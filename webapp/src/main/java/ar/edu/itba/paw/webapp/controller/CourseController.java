@@ -73,10 +73,29 @@ public class CourseController {
                     "poll/poll_short_list.jsp"),
 
             new Panel("Anuncios del curso", "",
-                    "announcement/announcement_short_list.jsp")
+                    "announcement/announcement_list.jsp")
         ));
 
         mav.addObject("announcements", announcementService.findByCourse(course.getId()));
+
+        return mav;
+    }
+
+
+    @RequestMapping("/courses/favourites")
+    public ModelAndView getCourseDetails() {
+        final ModelAndView mav = new ModelAndView("main");
+
+        mav.addObject("title", "Tus cursos favoritos");
+
+        mav.addObject("breadcrumbItems", Arrays.asList(
+            new BreadcrumbItem("Home", "/"),
+            new BreadcrumbItem("Cursos favoritos","/courses/favourites")
+        ));
+
+        mav.addObject("contentViewName", "course/course_full_list.jsp");
+
+        mav.addObject("courses", courseService.findFavourites(1));
 
         return mav;
     }

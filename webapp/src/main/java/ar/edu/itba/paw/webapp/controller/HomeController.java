@@ -37,14 +37,14 @@ public class HomeController {
             new Panel("Todas las carreras", null,
                     "career/career_full_list.jsp"),
 
-            new Panel("Tus cursos favoritos", "",
+            new Panel("Tus cursos favoritos", "/courses/favourites",
                     "course/course_short_list.jsp"),
 
             new Panel("Encuestas generales", "",
                     "poll/poll_short_list.jsp"),
 
             new Panel("Anuncios generales", "",
-                    "announcement/announcement_short_list.jsp")
+                    "announcement/announcement_list.jsp")
         ));
 
         mav.addObject("announcements", announcementService.findGeneral());
