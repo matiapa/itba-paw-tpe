@@ -9,10 +9,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Optional;
+
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Controller
 public class CourseController {
@@ -30,7 +35,12 @@ public class CourseController {
     ) {
         final ModelAndView mav = new ModelAndView("main");
 
-        Course course = courseService.findById(id).get();
+        Optional<Course> courseOpt = courseService.findById(id);
+        if(! courseOpt.isPresent()){
+            throw new ResponseStatusException(NOT_FOUND, "Curso no encontrado");
+        }
+
+        Course course = courseOpt.get();
 
         mav.addObject("title", course.getName());
 
