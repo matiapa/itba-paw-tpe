@@ -20,7 +20,7 @@
         <li class="list-group-item">
             <div class="row">
                 <div class="col">
-                    <h3 class="text-primary"><c:out value="${announcement.title}" /></h3>
+                    <h3 class="text-primary"><c:out value="${announcement.title}"/></h3>
                 </div>
                 <div class="col offset-xl-3"><span>Creation Date</span></div>
                 <div class="col-xl-2 offset-xl-1 text-right"><button class="btn btn-link" type="button">View Details</button></div>

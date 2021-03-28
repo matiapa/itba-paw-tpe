@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.models.Announcement;
+import ar.edu.itba.paw.services.AnnouncementService;
 import ar.edu.itba.paw.services.UserService;
 import ar.edu.itba.paw.webapp.viewparams.MainParams;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,28 +17,18 @@ import java.util.List;
 public class HomeController {
 
     @Autowired
-    UserService userService;
+    AnnouncementService announcementService;
 
     @RequestMapping("/")
-    public ModelAndView helloWorld(
-//            @RequestParam(name = "email") String email,
-//            @RequestParam(name = "pass") String pass
-    ) {
+    public ModelAndView helloWorld() {
         final ModelAndView mav = new ModelAndView("main");
-
-//        mav.addObject("user", userService.register(email, pass));
 
         mav.addObject("params", new MainParams(
                 "Home", "Todas las carreras", "Tus cursos favoritos",
                 "Encuestas generales", "Anuncios generales"
         ));
 
-        List<Announcement> announcements = Arrays.asList(
-                new Announcement("Anuncio 1"),
-                new Announcement("Anuncio 2")
-        );
-
-        mav.addObject("announcements", announcements);
+        mav.addObject("announcements", announcementService.findAll());
 
         return mav;
     }
