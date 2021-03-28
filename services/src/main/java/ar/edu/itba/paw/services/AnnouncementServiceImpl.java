@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.models.Announcement;
-import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.persistence.AnnouncementDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,8 +14,13 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     AnnouncementDao announcementDao;
 
     @Override
-    public List<Announcement> findAll() {
-        return announcementDao.findAll();
+    public List<Announcement> findGeneral() {
+        return announcementDao.findGeneral();
+    }
+
+    @Override
+    public List<Announcement> findByCourse(String courseId) {
+        return announcementDao.findByCourse(courseId);
     }
 
 }

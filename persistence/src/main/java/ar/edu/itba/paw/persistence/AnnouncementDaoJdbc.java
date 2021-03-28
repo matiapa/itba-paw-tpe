@@ -32,8 +32,19 @@ public class AnnouncementDaoJdbc implements AnnouncementDao {
 
 
     @Override
-    public List<Announcement> findAll() {
-        return jdbcTemplate.query("SELECT * FROM announcement", ANNOUNCEMENT_ROW_MAPPER);
+    public List<Announcement> findGeneral() {
+        return jdbcTemplate.query(
+            "SELECT * FROM announcement WHERE career_id IS NULL AND course_id IS NULL",
+            ANNOUNCEMENT_ROW_MAPPER
+        );
+    }
+
+    @Override
+    public List<Announcement> findByCourse(String courseId) {
+        return jdbcTemplate.query(
+            String.format("SELECT * FROM announcement WHERE course_id='%s'", courseId),
+            ANNOUNCEMENT_ROW_MAPPER
+        );
     }
 
 }

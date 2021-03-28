@@ -11,3 +11,6 @@
 
 # Maven related
 **/target
+
+# Others
+.txt/

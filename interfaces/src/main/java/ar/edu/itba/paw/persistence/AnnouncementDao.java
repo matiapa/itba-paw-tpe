@@ -5,6 +5,8 @@ import java.util.List;
 
 public interface AnnouncementDao {
 
-    List<Announcement> findAll();
+    List<Announcement> findGeneral();
+
+    List<Announcement> findByCourse(String courseId);
 
 }
