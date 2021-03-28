@@ -1,17 +1,15 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.models.Announcement;
+import ar.edu.itba.paw.models.ui.BreadcrumbItem;
+import ar.edu.itba.paw.models.ui.Panel;
 import ar.edu.itba.paw.services.AnnouncementService;
-import ar.edu.itba.paw.services.UserService;
-import ar.edu.itba.paw.webapp.viewparams.MainParams;
+import ar.edu.itba.paw.models.ui.MainParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 @Controller
 public class HomeController {
@@ -24,8 +22,12 @@ public class HomeController {
         final ModelAndView mav = new ModelAndView("main");
 
         mav.addObject("params", new MainParams(
-                "Home", "Todas las carreras", "Tus cursos favoritos",
-                "Encuestas generales", "Anuncios generales"
+            "Home",
+            Arrays.asList(new BreadcrumbItem("Home", "/")),
+            new Panel("Todas las carreras", null, "career_full_list.jsp"),
+            new Panel("Tus cursos favoritos", "/courses/fav", "course_short_list.jsp"),
+            new Panel("Encuestas generales", "/polls/general", "poll_short_list.jsp"),
+            new Panel("Anuncios generales", "/announcements/general", "announcement_short_list.jsp")
         ));
 
         mav.addObject("announcements", announcementService.findAll());

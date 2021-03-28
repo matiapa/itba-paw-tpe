@@ -24,7 +24,11 @@ public class AnnouncementDaoJdbc implements AnnouncementDao {
     }
 
     private static final RowMapper<Announcement> ANNOUNCEMENT_ROW_MAPPER = (rs, rowNum) ->
-            new Announcement(rs.getString("title"));
+            new Announcement(
+                    rs.getString("title"),
+                    rs.getString("content"),
+                    rs.getDate("creation_date")
+            );
 
 
     @Override
