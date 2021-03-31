@@ -9,4 +9,5 @@ public interface AnnouncementDao {
 
     List<Announcement> findByCourse(String courseId);
 
+    List<Announcement> findByCareer(int careerId);
 }

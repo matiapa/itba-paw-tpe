@@ -47,4 +47,11 @@ public class AnnouncementDaoJdbc implements AnnouncementDao {
         );
     }
 
+    @Override
+    public List<Announcement> findByCareer(int careerId) {
+        return jdbcTemplate.query(
+                String.format("SELECT * FROM announcement WHERE career_id='%d'", careerId), ANNOUNCEMENT_ROW_MAPPER
+        );
+    }
+
 }

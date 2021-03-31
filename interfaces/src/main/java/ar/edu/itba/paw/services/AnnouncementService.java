@@ -9,4 +9,6 @@ public interface AnnouncementService {
 
     List<Announcement> findByCourse(String courseId);
 
+    List<Announcement> findByCareer(int careerId);
+
 }

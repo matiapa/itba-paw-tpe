@@ -23,4 +23,9 @@ public class AnnouncementServiceImpl implements AnnouncementService {
         return announcementDao.findByCourse(courseId);
     }
 
+    @Override
+    public List<Announcement> findByCareer(int careerId) {
+        return announcementDao.findByCareer(careerId);
+    }
+
 }
