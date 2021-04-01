@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface CourseService {
 
-    List<Course> findFavourites(int userId);
+    List<Course> findFavourites();
 
     List<Course> findByCareer(int careerId);
 

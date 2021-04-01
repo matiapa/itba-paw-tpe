@@ -3,6 +3,8 @@ import ar.edu.itba.paw.models.User;
 
 public interface UserService {
 
-    User register(String email, String password);
+    boolean isLogged();
+
+    int getID();
 
 }

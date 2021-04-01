@@ -23,9 +23,9 @@
                     <jsp:include page="${panels[0].viewName}"/>
                 </div>
             </div>
-        </c:if>
 
-        <hr>
+            <hr>
+        </c:if>
 
         <c:if test="${panels[1] != null}">
             <div class="container" style="height: 150px;">
@@ -44,9 +44,9 @@
                     <jsp:include page="${panels[1].viewName}"/>
                 </div>
             </div>
-        </c:if>
 
-        <hr>
+            <hr>
+        </c:if>
 
         <c:if test="${panels[2] != null}">
             <div class="container" style="height: 300px;">

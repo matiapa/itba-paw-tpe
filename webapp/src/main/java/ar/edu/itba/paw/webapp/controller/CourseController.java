@@ -7,6 +7,7 @@ import ar.edu.itba.paw.models.ui.Panel;
 import ar.edu.itba.paw.services.AnnouncementService;
 import ar.edu.itba.paw.services.CareerService;
 import ar.edu.itba.paw.services.CourseService;
+import ar.edu.itba.paw.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,14 +23,13 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 @Controller
 public class CourseController {
 
-    @Autowired
-    AnnouncementService announcementService;
+    @Autowired AnnouncementService announcementService;
 
-    @Autowired
-    CourseService courseService;
+    @Autowired CourseService courseService;
 
-    @Autowired
-    CareerService careerService;
+    @Autowired CareerService careerService;
+
+    @Autowired UserService userService;
 
 
     @RequestMapping("/courses/byId")
@@ -65,8 +65,7 @@ public class CourseController {
         mav.addObject("contentViewName", "panels.jsp");
 
         mav.addObject("panels", Arrays.asList(
-            new Panel("Grupos de chat", "",
-                    "chat_group/chat_group_short_list.jsp"),
+            null,
 
             new Panel("Contenido", "",
                     "content_source/content_short_list.jsp"),
@@ -109,7 +108,7 @@ public class CourseController {
 
         mav.addObject("contentViewName", "course/course_full_list.jsp");
 
-        mav.addObject("courses", courseService.findFavourites(1));
+        mav.addObject("courses", courseService.findByCareer(careerId));
 
         return mav;
     }
@@ -126,9 +125,18 @@ public class CourseController {
             new BreadcrumbItem("Cursos favoritos","/courses/favourites")
         ));
 
-        mav.addObject("contentViewName", "course/course_full_list.jsp");
+        if(userService.isLogged()){
 
-        mav.addObject("courses", courseService.findFavourites(1));
+            mav.addObject("contentViewName", "course/course_full_list.jsp");
+
+            mav.addObject("courses", courseService.findFavourites());
+
+        }else{
+
+            mav.addObject("contentViewName", "user/login_required.jsp");
+            mav.addObject("redirectTo", "/courses/favourites");
+
+        }
 
         return mav;
     }

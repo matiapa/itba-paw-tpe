@@ -16,8 +16,12 @@ public class CourseServiceImpl implements CourseService {
     @Autowired
     CourseDao courseDao;
 
+    @Autowired
+    UserService userService;
+
     @Override
-    public List<Course> findFavourites(int userId) {
+    public List<Course> findFavourites() {
+        int userId = userService.getID();
         return courseDao.findFavourites(userId);
     }
 
