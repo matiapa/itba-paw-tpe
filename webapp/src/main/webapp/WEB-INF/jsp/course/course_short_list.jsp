@@ -7,7 +7,7 @@
 
     <div class="col mb-2">
         <a class="badge badge-pill badge-primary" style="padding: 7px 10px;"
-           href="/courses/detail?id=${course.id}">
+           href="/courses/byId?id=${course.id}">
             <c:out value="${course.name}"/>
         </a>
     </div>

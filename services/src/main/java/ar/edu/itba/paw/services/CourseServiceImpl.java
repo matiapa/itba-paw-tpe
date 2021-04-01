@@ -22,8 +22,15 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    public List<Course> findByCareer(int careerId) {
+        return courseDao.findByCareer(careerId);
+    }
+
+    @Override
     public Optional<Course> findById(String id) {
         return courseDao.findById(id);
     }
+
+
 
 }

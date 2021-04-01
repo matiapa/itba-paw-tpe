@@ -8,6 +8,8 @@ public interface CourseDao {
 
     List<Course> findFavourites(int userId);
 
+    List<Course> findByCareer(int careerId);
+
     Optional<Course> findById(String id);
 
 }

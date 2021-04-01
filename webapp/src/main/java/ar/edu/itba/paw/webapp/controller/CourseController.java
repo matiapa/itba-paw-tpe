@@ -1,20 +1,20 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.models.Career;
 import ar.edu.itba.paw.models.Course;
 import ar.edu.itba.paw.models.ui.BreadcrumbItem;
 import ar.edu.itba.paw.models.ui.Panel;
 import ar.edu.itba.paw.services.AnnouncementService;
+import ar.edu.itba.paw.services.CareerService;
 import ar.edu.itba.paw.services.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Optional;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -28,10 +28,13 @@ public class CourseController {
     @Autowired
     CourseService courseService;
 
+    @Autowired
+    CareerService careerService;
 
-    @RequestMapping("/courses/detail")
-    public ModelAndView getCourseDetails(
-            @RequestParam(name = "id") String id
+
+    @RequestMapping("/courses/byId")
+    public ModelAndView getCourseById(
+        @RequestParam(name = "id") String id
     ) {
         final ModelAndView mav = new ModelAndView("main");
 
@@ -39,19 +42,18 @@ public class CourseController {
         if(! courseOpt.isPresent()){
             throw new ResponseStatusException(NOT_FOUND, "Curso no encontrado");
         }
-
         Course course = courseOpt.get();
+
+        Career career = careerService.findByCourse(course);
 
         mav.addObject("title", course.getName());
 
         mav.addObject("breadcrumbItems", Arrays.asList(
             new BreadcrumbItem("Home", "/"),
 
-            // TODO: Replace title with career name once carrer model is implemented
-
             new BreadcrumbItem(
-                ""+course.getCareerId(),
-                "/careers/detail?id="+course.getCareerId()
+                ""+career.getName(),
+                "/careers/byId?id="+career.getId()
             ),
 
             new BreadcrumbItem(
@@ -82,8 +84,39 @@ public class CourseController {
     }
 
 
+    @RequestMapping("/courses/byCareer")
+    public ModelAndView getCoursesByCareer(
+        @RequestParam(name = "careerId") int careerId
+    ) {
+        final ModelAndView mav = new ModelAndView("main");
+
+        Optional<Career> careerOpt = careerService.findById(careerId);
+        if(! careerOpt.isPresent()){
+            throw new ResponseStatusException(NOT_FOUND, "Carrera no encontrada");
+        }
+        Career career = careerOpt.get();
+
+        mav.addObject("title", String.format("Cursos de %s", career.getName()));
+
+        mav.addObject("breadcrumbItems", Arrays.asList(
+                new BreadcrumbItem("Home", "/"),
+
+                new BreadcrumbItem(
+                    ""+career.getName(),
+                    "/careers/byId?id="+career.getId()
+                )
+        ));
+
+        mav.addObject("contentViewName", "course/course_full_list.jsp");
+
+        mav.addObject("courses", courseService.findFavourites(1));
+
+        return mav;
+    }
+
+
     @RequestMapping("/courses/favourites")
-    public ModelAndView getCourseDetails() {
+    public ModelAndView getFavouriteCourses() {
         final ModelAndView mav = new ModelAndView("main");
 
         mav.addObject("title", "Tus cursos favoritos");

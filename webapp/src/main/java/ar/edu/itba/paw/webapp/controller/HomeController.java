@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.models.ui.BreadcrumbItem;
 import ar.edu.itba.paw.models.ui.Panel;
 import ar.edu.itba.paw.services.AnnouncementService;
+import ar.edu.itba.paw.services.CareerService;
 import ar.edu.itba.paw.services.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,9 +21,12 @@ public class HomeController {
     @Autowired
     CourseService courseService;
 
+    @Autowired
+    CareerService careerService;
+
 
     @RequestMapping("/")
-    public ModelAndView helloWorld() {
+    public ModelAndView getDashboard() {
         final ModelAndView mav = new ModelAndView("main");
 
         mav.addObject("title", "Home");
@@ -50,6 +54,8 @@ public class HomeController {
         mav.addObject("announcements", announcementService.findGeneral());
 
         mav.addObject("courses", courseService.findFavourites(1));
+
+        mav.addObject("careers", careerService.findAll());
 
         return mav;
     }
