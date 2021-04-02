@@ -54,7 +54,7 @@ public class CareerController {
             new Panel("Lista de cursos", "/courses/byCareer?careerId="+career.getId(),
                     "course/course_short_list.jsp"),
 
-            new Panel("Grupos de chat", "",
+            new Panel("Grupos de chat", "/groups/byCareer?careerId="+career.getId(),
                     "chat_group/chat_group_short_list.jsp"),
 
             new Panel("Encuestas de la carrera", "",

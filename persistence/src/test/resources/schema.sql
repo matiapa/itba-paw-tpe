@@ -33,3 +33,15 @@ CREATE TABLE fav_course(
     FOREIGN KEY (course_id) REFERENCES course ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES users ON DELETE CASCADE
 );
+
+CREATE TABLE chat_group(
+    id              int,
+    career_id       int not null,
+    submitted_by    int,
+    creation_date   date not null,
+    link            varchar not null,
+
+    PRIMARY KEY (id),
+    FOREIGN KEY (career_id) REFERENCES career ON DELETE CASCADE,
+    FOREIGN KEY (submitted_by) REFERENCES users ON DELETE SET NULL
+);
