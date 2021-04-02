@@ -1,5 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8"%>
+
+<jsp:useBean id="courses" scope="request" type="java.util.List"/>
 
 <c:forEach var="course" items="${courses}">
 
@@ -17,7 +19,9 @@
             <p>Descripción</p>
 
             <div class="text-right">
-                <a href="/courses/byId?id=${course.id}">Ver detalles</a>
+                <a href="<c:url value="/courses/byId?id=${course.id}"/>">
+                    Ver detalles
+                </a>
             </div>
         </div>
     </li>

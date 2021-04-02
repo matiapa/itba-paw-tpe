@@ -1,5 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8"%>
 
 <jsp:useBean id="courses" scope="request" type="java.util.List"/>
 
@@ -7,7 +7,7 @@
 
     <div class="col mb-2">
         <a class="badge badge-pill badge-primary" style="padding: 7px 10px;"
-           href="/courses/byId?id=${course.id}">
+           href="<c:url value="/courses/byId?id=${course.id}"/>">
             <c:out value="${course.name}"/>
         </a>
     </div>

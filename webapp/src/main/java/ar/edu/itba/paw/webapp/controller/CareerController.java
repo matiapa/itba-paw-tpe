@@ -42,7 +42,8 @@ public class CareerController {
         }
 
         Career career = optionalCareer.get();
-        modelAndView.addObject("name", career.getName());
+        modelAndView.addObject("title", career.getName());
+
         modelAndView.addObject("breadcrumbItems", Arrays.asList(
                 new BreadcrumbItem("Home", "/"),
                 new BreadcrumbItem(career.getName(), "/careers/byId?id="+career.getId())

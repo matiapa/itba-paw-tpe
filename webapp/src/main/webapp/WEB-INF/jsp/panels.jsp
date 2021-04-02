@@ -14,7 +14,7 @@
                     </div>
                     <c:if test="${panels[0].moreLink != null}">
                         <div class="col text-right">
-                            <a href="${panels[0].moreLink}">Ver más</a>
+                            <a href="<c:url value="${panels[0].moreLink}"/>">Ver más</a>
                         </div>
                     </c:if>
                 </div>
@@ -35,7 +35,7 @@
                     </div>
                     <c:if test="${panels[1].moreLink != null}">
                         <div class="col text-right">
-                            <a href="${panels[1].moreLink}">Ver más</a>
+                            <a href="<c:url value="${panels[1].moreLink}"/>">Ver más</a>
                         </div>
                     </c:if>
                 </div>
@@ -56,7 +56,7 @@
                     </div>
                     <c:if test="${panels[2].moreLink != null}">
                         <div class="col text-right">
-                            <a href="${panels[2].moreLink}">Ver más</a>
+                            <a href="<c:url value="${panels[2].moreLink}"/>">Ver más</a>
                         </div>
                     </c:if>
                 </div>

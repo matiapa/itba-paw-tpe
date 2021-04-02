@@ -9,8 +9,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
 
-    <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/assets/css/styles.css">
+    <link rel="stylesheet" href="<c:url value="/assets/bootstrap/css/bootstrap.min.css"/>">
+    <link rel="stylesheet" href="<c:url value="/assets/css/styles.css"/>">
 
     <title>${title}</title>
 
@@ -27,10 +27,10 @@
                     <c:forEach var="breadcrumbItem" items="${breadcrumbItems}">
 
                         <li class="breadcrumb-item">
-                            <a href="<c:out value="${breadcrumbItem.url}"/>">
-                                    <span style="color: rgb(252,252,252);">
-                                        <c:out value="${breadcrumbItem.title}"/>
-                                    </span>
+                            <a href="<c:url value="${breadcrumbItem.url}"/>">
+                                <span style="color: rgb(252,252,252);">
+                                    <c:out value="${breadcrumbItem.title}"/>
+                                </span>
                             </a>
                         </li>
 
@@ -39,7 +39,7 @@
             </div>
 
             <div class="col text-right align-self-center">
-                <img src="/assets/img/logo.png" height="32">
+                <img src="<c:url value="/assets/img/logo.png"/>" height="32">
             </div>
 
         </div>
@@ -48,8 +48,8 @@
 
     </div>
 
-    <script src="/assets/js/jquery.min.js"></script>
-    <script src="/assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="<c:url value="/assets/js/jquery.min.js"/>"></script>
+    <script src="<c:url value="/assets/bootstrap/js/bootstrap.min.js"/>"></script>
 
 </body>
 
