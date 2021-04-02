@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.exceptions.LoginRequiredException;
 import ar.edu.itba.paw.models.ui.BreadcrumbItem;
 import ar.edu.itba.paw.models.ui.Panel;
 import ar.edu.itba.paw.services.AnnouncementService;
@@ -39,10 +40,10 @@ public class HomeController {
         mav.addObject("contentViewName", "panels.jsp");
 
         String favCoursesView;
-        if(userService.isLogged()){
+        try{
             favCoursesView = "course/course_short_list.jsp";
             mav.addObject("courses", courseService.findFavourites());
-        }else{
+        }catch (LoginRequiredException e){
             favCoursesView = "user/login_required.jsp";
             mav.addObject("redirectTo", "/home");
         }

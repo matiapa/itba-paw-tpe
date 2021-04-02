@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.exceptions.LoginRequiredException;
 import ar.edu.itba.paw.models.Career;
 import ar.edu.itba.paw.models.Course;
 import ar.edu.itba.paw.models.ui.BreadcrumbItem;
@@ -125,17 +126,12 @@ public class CourseController {
             new BreadcrumbItem("Cursos favoritos","/courses/favourites")
         ));
 
-        if(userService.isLogged()){
-
+        try{
             mav.addObject("contentViewName", "course/course_full_list.jsp");
-
             mav.addObject("courses", courseService.findFavourites());
-
-        }else{
-
+        }catch(LoginRequiredException e){
             mav.addObject("contentViewName", "user/login_required.jsp");
             mav.addObject("redirectTo", "/courses/favourites");
-
         }
 
         return mav;

@@ -1,8 +1,7 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.models.Announcement;
+import ar.edu.itba.paw.exceptions.LoginRequiredException;
 import ar.edu.itba.paw.models.Course;
-import ar.edu.itba.paw.persistence.AnnouncementDao;
 import ar.edu.itba.paw.persistence.CourseDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,9 +19,13 @@ public class CourseServiceImpl implements CourseService {
     UserService userService;
 
     @Override
-    public List<Course> findFavourites() {
-        int userId = userService.getID();
-        return courseDao.findFavourites(userId);
+    public List<Course> findFavourites() throws LoginRequiredException {
+        if(userService.isLogged()){
+            int userId = userService.getID();
+            return courseDao.findFavourites(userId);
+        }else{
+            throw new LoginRequiredException();
+        }
     }
 
     @Override
@@ -34,7 +37,5 @@ public class CourseServiceImpl implements CourseService {
     public Optional<Course> findById(String id) {
         return courseDao.findById(id);
     }
-
-
 
 }
