@@ -68,7 +68,7 @@ public class CourseController {
         mav.addObject("panels", Arrays.asList(
             null,
 
-            new Panel("Contenido", "",
+            new Panel("Contenido", "/contents/byCourse?careerId="+career.getId()+"&courseId="+course.getId(),
                     "content_source/content_short_list.jsp"),
 
             new Panel("Encuestas del curso", "",
