@@ -15,10 +15,10 @@
                     </div>
                 </div>
 
-                <p><c:out value="${announcement.content}"/></p>
+                <p><c:out value="${announcement.summary}"/></p>
 
                 <div class="text-right">
-                    <button class="btn btn-link " type="button">Ver más</button>
+                    <a href="<c:url value="/announcements/byId?id=${announcement.id}"/>">Ver más</a>
                 </div>
             </div>
         </li>

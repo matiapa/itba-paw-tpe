@@ -44,7 +44,9 @@
 
         </div>
 
-        <jsp:include page="${contentViewName}"/>
+        <div class="mt-4">
+            <jsp:include page="${contentViewName}"/>
+        </div>
 
     </div>
 

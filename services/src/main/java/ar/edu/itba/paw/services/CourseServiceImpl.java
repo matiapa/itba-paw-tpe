@@ -21,7 +21,7 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public List<Course> findFavourites() throws LoginRequiredException {
         if(userService.isLogged()){
-            int userId = userService.getID();
+            int userId = userService.getLoggedID();
             return courseDao.findFavourites(userId);
         }else{
             throw new LoginRequiredException();

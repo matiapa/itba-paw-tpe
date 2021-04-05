@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.models.Announcement;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface AnnouncementDao {
 
@@ -10,4 +11,7 @@ public interface AnnouncementDao {
     List<Announcement> findByCourse(String courseId);
 
     List<Announcement> findByCareer(int careerId);
+
+    Optional<Announcement> findById(int id);
+
 }

@@ -37,10 +37,10 @@ public class CourseServiceImplTest {
     @Test
     public void testFavCoursesLoggedIn() throws LoginRequiredException {
         Mockito.when(userService.isLogged()).thenReturn(true);
-        Mockito.when(userService.getID()).thenReturn(1);
+        Mockito.when(userService.getLoggedID()).thenReturn(1);
 
         List<Course> expectedFavs = Collections.singletonList(
-            new Course("1", "test", 1)
+            new Course("1", "test")
         );
         Mockito.when(courseDao.findFavourites(1)).thenReturn(expectedFavs);
 

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AnnouncementServiceImpl implements AnnouncementService {
@@ -26,6 +27,11 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     @Override
     public List<Announcement> findByCareer(int careerId) {
         return announcementDao.findByCareer(careerId);
+    }
+
+    @Override
+    public Optional<Announcement> findById(int id) {
+        return announcementDao.findById(id);
     }
 
 }
