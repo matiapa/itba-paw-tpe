@@ -20,7 +20,7 @@ public class CareerServiceImpl implements CareerService{
     }
 
     @Override
-    public Career findByCourse(Course course) {
+    public List<Career> findByCourse(Course course) {
         return careerDao.findByCourse(course);
     }
 

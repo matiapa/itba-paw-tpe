@@ -10,7 +10,7 @@ public interface CareerService {
 
     List<Career> findAll();
 
-    Career findByCourse(Course course);
+    List<Career> findByCourse(Course course);
 
     Optional<Career> findById(int id);
 

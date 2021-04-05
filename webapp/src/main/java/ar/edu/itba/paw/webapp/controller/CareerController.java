@@ -1,12 +1,10 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.models.Career;
-import ar.edu.itba.paw.models.ui.BreadcrumbItem;
+import ar.edu.itba.paw.models.ui.NavigationItem;
 import ar.edu.itba.paw.models.ui.Panel;
-import ar.edu.itba.paw.services.AnnouncementService;
-import ar.edu.itba.paw.services.CareerService;
-import ar.edu.itba.paw.services.ChatGroupService;
-import ar.edu.itba.paw.services.CourseService;
+import ar.edu.itba.paw.services.*;
+import ar.edu.itba.paw.webapp.mav.BaseMav;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,24 +31,24 @@ public class CareerController {
 
     @RequestMapping("careers/byId")
     public ModelAndView getCareerDetail(
-            @RequestParam(name = "id") int id
+        @RequestParam(name = "id") int id
     ){
-        final ModelAndView modelAndView = new ModelAndView("main");
         Optional<Career> optionalCareer = careerService.findById(id);
         if (!optionalCareer.isPresent()){
             throw new ResponseStatusException(NOT_FOUND, "Carrera no encontrada");
         }
-
         Career career = optionalCareer.get();
-        modelAndView.addObject("title", career.getName());
 
-        modelAndView.addObject("breadcrumbItems", Arrays.asList(
-                new BreadcrumbItem("Home", "/"),
-                new BreadcrumbItem(career.getName(), "/careers/byId?id="+career.getId())
-        ));
+        final ModelAndView mav = new BaseMav(
+            ""+career.getName(),
+            "panels.jsp",
+            Arrays.asList(
+                new NavigationItem("Home", "/"),
+                new NavigationItem(career.getName(), "/careers/byId?id="+career.getId())
+            )
+        );
 
-        modelAndView.addObject("contentViewName", "panels.jsp");
-        modelAndView.addObject("panels", Arrays.asList(
+        mav.addObject("panels", Arrays.asList(
             new Panel("Lista de cursos", "/courses/byCareer?careerId="+career.getId(),
                     "course/course_short_list.jsp"),
 
@@ -64,16 +62,16 @@ public class CareerController {
                     "announcement/announcement_list.jsp")
         ));
 
-        modelAndView.addObject("courses",
+        mav.addObject("courses",
                 courseService.findByCareer(career.getId()));
 
-        modelAndView.addObject("chat_groups",
+        mav.addObject("chat_groups",
                 chatGroupService.findByCareer(career.getId()));
 
-        modelAndView.addObject("announcements",
+        mav.addObject("announcements",
                 announcementService.findByCareer(career.getId()));
 
-        return modelAndView;
+        return mav;
     }
 
 }

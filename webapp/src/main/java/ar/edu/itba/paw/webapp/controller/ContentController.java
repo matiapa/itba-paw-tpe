@@ -2,12 +2,10 @@ package ar.edu.itba.paw.webapp.controller;
 
 
 import ar.edu.itba.paw.models.Career;
-import ar.edu.itba.paw.models.ChatGroup;
 import ar.edu.itba.paw.models.Content;
 import ar.edu.itba.paw.models.Course;
-import ar.edu.itba.paw.models.ui.BreadcrumbItem;
+import ar.edu.itba.paw.models.ui.NavigationItem;
 import ar.edu.itba.paw.services.CareerService;
-import ar.edu.itba.paw.services.ChatGroupService;
 import ar.edu.itba.paw.services.ContentService;
 import ar.edu.itba.paw.services.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +37,7 @@ public class ContentController {
             @RequestParam(name = "id") String id
     ){
         final ModelAndView modelAndView = new ModelAndView("main");
+
         Optional<Content> contentOptional = contentService.findById(id);
         if (!contentOptional.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Contenido no encontrado");
@@ -51,20 +50,13 @@ public class ContentController {
         }
         Course course = courseOptional.get();
 
-        Optional<Career> careerOptional = careerService.findById(course.getCareerId());
-        if (!careerOptional.isPresent()){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Carrera del contenido no encontrada");
-        }
-        Career career = careerOptional.get();
 
         modelAndView.addObject("title", content.getLink());
         modelAndView.addObject("breadcrumItems", Arrays.asList(
-                new BreadcrumbItem("Home", "/"),
-                new BreadcrumbItem(career.getName(),
-                        "/careers/detail?id="+ career.getId()),
-                new BreadcrumbItem( course.getName(),
+                new NavigationItem("Home", "/"),
+                new NavigationItem( course.getName(),
                         "/courses/byId?id="+course.getId()),
-                new BreadcrumbItem("Content of " + course.getName(),
+                new NavigationItem("Content of " + course.getName(),
                         "/contents/byCourse?courseId="+ course.getId())
 
         ));
@@ -98,11 +90,11 @@ public class ContentController {
 
 
         modelAndView.addObject("title", String.format("Contenidos de %s", course.getName()));
-        modelAndView.addObject("breadcrumbItems", Arrays.asList(
-                new BreadcrumbItem("Home", "/"),
-                new BreadcrumbItem(career.getName(), "/careers/byId?id="+ career.getId()),
-                new BreadcrumbItem(course.getName(), "/courses/byId?id="+ course.getId()),
-                new BreadcrumbItem("Contents of " + course.getName(),
+        modelAndView.addObject("navigationHistory", Arrays.asList(
+                new NavigationItem("Home", "/"),
+                new NavigationItem(career.getName(), "/careers/byId?id="+ career.getId()),
+                new NavigationItem(course.getName(), "/courses/byId?id="+ course.getId()),
+                new NavigationItem("Contents of " + course.getName(),
                         "/contents/byCourse?careerId="+ career.getId()+"&courseId="+course.getId())
         ));
         modelAndView.addObject("contentViewName", "content_source/content_full_list.jsp");

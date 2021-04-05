@@ -1,13 +1,11 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.models.Course;
-import ar.edu.itba.paw.models.ui.BreadcrumbItem;
+import ar.edu.itba.paw.models.ui.NavigationItem;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Collections;
-import java.util.Optional;
 
 @Controller
 public class ErrorController{
@@ -16,8 +14,8 @@ public class ErrorController{
     public ModelAndView error404(){
         final ModelAndView mav = new ModelAndView("main");
 
-        mav.addObject("breadcrumbItems", Collections.singletonList(
-                new BreadcrumbItem("Home", "/")));
+        mav.addObject("navigationHistory", Collections.singletonList(
+                new NavigationItem("Home", "/")));
         mav.addObject("title", "Página no encontrada");
         mav.addObject("contentViewName", "not_found.jsp");
 

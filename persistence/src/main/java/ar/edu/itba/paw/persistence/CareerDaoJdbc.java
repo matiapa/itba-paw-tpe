@@ -41,17 +41,15 @@ public class CareerDaoJdbc implements CareerDao{
     }
 
     @Override
-    public Career findByCourse(Course course) {
+    public List<Career> findByCourse(Course course) {
         return jdbcTemplate.query(
             String.format(
-                "SELECT * FROM career JOIN course c ON career.id = c.career_id " + "WHERE c.id = '%s'",
+                "SELECT * FROM career JOIN career_course ON id = career_id "
+                + "WHERE id = '%s'",
                 course.getId()
             ),
             CAREER_ROW_MAPPER
-        ).stream().findFirst()
-        .orElseThrow(IllegalStateException::new);
-
-        // TODO: Is this the appropiate exception?
+        );
     }
 
     @Override

@@ -3,9 +3,10 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.exceptions.LoginRequiredException;
 import ar.edu.itba.paw.models.Career;
 import ar.edu.itba.paw.models.Course;
-import ar.edu.itba.paw.models.ui.BreadcrumbItem;
+import ar.edu.itba.paw.models.ui.NavigationItem;
 import ar.edu.itba.paw.models.ui.Panel;
 import ar.edu.itba.paw.services.*;
+import ar.edu.itba.paw.webapp.mav.BaseMav;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,38 +37,25 @@ public class CourseController {
     public ModelAndView getCourseById(
         @RequestParam(name = "id") String id
     ) {
-        final ModelAndView mav = new ModelAndView("main");
-
         Optional<Course> courseOpt = courseService.findById(id);
         if(! courseOpt.isPresent()){
             throw new ResponseStatusException(NOT_FOUND, "Curso no encontrado");
         }
         Course course = courseOpt.get();
 
-        Career career = careerService.findByCourse(course);
-
-        mav.addObject("title", course.getName());
-
-        mav.addObject("breadcrumbItems", Arrays.asList(
-            new BreadcrumbItem("Home", "/"),
-
-            new BreadcrumbItem(
-                ""+career.getName(),
-                "/careers/byId?id="+career.getId()
-            ),
-
-            new BreadcrumbItem(
-                course.getName(),
-                "/course/detail?id="+course.getId()
+        final ModelAndView mav = new BaseMav(
+            ""+course.getName(),
+            "panels.jsp",
+            Arrays.asList(
+                new NavigationItem("Home", "/"),
+                new NavigationItem(course.getName(), "/courses/byId?id="+course.getId())
             )
-        ));
-
-        mav.addObject("contentViewName", "panels.jsp");
+        );
 
         mav.addObject("panels", Arrays.asList(
             null,
 
-            new Panel("Contenido", "/contents/byCourse?careerId="+career.getId()+"&courseId="+course.getId(),
+            new Panel("Contenido", "/contents/byCourse?&courseId="+course.getId(),
                     "content_source/content_short_list.jsp"),
 
             new Panel("Encuestas del curso", "",
@@ -89,26 +77,21 @@ public class CourseController {
     public ModelAndView getCoursesByCareer(
         @RequestParam(name = "careerId") int careerId
     ) {
-        final ModelAndView mav = new ModelAndView("main");
-
         Optional<Career> careerOpt = careerService.findById(careerId);
         if(! careerOpt.isPresent()){
             throw new ResponseStatusException(NOT_FOUND, "Carrera no encontrada");
         }
         Career career = careerOpt.get();
 
-        mav.addObject("title", String.format("Cursos de %s", career.getName()));
-
-        mav.addObject("breadcrumbItems", Arrays.asList(
-                new BreadcrumbItem("Home", "/"),
-
-                new BreadcrumbItem(
-                    ""+career.getName(),
-                    "/careers/byId?id="+career.getId()
-                )
-        ));
-
-        mav.addObject("contentViewName", "course/course_full_list.jsp");
+        final ModelAndView mav = new BaseMav(
+            ""+String.format("Cursos de %s", career.getName()),
+            "course/course_full_list.jsp",
+            Arrays.asList(
+                new NavigationItem("Home", "/"),
+                new NavigationItem(career.getName(), "/careers/byId?id="+career.getId()),
+                new NavigationItem("Cursos", "/courses/byCareer?careerId="+career.getId())
+            )
+        );
 
         mav.addObject("courses", courseService.findByCareer(careerId));
 
@@ -118,13 +101,20 @@ public class CourseController {
 
     @RequestMapping("/courses/favourites")
     public ModelAndView getFavouriteCourses() {
-        final ModelAndView mav = new ModelAndView("main");
+        final ModelAndView mav = new BaseMav(
+            "Tus cursos favoritos",
+            "course/course_full_list.jsp",
+            Arrays.asList(
+                new NavigationItem("Home", "/"),
+                new NavigationItem("Cursos favoritos", "/courses/favourites")
+            )
+        );
 
         mav.addObject("title", "Tus cursos favoritos");
 
-        mav.addObject("breadcrumbItems", Arrays.asList(
-            new BreadcrumbItem("Home", "/"),
-            new BreadcrumbItem("Cursos favoritos","/courses/favourites")
+        mav.addObject("navigationHistory", Arrays.asList(
+            new NavigationItem("Home", "/"),
+            new NavigationItem("Cursos favoritos","/courses/favourites")
         ));
 
         try{

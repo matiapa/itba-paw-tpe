@@ -24,7 +24,7 @@
 
             <div class="col align-self-center">
                 <ol class="breadcrumb text-center" style="background: transparent;">
-                    <c:forEach var="breadcrumbItem" items="${breadcrumbItems}">
+                    <c:forEach var="breadcrumbItem" items="${navigationHistory}">
 
                         <li class="breadcrumb-item">
                             <a href="<c:url value="${breadcrumbItem.url}"/>">
