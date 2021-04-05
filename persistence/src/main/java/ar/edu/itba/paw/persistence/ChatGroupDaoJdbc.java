@@ -26,6 +26,7 @@ public class ChatGroupDaoJdbc implements ChatGroupDao{
             new ChatGroup(
                     rs.getString("id"),
                     rs.getString("career_id"),
+                    rs.getString("name"),
                     rs.getString("link")
             );
 

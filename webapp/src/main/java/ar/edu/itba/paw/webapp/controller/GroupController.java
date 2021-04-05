@@ -25,34 +25,6 @@ public class GroupController {
     @Autowired
     CareerService careerService;
 
-    @RequestMapping("/groups/byId")
-    public ModelAndView getGroupById(
-            @RequestParam(name = "id") String id
-    ){
-        final ModelAndView modelAndView = new ModelAndView("main");
-        Optional<ChatGroup> chatGroupOptional = chatGroupService.findById(id);
-        if (!chatGroupOptional.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Grupo no encontrado");
-        }
-        ChatGroup chatGroup = chatGroupOptional.get();
-
-        Optional<Career> careerOptional = careerService.findById(Integer.parseInt(chatGroup.getCareer_id()));
-        if (!careerOptional.isPresent()){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Carrera del grupo no encontrada");
-        }
-        Career career = careerOptional.get();
-
-        modelAndView.addObject("title", chatGroup.getLink());
-        modelAndView.addObject("breadcrumItems", Arrays.asList(
-                new BreadcrumbItem("Home", "/"),
-                new BreadcrumbItem(career.getName(),
-                        "/careers/detail?id="+ career.getId()),
-                new BreadcrumbItem("Groups of " + career.getName(),
-                        "/groups/byCareer?careerId="+ career.getId())
-        ));
-        return modelAndView;
-    }
-
     @RequestMapping("/groups/byCareer")
     public ModelAndView getGroupsByCareer(
             @RequestParam(name = "careerId") int careerId
@@ -72,8 +44,10 @@ public class GroupController {
                 new BreadcrumbItem("Groups of " + career.getName(),
                         "/groups/byCareer?careerId="+ career.getId())
         ));
+
         modelAndView.addObject("contentViewName", "chat_group/chat_group_full_list.jsp");
-        modelAndView.addObject("chatGroups", chatGroupService.findByCareer(careerId));
+        modelAndView.addObject("chat_groups", chatGroupService.findByCareer(careerId));
+
         return modelAndView;
     }
 }

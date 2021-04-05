@@ -5,10 +5,7 @@ import ar.edu.itba.paw.models.Career;
 import ar.edu.itba.paw.models.Course;
 import ar.edu.itba.paw.models.ui.BreadcrumbItem;
 import ar.edu.itba.paw.models.ui.Panel;
-import ar.edu.itba.paw.services.AnnouncementService;
-import ar.edu.itba.paw.services.CareerService;
-import ar.edu.itba.paw.services.CourseService;
-import ar.edu.itba.paw.services.UserService;
+import ar.edu.itba.paw.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,6 +26,8 @@ public class CourseController {
     @Autowired CourseService courseService;
 
     @Autowired CareerService careerService;
+
+    @Autowired ContentService contentService;
 
     @Autowired UserService userService;
 
@@ -79,6 +78,8 @@ public class CourseController {
         ));
 
         mav.addObject("announcements", announcementService.findByCourse(course.getId()));
+
+        mav.addObject("contents", contentService.findByCourse(course.getId()));
 
         return mav;
     }

@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.ui.BreadcrumbItem;
 import ar.edu.itba.paw.models.ui.Panel;
 import ar.edu.itba.paw.services.AnnouncementService;
 import ar.edu.itba.paw.services.CareerService;
+import ar.edu.itba.paw.services.ChatGroupService;
 import ar.edu.itba.paw.services.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,14 +22,13 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 @Controller
 public class CareerController {
 
-    @Autowired
-    AnnouncementService announcementService;
+    @Autowired AnnouncementService announcementService;
 
-    @Autowired
-    CareerService careerService;
+    @Autowired CareerService careerService;
 
-    @Autowired
-    CourseService courseService;
+    @Autowired CourseService courseService;
+
+    @Autowired ChatGroupService chatGroupService;
 
 
     @RequestMapping("careers/byId")
@@ -66,6 +66,9 @@ public class CareerController {
 
         modelAndView.addObject("courses",
                 courseService.findByCareer(career.getId()));
+
+        modelAndView.addObject("chat_groups",
+                chatGroupService.findByCareer(career.getId()));
 
         modelAndView.addObject("announcements",
                 announcementService.findByCareer(career.getId()));
