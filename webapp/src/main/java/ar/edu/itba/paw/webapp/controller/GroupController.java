@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.models.Career;
+import ar.edu.itba.paw.models.ChatGroup;
 import ar.edu.itba.paw.models.ui.NavigationItem;
 import ar.edu.itba.paw.services.CareerService;
 import ar.edu.itba.paw.services.ChatGroupService;
@@ -47,6 +48,35 @@ public class GroupController {
 
         modelAndView.addObject("chat_groups", chatGroupService.findByCareer(careerId));
 
+        return modelAndView;
+    }
+
+    @RequestMapping("/groups/byId")
+    public ModelAndView getGroupById(
+            @RequestParam(name = "id") String id
+    ){
+        Optional<ChatGroup> optionalChatGroup = chatGroupService.findById(id);
+        if (!optionalChatGroup.isPresent()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Grupo no encontrado");
+        }
+        ChatGroup chatGroup = optionalChatGroup.get();
+        Optional<Career> optionalCareer = careerService.findById(Integer.parseInt(chatGroup.getCareerId()));
+        if (!optionalCareer.isPresent()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El grupo no pertenece a ninguna carrera");
+        }
+        Career career = optionalCareer.get();
+
+        final ModelAndView modelAndView = new BaseMav(
+                chatGroup.getName(),
+                "chat_group/chat_group.jsp",
+                Arrays.asList(
+                        new NavigationItem("Home", "/"),
+                        new NavigationItem(career.getName(), "/careers/byId?id=" + career.getId()),
+                        new NavigationItem(chatGroup.getName(), "/groups/byId?id=" + chatGroup.getId())
+                )
+        );
+
+        modelAndView.addObject("chat_group", chatGroup);
         return modelAndView;
     }
 }
