@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.models.Announcement;
 import ar.edu.itba.paw.models.Course;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -45,7 +44,8 @@ public class CourseDaoJdbc implements CourseDao {
     @Override
     public List<Course> findByCareer(int careerId) {
         return jdbcTemplate.query(
-            String.format("SELECT * FROM course WHERE career_id='%d'", careerId),
+            String.format("SELECT * FROM course JOIN career_course ON id = course_id " +
+                    "WHERE career_id='%d'", careerId),
             COURSE_ROW_MAPPER
         );
     }
