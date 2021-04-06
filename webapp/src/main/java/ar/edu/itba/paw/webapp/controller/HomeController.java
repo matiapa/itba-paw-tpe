@@ -23,6 +23,7 @@ public class HomeController {
 
     @Autowired UserService userService;
 
+    @Autowired PollService pollService;
 
     @RequestMapping("/")
     public ModelAndView getDashboard() {
@@ -62,6 +63,7 @@ public class HomeController {
 
         mav.addObject("careers", careerService.findAll());
 
+        mav.addObject("polls", pollService.findGeneral());
         return mav;
     }
 
