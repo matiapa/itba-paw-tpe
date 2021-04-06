@@ -14,11 +14,7 @@ import java.util.Optional;
 @Repository
 public class AnnouncementDaoJdbc implements AnnouncementDao {
 
-    @Autowired
-    private DataSource ds;
-
-    @Autowired
-    private UserDao userDao;
+    @Autowired private UserDao userDao;
 
     private final JdbcTemplate jdbcTemplate;
 

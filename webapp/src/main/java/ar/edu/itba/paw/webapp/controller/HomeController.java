@@ -38,7 +38,7 @@ public class HomeController {
         String favCoursesView;
         try{
             favCoursesView = "course/course_short_list.jsp";
-            mav.addObject("courses", courseService.findFavourites());
+            mav.addObject("courses", courseService.findFavourites(4));
         }catch (LoginRequiredException e){
             favCoursesView = "user/login_required.jsp";
             mav.addObject("redirectTo", "/home");

@@ -13,8 +13,8 @@ import java.util.Optional;
 @Repository
 public class ChatGroupDaoJdbc implements ChatGroupDao{
 
-    @Autowired
-    private DataSource ds;
+    @Autowired private DataSource ds;
+
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
@@ -23,18 +23,28 @@ public class ChatGroupDaoJdbc implements ChatGroupDao{
     }
 
     private static final RowMapper<ChatGroup> CHAT_GROUP_ROW_MAPPER = (rs, rowNum) ->
-            new ChatGroup(
-                    rs.getString("id"),
-                    rs.getString("career_id"),
-                    rs.getString("name"),
-                    rs.getString("link")
-            );
+        new ChatGroup(
+            rs.getString("id"),
+            rs.getString("career_id"),
+            rs.getString("name"),
+            rs.getString("link"),
+            rs.getDate("creation_date")
+        );
 
     @Override
     public List<ChatGroup> findByCareer(int careerId) {
         return jdbcTemplate.query(
-                String.format("SELECT * FROM chat_group WHERE career_id='%d'", careerId),
-                CHAT_GROUP_ROW_MAPPER
+            String.format("SELECT * FROM chat_group WHERE career_id='%d'", careerId),
+            CHAT_GROUP_ROW_MAPPER
+        );
+    }
+
+    @Override
+    public List<ChatGroup> findByCareer(int careerId, int limit) {
+        return jdbcTemplate.query(
+            String.format("SELECT * FROM chat_group WHERE career_id='%d' "+
+                "ORDER BY id LIMIT %d", careerId, limit),
+            CHAT_GROUP_ROW_MAPPER
         );
     }
 
@@ -45,4 +55,5 @@ public class ChatGroupDaoJdbc implements ChatGroupDao{
                 CHAT_GROUP_ROW_MAPPER
         ).stream().findFirst();
     }
+
 }

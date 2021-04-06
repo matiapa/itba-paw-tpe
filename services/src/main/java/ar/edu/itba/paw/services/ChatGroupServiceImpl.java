@@ -13,13 +13,20 @@ public class ChatGroupServiceImpl implements ChatGroupService{
 
     @Autowired
     ChatGroupDao chatGruopDao;
+
     @Override
     public List<ChatGroup> findByCareer(int careerId) {
         return chatGruopDao.findByCareer(careerId);
     }
 
     @Override
+    public List<ChatGroup> findByCareer(int careerId, int limit) {
+        return chatGruopDao.findByCareer(careerId, limit);
+    }
+
+    @Override
     public Optional<ChatGroup> findById(String id) {
         return chatGruopDao.findById(id);
     }
+
 }

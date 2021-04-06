@@ -28,7 +28,7 @@
     <org.postgresql.version>42.2.5</org.postgresql.version>
     <org.junit.version>4.13.2</org.junit.version>
     <org.mockito.version>2.25.1</org.mockito.version>
-    <org.hsqldb.version>2.3.1</org.hsqldb.version>
+    <org.hsqldb.version>2.5.1</org.hsqldb.version>
   </properties>
 
   <dependencyManagement>

@@ -63,10 +63,10 @@ public class CareerController {
         ));
 
         mav.addObject("courses",
-                courseService.findByCareer(career.getId()));
+                courseService.findByCareer(career.getId(), 4));
 
         mav.addObject("chat_groups",
-                chatGroupService.findByCareer(career.getId()));
+                chatGroupService.findByCareer(career.getId(), 4));
 
         mav.addObject("announcements",
                 announcementService.findByCareer(career.getId()));

@@ -18,19 +18,25 @@ public class CourseServiceImpl implements CourseService {
     @Autowired
     UserService userService;
 
+
     @Override
     public List<Course> findFavourites() throws LoginRequiredException {
-        if(userService.isLogged()){
-            int userId = userService.getLoggedID();
-            return courseDao.findFavourites(userId);
-        }else{
-            throw new LoginRequiredException();
-        }
+        return courseDao.findFavourites(userService.getLoggedID());
+    }
+
+    @Override
+    public List<Course> findFavourites(int limit) throws LoginRequiredException {
+        return courseDao.findFavourites(userService.getLoggedID(), limit);
     }
 
     @Override
     public List<Course> findByCareer(int careerId) {
         return courseDao.findByCareer(careerId);
+    }
+
+    @Override
+    public List<Course> findByCareer(int careerId, int limit) {
+        return courseDao.findByCareer(careerId, limit);
     }
 
     @Override

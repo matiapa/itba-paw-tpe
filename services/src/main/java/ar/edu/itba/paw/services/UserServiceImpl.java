@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.exceptions.LoginRequiredException;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.persistence.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +20,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public int getLoggedID() {
-        throw new RuntimeException("Unimplemented method");
+    public int getLoggedID() throws LoginRequiredException {
+        if(! isLogged())
+            throw new LoginRequiredException();
+        else
+            throw new RuntimeException("Unimplemented method");
     }
 
     @Override

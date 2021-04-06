@@ -9,5 +9,8 @@ public interface ChatGroupDao {
 
     List<ChatGroup> findByCareer(int careerId);
 
+    List<ChatGroup> findByCareer(int careerId, int limit);
+
     Optional<ChatGroup> findById(String id);
+
 }

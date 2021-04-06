@@ -67,7 +67,7 @@ public class CourseController {
 
         mav.addObject("announcements", announcementService.findByCourse(course.getId()));
 
-        mav.addObject("contents", contentService.findByCourse(course.getId()));
+        mav.addObject("contents", contentService.findByCourse(course.getId(), 4));
 
         return mav;
     }
