@@ -7,7 +7,7 @@
     <div class="col">
 
         <c:if test="${panels[0] != null}">
-            <div class="container" style="height: 150px;">
+            <div class="container" style="height: 150px; overflow: hidden">
                 <div class="row align-items-center">
                     <div class="col">
                         <h4>${panels[0].title}</h4>
@@ -19,7 +19,7 @@
                     </c:if>
                 </div>
 
-                <div class="mt-3">
+                <div class="col mt-3">
                     <jsp:include page="${panels[0].viewName}"/>
                 </div>
             </div>
@@ -28,7 +28,7 @@
         </c:if>
 
         <c:if test="${panels[1] != null}">
-            <div class="container" style="height: 150px;">
+            <div class="container" style="height: 150px; overflow: hidden">
                 <div class="row">
                     <div class="col">
                         <h4>${panels[1].title}</h4>
@@ -40,7 +40,7 @@
                     </c:if>
                 </div>
 
-                <div class="mt-3">
+                <div class="col mt-3">
                     <jsp:include page="${panels[1].viewName}"/>
                 </div>
             </div>
@@ -49,7 +49,7 @@
         </c:if>
 
         <c:if test="${panels[2] != null}">
-            <div class="container" style="height: 300px;">
+            <div class="container">
                 <div class="row">
                     <div class="col">
                         <h4>${panels[2].title}</h4>
@@ -61,7 +61,7 @@
                     </c:if>
                 </div>
 
-                <div class="mt-3">
+                <div class="col mt-3">
                     <jsp:include page="${panels[2].viewName}"/>
                 </div>
             </div>
@@ -70,7 +70,8 @@
     </div>
 
     <c:if test="${panels[3] != null}">
-        <div class="col-xl-7" style="border-width: 1px;border-color: rgb(229,229,229);border-left-style: solid;">
+        <div class="col-xl-7" style="border-width: 1px; border-color: rgb(229,229,229);
+            border-left-style: solid;">
             <div class="row">
                 <div class="col">
                     <h4><c:out value="${panels[3].title}"/></h4>
