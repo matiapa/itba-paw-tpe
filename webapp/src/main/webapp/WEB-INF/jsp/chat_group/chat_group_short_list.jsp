@@ -6,7 +6,7 @@
     <div class="col mb-2">
         <a class="badge badge-pill badge-primary" style="padding: 7px 10px;"
         href="<c:url value="/groups/byId?id=${group.id}"/>">
-            <c:out value="${group.link}"/>
+            <c:out value="${group.name}"/>
         </a>
     </div>
 </c:forEach>
