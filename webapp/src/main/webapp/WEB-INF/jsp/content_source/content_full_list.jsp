@@ -3,6 +3,7 @@
 
 
 
+
 <c:forEach var="content" items="${contents}">
 
     <li class="card mr-4 mb-4 p-3">
@@ -11,12 +12,21 @@
                 <div class="col">
                     <h5 class="text-primary"><c:out value="${content.name}"/></h5>
                 </div>
-                <div class="text-right">
-                    <a href="<c:out value='${content.link}'/>">
-                        Go To Source
-                    </a>
+                <div class="col text-right">
+                    <div class="text-right">
+                        <a href="<c:out value='${content.link}'/>">
+                               Go To Source
+                        </a>
+                    </div>
                 </div>
+
             </div>
+
+            <p>Description:
+            <c:out value='${content.description}'/>
+            </p>
+
+
         </div>
     </li>
 

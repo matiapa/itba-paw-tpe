@@ -30,7 +30,8 @@ public class ContentDaojdbc implements ContentDao{
                     rs.getString("course_id"),
                     rs.getString("name"),
                     rs.getString("submitted_by"), // OJO aca TODO hacer la busqueda del nombre del usuario en vez del id
-                    rs.getString("link")
+                    rs.getString("link"),
+                    rs.getString("description")
 
 //                    rs.getString("career_id"),
             );
