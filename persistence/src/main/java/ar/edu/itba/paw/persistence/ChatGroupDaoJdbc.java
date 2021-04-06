@@ -34,8 +34,17 @@ public class ChatGroupDaoJdbc implements ChatGroupDao{
     @Override
     public List<ChatGroup> findByCareer(int careerId) {
         return jdbcTemplate.query(
-                String.format("SELECT * FROM chat_group WHERE career_id='%d'", careerId),
-                CHAT_GROUP_ROW_MAPPER
+            String.format("SELECT * FROM chat_group WHERE career_id='%d'", careerId),
+            CHAT_GROUP_ROW_MAPPER
+        );
+    }
+
+    @Override
+    public List<ChatGroup> findByCareer(int careerId, int limit) {
+        return jdbcTemplate.query(
+            String.format("SELECT * FROM chat_group WHERE career_id='%d' "+
+                "ORDER BY id LIMIT %d", careerId, limit),
+            CHAT_GROUP_ROW_MAPPER
         );
     }
 
@@ -46,4 +55,5 @@ public class ChatGroupDaoJdbc implements ChatGroupDao{
                 CHAT_GROUP_ROW_MAPPER
         ).stream().findFirst();
     }
+
 }

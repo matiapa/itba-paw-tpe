@@ -24,43 +24,38 @@ public class ContentDaojdbc implements ContentDao{
     }
 
     private static final RowMapper<Content> CONTENT_ROW_MAPPER = (rs, rowNum) ->
-            new Content(
-                    rs.getInt("id"),
-//
-                    rs.getString("course_id"),
-                    rs.getString("name"),
-                    rs.getString("submitted_by"), // OJO aca TODO hacer la busqueda del nombre del usuario en vez del id
-                    rs.getString("link"),
-                    rs.getString("description")
-
-//                    rs.getString("career_id"),
-            );
-
-
-
-
-
-//    @Override
-//    public List<Content> findByCareer(int careerId) {
-//        return jdbcTemplate.query(
-//                String.format("SELECT * FROM content_source WHERE career_id='%d'", careerId),
-//                CONTENT_ROW_MAPPER
-//        );
-//    }
+        new Content(
+            rs.getInt("id"),
+            rs.getString("course_id"),
+            rs.getString("name"),
+            rs.getString("submitted_by"), // OJO aca TODO hacer la busqueda del nombre del usuario en vez del id
+            rs.getString("link"),
+            rs.getString("description")
+        );
 
     @Override
-    public  List<Content> findByCourse(String courseId){
+    public  List<Content> findByCourse(String courseId) {
         return jdbcTemplate.query(
-                String.format("SELECT * FROM content_source WHERE course_id='%s'", courseId),
-                CONTENT_ROW_MAPPER
+            String.format("SELECT * FROM content_source WHERE course_id='%s'", courseId),
+            CONTENT_ROW_MAPPER
+        );
+    }
+
+    @Override
+    public  List<Content> findByCourse(String courseId, int limit){
+        return jdbcTemplate.query(
+            String.format("SELECT * FROM content_source WHERE course_id='%s' "+
+                "ORDER BY id LIMIT %d", courseId, limit),
+            CONTENT_ROW_MAPPER
         );
     }
 
     @Override
     public Optional<Content> findById(String id) {
         return jdbcTemplate.query(
-                String.format("SELECT * FROM content_source WHERE id='%s'", id),
-                CONTENT_ROW_MAPPER
+            String.format("SELECT * FROM content_source WHERE id='%s'", id),
+            CONTENT_ROW_MAPPER
         ).stream().findFirst();
     }
+
 }

@@ -34,8 +34,17 @@ public class CourseDaoJdbc implements CourseDao {
     @Override
     public List<Course> findFavourites(int userId) {
         return jdbcTemplate.query(
-            "SELECT * FROM fav_course JOIN course ON course_id=id" +
-                " WHERE user_id="+userId,
+            String.format("SELECT * FROM fav_course JOIN course ON course_id=id " +
+                "WHERE user_id=%d", userId),
+            COURSE_ROW_MAPPER
+        );
+    }
+
+    @Override
+    public List<Course> findFavourites(int userId, int limit) {
+        return jdbcTemplate.query(
+            String.format("SELECT * FROM fav_course JOIN course ON course_id=id " +
+                "WHERE user_id=%d ORDER BY id LIMIT %d", userId, limit),
             COURSE_ROW_MAPPER
         );
     }
@@ -43,8 +52,17 @@ public class CourseDaoJdbc implements CourseDao {
     @Override
     public List<Course> findByCareer(int careerId) {
         return jdbcTemplate.query(
-            String.format("SELECT * FROM course JOIN career_course ON id = course_id " +
-                    "WHERE career_id='%d'", careerId),
+            String.format("SELECT * FROM course JOIN career_course ON id=course_id " +
+                "WHERE career_id='%d'", careerId),
+            COURSE_ROW_MAPPER
+        );
+    }
+
+    @Override
+    public List<Course> findByCareer(int careerId, int limit) {
+        return jdbcTemplate.query(
+            String.format("SELECT * FROM course JOIN career_course ON id=course_id " +
+                "WHERE career_id='%d' ORDER BY id LIMIT %d", careerId, limit),
             COURSE_ROW_MAPPER
         );
     }

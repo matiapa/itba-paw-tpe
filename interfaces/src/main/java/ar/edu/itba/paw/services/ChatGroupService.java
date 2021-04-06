@@ -6,7 +6,11 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ChatGroupService {
+
     List<ChatGroup> findByCareer(int careerId);
 
+    List<ChatGroup> findByCareer(int careerId, int limit);
+
     Optional<ChatGroup> findById(String id);
+
 }

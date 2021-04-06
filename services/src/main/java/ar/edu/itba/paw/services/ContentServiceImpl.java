@@ -13,18 +13,20 @@ public class ContentServiceImpl implements ContentService{
 
     @Autowired
     ContentDao contentDao;
-//    @Override
-//    public List<Content> findByCareer(int careerId) {
-//        return contentDao.findByCareer(careerId);
-//    }
 
     @Override
     public  List<Content> findByCourse(String courseId){
-        return  contentDao.findByCourse(courseId);
+        return contentDao.findByCourse(courseId);
+    }
+
+    @Override
+    public List<Content> findByCourse(String courseId, int limit) {
+        return contentDao.findByCourse(courseId, limit);
     }
 
     @Override
     public Optional<Content> findById(String id) {
         return contentDao.findById(id);
     }
+
 }

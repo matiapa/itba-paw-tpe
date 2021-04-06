@@ -6,9 +6,11 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ContentDao {
-    //    List<Content> findByCareer(int careerId);
 
     List<Content> findByCourse(String courseId);
 
+    List<Content> findByCourse(String courseId, int limit);
+
     Optional<Content> findById(String id);
+
 }
