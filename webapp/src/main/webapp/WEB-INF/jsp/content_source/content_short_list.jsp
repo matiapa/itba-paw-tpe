@@ -3,13 +3,20 @@
 
 <jsp:useBean id="contents" scope="request" type="java.util.List"/>
 
-<c:forEach var="content" items="${contents}">
+<c:if test= "${empty contents}">
+    <a>No hay contenido disponible</a>
+</c:if>
 
-    <div class="col mb-2">
-        <a class="badge badge-pill badge-primary" style="padding: 7px 10px;"
-           href="<c:out value='${content.link}'/>">
-            <c:out value="${content.name}"/>
-        </a>
-    </div>
+<c:if test= "${!empty contents}">
+    <c:forEach var="content" items="${contents}">
 
-</c:forEach>
+        <div class="col mb-2">
+            <a class="badge badge-pill badge-primary" style="padding: 7px 10px;"
+               href="<c:out value='${content.link}'/>">
+                <c:out value="${content.name}"/>
+            </a>
+        </div>
+
+    </c:forEach>
+</c:if>
+
