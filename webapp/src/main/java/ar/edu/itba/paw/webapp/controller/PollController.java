@@ -97,4 +97,20 @@ public class PollController {
         mav.addObject("polls", pollService.findByCourse(courseId));
         return mav;
     }
+
+    @RequestMapping("polls/general")
+    public ModelAndView getGeneralPolls()
+    {
+        ModelAndView mav = new BaseMav(
+            "Encuestas generales",
+            "poll/poll_full_list.jsp",
+            Arrays.asList(
+                new NavigationItem("Home", "/"),
+                new NavigationItem("Encuestas", "/polls/general")
+            )
+        );
+
+        mav.addObject("polls", pollService.findGeneral());
+        return mav;
+    }
 }

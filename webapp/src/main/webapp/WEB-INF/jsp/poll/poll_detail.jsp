@@ -7,16 +7,12 @@
     <p style="font-size: 14px;"><em><c:out value="Publicado por ${poll.submittedBy.name} el 01/01/1970. Finaliza en 48 horas"/></em></p>
 </div>
 <form>
-    <ul class="list-group">
-        <li class="list-group-item">
-            <div class="form-check"><input class="form-check-input" type="radio" id="poll-radio1" name="option"><label class="form-check-label" for="poll-radio1">Option 1</label></div>
-        </li>
-        <li class="list-group-item">
-            <div class="form-check"><input class="form-check-input" type="radio" id="poll-radio-2" name="option"><label class="form-check-label" for="poll-radio2">Option 2</label></div>
-        </li>
-        <li class="list-group-item">
-            <div class="form-check"><input class="form-check-input" type="radio" id="poll-radio-3" name="option"><label class="form-check-label" for="poll-radio3">Option 3</label></div>
-        </li>
+    <ul class="list-group" style="margin-left: 20px;">
+        <c:forEach var="option" items="${poll.options}">
+            <li class="list-group-item">
+                <div class="form-check"><input class="form-check-input" type="radio" id="poll-option-${option.id}" name="option"><label class="form-check-label" for="poll-option-${option.id}">${option.value}</label></div>
+            </li>
+        </c:forEach>
     </ul>
     <button class="btn btn-primary poll-headers" type="button" style="margin-left: 20px;margin-top: 15px;">Enviar</button>
 </form>

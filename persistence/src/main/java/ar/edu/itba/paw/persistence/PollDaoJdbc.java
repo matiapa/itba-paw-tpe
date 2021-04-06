@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import ar.edu.itba.paw.models.Poll;
+import ar.edu.itba.paw.models.Poll.PollOption;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -25,14 +26,24 @@ public class PollDaoJdbc implements PollDao {
         this.jdbcTemplate = new JdbcTemplate(ds);
     }
 
-    private final RowMapper<Poll> rowMapper = (rs, rowNum) ->
-        new Poll(
-            rs.getInt("id"),
+    private final RowMapper<Poll> rowMapper = (rs, rowNum) -> {
+        int id = rs.getInt("id");
+        return new Poll(
+            id,
             rs.getString("name"),
             rs.getString("description"),
             rs.getDate("creation_date"),
             rs.getDate("expiry_date"),
-            userDao.findById(rs.getInt("submitted_by")).get()
+            userDao.findById(rs.getInt("submitted_by")).get(),
+            getOptions(id)
+        );
+    };
+        
+
+    private final RowMapper<PollOption> optionMapper = (rs, rowNum) ->
+        new PollOption(
+            rs.getInt("option_id"),
+            rs.getString("option_value")
         );
 
     @Override
@@ -64,6 +75,13 @@ public class PollDaoJdbc implements PollDao {
         return jdbcTemplate.query(
             "SELECT * FROM poll WHERE career_id IS NULL AND course_id IS NULL",
             rowMapper
+        );
+    }
+
+    private List<PollOption> getOptions(int pollId) {
+        return jdbcTemplate.query(
+            String.format("SELECT * FROM poll_option WHERE poll_id='%d'", pollId),
+            optionMapper
         );
     }
 }

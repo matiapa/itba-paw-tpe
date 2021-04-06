@@ -52,7 +52,7 @@ public class HomeController {
             new Panel("Tus cursos favoritos", "/courses/favourites",
                     favCoursesView),
 
-            new Panel("Encuestas generales", "",
+            new Panel("Encuestas generales", "/polls/general",
                     "poll/poll_short_list.jsp"),
 
             new Panel("Anuncios generales", "",
