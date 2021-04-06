@@ -3,7 +3,12 @@
 
 <jsp:useBean id="contents" scope="request" type="java.util.List"/>
 
-<c:forEach var="content" items="${contents}">
+<c:if test= "${empty contents}">
+    <a>No hay contenido disponible</a>
+</c:if>
+
+<c:if test= "${!empty contents}">
+    <c:forEach var="content" items="${contents}">
 
     <div class="row mb-2">
         <a class="badge badge-pill badge-primary" style="padding: 7px 10px;"
@@ -12,4 +17,6 @@
         </a>
     </div>
 
-</c:forEach>
+    </c:forEach>
+</c:if>
+
