@@ -14,8 +14,7 @@ import java.util.Optional;
 @Repository
 public class CourseDaoJdbc implements CourseDao {
 
-    @Autowired
-    private DataSource ds;
+    @Autowired private DataSource ds;
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -74,4 +73,5 @@ public class CourseDaoJdbc implements CourseDao {
             COURSE_ROW_MAPPER
         ).stream().findFirst();
     }
+
 }

@@ -12,14 +12,14 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class ContentDaojdbc implements ContentDao{
+public class ContentDaoJdbc implements ContentDao{
 
-    @Autowired
-    private DataSource ds;
+    @Autowired private DataSource ds;
 
     private final JdbcTemplate jdbcTemplate;
+
     @Autowired
-    public ContentDaojdbc(DataSource ds){
+    public ContentDaoJdbc(DataSource ds){
         this.jdbcTemplate = new JdbcTemplate(ds);
     }
 
@@ -34,7 +34,7 @@ public class ContentDaojdbc implements ContentDao{
         );
 
     @Override
-    public  List<Content> findByCourse(String courseId) {
+    public List<Content> findByCourse(String courseId) {
         return jdbcTemplate.query(
             String.format("SELECT * FROM content_source WHERE course_id='%s'", courseId),
             CONTENT_ROW_MAPPER
@@ -42,7 +42,7 @@ public class ContentDaojdbc implements ContentDao{
     }
 
     @Override
-    public  List<Content> findByCourse(String courseId, int limit){
+    public List<Content> findByCourse(String courseId, int limit){
         return jdbcTemplate.query(
             String.format("SELECT * FROM content_source WHERE course_id='%s' "+
                 "ORDER BY id LIMIT %d", courseId, limit),

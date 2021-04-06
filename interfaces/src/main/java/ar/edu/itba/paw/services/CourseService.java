@@ -7,9 +7,6 @@ import java.util.Optional;
 
 public interface CourseService {
 
-    /** @return List of the favourite courses of the user
-     *  @throws LoginRequiredException  If there is no user logged in */
-
     List<Course> findFavourites() throws LoginRequiredException;
 
     List<Course> findFavourites(int limit) throws LoginRequiredException;

@@ -13,8 +13,8 @@ import java.util.Optional;
 @Repository
 public class ChatGroupDaoJdbc implements ChatGroupDao{
 
-    @Autowired
-    private DataSource ds;
+    @Autowired private DataSource ds;
+
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired

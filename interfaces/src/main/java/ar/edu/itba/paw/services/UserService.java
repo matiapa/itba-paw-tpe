@@ -8,6 +8,9 @@ public interface UserService {
 
     boolean isLogged();
 
+    /** @return ID of the currently logged user
+     *  @throws LoginRequiredException  If there is no user logged in */
+
     int getLoggedID() throws LoginRequiredException;
 
     Optional<User> getById(int id);

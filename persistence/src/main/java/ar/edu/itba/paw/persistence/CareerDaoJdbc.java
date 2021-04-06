@@ -13,8 +13,8 @@ import java.util.Optional;
 
 @Repository
 public class CareerDaoJdbc implements CareerDao{
-    @Autowired
-    private DataSource ds;
+
+    @Autowired private DataSource ds;
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -58,4 +58,5 @@ public class CareerDaoJdbc implements CareerDao{
             "SELECT * FROM career", CAREER_ROW_MAPPER
         );
     }
+
 }

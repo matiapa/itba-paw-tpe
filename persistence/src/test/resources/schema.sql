@@ -1,3 +1,5 @@
+-------------------- App-generated entities --------------------
+
 CREATE TABLE career(
     id      int,
     name    varchar(100) not null,
@@ -8,10 +10,17 @@ CREATE TABLE career(
 CREATE TABLE course(
     id          varchar(100),
     name        varchar(100) not null,
-    career_id   int not null,
 
-    PRIMARY KEY (id),
-    FOREIGN KEY (career_id) REFERENCES career ON DELETE RESTRICT
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE career_course(
+   career_id   int,
+   course_id   varchar(100),
+
+   PRIMARY KEY (career_id, course_id),
+   FOREIGN KEY (career_id) REFERENCES career ON DELETE CASCADE,
+   FOREIGN KEY (course_id) REFERENCES course ON DELETE CASCADE
 );
 
 CREATE TABLE users(
@@ -34,14 +43,48 @@ CREATE TABLE fav_course(
     FOREIGN KEY (user_id) REFERENCES users ON DELETE CASCADE
 );
 
-CREATE TABLE chat_group(
+
+-------------------- User-generated entities --------------------
+
+CREATE TABLE chat_group(                -- Whatsapp/Discord
+   id              int,
+   career_id       int not null,
+   creation_date   date not null,      -- Yr/Qt of the comission
+   name            varchar(100) not null,
+   link            varchar(100) not null,
+   submitted_by    int not null,
+
+   PRIMARY KEY (id),
+   FOREIGN KEY (career_id) REFERENCES career ON DELETE CASCADE,
+   FOREIGN KEY (submitted_by) REFERENCES users ON DELETE RESTRICT
+);
+
+CREATE TABLE content_source(            -- Drive/Reddit
+   id              int,
+   course_id       varchar(100) not null,
+   name            varchar(100) not null,
+   description     varchar(100) not null,
+   link            varchar(100) not null,
+   submitted_by    int not null,
+
+   PRIMARY KEY (id),
+   FOREIGN KEY (course_id) REFERENCES course ON DELETE CASCADE,
+   FOREIGN KEY (submitted_by) REFERENCES users ON DELETE RESTRICT
+);
+
+CREATE TABLE announcement(
     id              int,
-    career_id       int not null,
-    submitted_by    int,
-    creation_date   date not null,
-    link            varchar not null,
+    title           varchar(100) not null,
+    summary         varchar(100) not null,
+    content         varchar(100) not null,
+    career_id       int,
+    course_id       varchar(100),
+    creation_date   date not null default now(),
+    expiry_date     date,
+    submitted_by    int not null,
 
     PRIMARY KEY (id),
     FOREIGN KEY (career_id) REFERENCES career ON DELETE CASCADE,
-    FOREIGN KEY (submitted_by) REFERENCES users ON DELETE SET NULL
+    FOREIGN KEY (course_id) REFERENCES course ON DELETE CASCADE,
+    FOREIGN KEY (submitted_by) REFERENCES users ON DELETE RESTRICT
 );
