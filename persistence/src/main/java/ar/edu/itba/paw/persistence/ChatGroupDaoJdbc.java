@@ -23,12 +23,13 @@ public class ChatGroupDaoJdbc implements ChatGroupDao{
     }
 
     private static final RowMapper<ChatGroup> CHAT_GROUP_ROW_MAPPER = (rs, rowNum) ->
-            new ChatGroup(
-                    rs.getString("id"),
-                    rs.getString("career_id"),
-                    rs.getString("name"),
-                    rs.getString("link")
-            );
+        new ChatGroup(
+            rs.getString("id"),
+            rs.getString("career_id"),
+            rs.getString("name"),
+            rs.getString("link"),
+            rs.getDate("creation_date")
+        );
 
     @Override
     public List<ChatGroup> findByCareer(int careerId) {

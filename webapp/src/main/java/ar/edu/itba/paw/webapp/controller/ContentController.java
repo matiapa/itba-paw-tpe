@@ -85,7 +85,7 @@ public class ContentController {
         modelAndView.addObject("navigationHistory", Arrays.asList(
                 new NavigationItem("Home", "/"),
                 new NavigationItem(course.getName(), "/courses/byId?id="+ course.getId()),
-                new NavigationItem("Contents of " + course.getName(),
+                new NavigationItem("Contenido de " + course.getName(),
                         "/contents/byCourse?courseId="+course.getId())
         ));
         modelAndView.addObject("contentViewName", "content_source/content_full_list.jsp");

@@ -12,21 +12,21 @@
                 <div class="col">
                     <h5 class="text-primary"><c:out value="${content.name}"/></h5>
                 </div>
+            </div>
+
+            <div class="row align-items-center mt-1">
+                <div class="col">
+                    <c:out value='${content.description}'/>
+                </div>
                 <div class="col text-right">
                     <div class="text-right">
                         <a href="<c:out value='${content.link}'/>">
-                               Go To Source
+                            Ir a la fuente
                         </a>
                     </div>
                 </div>
 
             </div>
-
-            <p>Description:
-            <c:out value='${content.description}'/>
-            </p>
-
-
         </div>
     </li>
 
