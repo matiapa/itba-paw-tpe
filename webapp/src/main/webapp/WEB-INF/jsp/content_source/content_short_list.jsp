@@ -10,12 +10,12 @@
 <c:if test= "${!empty contents}">
     <c:forEach var="content" items="${contents}">
 
-        <div class="col mb-2">
-            <a class="badge badge-pill badge-primary" style="padding: 7px 10px;"
-               href="<c:out value='${content.link}'/>">
-                <c:out value="${content.name}"/>
-            </a>
-        </div>
+    <div class="row mb-2">
+        <a class="badge badge-pill badge-primary" style="padding: 7px 10px;"
+           href="<c:out value='${content.link}'/>">
+            <c:out value="${content.name}"/>
+        </a>
+    </div>
 
     </c:forEach>
 </c:if>

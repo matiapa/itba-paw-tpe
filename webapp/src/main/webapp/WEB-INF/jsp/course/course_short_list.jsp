@@ -5,7 +5,7 @@
 
 <c:forEach var="course" items="${courses}">
 
-    <div class="col mb-2">
+    <div class="row mb-2">
         <a class="badge badge-pill badge-primary" style="padding: 7px 10px;"
            href="<c:url value="/courses/byId?id=${course.id}"/>">
             <c:out value="${course.name}"/>
