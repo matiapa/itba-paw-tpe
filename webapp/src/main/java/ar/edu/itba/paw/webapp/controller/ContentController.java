@@ -26,8 +26,6 @@ public class ContentController {
     @Autowired
     ContentService contentService;
 
-    @Autowired
-    CareerService careerService;
 
     @Autowired
     CourseService courseService;
@@ -65,8 +63,7 @@ public class ContentController {
 
     @RequestMapping("/contents/byCourse")
     public ModelAndView getContentsByCourse(
-            @RequestParam(name = "courseId") String courseId,
-            @RequestParam(name = "careerId") String careerId
+            @RequestParam(name = "courseId") String courseId
     ) {
         final ModelAndView modelAndView = new ModelAndView("main");
 
@@ -82,20 +79,14 @@ public class ContentController {
         }
         Course course = courseOptional.get();
 
-        Optional<Career> careerOptional = careerService.findById(Integer.parseInt(careerId));
-        if (!careerOptional.isPresent()){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Carrera no encontrada");
-        }
-        Career career = careerOptional.get();
 
 
         modelAndView.addObject("title", String.format("Contenidos de %s", course.getName()));
         modelAndView.addObject("navigationHistory", Arrays.asList(
                 new NavigationItem("Home", "/"),
-                new NavigationItem(career.getName(), "/careers/byId?id="+ career.getId()),
                 new NavigationItem(course.getName(), "/courses/byId?id="+ course.getId()),
                 new NavigationItem("Contents of " + course.getName(),
-                        "/contents/byCourse?careerId="+ career.getId()+"&courseId="+course.getId())
+                        "/contents/byCourse?courseId="+course.getId())
         ));
         modelAndView.addObject("contentViewName", "content_source/content_full_list.jsp");
         modelAndView.addObject("contents", contentService.findByCourse(course.getId()));
