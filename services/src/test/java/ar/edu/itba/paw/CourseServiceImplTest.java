@@ -21,7 +21,7 @@ import java.util.List;
 public class CourseServiceImplTest {
 
     @InjectMocks
-    private CourseServiceImpl courseService = new CourseServiceImpl();
+    private final CourseServiceImpl courseService = new CourseServiceImpl();
 
     @Mock private CourseDao courseDao;
     @Mock private UserService userService;

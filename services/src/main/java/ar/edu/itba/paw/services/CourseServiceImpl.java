@@ -13,10 +13,10 @@ import java.util.Optional;
 public class CourseServiceImpl implements CourseService {
 
     @Autowired
-    CourseDao courseDao;
+    private CourseDao courseDao;
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
 
     @Override

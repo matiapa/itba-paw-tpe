@@ -24,12 +24,12 @@ public class Announcement {
         return id;
     }
 
-    public User getUploader() {
-        return uploader;
-    }
-
     public String getTitle() {
         return title;
+    }
+
+    public User getUploader() {
+        return uploader;
     }
 
     public String getSummary() {
@@ -47,4 +47,5 @@ public class Announcement {
     public Date getExpiryDate() {
         return expiryDate;
     }
+
 }

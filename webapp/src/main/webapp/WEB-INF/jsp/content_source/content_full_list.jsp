@@ -1,6 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 
+<jsp:useBean type="java.util.List<ar.edu.itba.paw.models.Content>" scope="request" id="contents"/>
 
 <c:if test= "${empty contents}">
     <a>No hay contenido disponible</a>
@@ -28,7 +29,10 @@
                              </a>
                          </div>
                      </div>
+                 </div>
 
+                 <div class="font-weight-light mt-4">
+                     <c:out value="Publicado por ${content.submitter.name}"/>
                  </div>
              </div>
          </li>

@@ -10,7 +10,7 @@ import java.util.Collections;
 @Controller
 public class ErrorController{
 
-    @RequestMapping(value="/error/404")
+    @RequestMapping("/error/404")
     public ModelAndView error404(){
         final ModelAndView mav = new ModelAndView("main");
 

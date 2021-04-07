@@ -12,7 +12,7 @@ import java.util.Optional;
 public class AnnouncementServiceImpl implements AnnouncementService {
 
     @Autowired
-    AnnouncementDao announcementDao;
+    private AnnouncementDao announcementDao;
 
     @Override
     public List<Announcement> findGeneral() {

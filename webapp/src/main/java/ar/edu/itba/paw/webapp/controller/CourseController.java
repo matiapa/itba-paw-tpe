@@ -22,15 +22,13 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 @Controller
 public class CourseController {
 
-    @Autowired AnnouncementService announcementService;
+    @Autowired private AnnouncementService announcementService;
 
-    @Autowired CourseService courseService;
+    @Autowired private CourseService courseService;
 
-    @Autowired CareerService careerService;
+    @Autowired private CareerService careerService;
 
-    @Autowired ContentService contentService;
-
-    @Autowired UserService userService;
+    @Autowired private ContentService contentService;
 
 
     @RequestMapping("/courses/byId")
@@ -44,7 +42,7 @@ public class CourseController {
         Course course = courseOpt.get();
 
         final ModelAndView mav = new BaseMav(
-            ""+course.getName(),
+            course.getName(),
             "panels.jsp",
             Arrays.asList(
                 new NavigationItem("Home", "/"),
@@ -84,7 +82,7 @@ public class CourseController {
         Career career = careerOpt.get();
 
         final ModelAndView mav = new BaseMav(
-            ""+String.format("Cursos de %s", career.getName()),
+            String.format("Cursos de %s", career.getName()),
             "course/course_full_list.jsp",
             Arrays.asList(
                 new NavigationItem("Home", "/"),
