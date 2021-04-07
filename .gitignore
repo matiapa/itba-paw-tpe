@@ -5,6 +5,7 @@
 .settings/
 *.classpath
 *.launch
+**/.project
 
 # OS related
 .DS_Store
