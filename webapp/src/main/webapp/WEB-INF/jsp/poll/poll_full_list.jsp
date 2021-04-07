@@ -7,7 +7,11 @@
 <c:forEach var="poll" items="${polls}">
     <div class="card" style="margin: 10px;">
         <div class="card-body">
-            <h4 class="card-title"><c:url value="/polls/byId?id=${poll.id}"><c:out value="${poll.name}"/></c:url></h4>
+            <h4 class="card-title">
+                <a href="<c:url value="/polls/byId?id=${poll.id}"/>">
+                    <c:out value="${poll.name}"/>
+                </a>
+            </h4>
             <c:if test="${poll.description != null}"><h6 class="text-muted card-subtitle mb-2"><br><c:out value="${poll.description}"/><br><br></h6></c:if>
             <form>
                 <ul class="list-group list-group-flush">

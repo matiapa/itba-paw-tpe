@@ -8,7 +8,11 @@
     <c:forEach var="poll" items="${polls}">
         <li class="list-group-item poll-short">
             <form>
-                <h1><c:url value="/polls/byId?id=${poll.id}"><c:out value="${poll.name}"/></c:url></h1>
+                <h1>
+                    <a href="<c:url value="/polls/byId?id=${poll.id}"/>">
+                        <c:out value="${poll.name}"/>
+                    </a>
+                </h1>
                 <div class="form-row align-items-end">
                     <div class="col">
                         <ul class="list-group">
