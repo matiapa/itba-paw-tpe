@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.models;
 
 public class Career {
+
     private final int id;
     private final String name;
 
@@ -16,4 +17,5 @@ public class Career {
     public String getName() {
         return name;
     }
+
 }

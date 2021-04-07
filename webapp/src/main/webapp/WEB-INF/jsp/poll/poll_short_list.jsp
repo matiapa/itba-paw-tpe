@@ -1,12 +1,14 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 
+<jsp:useBean type="java.util.List<ar.edu.itba.paw.models.Poll>" scope="request" id="polls"/>
+
 <c:if test="${empty polls}">No hay encuestas abiertas en este momento</c:if>
 <ul class="list-group">
     <c:forEach var="poll" items="${polls}">
         <li class="list-group-item poll-short">
             <form>
-                <h1><a href="/polls/byId?id=${poll.id}"><c:out value="${poll.name}"/></a></h1>
+                <h1><c:url value="/polls/byId?id=${poll.id}"><c:out value="${poll.name}"/></c:url></h1>
                 <div class="form-row align-items-end">
                     <div class="col">
                         <ul class="list-group">

@@ -1,5 +1,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8"%>
+
+<jsp:useBean type="ar.edu.itba.paw.models.Poll" scope="request" id="poll"/>
+<jsp:useBean type="java.text.DateFormat" scope="request" id="creationFormat"/>
+<jsp:useBean type="java.text.DateFormat" scope="request" id="expiryFormat"/>
 
 <div style="margin-left: 20px;">
     <h1 class="text-primary"><c:out value="${poll.name}"/></h1>

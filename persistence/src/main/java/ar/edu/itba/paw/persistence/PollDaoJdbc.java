@@ -22,11 +22,6 @@ public class PollDaoJdbc implements PollDao {
 
     private final JdbcTemplate jdbcTemplate;
 
-    @Autowired
-    public PollDaoJdbc(DataSource ds) {
-        this.jdbcTemplate = new JdbcTemplate(ds);
-    }
-
     private final RowMapper<Poll> rowMapper = (rs, rowNum) -> {
         int id = rs.getInt("id");
         Optional<User> optUser = userDao.findById(rs.getInt("submitted_by"));
@@ -36,17 +31,22 @@ public class PollDaoJdbc implements PollDao {
             rs.getString("description"),
             rs.getTimestamp("creation_date"),
             rs.getTimestamp("expiry_date"),
-            optUser.isPresent() ? optUser.get() : null,
+            optUser.orElse(null),
             getOptions(id)
         );
     };
-        
 
     private final RowMapper<PollOption> optionMapper = (rs, rowNum) ->
         new PollOption(
             rs.getInt("option_id"),
             rs.getString("option_value")
         );
+
+
+    @Autowired
+    public PollDaoJdbc(DataSource ds) {
+        this.jdbcTemplate = new JdbcTemplate(ds);
+    }
 
     @Override
     public List<Poll> findByCareer(int careerId) {

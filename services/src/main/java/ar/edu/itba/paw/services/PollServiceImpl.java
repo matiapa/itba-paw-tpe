@@ -11,8 +11,9 @@ import ar.edu.itba.paw.persistence.PollDao;
 
 @Service
 public class PollServiceImpl implements PollService {
+
     @Autowired
-    PollDao pollDao;
+    private PollDao pollDao;
 
     @Override
     public List<Poll> findByCareer(int careerId) {
@@ -33,4 +34,5 @@ public class PollServiceImpl implements PollService {
     public List<Poll> findGeneral() {
         return pollDao.findGeneral();
     }
+
 }

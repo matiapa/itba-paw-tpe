@@ -129,6 +129,9 @@
             <excludeRoots>
               <excludeRoot>**/target/*</excludeRoot>
             </excludeRoots>
+            <rulesets>
+              <ruleset>./config/ruleset.xml</ruleset>
+            </rulesets>
           </configuration>
         </plugin>
 

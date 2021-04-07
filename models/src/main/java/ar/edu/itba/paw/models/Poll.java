@@ -66,4 +66,5 @@ public class Poll {
             return value;
         }
     }
+
 }
