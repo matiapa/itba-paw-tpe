@@ -30,7 +30,7 @@ public class CourseController {
 
     @Autowired private ContentService contentService;
 
-    @Autowired PollService pollService;
+    @Autowired private PollService pollService;
 
     @RequestMapping("/courses/byId")
     public ModelAndView getCourseById(
