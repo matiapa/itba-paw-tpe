@@ -3,10 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.exceptions.LoginRequiredException;
 import ar.edu.itba.paw.models.ui.NavigationItem;
 import ar.edu.itba.paw.models.ui.Panel;
-import ar.edu.itba.paw.services.AnnouncementService;
-import ar.edu.itba.paw.services.CareerService;
-import ar.edu.itba.paw.services.CourseService;
-import ar.edu.itba.paw.services.UserService;
+import ar.edu.itba.paw.services.*;
 import ar.edu.itba.paw.webapp.mav.BaseMav;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,7 +22,7 @@ public class HomeController {
 
     @Autowired private CareerService careerService;
 
-    @Autowired PollService pollService;
+    @Autowired private PollService pollService;
 
     @RequestMapping("/")
     public ModelAndView getDashboard() {

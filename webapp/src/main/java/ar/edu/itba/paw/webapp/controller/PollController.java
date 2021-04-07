@@ -24,14 +24,12 @@ import ar.edu.itba.paw.webapp.mav.BaseMav;
 
 @Controller
 public class PollController {
-    @Autowired
-    PollService pollService;
 
-    @Autowired
-    CareerService careerService;
+    @Autowired PollService pollService;
 
-    @Autowired
-    CourseService courseService;
+    @Autowired CareerService careerService;
+
+    @Autowired CourseService courseService;
 
     @RequestMapping("polls/byId")
     public ModelAndView getPollDetails(@RequestParam int id)

@@ -3,10 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.models.Career;
 import ar.edu.itba.paw.models.ui.NavigationItem;
 import ar.edu.itba.paw.models.ui.Panel;
-import ar.edu.itba.paw.services.AnnouncementService;
-import ar.edu.itba.paw.services.CareerService;
-import ar.edu.itba.paw.services.ChatGroupService;
-import ar.edu.itba.paw.services.CourseService;
+import ar.edu.itba.paw.services.*;
 import ar.edu.itba.paw.webapp.mav.BaseMav;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -31,7 +28,7 @@ public class CareerController {
 
     @Autowired private ChatGroupService chatGroupService;
 
-    @Autowired PollService pollService;
+    @Autowired private PollService pollService;
 
     @RequestMapping("careers/byId")
     public ModelAndView getCareerDetail(

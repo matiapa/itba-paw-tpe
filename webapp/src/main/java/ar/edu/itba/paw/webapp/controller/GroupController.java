@@ -19,11 +19,9 @@ import java.util.Optional;
 @Controller
 public class GroupController {
 
-    @Autowired
-    private ChatGroupService chatGroupService;
+    @Autowired private ChatGroupService chatGroupService;
 
-    @Autowired
-    private CareerService careerService;
+    @Autowired private CareerService careerService;
 
     @RequestMapping("/groups/byCareer")
     public ModelAndView getGroupsByCareer(
