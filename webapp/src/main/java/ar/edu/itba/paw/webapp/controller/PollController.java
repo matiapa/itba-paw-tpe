@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.text.DateFormat;
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.Optional;
 
 import ar.edu.itba.paw.models.Career;
@@ -47,6 +49,13 @@ public class PollController {
                 new NavigationItem(poll.getName(), "polls/byId?id=" + id)
             )
         );
+
+        Locale loc = new Locale("es", "AR");
+        DateFormat expiryFormat = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT, loc);
+        DateFormat creationFormat = DateFormat.getDateInstance(DateFormat.MEDIUM, loc);
+
+        mav.addObject("expiryFormat", expiryFormat);
+        mav.addObject("creationFormat", creationFormat);
         mav.addObject("poll", poll);
 
         return mav;

@@ -6,7 +6,7 @@
     <div class="card" style="margin: 10px;">
         <div class="card-body">
             <h4 class="card-title"><a href="/polls/byId?id=${poll.id}"><c:out value="${poll.name}"/></a></h4>
-            <h6 class="text-muted card-subtitle mb-2"><br><c:out value="${poll.description}"/><br><br></h6>
+            <c:if test="${poll.description != null}"><h6 class="text-muted card-subtitle mb-2"><br><c:out value="${poll.description}"/><br><br></h6></c:if>
             <form>
                 <ul class="list-group list-group-flush">
                     <c:forEach var="option" items="${poll.options}">

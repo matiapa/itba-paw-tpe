@@ -4,7 +4,15 @@
 <div style="margin-left: 20px;">
     <h1 class="text-primary"><c:out value="${poll.name}"/></h1>
     <p><c:out value="${poll.description}"/></p>
-    <p style="font-size: 14px;"><em><c:out value="Publicado por ${poll.submittedBy.name} el 01/01/1970. Finaliza en 48 horas"/></em></p>
+    <p style="font-size: 14px;"><em>
+        <c:if test="${poll.submittedBy != null}">
+            <c:out value="Publicado por ${poll.submittedBy.name} el ${creationFormat.format(poll.creationDate)}."/>
+        </c:if>
+        <c:if test="${poll.submittedBy == null}">
+            <c:out value="Creado el ${creationFormat.format(poll.creationDate)}."/>
+        </c:if>
+        <c:if test="${poll.expiryDate != null}">Finaliza ${expiryFormat.format(poll.expiryDate)}</c:if>
+    </em></p>
 </div>
 <form>
     <ul class="list-group" style="margin-left: 20px;">

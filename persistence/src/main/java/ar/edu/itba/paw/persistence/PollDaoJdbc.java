@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import ar.edu.itba.paw.models.Poll;
+import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.Poll.PollOption;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,13 +29,14 @@ public class PollDaoJdbc implements PollDao {
 
     private final RowMapper<Poll> rowMapper = (rs, rowNum) -> {
         int id = rs.getInt("id");
+        Optional<User> optUser = userDao.findById(rs.getInt("submitted_by"));
         return new Poll(
             id,
             rs.getString("name"),
             rs.getString("description"),
-            rs.getDate("creation_date"),
-            rs.getDate("expiry_date"),
-            userDao.findById(rs.getInt("submitted_by")).get(),
+            rs.getTimestamp("creation_date"),
+            rs.getTimestamp("expiry_date"),
+            optUser.isPresent() ? optUser.get() : null,
             getOptions(id)
         );
     };

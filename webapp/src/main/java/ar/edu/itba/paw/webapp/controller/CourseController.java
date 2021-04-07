@@ -59,7 +59,7 @@ public class CourseController {
             new Panel("Contenido", "/contents/byCourse?&courseId="+course.getId(),
                     "content_source/content_short_list.jsp"),
 
-            new Panel("Encuestas del curso", "/polls/byCourse?careerId="+course.getId(),
+            new Panel("Encuestas del curso", "/polls/byCourse?courseId="+course.getId(),
                     "poll/poll_short_list.jsp"),
 
             new Panel("Anuncios del curso", "",
