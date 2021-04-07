@@ -31,6 +31,7 @@ public class CareerController {
 
     @Autowired private ChatGroupService chatGroupService;
 
+    @Autowired PollService pollService;
 
     @RequestMapping("careers/byId")
     public ModelAndView getCareerDetail(
@@ -58,7 +59,7 @@ public class CareerController {
             new Panel("Grupos de chat", "/groups/byCareer?careerId="+career.getId(),
                     "chat_group/chat_group_short_list.jsp"),
 
-            new Panel("Encuestas de la carrera", "",
+            new Panel("Encuestas de la carrera", "/polls/byCareer?careerId="+career.getId(),
                     "poll/poll_short_list.jsp"),
 
             new Panel("Anuncios de la carrera", "",
@@ -73,6 +74,9 @@ public class CareerController {
 
         mav.addObject("announcements",
                 announcementService.findByCareer(career.getId()));
+
+        mav.addObject("polls", 
+                pollService.findByCareer(career.getId()));
 
         return mav;
     }

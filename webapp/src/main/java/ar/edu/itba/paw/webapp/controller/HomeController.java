@@ -25,6 +25,7 @@ public class HomeController {
 
     @Autowired private CareerService careerService;
 
+    @Autowired PollService pollService;
 
     @RequestMapping("/")
     public ModelAndView getDashboard() {
@@ -53,7 +54,7 @@ public class HomeController {
             new Panel("Tus cursos favoritos", "/courses/favourites",
                     favCoursesView),
 
-            new Panel("Encuestas generales", "",
+            new Panel("Encuestas generales", "/polls/general",
                     "poll/poll_short_list.jsp"),
 
             new Panel("Anuncios generales", "",
@@ -64,6 +65,7 @@ public class HomeController {
 
         mav.addObject("careers", careerService.findAll());
 
+        mav.addObject("polls", pollService.findGeneral());
         return mav;
     }
 

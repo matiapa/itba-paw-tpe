@@ -30,6 +30,7 @@ public class CourseController {
 
     @Autowired private ContentService contentService;
 
+    @Autowired PollService pollService;
 
     @RequestMapping("/courses/byId")
     public ModelAndView getCourseById(
@@ -56,7 +57,7 @@ public class CourseController {
             new Panel("Contenido", "/contents/byCourse?&courseId="+course.getId(),
                     "content_source/content_short_list.jsp"),
 
-            new Panel("Encuestas del curso", "",
+            new Panel("Encuestas del curso", "/polls/byCourse?courseId="+course.getId(),
                     "poll/poll_short_list.jsp"),
 
             new Panel("Anuncios del curso", "",
@@ -66,6 +67,8 @@ public class CourseController {
         mav.addObject("announcements", announcementService.findByCourse(course.getId()));
 
         mav.addObject("contents", contentService.findByCourse(course.getId(), 4));
+
+        mav.addObject("polls", pollService.findByCourse(course.getId()));
 
         return mav;
     }
