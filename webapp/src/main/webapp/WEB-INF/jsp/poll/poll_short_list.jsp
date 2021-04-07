@@ -17,7 +17,7 @@
                             </c:forEach>
                         </ul>
                     </div>
-                    <div class="col text-right"><button class="btn btn-primary" type="button">Enviar</button></div>
+                    <div class="col text-right flex-grow-0"><button class="btn btn-primary" type="button">Enviar</button></div>
                 </div>
             </form>
         </li>
