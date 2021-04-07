@@ -1,21 +1,20 @@
 package ar.edu.itba.paw;
 
-import ar.edu.itba.paw.models.Course;
 import ar.edu.itba.paw.models.ui.NavigationItem;
-import ar.edu.itba.paw.services.CourseServiceImpl;
 import ar.edu.itba.paw.services.NavigationServiceImpl;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 
 public class NavigationServiceImplTest {
 
     @InjectMocks
-    private NavigationServiceImpl navigationService = new NavigationServiceImpl();
+    private final NavigationServiceImpl navigationService = new NavigationServiceImpl();
 
     @Test
     public void testForwardNav(){
@@ -33,7 +32,7 @@ public class NavigationServiceImplTest {
     @Test
     public void testBackwardNav(){
 
-        List<NavigationItem> expectedHistory = Arrays.asList(
+        List<NavigationItem> expectedHistory = Collections.singletonList(
                 new NavigationItem("A", "/A")
         );
 

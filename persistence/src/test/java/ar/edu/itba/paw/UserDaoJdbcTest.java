@@ -27,9 +27,9 @@ public class UserDaoJdbcTest {
 
         Assert.assertTrue(userOptional.isPresent());
         User user = userOptional.get();
+
         Assert.assertEquals("User 1", user.getName());
         Assert.assertEquals(1, user.getId());
     }
-
 
 }

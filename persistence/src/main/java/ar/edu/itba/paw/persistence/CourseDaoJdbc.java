@@ -14,14 +14,7 @@ import java.util.Optional;
 @Repository
 public class CourseDaoJdbc implements CourseDao {
 
-    @Autowired private DataSource ds;
-
     private final JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    public CourseDaoJdbc(DataSource ds) {
-        this.jdbcTemplate = new JdbcTemplate(ds);
-    }
 
     private static final RowMapper<Course> COURSE_ROW_MAPPER = (rs, rowNum) ->
             new Course(
@@ -29,6 +22,10 @@ public class CourseDaoJdbc implements CourseDao {
                 rs.getString("name")
             );
 
+    @Autowired
+    public CourseDaoJdbc(DataSource ds) {
+        this.jdbcTemplate = new JdbcTemplate(ds);
+    }
 
     @Override
     public List<Course> findFavourites(int userId) {

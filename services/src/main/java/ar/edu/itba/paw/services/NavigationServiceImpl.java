@@ -9,14 +9,12 @@ import java.util.ArrayList;
 @Service
 public class NavigationServiceImpl implements NavigationService{
 
-    List<NavigationItem> navigationHistory = new ArrayList<>();
+    private List<NavigationItem> navigationHistory = new ArrayList<>();
 
-    @Override
     public List<NavigationItem> getHistory() {
         return navigationHistory;
     }
 
-    @Override
     public void registerPath(NavigationItem pathItem) {
 
         int pathItemPos = navigationHistory.indexOf(pathItem);

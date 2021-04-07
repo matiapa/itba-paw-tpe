@@ -3,43 +3,34 @@ package ar.edu.itba.paw.models;
 public class Content {
 
     private final int id;
-    private final String course_id,name,author,link,description;
+    private final String name, link, description;
+    private final User submitter;
 
-    public Content(int id, String course_id, String name, String author,String link,String description) {
+    public Content(int id, String name, String link, String description, User submitter) {
         this.id = id;
-//        this.career_id = career_id;
-        this.course_id = course_id;
         this.name = name;
-        this.author = author;
         this.link=link;
         this.description=description;
-    }
-
-    public String getLink() {
-        return link;
+        this.submitter = submitter;
     }
 
     public int getId() {
         return id;
     }
 
-//    public String getCareer_id() {
-//        return career_id;
-//    }
-
-    public String getCourse_id() {
-        return course_id;
-    }
-
     public String getName() {
         return name;
     }
 
-    public String getAuthor() {
-        return author;
+    public String getLink() {
+        return link;
     }
 
     public String getDescription() {
         return description;
+    }
+
+    public User getSubmitter() {
+        return submitter;
     }
 }

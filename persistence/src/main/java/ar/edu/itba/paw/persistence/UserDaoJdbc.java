@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.models.Course;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -14,21 +13,18 @@ import java.util.Optional;
 @Repository
 public class UserDaoJdbc implements UserDao {
 
-    @Autowired
-    private DataSource ds;
-
     private final JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    public UserDaoJdbc(DataSource ds) {
-        this.jdbcTemplate = new JdbcTemplate(ds);
-    }
 
     private static final RowMapper<User> USER_ROW_MAPPER = (rs, rowNum) ->
         new User(
             rs.getInt("id"),
             rs.getString("name")
         );
+
+    @Autowired
+    public UserDaoJdbc(DataSource ds) {
+        this.jdbcTemplate = new JdbcTemplate(ds);
+    }
 
     @Override
     public Optional<User> findById(int id) {

@@ -13,14 +13,7 @@ import java.util.Optional;
 @Repository
 public class ChatGroupDaoJdbc implements ChatGroupDao{
 
-    @Autowired private DataSource ds;
-
     private final JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    public ChatGroupDaoJdbc(DataSource ds){
-        this.jdbcTemplate = new JdbcTemplate(ds);
-    }
 
     private static final RowMapper<ChatGroup> CHAT_GROUP_ROW_MAPPER = (rs, rowNum) ->
         new ChatGroup(
@@ -30,6 +23,12 @@ public class ChatGroupDaoJdbc implements ChatGroupDao{
             rs.getString("link"),
             rs.getDate("creation_date")
         );
+
+    @Autowired
+    public ChatGroupDaoJdbc(DataSource ds){
+        this.jdbcTemplate = new JdbcTemplate(ds);
+    }
+
 
     @Override
     public List<ChatGroup> findByCareer(int careerId) {
@@ -48,7 +47,6 @@ public class ChatGroupDaoJdbc implements ChatGroupDao{
         );
     }
 
-    @Override
     public Optional<ChatGroup> findById(String id) {
         return jdbcTemplate.query(
                 String.format("SELECT * FROM chat_group WHERE id='%s'", id),

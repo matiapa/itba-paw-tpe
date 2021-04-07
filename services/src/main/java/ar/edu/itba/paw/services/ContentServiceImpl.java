@@ -6,13 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ContentServiceImpl implements ContentService{
 
     @Autowired
-    ContentDao contentDao;
+    private ContentDao contentDao;
 
     @Override
     public  List<Content> findByCourse(String courseId){
@@ -22,11 +21,6 @@ public class ContentServiceImpl implements ContentService{
     @Override
     public List<Content> findByCourse(String courseId, int limit) {
         return contentDao.findByCourse(courseId, limit);
-    }
-
-    @Override
-    public Optional<Content> findById(String id) {
-        return contentDao.findById(id);
     }
 
 }

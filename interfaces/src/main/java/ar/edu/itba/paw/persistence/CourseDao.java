@@ -1,5 +1,4 @@
 package ar.edu.itba.paw.persistence;
-import ar.edu.itba.paw.exceptions.LoginRequiredException;
 import ar.edu.itba.paw.models.Course;
 
 import java.util.List;

@@ -1,7 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8"%>
 
-<jsp:useBean id="courses" scope="request" type="java.util.List"/>
+<jsp:useBean type="java.util.List<ar.edu.itba.paw.models.Course>" scope="request" id="courses"/>
 
 <c:forEach var="course" items="${courses}">
 

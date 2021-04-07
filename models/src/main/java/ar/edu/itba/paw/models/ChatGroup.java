@@ -8,9 +8,9 @@ public class ChatGroup {
     private final String name, link;
     private final Date creationDate;
 
-    public ChatGroup(String id, String career_id, String name, String link, Date creationDate){
+    public ChatGroup(String id, String careerId, String name, String link, Date creationDate){
         this.id = id;
-        this.careerId = career_id;
+        this.careerId = careerId;
         this.name = name;
         this.link = link;
         this.creationDate = creationDate;
@@ -33,4 +33,5 @@ public class ChatGroup {
     public Date getCreationDate() {
         return creationDate;
     }
+
 }

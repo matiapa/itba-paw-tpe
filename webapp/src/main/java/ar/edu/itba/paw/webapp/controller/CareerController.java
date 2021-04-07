@@ -3,7 +3,10 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.models.Career;
 import ar.edu.itba.paw.models.ui.NavigationItem;
 import ar.edu.itba.paw.models.ui.Panel;
-import ar.edu.itba.paw.services.*;
+import ar.edu.itba.paw.services.AnnouncementService;
+import ar.edu.itba.paw.services.CareerService;
+import ar.edu.itba.paw.services.ChatGroupService;
+import ar.edu.itba.paw.services.CourseService;
 import ar.edu.itba.paw.webapp.mav.BaseMav;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,14 +23,15 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 @Controller
 public class CareerController {
 
-    @Autowired AnnouncementService announcementService;
+    @Autowired private AnnouncementService announcementService;
 
-    @Autowired CareerService careerService;
+    @Autowired private CareerService careerService;
 
-    @Autowired CourseService courseService;
+    @Autowired private CourseService courseService;
 
-    @Autowired ChatGroupService chatGroupService;
+    @Autowired private ChatGroupService chatGroupService;
 
+    @Autowired PollService pollService;
 
     @RequestMapping("careers/byId")
     public ModelAndView getCareerDetail(
@@ -40,7 +44,7 @@ public class CareerController {
         Career career = optionalCareer.get();
 
         final ModelAndView mav = new BaseMav(
-            ""+career.getName(),
+            career.getName(),
             "panels.jsp",
             Arrays.asList(
                 new NavigationItem("Home", "/"),
@@ -55,7 +59,7 @@ public class CareerController {
             new Panel("Grupos de chat", "/groups/byCareer?careerId="+career.getId(),
                     "chat_group/chat_group_short_list.jsp"),
 
-            new Panel("Encuestas de la carrera", "",
+            new Panel("Encuestas de la carrera", "/polls/byCareer?careerId="+career.getId(),
                     "poll/poll_short_list.jsp"),
 
             new Panel("Anuncios de la carrera", "",
@@ -70,6 +74,9 @@ public class CareerController {
 
         mav.addObject("announcements",
                 announcementService.findByCareer(career.getId()));
+
+        mav.addObject("polls", 
+                pollService.findByCareer(career.getId()));
 
         return mav;
     }

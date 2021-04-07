@@ -1,6 +1,5 @@
 package ar.edu.itba.paw;
 
-import org.hsqldb.Database;
 import org.hsqldb.jdbc.JDBCDriver;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

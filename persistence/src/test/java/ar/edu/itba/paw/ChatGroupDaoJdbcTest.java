@@ -11,7 +11,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,16 +25,19 @@ public class ChatGroupDaoJdbcTest {
     @Test
     public void testFindByCareer(){
         List<ChatGroup> chatGroups = chatGroupDaoJdbc.findByCareer(1);
+
         Assert.assertEquals(3, chatGroups.size());
         Assert.assertEquals("1", chatGroups.get(0).getId());
-        chatGroups = chatGroupDaoJdbc.findByCareer(1, 2);
-        Assert.assertTrue(chatGroups.size() <= 2);
 
+        chatGroups = chatGroupDaoJdbc.findByCareer(1, 2);
+
+        Assert.assertTrue(chatGroups.size() <= 2);
     }
 
     @Test
     public void testFindById(){
         Optional<ChatGroup> chatGroupOptional = chatGroupDaoJdbc.findById("1");
+
         Assert.assertTrue(chatGroupOptional.isPresent());
         Assert.assertEquals("1", chatGroupOptional.get().getId());
         Assert.assertEquals("1", chatGroupOptional.get().getCareerId());

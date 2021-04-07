@@ -1,5 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
+
+<jsp:useBean type="ar.edu.itba.paw.models.Announcement" scope="request" id="announcement"/>
 
 <ul class="list-group">
     <li class="list-group-item">
@@ -7,7 +9,8 @@
 
             <div class="row align-items-center">
                 <div class="col">
-                    <h5 class="text-primary"><c:out value="${announcement.title}"/></h5>
+                    <h5 class="text-primary">
+                    <c:out value="${announcement.title}"/></h5>
                 </div>
                 <div class="col text-right">
                     <c:out value="${announcement.uploadDate}"/>
@@ -28,8 +31,6 @@
                     </div>
                 </c:if>
             </div>
-
-
 
         </div>
     </li>

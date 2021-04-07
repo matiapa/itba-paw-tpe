@@ -39,7 +39,7 @@
             </div>
 
             <div class="col text-right align-self-center">
-                <img src="<c:url value="/assets/img/logo.png"/>" height="32">
+                <img alt="Logo del ITBA" src="<c:url value="/assets/img/logo.png"/>" height="32">
             </div>
 
         </div>

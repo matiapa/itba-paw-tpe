@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.models.Career;
-import ar.edu.itba.paw.models.ChatGroup;
 import ar.edu.itba.paw.models.ui.NavigationItem;
 import ar.edu.itba.paw.services.CareerService;
 import ar.edu.itba.paw.services.ChatGroupService;
@@ -21,10 +20,10 @@ import java.util.Optional;
 public class GroupController {
 
     @Autowired
-    ChatGroupService chatGroupService;
+    private ChatGroupService chatGroupService;
 
     @Autowired
-    CareerService careerService;
+    private CareerService careerService;
 
     @RequestMapping("/groups/byCareer")
     public ModelAndView getGroupsByCareer(
@@ -37,7 +36,7 @@ public class GroupController {
         Career career = careerOptional.get();
 
         final ModelAndView modelAndView = new BaseMav(
-            ""+String.format("Grupos de %s", career.getName()),
+            String.format("Grupos de %s", career.getName()),
             "chat_group/chat_group_full_list.jsp",
             Arrays.asList(
                 new NavigationItem("Home", "/"),

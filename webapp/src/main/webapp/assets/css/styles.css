@@ -1,0 +1,14 @@
+.poll-short .list-group-item {
+  border: none;
+  padding-top: 3px;
+  padding-bottom: 3px;
+}
+
+.poll-short .list-group-item label {
+  font-size: small;
+}
+
+.poll-short h1 {
+  font-size: large;
+}
+
