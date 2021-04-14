@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.exceptions.LoginRequiredException;
+import ar.edu.itba.paw.models.User;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -8,15 +9,16 @@ public class UserServiceImpl implements UserService {
 
     @SuppressWarnings("SameReturnValue")
     private boolean isLogged() {
-        return false;
+        return true;
     }
 
     @Override
-    public int getLoggedID() throws LoginRequiredException {
+    public User getUser() {
         if(isLogged())
-            throw new UnsupportedOperationException();
+            return new User(1, "Test User");
+//            throw new UnsupportedOperationException();
         else
-            throw new LoginRequiredException();
+            return null;
     }
 
 }

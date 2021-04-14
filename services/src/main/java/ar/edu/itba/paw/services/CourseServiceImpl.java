@@ -20,13 +20,18 @@ public class CourseServiceImpl implements CourseService {
 
 
     @Override
-    public List<Course> findFavourites() throws LoginRequiredException {
-        return courseDao.findFavourites(userService.getLoggedID());
+    public List<Course> findAll() {
+        return courseDao.findAll();
     }
 
     @Override
-    public List<Course> findFavourites(int limit) throws LoginRequiredException {
-        return courseDao.findFavourites(userService.getLoggedID(), limit);
+    public List<Course> findFavourites() {
+        return courseDao.findFavourites(userService.getUser().getId());
+    }
+
+    @Override
+    public List<Course> findFavourites(int limit) {
+        return courseDao.findFavourites(userService.getUser().getId(), limit);
     }
 
     @Override

@@ -7,9 +7,11 @@ import java.util.Optional;
 
 public interface CourseService {
 
-    List<Course> findFavourites() throws LoginRequiredException;
+    List<Course> findAll();
 
-    List<Course> findFavourites(int limit) throws LoginRequiredException;
+    List<Course> findFavourites();
+
+    List<Course> findFavourites(int limit);
 
     List<Course> findByCareer(int careerId);
 

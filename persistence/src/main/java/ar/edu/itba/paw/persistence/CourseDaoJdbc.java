@@ -28,6 +28,14 @@ public class CourseDaoJdbc implements CourseDao {
     }
 
     @Override
+    public List<Course> findAll() {
+        return jdbcTemplate.query(
+                "SELECT * FROM course",
+                COURSE_ROW_MAPPER
+        );
+    }
+
+    @Override
     public List<Course> findFavourites(int userId) {
         return jdbcTemplate.query(
             String.format("SELECT * FROM fav_course JOIN course ON course_id=id " +

@@ -118,13 +118,7 @@ public class CourseController {
             new NavigationItem("Cursos favoritos","/courses/favourites")
         ));
 
-        try{
-            mav.addObject("contentViewName", "course/course_full_list.jsp");
-            mav.addObject("courses", courseService.findFavourites());
-        }catch(LoginRequiredException e){
-            mav.addObject("contentViewName", "user/login_required.jsp");
-            mav.addObject("redirectTo", "/courses/favourites");
-        }
+        mav.addObject("courses", courseService.findFavourites());
 
         return mav;
     }

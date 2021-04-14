@@ -6,6 +6,8 @@ import java.util.Optional;
 
 public interface CourseDao {
 
+    List<Course> findAll();
+
     List<Course> findFavourites(int userId);
 
     List<Course> findFavourites(int userId, int limit);

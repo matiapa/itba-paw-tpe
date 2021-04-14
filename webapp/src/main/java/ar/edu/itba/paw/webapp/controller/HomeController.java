@@ -16,6 +16,8 @@ import java.util.Collections;
 @Controller
 public class HomeController {
 
+    @Autowired private UserService userService;
+
     @Autowired private AnnouncementService announcementService;
 
     @Autowired private CourseService courseService;
@@ -27,42 +29,18 @@ public class HomeController {
     @RequestMapping("/")
     public ModelAndView getDashboard() {
 
-        final ModelAndView mav = new BaseMav(
-            "Home",
-            "panels.jsp",
-                Collections.singletonList(
-                        new NavigationItem("Home", "/")
-                )
-        );
+        final ModelAndView mav = new ModelAndView("index");
 
-        String favCoursesView;
-        try{
-            favCoursesView = "course/course_short_list.jsp";
-            mav.addObject("courses", courseService.findFavourites(4));
-        }catch (LoginRequiredException e){
-            favCoursesView = "user/login_required.jsp";
-            mav.addObject("redirectTo", "/home");
-        }
+        mav.addObject("user", userService.getUser());
 
-        mav.addObject("panels", Arrays.asList(
-            new Panel("Todas las carreras", null,
-                    "career/career_full_list.jsp"),
-
-            new Panel("Tus cursos favoritos", "/courses/favourites",
-                    favCoursesView),
-
-            new Panel("Encuestas generales", "/polls/general",
-                    "poll/poll_short_list.jsp"),
-
-            new Panel("Anuncios generales", "",
-                    "announcement/announcement_list.jsp")
-        ));
+        mav.addObject("courses", courseService.findFavourites(4));
 
         mav.addObject("announcements", announcementService.findGeneral());
 
         mav.addObject("careers", careerService.findAll());
 
         mav.addObject("polls", pollService.findGeneral());
+
         return mav;
     }
 
