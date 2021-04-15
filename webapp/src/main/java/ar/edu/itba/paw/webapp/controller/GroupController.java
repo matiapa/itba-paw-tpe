@@ -1,9 +1,12 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.models.Career;
+import ar.edu.itba.paw.models.ChatGroup;
+import ar.edu.itba.paw.models.HolderEntity;
 import ar.edu.itba.paw.models.ui.NavigationItem;
 import ar.edu.itba.paw.services.CareerService;
 import ar.edu.itba.paw.services.ChatGroupService;
+import ar.edu.itba.paw.services.UserService;
 import ar.edu.itba.paw.webapp.mav.BaseMav;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,7 +16,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -22,6 +27,38 @@ public class GroupController {
     @Autowired private ChatGroupService chatGroupService;
 
     @Autowired private CareerService careerService;
+
+    @Autowired private UserService userService;
+
+    @RequestMapping("chats")
+    public ModelAndView getChats(
+            @RequestParam(name="filterBy", required = false, defaultValue = "general")HolderEntity filterBy,
+            @RequestParam(name = "careerId", required = false) Integer careerId
+    ){
+        final ModelAndView modelAndView = new ModelAndView("chats/chats_list");
+        modelAndView.addObject("filterBy", filterBy);
+
+        List<ChatGroup> chatGroupList = new ArrayList<>();
+        switch (filterBy){
+            case career:
+                List<Career> careers = careerService.findAll();
+                modelAndView.addObject("careers", careers);
+                if (careerId != null){
+                    chatGroupList = chatGroupService.findByCareer(careerId);
+                    Career selected = careers.stream().filter(c -> c.getId() == careerId).findFirst()
+                            .orElseThrow(RuntimeException::new);
+                    modelAndView.addObject("selectedCareer", selected);
+                }
+                break;
+            case general:
+            default:
+                chatGroupList = chatGroupService.getChatGroups();
+                break;
+        }
+        modelAndView.addObject("chats", chatGroupList);
+        modelAndView.addObject("user", userService.getUser());
+        return modelAndView;
+    }
 
     @RequestMapping("/groups/byCareer")
     public ModelAndView getGroupsByCareer(

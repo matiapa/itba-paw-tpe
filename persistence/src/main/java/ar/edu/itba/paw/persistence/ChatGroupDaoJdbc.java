@@ -31,6 +31,13 @@ public class ChatGroupDaoJdbc implements ChatGroupDao{
 
 
     @Override
+    public List<ChatGroup> getChats() {
+        return jdbcTemplate.query(
+                String.format("SELECT * FROM chat_group"), CHAT_GROUP_ROW_MAPPER
+        );
+    }
+
+    @Override
     public List<ChatGroup> findByCareer(int careerId) {
         return jdbcTemplate.query(
             String.format("SELECT * FROM chat_group WHERE career_id='%d'", careerId),

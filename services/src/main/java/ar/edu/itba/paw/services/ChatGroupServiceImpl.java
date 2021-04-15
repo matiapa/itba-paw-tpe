@@ -14,6 +14,11 @@ public class ChatGroupServiceImpl implements ChatGroupService{
     private ChatGroupDao chatGruopDao;
 
     @Override
+    public List<ChatGroup> getChatGroups() {
+        return chatGruopDao.getChats();
+    }
+
+    @Override
     public List<ChatGroup> findByCareer(int careerId) {
         return chatGruopDao.findByCareer(careerId);
     }
