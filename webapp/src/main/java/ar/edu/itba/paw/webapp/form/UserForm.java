@@ -10,7 +10,7 @@ public class UserForm {
 
     private int id;
     private int career_id;
-    private int [] materias_inscriptas_id;
+//    private int [] materias_inscriptas_id;
 
     public String getName() {
         return name;
@@ -32,9 +32,6 @@ public class UserForm {
         return id;
     }
 
-    public int[] getMaterias_inscriptas_id() {
-        return materias_inscriptas_id;
-    }
 
     public void setName(String name) {
         this.name = name;
@@ -56,7 +53,5 @@ public class UserForm {
         this.career_id = career_id;
     }
 
-    public void setMaterias_inscriptas_id(int[] materias_inscriptas_id) {
-        this.materias_inscriptas_id = materias_inscriptas_id;
-    }
+
 }

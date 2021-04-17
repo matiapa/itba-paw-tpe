@@ -1,3 +1,5 @@
+<%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <!DOCTYPE html>
 <html>
 
@@ -25,28 +27,48 @@
     <div class="container">
             <div class="card shadow-lg o-hidden border-0 my-5">
                 <div class="card-body p-0">
-                <form action="<c:url value"/registerUser"/>" method="post">
-                    <div class="row">
-                        <div class="col-lg-5 d-none d-lg-flex">
+                    <c:url value="/registerUser" var="postFormUrl"/>
+                    <form:form modelAttribute="UserForm" action="${postFormUrl}" method="post">
+                        <div class="row">
+                            <div class="col-lg-5 d-none d-lg-flex">
 
-                            <div class="p-5">
-                                <div class="text-center">
-                                    <h4 class="text-dark mb-4">Tu información</h4>
+                                <div class="p-5">
+                                    <div class="text-center">
+                                        <h4 class="text-dark mb-4">Tu informacion</h4>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-sm-6 mb-3 mb-sm-0">
+                                            <form:input class="form-control form-control-user" type="text" id="exampleFirstName" placeholder="Nombre" path="name"/>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <form:input class="form-control form-control-user" type="text" id="exampleLastName" placeholder="Apellido" path="surname"/>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <form:input class="form-control form-control-user" type="email" id="exampleInputEmail"  placeholder="Email" path="email"/>
+                                        </div>
+                                    </div>
+                                    <form:input class="form-control form-control-user" type="text" id="exampleLegajo" placeholder="Legajo" path="id"/>
+                                    <form:input class="form-control form-control-user" type="text" id="exampleCareer_id" placeholder="Career_id" path="career_id"/>
+
+                                    <div class="text-center"></div>
+                                    <div class="text-center"></div>
                                 </div>
+                            </div>
+                            <div class="col-lg-7">
+                                <div class="p-5" style="border-left: 1px solid rgb(232,233,240) ;">
+                                    <div class="text-center">
+                                        <h4 class="text-dark mb-4">Materias que cursas</h4>
+                                    </div>
 
-                                <div class="form-group row">
-                                    <div class="col-sm-6 mb-3 mb-sm-0"><input class="form-control form-control-user" type="text" id="exampleFirstName" placeholder="Nombre" name="first_name"></div>
-                                    <div class="col-sm-6"><input class="form-control form-control-user" type="text" id="exampleLastName" placeholder="Apellido" name="last_name"></div>
+
                                 </div>
-                                <div class="form-group"><input class="form-control form-control-user" type="email" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Email" name="email"></div><input class="form-control form-control-user" type="text" id="exampleFirstName-3"
-                                    placeholder="Legajo" name="last_name">
-
-                                <div class="text-center"></div>
-                                <div class="text-center"></div>
                             </div>
                         </div>
-                    </div>
-                </form>
+                        <input class="btn btn-primary" type="submit" value="Submit">
+                    </form:form>
                 </div>
             </div>
         </div>

@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -33,7 +34,8 @@ public class UserDaoJdbc implements UserDao {
     @Autowired
     public UserDaoJdbc(DataSource ds) {
         this.jdbcTemplate = new JdbcTemplate(ds);
-        this.jdbcInsert= new SimpleJdbcInsert(ds);
+        this.jdbcInsert= new SimpleJdbcInsert(ds)
+                .withTableName("users");
     }
 
     @Override
@@ -52,8 +54,9 @@ public class UserDaoJdbc implements UserDao {
         args.put("surname",surname);
         args.put("email",email);
         args.put("career_id",career_id);
+        args.put("signup_date",new Date());
 
-        final Number userID = jdbcInsert.executeAndReturnKey(args);
+        final Number userID = jdbcInsert.execute(args);
 
         return new User(id,name,surname,email,career_id);
 

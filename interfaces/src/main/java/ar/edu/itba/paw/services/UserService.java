@@ -6,4 +6,6 @@ public interface UserService {
 
     User getUser();
 
+    User registerUser(int id, String name, String surname, String email,int career_id);
+
 }
