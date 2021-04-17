@@ -7,4 +7,6 @@ public interface UserDao {
 
     Optional<User> findById(int id);
 
+    User registerUser(int id, String name, String surname, String email,int career_id);
+
 }

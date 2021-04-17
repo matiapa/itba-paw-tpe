@@ -4,11 +4,20 @@ public class User {
 
     private final int id;
     private final String name;
+    private final String surname;
+    private final String email;
 
-    public User(int id, String name) {
+    private final int career_id;
+
+    public User(int id, String name, String surname, String email,int career_id) {
         this.id = id;
         this.name = name;
+        this.surname = surname;
+        this.email = email;
+        this.career_id=career_id;
     }
+
+
 
     public int getId() {
         return id;
@@ -18,4 +27,17 @@ public class User {
         return name;
     }
 
+    public String getSurname() {
+        return surname;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+
+
+    public int getCareer_id() {
+        return career_id;
+    }
 }
