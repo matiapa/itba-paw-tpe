@@ -17,35 +17,35 @@ import java.util.Collections;
 import java.util.List;
 
 
-@RunWith(MockitoJUnitRunner.class)
-public class CourseServiceImplTest {
+// @RunWith(MockitoJUnitRunner.class)
+// public class CourseServiceImplTest {
 
-    @InjectMocks
-    private final CourseServiceImpl courseService = new CourseServiceImpl();
+//     @InjectMocks
+//     private final CourseServiceImpl courseService = new CourseServiceImpl();
 
-    @Mock private CourseDao courseDao;
-    @Mock private UserService userService;
+//     @Mock private CourseDao courseDao;
+//     @Mock private UserService userService;
 
 
-    @Test(expected = LoginRequiredException.class)
-    public void testFavCoursesNotLoggedIn() throws LoginRequiredException {
-        Mockito.when(userService.getLoggedID()).thenThrow(LoginRequiredException.class);
+//     @Test(expected = LoginRequiredException.class)
+//     public void testFavCoursesNotLoggedIn() throws LoginRequiredException {
+//         Mockito.when(userService.getLoggedID()).thenThrow(LoginRequiredException.class);
 
-        courseService.findFavourites();
-    }
+//         courseService.findFavourites();
+//     }
 
-    @Test
-    public void testFavCoursesLoggedIn() throws LoginRequiredException {
-        Mockito.when(userService.getLoggedID()).thenReturn(1);
+//     @Test
+//     public void testFavCoursesLoggedIn() throws LoginRequiredException {
+//         Mockito.when(userService.getLoggedID()).thenReturn(1);
 
-        List<Course> expectedFavs = Collections.singletonList(
-            new Course("1", "test")
-        );
-        Mockito.when(courseDao.findFavourites(1)).thenReturn(expectedFavs);
+//         List<Course> expectedFavs = Collections.singletonList(
+//             new Course("1", "test")
+//         );
+//         Mockito.when(courseDao.findFavourites(1)).thenReturn(expectedFavs);
 
-        List<Course> favs = courseService.findFavourites();
+//         List<Course> favs = courseService.findFavourites();
 
-        Assert.assertEquals(expectedFavs, favs);
-    }
+//         Assert.assertEquals(expectedFavs, favs);
+//     }
 
-}
+// }
