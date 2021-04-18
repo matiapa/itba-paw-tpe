@@ -14,4 +14,6 @@ public interface AnnouncementDao {
 
     Optional<Announcement> findById(int id);
 
+    void markSeen(int announcementId, int userId);
+
 }

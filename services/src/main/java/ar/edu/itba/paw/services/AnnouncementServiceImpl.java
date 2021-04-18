@@ -14,6 +14,9 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     @Autowired
     private AnnouncementDao announcementDao;
 
+    @Autowired
+    private UserService userService;
+
     @Override
     public List<Announcement> findGeneral() {
         return announcementDao.findGeneral();
@@ -32,6 +35,11 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     @Override
     public Optional<Announcement> findById(int id) {
         return announcementDao.findById(id);
+    }
+
+    @Override
+    public void markSeen(int id) {
+        announcementDao.markSeen(id, userService.getUser().getId());
     }
 
 }

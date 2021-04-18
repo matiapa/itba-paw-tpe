@@ -18,12 +18,18 @@ public class AnnouncementDaoJdbc implements AnnouncementDao {
 
     @Autowired private UserDao userDao;
 
-    private final JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
 
     private final RowMapper<Announcement> announcementRowMapper = (rs, rowNum) -> {
         final Optional<User> userOpt = userDao.findById(rs.getInt("submitted_by"));
         if(!userOpt.isPresent())
             throw new NoSuchElementException();
+
+        Boolean seen = jdbcTemplate.queryForObject(
+            "SELECT count(*) FROM announcement_seen WHERE announcement_id=?",
+            new Object[] { rs.getInt("id") },
+            (rs2, rowNum2) -> rs2.getInt("count") > 0
+        );
 
         return new Announcement(
             rs.getInt("id"),
@@ -32,7 +38,8 @@ public class AnnouncementDaoJdbc implements AnnouncementDao {
             rs.getString("summary"),
             rs.getString("content"),
             rs.getDate("creation_date"),
-            rs.getDate("expiry_date")
+            rs.getDate("expiry_date"),
+            seen
         );
     };
 
@@ -71,6 +78,14 @@ public class AnnouncementDaoJdbc implements AnnouncementDao {
             String.format("SELECT * FROM announcement WHERE id='%d'", id),
                 announcementRowMapper
         ).stream().findFirst();
+    }
+
+    @Override
+    public void markSeen(int announcementId, int userId){
+        jdbcTemplate.update(
+        "INSERT INTO announcement_seen(announcement_id, user_id) VALUES (?,?)",
+            announcementId, userId
+        );
     }
 
 }

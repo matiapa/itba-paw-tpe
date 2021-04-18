@@ -14,4 +14,6 @@ public interface AnnouncementService {
 
     Optional<Announcement> findById(int id);
 
+    void markSeen(int id);
+
 }

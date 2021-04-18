@@ -115,7 +115,7 @@
                                     <form action="<c:url value="/announcements"/>" method="get">
                                         <input type="text" name="filterBy" value="course" hidden>
 
-                                        <select id="courseId" class="selectpicker" data-live-search="true" title="Elegí un curso" data-width="75%">
+                                        <select id="courseId" class="selectpicker" data-live-search="true" title="Elegí un curso">
                                             <c:forEach var="course" items="${courses}">
                                                 <option ${course.equals(selectedCourse) ? 'selected' : ''}
                                                     value="${course.id}" data-tokens="${course.name}">${course.name}</option>
@@ -149,6 +149,21 @@
             </div>
         </div>
 
+    </div
+
+    <div aria-live="polite" aria-atomic="true" style="position: relative; min-height: 200px;">
+        <div id="errorToast" class="toast" data-autohide="false"
+                style="position: absolute; top: 0; right: 0; background-color: orange; color: white">
+            <div class="toast-header">
+                <strong class="mr-auto">Ups!</strong>
+                <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="toast-body">
+                Mensaje de error
+            </div>
+        </div>
     </div>
 
     <div class="fab">
