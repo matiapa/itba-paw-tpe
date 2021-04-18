@@ -15,3 +15,6 @@
 
 # Others
 .txt/
+
+# Credentials
+webapp/src/main/java/ar/edu/itba/paw/webapp/config/auth.properties
