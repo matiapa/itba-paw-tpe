@@ -14,6 +14,12 @@ public class ChatGroupServiceImpl implements ChatGroupService{
     private ChatGroupDao chatGruopDao;
 
     @Override
+    public boolean addGroup(String groupName, String careerId, String link) {
+        //TODO implementar agregado de grupo
+        return false;
+    }
+
+    @Override
     public List<ChatGroup> getChatGroups() {
         return chatGruopDao.getChats();
     }

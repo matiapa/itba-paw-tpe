@@ -1,5 +1,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
+
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 
 <jsp:useBean type="java.util.List<ar.edu.itba.paw.models.ChatGroup>" scope="request" id="chats"/>
@@ -89,7 +92,7 @@
                                     </c:when>
                                     <c:otherwise>
                                         <div class="text-center"><i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
-                                            <p style="margin-top: 16px;">Por favor, elegí una carrera para ver los anuncios</p>
+                                            <p style="margin-top: 16px;">Por favor, elegí una carrera para ver los grupos de chat</p>
                                         </div>
                                     </c:otherwise>
                                 </c:choose>
@@ -107,7 +110,43 @@
 </div>
 
 <div class="fab">
-    <i class="material-icons" style="font-size: 32px;color: rgb(255,255,255);">add</i>
+    <a href="#popup" data-toggle="modal">
+        <i class="material-icons" style="font-size: 32px;color: rgb(255,255,255);">add</i>
+    </a>
+</div>
+
+<div class="modal fade" id="popup">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Agregar grupo de chat</h4>
+            </div>
+
+            <div class="modal-body">
+                <c:url value="/chats/add" var="postGroup"/>
+                <form:form modelAttribute="chatGroupForm" id="chat_form" method="post" action="${postGroup}">
+                    <form:label path="groupName">Nombre del grupo</form:label>
+                    <form:input type="text" path="groupName" class="form-control"/>
+                    <form:errors path="groupName" element="p"/>
+                    <form:label path="groupCareer">Carrera del grupo</form:label>
+                    <form:select path="groupCareer" class="form-control">
+                        <c:forEach var="career" items="${careers}">
+                            <form:option value="${career.id}"><c:out value="${career.name}"/></form:option>
+                        </c:forEach>
+                        <form:errors path="groupCareer" element="p"/>
+                    </form:select>
+                    <form:label path="link">Link al grupo</form:label>
+                    <form:input type="text" path="link" class="form-control"/>
+                    <form:errors path="link" element="p"/>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-primary">Agregar</button>
+                    </div>
+                </form:form>
+            </div>
+
+        </div>
+    </div>
 </div>
 
 <script src="assets/js/jquery.min.js"></script>

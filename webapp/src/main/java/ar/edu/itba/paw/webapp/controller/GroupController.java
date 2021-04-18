@@ -7,15 +7,20 @@ import ar.edu.itba.paw.models.ui.NavigationItem;
 import ar.edu.itba.paw.services.CareerService;
 import ar.edu.itba.paw.services.ChatGroupService;
 import ar.edu.itba.paw.services.UserService;
+import ar.edu.itba.paw.webapp.form.ChatGroupForm;
 import ar.edu.itba.paw.webapp.mav.BaseMav;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -33,7 +38,8 @@ public class GroupController {
     @RequestMapping("chats")
     public ModelAndView getChats(
             @RequestParam(name="filterBy", required = false, defaultValue = "general")HolderEntity filterBy,
-            @RequestParam(name = "careerId", required = false) Integer careerId
+            @RequestParam(name = "careerId", required = false) Integer careerId,
+            @ModelAttribute("chatGroupForm") final ChatGroupForm chatGroupForm
     ){
         final ModelAndView modelAndView = new ModelAndView("chats/chats_list");
         modelAndView.addObject("filterBy", filterBy);
@@ -59,6 +65,21 @@ public class GroupController {
         modelAndView.addObject("user", userService.getUser());
         return modelAndView;
     }
+
+
+    @RequestMapping(value = "/chats/add", method = {RequestMethod.POST})
+    public ModelAndView addGroup(
+            @Valid @ModelAttribute("chatGroupForm") final ChatGroupForm chatGroupForm,
+            final BindingResult errors
+    ) {
+        if (errors.hasErrors()) {
+            return getChats(HolderEntity.general, null, chatGroupForm);
+        }
+        chatGroupService.addGroup(chatGroupForm.getGroupName(), chatGroupForm.getGroupCareer(), chatGroupForm.getLink());
+        return new ModelAndView("redirect:chats");
+    }
+
+
 
     @RequestMapping("/groups/byCareer")
     public ModelAndView getGroupsByCareer(
