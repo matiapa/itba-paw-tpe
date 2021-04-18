@@ -8,16 +8,14 @@ import ar.edu.itba.paw.services.CourseService;
 import ar.edu.itba.paw.services.UserService;
 import ar.edu.itba.paw.webapp.mav.BaseMav;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
@@ -31,26 +29,31 @@ public class ContentController {
     @Autowired private UserService userService;
 
     @RequestMapping("contents")
-    public ModelAndView getAnnouncements(
-            //@RequestParam(name="filterBy", required = false, defaultValue="courseId") HolderEntity filterBy,
+    public ModelAndView getContents(
+            @RequestParam(name="courseId", required = false) String courseId,
+            @RequestParam(name="contentType", required = false) String contentType,
+            @RequestParam(name="minDate",required = false) @DateTimeFormat(pattern="yyyy-MM-dd") Date minDate,
+            @RequestParam(name="maxDate",required = false) @DateTimeFormat(pattern="yyyy-MM-dd") Date maxDate
 
-            @RequestParam(name="courseId", required = false) String courseId
-    ) {
+
+            ) {
         final ModelAndView mav = new ModelAndView("contents/content_list");
 
-        //mav.addObject("filterBy", filterBy);
+
 
         List<Content> contents = new ArrayList<>();
-        //if (filterBy == HolderEntity.course) {
-            List<Course> courses = courseService.findAll();
-            mav.addObject("courses", courses);
-            if (courseId != null) {
-                contents = contentService.findByCourse(courseId);
-                Course selectedCourse = courses.stream().filter(c -> c.getId().equals(courseId)).findFirst()
-                        .orElseThrow(RuntimeException::new);
-                mav.addObject("selectedCourse", selectedCourse);
+
+        List<Course> courses = courseService.findAll();
+        mav.addObject("courses", courses);
+        if (courseId != null) {
+            if (contentType.equals("")){
+                contentType=null;
             }
-        //}
+            contents = contentService.findContent(courseId,contentType,minDate,maxDate);
+            Course selectedCourse = courses.stream().filter(c -> c.getId().equals(courseId)).findFirst()
+                    .orElseThrow(RuntimeException::new);
+            mav.addObject("selectedCourse", selectedCourse);
+        }
 
         mav.addObject("contents", contents);
 
@@ -59,30 +62,6 @@ public class ContentController {
         return mav;
     }
 
-    @RequestMapping("/contents/byCourse")
-    public ModelAndView getContentsByCourse(
-            @RequestParam(name = "courseId") String courseId
-    ) {
-        Optional<Course> courseOptional = courseService.findById(courseId);
-        if(! courseOptional.isPresent()){
-            throw new ResponseStatusException(NOT_FOUND, "Curso no encontrado");
-        }
-        Course course = courseOptional.get();
 
-        final ModelAndView mav = new BaseMav(
-            String.format("Contenidos de %s", course.getName()),
-            "content_source/content_full_list.jsp",
-            Arrays.asList(
-                    new NavigationItem("Home", "/"),
-                    new NavigationItem(course.getName(), "/courses/byId?id="+ course.getId()),
-                    new NavigationItem("Contenido de " + course.getName(),
-                            "/contents/byCourse?courseId="+course.getId())
-            )
-        );
-
-        mav.addObject("contents", contentService.findByCourse(course.getId()));
-
-        return mav;
-    }
 
 }

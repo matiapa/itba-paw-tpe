@@ -41,7 +41,7 @@
                         <jsp:include page="../common/header.jsp"/>
 
                         <div class="col-lg-12 col-xl-12 mb-4">
-                            <form action="<c:url value="/contents"/>" method="get">
+                            <form action="<c:url value='/contents'/>" method="get">
                                 <input type="text" name="filterBy" value="course" hidden>
                                 <select name="courseId" class="selectpicker" data-live-search="true" title="Elegí una carrera" data-width="75%">
                                     <c:forEach var="course" items="${courses}">
@@ -49,18 +49,27 @@
                                             value="${course.id}" data-tokens="${course.name}">${course.name}</option>
                                     </c:forEach>
                                 </select>
+
+                                <div class="row align-items-center" style="margin-top: 16px;margin-bottom: 32px;">
+                                    <div class="col-lg-2 col-xl-2">
+                                        <select class="custom-select my-1 mr-sm-2" name="contentType">
+                                            <option selected value="" >tipo...</option>
+                                            <option value="EXAMEN">Exámen</option>
+                                            <option value="GUIA">Guia</option>
+                                            <option value="RESUMEN">Resúmen</option>
+                                            <option value="APUNTE">Apunte</option>
+                                            <option value="OTRO">Otro</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-lg-4 col-xl-4 text-center"><label>Desde&nbsp;</label><input class="border rounded-0" type="date" name="minDate"></div>
+                                    <div class="col-lg-4 col-xl-4 text-center"><label>Hasta</label><input class="border rounded-0" type="date" name="maxDate"></div>
+                                </div>
+
+
                                 <button type="submit" class="btn btn-primary ml-3">Buscar</button>
                             </form>
 
-                            <div class="row align-items-center" style="margin-top: 16px;margin-bottom: 32px;">
-                                <div class="col-lg-2 col-xl-2">
-                                    <div class="dropdown"><button class="btn btn-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false" type="button">Tipo</button>
-                                        <div class="dropdown-menu"><a class="dropdown-item" href="#">Exámen</a><a class="dropdown-item" href="#">Guía</a><a class="dropdown-item" href="#">Apunte</a><a class="dropdown-item" href="#">Resúmen</a></div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4 col-xl-4 text-center"><label>Desde&nbsp;</label><input class="border rounded-0" type="date"></div>
-                                <div class="col-lg-4 col-xl-4 text-center"><label>Hasta</label><input class="border rounded-0" type="date"></div>
-                            </div>
+
 
                             <c:choose>
                                 <c:when test="${selectedCourse != null}">
@@ -76,16 +85,15 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                            <c:forEach var="content" items="${contents}">
-                                                <c:set var="content" value="${content}" scope="request"/>
-                                                <tr>
-                                                    <td><c:out value="${content.name}"/></td>
-                                                    <td><c:out value="${content.contenttype}"/></td>
-                                                    <td><c:out value="${content.uploadDate}"/></td>
-                                                    <td><img class="rounded-circle mr-2" width="30" height="30" src="assets/img/avatars/avatar.png"><c:out value="${content.submitter.name}"/></td>
-                                                    <td><a class="btn btn-link" href="<c:url value='${content.link}'/>" role="button">Link</a></td>
-                                                </tr>
-                                                <
+                                                <c:forEach var="content" items="${contents}">
+                                                    <c:set var="content" value="${content}" scope="request"/>
+                                                    <tr>
+                                                        <td><c:out value="${content.name}"/></td>
+                                                        <td><c:out value="${content.contenttype}"/></td>
+                                                        <td><c:out value="${content.uploadDate}"/></td>
+                                                        <td><img class="rounded-circle mr-2" width="30" height="30" src="assets/img/avatars/avatar.png"><c:out value="${content.submitter.name}"/></td>
+                                                        <td><a class="btn btn-link" href="<c:url value='${content.link}'/>" role="button">Link</a></td>
+                                                    </tr>
                                                 </c:forEach>
                                             </tbody>
                                             <tfoot>

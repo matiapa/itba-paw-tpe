@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -55,6 +56,29 @@ public class ContentDaoJdbc implements ContentDao{
                 "ORDER BY id LIMIT %d", courseId, limit),
                 contentRowMapper
         );
+    }
+
+    @Override
+    public List<Content> findByCourseAndType(String courseId, String contentType) {
+        return jdbcTemplate.query(
+                String.format("SELECT * FROM content_source WHERE course_id='%s' AND content_type='%s", courseId,contentType),
+                contentRowMapper
+        );
+    }
+
+    @Override
+    public List<Content> findContent(String courseId, String contentType, Date minDate, Date maxDate) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(String.format("SELECT * FROM content_source WHERE course_id='%s'",courseId));
+        if (contentType!= null)
+            stringBuilder.append(String.format(" AND content_type='%s'",contentType));
+        if (minDate!= null)
+            stringBuilder.append(String.format(" AND creation_date>='%s'", minDate));
+        if (maxDate!= null)
+            stringBuilder.append(String.format(" AND creation_date<='%s'", maxDate));
+
+
+        return jdbcTemplate.query(stringBuilder.toString(),contentRowMapper);
     }
 
     public Optional<Content> findById(String id) {
