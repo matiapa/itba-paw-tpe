@@ -1,23 +1,22 @@
 package ar.edu.itba.paw.webapp.controller;
 
 
-import ar.edu.itba.paw.models.*;
-import ar.edu.itba.paw.models.ui.NavigationItem;
+import ar.edu.itba.paw.models.Content;
+import ar.edu.itba.paw.models.Course;
 import ar.edu.itba.paw.services.ContentService;
 import ar.edu.itba.paw.services.CourseService;
 import ar.edu.itba.paw.services.UserService;
-import ar.edu.itba.paw.webapp.mav.BaseMav;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
-import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Controller
 public class ContentController {
