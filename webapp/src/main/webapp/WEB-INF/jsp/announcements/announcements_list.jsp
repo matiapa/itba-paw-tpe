@@ -114,13 +114,15 @@
 
                                     <form action="<c:url value="/announcements"/>" method="get">
                                         <input type="text" name="filterBy" value="course" hidden>
-                                        <select name="courseId" class="selectpicker" data-live-search="true" title="Elegí una carrera" data-width="75%">
+
+                                        <select id="courseId" class="selectpicker" data-live-search="true" title="Elegí un curso" data-width="75%">
                                             <c:forEach var="course" items="${courses}">
                                                 <option ${course.equals(selectedCourse) ? 'selected' : ''}
                                                     value="${course.id}" data-tokens="${course.name}">${course.name}</option>
                                             </c:forEach>
                                         </select>
-                                        <button type="submit" class="btn btn-primary ml-3">Buscar</button>
+
+                                        <button hidden id="courseSearchBtn" type="submit" class="btn btn-primary ml-3">Buscar</button>
                                     </form>
 
                                     <c:choose>
@@ -153,13 +155,15 @@
         <i class="material-icons" style="font-size: 32px;color: rgb(255,255,255);">add</i>
     </div>
 
+
     <script src="assets/js/jquery.min.js"></script>
-    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
-    <script src="assets/js/chart.min.js"></script>
-    <script src="assets/js/bs-init.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.js"></script>
     <script src="assets/js/theme.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.js"></script>
+
+    <script src="assets/js/announcements.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" ></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
 
 </body>
