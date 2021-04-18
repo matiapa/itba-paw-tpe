@@ -143,7 +143,7 @@
                     </div>
 
                 </div>
-                <div id="content-1"></div>
+
             </div>
         </div>
 

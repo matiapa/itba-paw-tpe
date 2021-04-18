@@ -30,26 +30,22 @@ public class ContentController {
 
     @RequestMapping("contents")
     public ModelAndView getContents(
-            @RequestParam(name="courseId", required = false) String courseId,
-            @RequestParam(name="contentType", required = false) String contentType,
-            @RequestParam(name="minDate",required = false) @DateTimeFormat(pattern="yyyy-MM-dd") Date minDate,
-            @RequestParam(name="maxDate",required = false) @DateTimeFormat(pattern="yyyy-MM-dd") Date maxDate
-
-
-            ) {
+        @RequestParam(name="courseId", required = false) String courseId,
+        @RequestParam(name="contentType", required = false) String contentType,
+        @RequestParam(name="minDate",required = false) @DateTimeFormat(pattern="yyyy-MM-dd") Date minDate,
+        @RequestParam(name="maxDate",required = false) @DateTimeFormat(pattern="yyyy-MM-dd") Date maxDate
+    ) {
         final ModelAndView mav = new ModelAndView("contents/content_list");
-
-
-
-        List<Content> contents = new ArrayList<>();
 
         List<Course> courses = courseService.findAll();
         mav.addObject("courses", courses);
+
+        List<Content> contents = new ArrayList<>();
+
         if (courseId != null) {
-            if (contentType.equals("")){
-                contentType=null;
-            }
-            contents = contentService.findContent(courseId,contentType,minDate,maxDate);
+            contentType = contentType.equals("") ? null : contentType;
+            contents = contentService.findContent(courseId, contentType, minDate, maxDate);
+
             Course selectedCourse = courses.stream().filter(c -> c.getId().equals(courseId)).findFirst()
                     .orElseThrow(RuntimeException::new);
             mav.addObject("selectedCourse", selectedCourse);

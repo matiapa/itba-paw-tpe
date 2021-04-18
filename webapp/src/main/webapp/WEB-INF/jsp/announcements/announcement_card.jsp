@@ -9,10 +9,15 @@
         <h6 class="font-weight-bold m-0"><c:out value="${announcement.title}"/></h6>
     </div>
     <div class="col mr-2" style="padding: 16px 24px;">
+        <p style="padding-top: 0;"><c:out value="${announcement.summary}"/></p>
         <p style="padding-top: 0;"><c:out value="${announcement.content}"/></p>
-        <span class="text-xs">
-            <c:out value="Publicado por ${announcement.uploader.name} el "/>
-            <fmt:formatDate type="both" dateStyle = "short" timeStyle = "short" value="${announcement.uploadDate}"/>
-        </span>
+        <div class="row">
+            <div class="col">
+                <span class="text-xs">
+                    <c:out value="Publicado por ${announcement.uploader.name} el "/>
+                    <fmt:formatDate type="both" dateStyle = "short" timeStyle = "short" value="${announcement.uploadDate}"/>
+                </span>
+            </div>
+        </div>
     </div>
 </div>

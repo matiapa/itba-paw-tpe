@@ -8,10 +8,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.util.Date;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 public class ContentDaoJdbc implements ContentDao{
@@ -25,6 +22,8 @@ public class ContentDaoJdbc implements ContentDao{
         if(!userOpt.isPresent())
             throw new NoSuchElementException();
 
+        String contentType = rs.getString("content_type");
+
         return new Content(
             rs.getInt("id"),
             rs.getString("name"),
@@ -32,7 +31,9 @@ public class ContentDaoJdbc implements ContentDao{
             rs.getString("description"),
             userOpt.get(),
             rs.getDate("creation_date"),
-            rs.getString("content_type")
+            rs.getDate("content_date"),
+            Arrays.stream(Content.ContentType.values()).filter( t -> t.name().equals(contentType))
+                    .findFirst().orElseThrow(() -> new IllegalStateException("Invalid content type found"))
         );
     };
 
@@ -44,7 +45,7 @@ public class ContentDaoJdbc implements ContentDao{
     @Override
     public List<Content> findByCourse(String courseId) {
         return jdbcTemplate.query(
-            String.format("SELECT * FROM content_source WHERE course_id='%s'", courseId),
+            String.format("SELECT * FROM course_content WHERE course_id='%s'", courseId),
                 contentRowMapper
         );
     }
@@ -52,7 +53,7 @@ public class ContentDaoJdbc implements ContentDao{
     @Override
     public List<Content> findByCourse(String courseId, int limit){
         return jdbcTemplate.query(
-            String.format("SELECT * FROM content_source WHERE course_id='%s' "+
+            String.format("SELECT * FROM course_content WHERE course_id='%s' "+
                 "ORDER BY id LIMIT %d", courseId, limit),
                 contentRowMapper
         );
@@ -61,7 +62,7 @@ public class ContentDaoJdbc implements ContentDao{
     @Override
     public List<Content> findByCourseAndType(String courseId, String contentType) {
         return jdbcTemplate.query(
-                String.format("SELECT * FROM content_source WHERE course_id='%s' AND content_type='%s", courseId,contentType),
+                String.format("SELECT * FROM course_content WHERE course_id='%s' AND content_type='%s", courseId,contentType),
                 contentRowMapper
         );
     }
@@ -69,7 +70,7 @@ public class ContentDaoJdbc implements ContentDao{
     @Override
     public List<Content> findContent(String courseId, String contentType, Date minDate, Date maxDate) {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(String.format("SELECT * FROM content_source WHERE course_id='%s'",courseId));
+        stringBuilder.append(String.format("SELECT * FROM course_content WHERE course_id='%s'",courseId));
         if (contentType!= null)
             stringBuilder.append(String.format(" AND content_type='%s'",contentType));
         if (minDate!= null)
@@ -83,7 +84,7 @@ public class ContentDaoJdbc implements ContentDao{
 
     public Optional<Content> findById(String id) {
         return jdbcTemplate.query(
-            String.format("SELECT * FROM content_source WHERE id='%s'", id),
+            String.format("SELECT * FROM course_content WHERE id='%s'", id),
                 contentRowMapper
         ).stream().findFirst();
     }
