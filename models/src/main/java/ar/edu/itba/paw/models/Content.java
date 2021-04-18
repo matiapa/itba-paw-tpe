@@ -8,14 +8,18 @@ public class Content {
     private final String name, link, description;
     private final User submitter;
     private final Date uploadDate;
+    private final String contenttype;
 
-    public Content(int id, String name, String link, String description, User submitter,Date uploadDate) {
+//    CONTENTTYPE puede ser {EXAMEN, GUIA, RESUMEN, APUNTE,OTRO};
+
+    public Content(int id, String name, String link, String description, User submitter,Date uploadDate,String contenttype) {
         this.id = id;
         this.name = name;
         this.link=link;
         this.description=description;
         this.submitter = submitter;
         this.uploadDate = uploadDate;
+        this.contenttype=contenttype;
     }
 
     public int getId() {
@@ -40,5 +44,9 @@ public class Content {
 
     public Date getUploadDate() {
         return uploadDate;
+    }
+
+    public String getContenttype() {
+        return contenttype;
     }
 }

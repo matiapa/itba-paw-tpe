@@ -30,7 +30,8 @@ public class ContentDaoJdbc implements ContentDao{
             rs.getString("link"),
             rs.getString("description"),
             userOpt.get(),
-            rs.getDate("creation_date")
+            rs.getDate("creation_date"),
+            rs.getString("content_type")
         );
     };
 
