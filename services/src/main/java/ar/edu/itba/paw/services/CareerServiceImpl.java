@@ -18,6 +18,8 @@ public class CareerServiceImpl implements CareerService{
         return careerDao.findById(id);
     }
 
+
+
     @Override
     public List<Career> findAll() {
         return careerDao.findAll();

@@ -7,8 +7,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 public class CareerDaoJdbc implements CareerDao{
@@ -20,6 +19,7 @@ public class CareerDaoJdbc implements CareerDao{
             rs.getInt("id"),
             rs.getString("name")
         );
+
 
     @Autowired
     public CareerDaoJdbc(DataSource ds){
@@ -36,6 +36,9 @@ public class CareerDaoJdbc implements CareerDao{
             CAREER_ROW_MAPPER
         ).stream().findFirst();
     }
+
+
+
 
     @Override
     public List<Career> findAll() {

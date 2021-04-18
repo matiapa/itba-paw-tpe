@@ -1,8 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.exceptions.LoginRequiredException;
-import ar.edu.itba.paw.models.Career;
-import ar.edu.itba.paw.models.Course;
+import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.ui.NavigationItem;
 import ar.edu.itba.paw.models.ui.Panel;
 import ar.edu.itba.paw.services.*;
@@ -14,8 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.Arrays;
-import java.util.Optional;
+import java.util.*;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
@@ -24,6 +22,8 @@ public class CourseController {
 
     @Autowired private AnnouncementService announcementService;
 
+    @Autowired private CareerCourseService careerCourseService;
+
     @Autowired private CourseService courseService;
 
     @Autowired private CareerService careerService;
@@ -31,6 +31,8 @@ public class CourseController {
     @Autowired private ContentService contentService;
 
     @Autowired private PollService pollService;
+
+    @Autowired private UserService userService;
 
     @RequestMapping("/courses/byId")
     public ModelAndView getCourseById(
@@ -119,6 +121,32 @@ public class CourseController {
         ));
 
         mav.addObject("courses", courseService.findFavourites());
+
+        return mav;
+    }
+
+    @RequestMapping("courses")
+    public ModelAndView getCourses(
+//            @RequestParam(name="filterBy", required = false, defaultValue="general") HolderEntity filterBy,
+            @RequestParam(name="careerId", required = false) Integer careerId
+//            @RequestParam(name="courseId", required = false) String courseId
+    ){
+        final ModelAndView mav = new ModelAndView("courses/courses_list");
+
+
+
+        Map<Integer,List<CareerCourse>> courses;
+        List<Career> careers = careerService.findAll();
+        mav.addObject("careers", careers);
+        if(careerId != null) {
+            courses = careerCourseService.findByCareer(careerId);
+            mav.addObject("careerCourses",courses);
+            Career selectedCareer = careers.stream().filter(c -> c.getId() == careerId).findFirst()
+                    .orElseThrow(RuntimeException::new);
+            mav.addObject("selectedCareer", selectedCareer);
+        }
+
+        mav.addObject("user", userService.getUser());
 
         return mav;
     }

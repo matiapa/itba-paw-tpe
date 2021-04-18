@@ -53,10 +53,13 @@ public class ContentController {
 
         mav.addObject("contents", contents);
 
+
         mav.addObject("user", userService.getUser());
 
         return mav;
     }
+
+
 
 
 
