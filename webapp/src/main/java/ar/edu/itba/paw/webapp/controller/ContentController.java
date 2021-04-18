@@ -1,10 +1,11 @@
 package ar.edu.itba.paw.webapp.controller;
 
 
-import ar.edu.itba.paw.models.Course;
+import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.ui.NavigationItem;
 import ar.edu.itba.paw.services.ContentService;
 import ar.edu.itba.paw.services.CourseService;
+import ar.edu.itba.paw.services.UserService;
 import ar.edu.itba.paw.webapp.mav.BaseMav;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -25,6 +28,36 @@ public class ContentController {
 
     @Autowired private CourseService courseService;
 
+    @Autowired private UserService userService;
+
+    @RequestMapping("contents")
+    public ModelAndView getAnnouncements(
+            //@RequestParam(name="filterBy", required = false, defaultValue="courseId") HolderEntity filterBy,
+
+            @RequestParam(name="courseId", required = false) String courseId
+    ) {
+        final ModelAndView mav = new ModelAndView("contents/content_list");
+
+        //mav.addObject("filterBy", filterBy);
+
+        List<Content> contents = new ArrayList<>();
+        //if (filterBy == HolderEntity.course) {
+            List<Course> courses = courseService.findAll();
+            mav.addObject("courses", courses);
+            if (courseId != null) {
+                contents = contentService.findByCourse(courseId);
+                Course selectedCourse = courses.stream().filter(c -> c.getId().equals(courseId)).findFirst()
+                        .orElseThrow(RuntimeException::new);
+                mav.addObject("selectedCourse", selectedCourse);
+            }
+        //}
+
+        mav.addObject("contents", contents);
+
+        mav.addObject("user", userService.getUser());
+
+        return mav;
+    }
 
     @RequestMapping("/contents/byCourse")
     public ModelAndView getContentsByCourse(
