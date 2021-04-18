@@ -75,7 +75,10 @@ public class GroupController {
         if (errors.hasErrors()) {
             return getChats(HolderEntity.general, null, chatGroupForm);
         }
-        chatGroupService.addGroup(chatGroupForm.getGroupName(), chatGroupForm.getGroupCareer(), chatGroupForm.getLink());
+        chatGroupService.addGroup(chatGroupForm.getGroupName(),
+                chatGroupForm.getGroupCareer(),
+                chatGroupForm.getLink(),
+                userService.getUser());
         return new ModelAndView("redirect:chats");
     }
 

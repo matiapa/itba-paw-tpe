@@ -8,7 +8,13 @@
     <div class="card-header py-3">
         <h6 class="font-weight-bold m-0"><c:out value="${chat.name}"/></h6>
     </div>
-    <div class="col mr-2" style="padding: 16px 24px;">
-        <a href=<c:out value="${chat.link}"/> target="_blank"> Ir al grupo</a>
+    <div class="row">
+        <div class="col mr-2" style="padding: 16px 24px;">
+            <a href=<c:out value="${chat.link}"/> target="_blank"> Ir al grupo</a>
+        </div>
+        <div class="col mr-10" style=" padding: 16px 24px; text-align: right">
+            <h6><c:out value="Creado el: ${chat.creationDate}"/></h6>
+        </div>
     </div>
+
 </div>

@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.models.ChatGroup;
+import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -29,6 +30,15 @@ public class ChatGroupDaoJdbc implements ChatGroupDao{
         this.jdbcTemplate = new JdbcTemplate(ds);
     }
 
+
+    @Override
+    public boolean addGroup(String groupName, String careerId, String link, User user) {
+        jdbcTemplate.query(String.format("INSERT INTO chat_group" +
+                        "(id, career_id, creation_date, name, link, submitted_by) " +
+                        "VALUES (2, %s, null, %s, %s, %d)",
+                careerId, groupName, link, user.getId()), CHAT_GROUP_ROW_MAPPER);
+        return false;
+    }
 
     @Override
     public List<ChatGroup> getChats() {

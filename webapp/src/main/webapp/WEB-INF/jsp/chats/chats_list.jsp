@@ -123,7 +123,7 @@
             </div>
 
             <div class="modal-body">
-                <c:url value="/chats/add" var="postGroup"/>
+                <c:url value="/chats" var="postGroup"/>
                 <form:form modelAttribute="chatGroupForm" id="chat_form" method="post" action="${postGroup}">
                     <form:label path="groupName">Nombre del grupo</form:label>
                     <form:input type="text" path="groupName" class="form-control"/>
@@ -138,6 +138,10 @@
                     <form:label path="link">Link al grupo</form:label>
                     <form:input type="text" path="link" class="form-control"/>
                     <form:errors path="link" element="p"/>
+                    <form:label path="groupDate">Fecha de creacion</form:label>
+                    <form:input type="text" path="groupDate" class="form-control"/>
+                    <form:errors path="groupDate" element="p"/>
+
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
                         <button type="submit" class="btn btn-primary">Agregar</button>
