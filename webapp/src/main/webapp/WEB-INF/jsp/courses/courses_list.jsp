@@ -53,7 +53,7 @@
 
                                 <div class="card">
                                     <div class="card-header" role="tab">
-                                        <h5 class="mb-0"><a data-toggle="collapse" aria-expanded="true" aria-controls="accordion-1 .item-${CourseList.key}" href="#accordion-1 .item-${CourseList.key}">año <c:out value="${CourseList.key}"/></a></h5>
+                                        <h5 class="mb-0"><a data-toggle="collapse" aria-expanded="true" aria-controls="accordion-1 .item-${CourseList.key}" href="#accordion-1 .item-${CourseList.key}">Año <c:out value="${CourseList.key}"/></a></h5>
                                     </div>
                                     <div class="collapse show item-${CourseList.key}" role="tabpanel" data-parent="#accordion-1">
 
