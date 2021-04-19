@@ -1,8 +1,11 @@
 document.addEventListener("DOMContentLoaded", function(event) {
 
-    document.getElementById("courseId").addEventListener('change', (event) => {
-        document.getElementById("courseSearchBtn").hidden = (event.target.value === undefined)
-    });
+    const courseSelector = document.getElementById("courseId");
+    if(courseSelector != null) {
+        courseSelector.addEventListener('change', (event) => {
+            document.getElementById("courseSearchBtn").hidden = (event.target.value === undefined)
+        });
+    }
 
 });
 
@@ -19,3 +22,8 @@ async function hideAnnouncement(id){
     }
 
 }
+
+$("#submitAnnouncement").click(function(){
+    $("div.spanner").addClass("show");
+    $("div.overlay").addClass("show");
+});

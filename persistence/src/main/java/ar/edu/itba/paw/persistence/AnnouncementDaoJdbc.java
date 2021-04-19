@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -86,6 +87,18 @@ public class AnnouncementDaoJdbc implements AnnouncementDao {
         "INSERT INTO announcement_seen(announcement_id, user_id) VALUES (?,?)",
             announcementId, userId
         );
+    }
+
+    @Override
+    public Announcement create(String title, String summary, String content, Integer careerId,
+                   String courseId, Date expiryDate, Integer submittedBy) {
+        return jdbcTemplate.queryForObject(
+        "INSERT INTO announcement(title, summary, content, career_id, course_id, expiry_date, " +
+                "submitted_by) VALUES (?,?,?,?,?,?,?) RETURNING *",
+            new Object[]{title, summary, content, careerId, courseId, expiryDate, submittedBy},
+            announcementRowMapper
+        );
+//        return new Announcement(1, null, title, summary, content, new Date(), new Date(), false);
     }
 
 }

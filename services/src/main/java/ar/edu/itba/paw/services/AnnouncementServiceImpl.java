@@ -5,6 +5,7 @@ import ar.edu.itba.paw.persistence.AnnouncementDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,6 +41,13 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     @Override
     public void markSeen(int id) {
         announcementDao.markSeen(id, userService.getUser().getId());
+    }
+
+    @Override
+    public Announcement create(String title, String summary, String content, Integer careerId,
+       String courseId, Date expiryDate) {
+        return announcementDao.create(title, summary, content, careerId, courseId, expiryDate,
+            userService.getUser().getId());
     }
 
 }

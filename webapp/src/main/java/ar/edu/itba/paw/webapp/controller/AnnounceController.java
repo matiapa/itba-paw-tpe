@@ -8,12 +8,16 @@ import ar.edu.itba.paw.services.AnnouncementService;
 import ar.edu.itba.paw.services.CareerService;
 import ar.edu.itba.paw.services.CourseService;
 import ar.edu.itba.paw.services.UserService;
+import ar.edu.itba.paw.webapp.form.AnnouncementForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,7 +83,7 @@ public class AnnounceController {
 
 
     @RequestMapping(value = "announcements/markSeen", method = POST)
-    public ModelAndView getDashboard(
+    public ModelAndView markSeen(
         @RequestParam(name = "id") int id
     ) {
         final ModelAndView mav = new ModelAndView("simple");
@@ -88,6 +92,37 @@ public class AnnounceController {
         announcementService.markSeen(id);
 
         return mav;
+    }
+
+    @RequestMapping("announcements/create")
+    public ModelAndView create(
+        @ModelAttribute("createForm") final AnnouncementForm form
+    ) {
+        ModelAndView mav = new ModelAndView("announcements/create_announcement");
+
+        mav.addObject("careers", careerService.findAll());
+        mav.addObject("courses", courseService.findAll());
+        mav.addObject("user", userService.getUser());
+
+        return mav;
+    }
+
+    @RequestMapping(value = "announcements/create", method = POST)
+    public ModelAndView create(
+        @Valid @ModelAttribute("createForm") final AnnouncementForm form,
+        final BindingResult errors
+    ){
+        System.out.println(errors.hasErrors());
+
+        if (errors.hasErrors())
+            throw new RuntimeException();
+
+//        final Announcement announcement = announcementService.create(
+//            form.getTitle(), form.getSummary(), form.getContent(),
+//            form.getCarrerId(), form.getCourseId(), form.getExpiryDate()
+//        );
+
+        return new ModelAndView("redirect:/announcements");
     }
 
 }

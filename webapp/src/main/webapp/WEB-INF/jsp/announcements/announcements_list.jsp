@@ -12,20 +12,20 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Anuncios</title>
-    <link rel="icon" type="image/png" sizes="311x311" href="assets/img/logo-tran-white.png">
-    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="icon" type="image/png" sizes="311x311" href="<c:url value="/assets/img/logo-tran-white.png"/>">
+    <link rel="stylesheet" href="<c:url value="/assets/bootstrap/css/bootstrap.min.css"/>">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
-    <link rel="stylesheet" href="assets/fonts/fontawesome-all.min.css">
-    <link rel="stylesheet" href="assets/fonts/font-awesome.min.css">
-    <link rel="stylesheet" href="assets/fonts/material-icons.min.css">
-    <link rel="stylesheet" href="assets/fonts/simple-line-icons.min.css">
-    <link rel="stylesheet" href="assets/fonts/fontawesome5-overrides.min.css">
-    <link rel="stylesheet" href="assets/css/buttons.css">
-    <link rel="stylesheet" href="assets/css/cards.css">
-    <link rel="stylesheet" href="assets/css/colors.compiled.css">
-    <link rel="stylesheet" href="assets/css/fab.css">
-    <link rel="stylesheet" href="assets/css/nav-tabs.css">
-    <link rel="stylesheet" href="assets/css/sidebar.css">
+    <link rel="stylesheet" href="<c:url value="/assets/fonts/fontawesome-all.min.css"/>">
+    <link rel="stylesheet" href="<c:url value="/assets/fonts/font-awesome.min.css"/>">
+    <link rel="stylesheet" href="<c:url value="/assets/fonts/material-icons.min.css"/>">
+    <link rel="stylesheet" href="<c:url value="/assets/fonts/simple-line-icons.min.css"/>">
+    <link rel="stylesheet" href="<c:url value="/assets/fonts/fontawesome5-overrides.min.css"/>">
+    <link rel="stylesheet" href="<c:url value="/assets/css/buttons.css"/>">
+    <link rel="stylesheet" href="<c:url value="/assets/css/cards.css"/>">
+    <link rel="stylesheet" href="<c:url value="/assets/css/colors.compiled.css"/>">
+    <link rel="stylesheet" href="<c:url value="/assets/css/fab.css"/>">
+    <link rel="stylesheet" href="<c:url value="/assets/css/nav-tabs.css"/>">
+    <link rel="stylesheet" href="<c:url value="/assets/css/sidebar.css"/>">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
 </head>
 
@@ -62,12 +62,10 @@
 
                             <div class="tab-pane ${filterBy == "general" ? 'active' : ''}" role="tabpanel" id="tab-1">
                                 <div class="col">
-                                    <div class="card-group">
-                                        <c:forEach var="announcement" items="${announcements}">
-                                            <c:set var="announcement" value="${announcement}" scope="request"/>
-                                            <jsp:include page="announcement_card.jsp"/>
-                                        </c:forEach>
-                                    </div>
+                                    <c:forEach var="announcement" items="${announcements}">
+                                        <c:set var="announcement" value="${announcement}" scope="request"/>
+                                        <jsp:include page="announcement_card.jsp"/>
+                                    </c:forEach>
                                 </div>
                             </div>
 
@@ -149,34 +147,33 @@
             </div>
         </div>
 
-    </div
+    </div>
 
-    <div aria-live="polite" aria-atomic="true" style="position: relative; min-height: 200px;">
-        <div id="errorToast" class="toast" data-autohide="false"
-                style="position: absolute; top: 0; right: 0; background-color: orange; color: white">
-            <div class="toast-header">
-                <strong class="mr-auto">Ups!</strong>
-                <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="toast-body">
-                Mensaje de error
-            </div>
+    <div id="errorToast" class="toast" data-autohide="false"
+         style="position: fixed; top: 0; right: 0; background-color: orange; color: white">
+        <div class="toast-header">
+            <strong class="mr-auto">Ups!</strong>
+            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="toast-body">
+            Mensaje de error
         </div>
     </div>
 
-    <div class="fab">
-        <i class="material-icons" style="font-size: 32px;color: rgb(255,255,255);">add</i>
+    <div class="fab" data-toggle="modal">
+        <a href="<c:url value="/announcements/create"/>">
+            <i class="material-icons" style="font-size: 32px;color: rgb(255,255,255);">add</i>
+        </a>
     </div>
 
-
-    <script src="assets/js/jquery.min.js"></script>
-    <script src="assets/js/theme.js"></script>
-    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="<c:url value="/assets/js/jquery.min.js"/>"></script>
+    <script src="<c:url value="/assets/js/theme.js"/>"></script>
+    <script src="<c:url value="/assets/bootstrap/js/bootstrap.min.js"/>"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.js"></script>
 
-    <script src="assets/js/announcements.js"></script>
+    <script src="<c:url value="/assets/js/announcements.js"/>"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" ></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
