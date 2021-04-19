@@ -11,7 +11,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Contenidos</title>
+    <title>Apuntes</title>
     <link rel="icon" type="image/png" sizes="311x311" href="assets/img/logo-tran-white.png">
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
@@ -42,7 +42,7 @@
                     <div class="col-lg-12 col-xl-12 mb-4">
                         <form action="<c:url value='/contents'/>" method="get">
 
-                            <select name="courseId" class="selectpicker" data-live-search="true" title="Elegí una carrera" data-width="75%">
+                            <select name="courseId" class="selectpicker" data-live-search="true" title="Elegí una carrera">
                                 <c:forEach var="course" items="${courses}">
                                     <option ${course.equals(selectedCourse) ? 'selected' : ''}
                                             value="${course.id}" data-tokens="${course.name}">${course.name}</option>
@@ -52,7 +52,6 @@
                             <div class="row align-items-center" style="margin-top: 16px;margin-bottom: 32px;">
                                 <div class="col-lg-2 col-xl-2">
                                     <select class="custom-select my-1 mr-sm-2" name="contentType">
-                                        <option selected value="" >Tipo...</option>
                                         <option value="exam">Exámen</option>
                                         <option value="guide">Guía</option>
                                         <option value="resume">Resúmen</option>
@@ -65,7 +64,7 @@
 
                                 <div class="col-lg-4 col-xl-4 text-center"><label>Hasta</label><input class="border rounded-0" type="date" name="maxDate"></div>
 
-                                <button type="submit" class="btn btn-primary ml-3">Buscar</button>
+                                <button hidden id="courseSearchBtn" type="submit" class="btn btn-primary ml-3">Buscar</button>
                             </div>
                         </form>
 
@@ -125,6 +124,12 @@
     <script src="assets/js/bs-init.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.js"></script>
     <script src="assets/js/theme.js"></script>
+
+    <script src="<c:url value="/assets/js/contents.js"/>"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" ></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+
 </body>
 
 </html>
