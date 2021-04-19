@@ -31,71 +31,81 @@
     <div id="wrapper">
         <jsp:include page="../common/navbar.jsp"/>
 
-        <div class="container-fluid">
-            <div>
-                <ul class="nav nav-tabs" role="tablist">
-                    <c:forEach var="career" items="${careers}">
-                        <c:set var="career" value="${career}" scope="request"/>
-                        <li class="nav-item" role="presentation">
-                            <a class="nav-link" role="tab" href="<c:url value='/courses?careerId=${career.id}'/>">
-                                <c:out value="${career.name}"/>
-                            </a>
-                        </li>
-                    </c:forEach>
+        <div class="d-flex flex-column" id="content-wrapper">
+            <div id="content">
 
-                </ul>
-                <div class="tab-content">
-                    <div class="tab-pane active" role="tabpanel" id="tab-1">
-                        <div role="tablist" id="accordion-1" style="margin-top: 32px;">
+                <jsp:include page="../common/header.jsp"/>
 
+                <div class="container-fluid">
+                    <div>
+                        <ul class="nav nav-tabs" role="tablist">
+                            <c:forEach var="career" items="${careers}">
+                                <c:set var="career" value="${career}" scope="request"/>
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link" role="tab" href="<c:url value='/courses?careerId=${career.id}'/>">
+                                        <c:out value="${career.name}"/>
+                                    </a>
+                                </li>
+                            </c:forEach>
 
-                             <c:forEach var="CourseList" items="${careerCourses}">
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active" role="tabpanel" id="tab-1">
+                                <div role="tablist" id="accordion-1" style="margin-top: 32px;">
+                                    <c:choose>
+                                        <c:when test="${selectedCareer != null}">
+                                            <c:forEach var="CourseList" items="${careerCourses}">
+                                                <div class="card">
+                                                    <div class="card-header" role="tab">
+                                                        <h5 class="mb-0"><a data-toggle="collapse" aria-expanded="true" aria-controls="accordion-1 .item-${CourseList.key}" href="#accordion-1 .item-${CourseList.key}">Año <c:out value="${CourseList.key}"/></a></h5>
+                                                    </div>
+                                                    <div class="collapse show item-${CourseList.key}" role="tabpanel" data-parent="#accordion-1">
 
-                                <div class="card">
-                                    <div class="card-header" role="tab">
-                                        <h5 class="mb-0"><a data-toggle="collapse" aria-expanded="true" aria-controls="accordion-1 .item-${CourseList.key}" href="#accordion-1 .item-${CourseList.key}">Año <c:out value="${CourseList.key}"/></a></h5>
-                                    </div>
-                                    <div class="collapse show item-${CourseList.key}" role="tabpanel" data-parent="#accordion-1">
-
-                                        <div class="card-body">
-                                            <div class="table-responsive">
-                                                <table class="table">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Código</th>
-                                                            <th>Nombre</th>
-                                                            <th>Cuatrimestre</th>
-                                                            <th>Créditos</th>
-                                                            <th>Link</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <c:forEach var="course" items="${CourseList.value}">
-                                                            <tr>
-                                                                <td><c:out value="${course.id}"/></td>
-                                                                <td><c:out value="${course.name}"/></td>
-                                                                <td><c:out value="${course.semester}"/></td>
-                                                                <td><c:out value="${course.credits}"/></td>
-                                                                <td><a class="btn btn-link" type="button" href="<c:url value='/courseByCourseId?courseId=${course.id}'/>">Abrir</a></td>
-                                                            </tr>
-                                                        </c:forEach>
-                                                    </tbody>
-                                                </table>
+                                                        <div class="card-body">
+                                                            <div class="table-responsive">
+                                                                <table class="table">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>Código</th>
+                                                                            <th>Nombre</th>
+                                                                            <th>Cuatrimestre</th>
+                                                                            <th>Créditos</th>
+                                                                            <th>Link</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <c:forEach var="course" items="${CourseList.value}">
+                                                                            <tr>
+                                                                                <td><c:out value="${course.id}"/></td>
+                                                                                <td><c:out value="${course.name}"/></td>
+                                                                                <td><c:out value="${course.semester}"/></td>
+                                                                                <td><c:out value="${course.credits}"/></td>
+                                                                                <td><a class="btn btn-link" type="button" href="<c:url value='/courseByCourseId?courseId=${course.id}'/>">Abrir</a></td>
+                                                                            </tr>
+                                                                        </c:forEach>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </c:forEach>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <div class="text-center"><i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
+                                                <p style="margin-top: 16px;">Por favor, elegí una carrera para ver los Cursos</p>
                                             </div>
-                                        </div>
-                                    </div>
+                                        </c:otherwise>
+                                    </c:choose>
                                 </div>
-
-                             </c:forEach>
-
+                            </div>
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
         <div id="content-1"></div>
-    </div>
-    </div>
     </div>
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
