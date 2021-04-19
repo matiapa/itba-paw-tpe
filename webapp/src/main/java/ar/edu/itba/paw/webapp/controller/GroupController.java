@@ -45,10 +45,11 @@ public class GroupController {
         modelAndView.addObject("filterBy", filterBy);
 
         List<ChatGroup> chatGroupList = new ArrayList<>();
+        List<Career> careers = careerService.findAll();
+        modelAndView.addObject("careers", careers);
         switch (filterBy){
             case career:
-                List<Career> careers = careerService.findAll();
-                modelAndView.addObject("careers", careers);
+
                 if (careerId != null){
                     chatGroupList = chatGroupService.findByCareer(careerId);
                     Career selected = careers.stream().filter(c -> c.getId() == careerId).findFirst()
@@ -78,7 +79,8 @@ public class GroupController {
         chatGroupService.addGroup(chatGroupForm.getGroupName(),
                 chatGroupForm.getGroupCareer(),
                 chatGroupForm.getLink(),
-                userService.getUser());
+                userService.getUser(),
+                chatGroupForm.getGroupDate());
         return new ModelAndView("redirect:chats/chats_list");
     }
 

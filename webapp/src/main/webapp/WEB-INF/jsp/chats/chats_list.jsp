@@ -132,8 +132,9 @@
                     <form:select path="groupCareer" class="form-control">
                         <c:forEach var="career" items="${careers}">
                             <form:option value="${career.id}"><c:out value="${career.name}"/></form:option>
+
                         </c:forEach>
-                        <form:errors path="groupCareer" element="p"/>
+                        <form:errors path="groupCareer" element="div"/>
                     </form:select>
                     <form:label path="link">Link al grupo</form:label>
                     <form:input type="text" path="link" class="form-control"/>

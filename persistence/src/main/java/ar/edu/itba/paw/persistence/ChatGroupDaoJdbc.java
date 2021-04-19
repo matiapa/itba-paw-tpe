@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,11 +33,11 @@ public class ChatGroupDaoJdbc implements ChatGroupDao{
 
 
     @Override
-    public boolean addGroup(String groupName, String careerId, String link, User user) {
+    public boolean addGroup(String groupName, String careerId, String link, User user, Date date) {
         jdbcTemplate.query(String.format("INSERT INTO chat_group" +
                         "(id, career_id, creation_date, name, link, submitted_by) " +
-                        "VALUES (2, %s, null, %s, %s, %d)",
-                careerId, groupName, link, user.getId()), CHAT_GROUP_ROW_MAPPER);
+                        "VALUES (2, %s, %s, %s, %s, %d)",
+                careerId, date.toString(), groupName, link, user.getId()), CHAT_GROUP_ROW_MAPPER);
         return false;
     }
 
