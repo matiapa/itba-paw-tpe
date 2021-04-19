@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.models.Content;
+import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.persistence.ContentDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,11 @@ public class ContentServiceImpl implements ContentService{
     @Override
     public List<Content> findContent(String courseId, String contentType, Date minDate, Date maxDate) {
         return contentDao.findContent(courseId,contentType,minDate,maxDate);
+    }
+
+    @Override
+    public boolean createContent(String name, String link, String courseId, String description, Content.ContentType contentType, Date contentDate,User user ) {
+        return contentDao.createContent(name, link, courseId, description, contentType, contentDate,user);
     }
 
 }

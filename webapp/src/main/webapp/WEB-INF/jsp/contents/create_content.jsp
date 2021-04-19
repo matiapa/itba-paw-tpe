@@ -3,8 +3,6 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 
-<jsp:useBean type="java.util.List<ar.edu.itba.paw.models.Career>" scope="request" id="careers"/>
-<jsp:useBean type="java.util.List<ar.edu.itba.paw.models.Course>" scope="request" id="courses"/>
 
 <!DOCTYPE html>
 <html>
@@ -46,14 +44,14 @@
 
 
                         <div class="form-group">
-                            <form:label path="name">Título: </form:label>
-                            <form:select name="courseId" class="selectpicker" data-live-search="true" title="Elegí un Curso">
+
+                            <form:select path="courseId" name="courseId" class="selectpicker" data-live-search="true" title="Elegí un Curso">
                                 <c:forEach var="course" items="${courses}">
                                     <option ${course.equals(selectedCourse) ? 'selected' : ''}
                                             value="${course.id}" data-tokens="${course.name}">${course.name}</option>
                                 </c:forEach>
                             </form:select>
-                            <form:errors path="name" cssClass="invalid-feedback" element="div"/>
+                            <form:errors path="courseId" cssClass="invalid-feedback" element="div"/>
                         </div>
 
 
@@ -65,20 +63,20 @@
                         </div>
 
                         <div class="form-group">
-                            <form:label path="link">Breve descripción:</form:label>
+                            <form:label path="link">Link:</form:label>
                             <form:input type="text" path="link" cssClass="form-control"/>
                             <form:errors path="link" cssClass="invalid-feedback" element="div"/>
                         </div>
 
                         <div class="form-group">
-                            <form:label path="descritption">Breve descripción: </form:label>
+                            <form:label path="description">Breve descripción: </form:label>
                             <form:textarea path="description" cssClass="form-control"/>
                             <form:errors path="description" cssClass="invalid-feedback" element="div"/>
                         </div>
 
                         <div class="form-group">
-                            <form:label path="contentType">Breve descripción: </form:label>
-                            <form:select class="custom-select my-1 mr-sm-2" name="contentType">
+                            <form:label path="contentType">Tipo: </form:label>
+                            <form:select path="contentType" class="custom-select my-1 mr-sm-2" name="contentType">
                                 <option selected value="">...</option>
                                 <option value="exam">Exámen</option>
                                 <option value="guide">Guía</option>
@@ -90,9 +88,9 @@
                         </div>
 
                         <div class="form-group">
-                            <form:label path="descritption">Breve descripción: </form:label>
-                            <input class="border rounded-0" type="date" name="contentDate">
-                            <form:errors path="description" cssClass="invalid-feedback" element="div"/>
+                            <form:label path="contentDate">Fecha del Apunte: (Opcional) </form:label>
+                            <input class="border rounded-0" path="contentDate" type="date" name="contentDate">
+                            <form:errors path="contentDate" cssClass="invalid-feedback" element="div"/>
                         </div>
 
 

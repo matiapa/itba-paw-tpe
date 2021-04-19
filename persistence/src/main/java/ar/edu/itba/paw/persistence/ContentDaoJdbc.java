@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
@@ -16,6 +17,7 @@ public class ContentDaoJdbc implements ContentDao{
     @Autowired private UserDao userDao;
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert jdbcInsert;
 
     private final RowMapper<Content> contentRowMapper = (rs, rowNum) -> {
         final Optional<User> userOpt = userDao.findById(rs.getInt("submitted_by"));
@@ -40,6 +42,7 @@ public class ContentDaoJdbc implements ContentDao{
     @Autowired
     public ContentDaoJdbc(DataSource ds){
         this.jdbcTemplate = new JdbcTemplate(ds);
+        this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate).withTableName("course_content");
     }
 
     @Override
@@ -80,6 +83,24 @@ public class ContentDaoJdbc implements ContentDao{
 
 
         return jdbcTemplate.query(stringBuilder.toString(),contentRowMapper);
+    }
+
+    @Override
+    public boolean createContent(String name, String link, String courseId, String description, Content.ContentType contentType, Date contentDate, User user) {
+        final Map<String,Object> args= new HashMap<>();
+        args.put("name",name);
+        args.put("link",link);
+        args.put("submitted_by",user.getId());
+        args.put("course_id",courseId);
+        args.put("description",description);
+        args.put("content_type",contentType);
+        args.put("content_date",contentDate);
+
+        return jdbcInsert.execute(args)==1;
+
+
+
+
     }
 
     public Optional<Content> findById(String id) {
