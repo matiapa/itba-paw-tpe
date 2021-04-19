@@ -86,7 +86,7 @@ public class ContentDaoJdbc implements ContentDao{
     }
 
     @Override
-    public boolean createContent(String name, String link, String courseId, String description, Content.ContentType contentType, Date contentDate, User user) {
+    public boolean createContent(String name, String link, String courseId, String description, String contentType, Date contentDate, User user) {
         final Map<String,Object> args= new HashMap<>();
         args.put("name",name);
         args.put("link",link);

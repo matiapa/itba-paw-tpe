@@ -16,6 +16,6 @@ public interface ContentService {
 
     List<Content> findContent(String courseId, String contentType, Date minDate,Date maxDate);
 
-    boolean createContent(String name, String link, String courseId, String description, Content.ContentType contentType, Date contentDate,User user);
+    boolean createContent(String name, String link, String courseId, String description, String contentType, Date contentDate,User user);
 
 }
