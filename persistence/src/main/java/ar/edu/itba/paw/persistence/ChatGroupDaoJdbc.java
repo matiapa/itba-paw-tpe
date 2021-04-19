@@ -22,10 +22,11 @@ public class ChatGroupDaoJdbc implements ChatGroupDao{
 
     private static final RowMapper<ChatGroup> CHAT_GROUP_ROW_MAPPER = (rs, rowNum) ->
         new ChatGroup(
-            rs.getString("id"),
+            rs.getInt("id"),
             rs.getString("career_id"),
             rs.getString("name"),
             rs.getString("link"),
+            rs.getInt("submitted_by"),
             rs.getDate("creation_date")
         );
 
@@ -50,17 +51,17 @@ public class ChatGroupDaoJdbc implements ChatGroupDao{
     }
 
     @Override
-    public ChatGroup addGroup(String groupName, String careerId, String link, User user, Date date) {
+    public ChatGroup addGroup(String groupName, String careerId, String link, Integer user, Date date) {
         final Map<String, Object> args = new HashMap<>();
         args.put("career_id", careerId);
         args.put("creation_date", date);
         args.put("name", groupName);
         args.put("link", link);
-        args.put("submitted_by", user.getId());
+        args.put("submitted_by", user);
 
         final Number id = simpleJdbcInsert.executeAndReturnKey(args);
 
-        return new ChatGroup(id.toString(), careerId, groupName, link, date);
+        return new ChatGroup(id.intValue(), careerId, groupName, link, user, date);
     }
 
     @Override

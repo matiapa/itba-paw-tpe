@@ -79,7 +79,7 @@ public class GroupController {
         chatGroupService.addGroup(chatGroupForm.getGroupName(),
                 chatGroupForm.getGroupCareer(),
                 chatGroupForm.getLink(),
-                userService.getUser(),
+                userService.getUser().getId(),
                 chatGroupForm.getGroupDate());
         return new ModelAndView("redirect:chats/chats_list");
     }

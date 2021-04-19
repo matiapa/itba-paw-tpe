@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface ChatGroupService {
 
-    ChatGroup addGroup(String groupName, String careerId, String link, User user, Date date);
+    ChatGroup addGroup(String groupName, String careerId, String link, Integer user, Date date);
 
     List<ChatGroup> getChatGroups();
 
