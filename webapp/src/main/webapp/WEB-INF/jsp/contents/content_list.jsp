@@ -40,7 +40,7 @@
                 <jsp:include page="../common/header.jsp"/>
 
                 <div class="container-fluid">
-                    <div class="col-lg-6 col-xl-6 mb-6">
+                    <div class="col-lg-12 col-xl-12 mb-6">
                         <form action="<c:url value='/contents'/>" method="get">
 
                             <select name="courseId" class="selectpicker" data-live-search="true" title="Elegí una carrera">
@@ -50,9 +50,12 @@
                                 </c:forEach>
                             </select>
 
+                            <button id="courseSearchBtn" type="submit" class="btn btn-primary ml-3">Buscar</button>
+
                             <div class="row align-items-center" style="margin-top: 16px;margin-bottom: 32px;">
                                 <div class="col-lg-2 col-xl-2">
                                     <select class="custom-select my-1 mr-sm-2" name="contentType">
+                                        <option selected value="">...</option>
                                         <option value="exam">Exámen</option>
                                         <option value="guide">Guía</option>
                                         <option value="resume">Resúmen</option>
@@ -65,7 +68,7 @@
 
                                 <div class="col-lg-4 col-xl-4 text-center"><label>Hasta</label><input class="border rounded-0" type="date" name="maxDate"></div>
 
-                                <button hidden id="courseSearchBtn" type="submit" class="btn btn-primary ml-3">Buscar</button>
+
                             </div>
                         </form>
 
