@@ -118,8 +118,11 @@
         </div>
     </div>
 
+
     <div class="fab">
-        <i class="material-icons" style="font-size: 32px;color: rgb(255,255,255);">add</i>
+        <a href="<c:url value='/contents/create'/>">
+            <i class="material-icons" style="font-size: 32px;color: rgb(255,255,255);">add</i>
+        </a>
     </div>
 
     <script src="assets/js/jquery.min.js"></script>
