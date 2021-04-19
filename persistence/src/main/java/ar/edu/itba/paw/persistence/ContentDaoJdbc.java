@@ -42,7 +42,7 @@ public class ContentDaoJdbc implements ContentDao{
     @Autowired
     public ContentDaoJdbc(DataSource ds){
         this.jdbcTemplate = new JdbcTemplate(ds);
-        this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate).withTableName("course_content");
+        this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate).withTableName("course_content").usingGeneratedKeyColumns("id","creation_date");
     }
 
     @Override

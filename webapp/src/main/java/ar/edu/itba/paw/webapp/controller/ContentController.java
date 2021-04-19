@@ -81,14 +81,9 @@ public class ContentController {
             @Valid @ModelAttribute("createForm") final ContentForm form,
             final BindingResult errors
     ){
-        System.out.println(form.getContentType());
-        System.out.println(form.getContentDate());
-        System.out.println(form.getCourseId());
-        System.out.println(form.getDescription());
-        System.out.println(form.getLink());
-        System.out.println(form.getName());
+
 //        if (errors.hasErrors())
-//            throw new RuntimeException("Tieme errores");
+//            throw new RuntimeException("Tiene errores");
 
          contentService.createContent(form.getName(),form.getLink(), form.getCourseId(), form.getDescription(), form.getContentType(),form.getContentDate(), userService.getUser());
 
