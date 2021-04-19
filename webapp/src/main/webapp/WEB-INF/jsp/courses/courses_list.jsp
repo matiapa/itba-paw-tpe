@@ -76,7 +76,7 @@
                                                                 <td><c:out value="${course.name}"/></td>
                                                                 <td><c:out value="${course.semester}"/></td>
                                                                 <td><c:out value="${course.credits}"/></td>
-                                                                <td><button class="btn btn-link" type="button">Abrir</button></td>
+                                                                <td><a class="btn btn-link" type="button" href="<c:url value='/courseByCourseId?courseId=${course.id}'/>">Abrir</a></td>
                                                             </tr>
                                                         </c:forEach>
                                                     </tbody>
