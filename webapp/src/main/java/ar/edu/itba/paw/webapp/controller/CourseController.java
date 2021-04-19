@@ -83,7 +83,9 @@ public class CourseController {
         mav.addObject("polls",polls);
 
         Optional<Course> selectedCourse = courseService.findById(courseId);
-        mav.addObject("selectedCourse", selectedCourse);
+        if (!selectedCourse.isPresent())
+            throw new RuntimeException();
+        mav.addObject("course", selectedCourse.get());
 
 
         mav.addObject("user", userService.getUser());

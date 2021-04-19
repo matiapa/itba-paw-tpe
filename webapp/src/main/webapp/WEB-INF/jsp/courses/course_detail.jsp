@@ -2,13 +2,15 @@
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 
+<jsp:useBean type="ar.edu.itba.paw.models.Course" scope="request" id="course"/>
+
 <!DOCTYPE html>
 <html>
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>new-design</title>
+    <title><c:out value="${course.name}"/></title>
     <link rel="icon" type="image/png" sizes="311x311" href="assets/img/logo-tran-white.png">
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
@@ -34,7 +36,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-lg-6 col-xl-8 mb-4">
-                    <h6 class="display-3 font-weight-bold m-0"><c:out value="${course.title}"/></h6>
+                    <h6 class="display-3 font-weight-bold m-0"><c:out value="${course.name}"/></h6>
                 </div>
             </div>
             <div class="row">
@@ -87,7 +89,7 @@
                 <div class="col-lg-6 col-xl-12 offset-xl-0 mb-4">
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h6 class="font-weight-bold m-0">Content</h6>
+                            <h6 class="font-weight-bold m-0">Apuntes del Curso</h6>
                         </div>
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item">
