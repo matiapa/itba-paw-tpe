@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface ChatGroupDao {
 
-    boolean addGroup(String groupName, String careerId, String link, User user, Date date);
+    ChatGroup addGroup(String groupName, String careerId, String link, User user, Date date);
 
     List<ChatGroup> getChats();
 

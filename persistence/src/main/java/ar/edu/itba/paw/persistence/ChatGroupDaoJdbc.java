@@ -5,15 +5,18 @@ import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 public class ChatGroupDaoJdbc implements ChatGroupDao{
+
+    static int id = 2;
+    private final SimpleJdbcInsert simpleJdbcInsert;
+
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -28,17 +31,36 @@ public class ChatGroupDaoJdbc implements ChatGroupDao{
 
     @Autowired
     public ChatGroupDaoJdbc(DataSource ds){
+
         this.jdbcTemplate = new JdbcTemplate(ds);
+        this.simpleJdbcInsert = new SimpleJdbcInsert(this.jdbcTemplate)
+                .withTableName("chat_group")
+                .usingGeneratedKeyColumns("id");
+
+        this.jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS chat_group(" +
+                "id             SERIAL," +
+                "career_id      INT NOT NULL," +
+                "creation_date  DATE NOT NULL," +
+                "name           VARCHAR(100) NOT NULL," +
+                "link           VARCHAR (100) NOT NULL," +
+                "submitted_by   INT NOT NULL," +
+                "PRIMARY KEY(id)," +
+                "FOREIGN KEY(career_id) REFERENCES career ON DELETE CASCADE," +
+                "FOREIGN KEY(submitted_by) REFERENCES users ON DELETE RESTRICT );");
     }
 
-
     @Override
-    public boolean addGroup(String groupName, String careerId, String link, User user, Date date) {
-        jdbcTemplate.query(String.format("INSERT INTO chat_group" +
-                        "(id, career_id, creation_date, name, link, submitted_by) " +
-                        "VALUES (2, %s, %s, %s, %s, %d)",
-                careerId, date.toString(), groupName, link, user.getId()), CHAT_GROUP_ROW_MAPPER);
-        return false;
+    public ChatGroup addGroup(String groupName, String careerId, String link, User user, Date date) {
+        final Map<String, Object> args = new HashMap<>();
+        args.put("career_id", careerId);
+        args.put("creation_date", date);
+        args.put("name", groupName);
+        args.put("link", link);
+        args.put("submitted_by", user.getId());
+
+        final Number id = simpleJdbcInsert.executeAndReturnKey(args);
+
+        return new ChatGroup(id.toString(), careerId, groupName, link, date);
     }
 
     @Override

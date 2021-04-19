@@ -3,6 +3,7 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.models.ChatGroup;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.persistence.ChatGroupDao;
+import ar.edu.itba.paw.persistence.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,9 +17,8 @@ public class ChatGroupServiceImpl implements ChatGroupService{
     private ChatGroupDao chatGroupDao;
 
     @Override
-    public boolean addGroup(String groupName, String careerId, String link, User user, Date date) {
-        chatGroupDao.addGroup(groupName, careerId, link, user, date);
-        return false;
+    public ChatGroup addGroup(String groupName, String careerId, String link, User user, Date date) {
+        return chatGroupDao.addGroup(groupName, careerId, link, user, date);
     }
 
     @Override
