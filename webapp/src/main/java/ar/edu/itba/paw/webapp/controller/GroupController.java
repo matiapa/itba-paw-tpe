@@ -67,7 +67,7 @@ public class GroupController {
     }
 
 
-    @RequestMapping(value = "/chats/add", method = {RequestMethod.POST})
+    @RequestMapping(value = "/chats", method = {RequestMethod.POST})
     public ModelAndView addGroup(
             @Valid @ModelAttribute("chatGroupForm") final ChatGroupForm chatGroupForm,
             final BindingResult errors
@@ -79,7 +79,7 @@ public class GroupController {
                 chatGroupForm.getGroupCareer(),
                 chatGroupForm.getLink(),
                 userService.getUser());
-        return new ModelAndView("redirect:chats");
+        return new ModelAndView("redirect:chats/chats_list");
     }
 
 
