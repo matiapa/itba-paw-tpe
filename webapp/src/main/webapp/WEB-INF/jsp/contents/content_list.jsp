@@ -43,7 +43,7 @@
                     <div class="col-lg-12 col-xl-12 mb-6">
                         <form action="<c:url value='/contents'/>" method="get">
 
-                            <select name="courseId" class="selectpicker" data-live-search="true" title="Elegí una carrera">
+                            <select name="courseId" class="selectpicker" data-live-search="true" title="Elegí un Curso">
                                 <c:forEach var="course" items="${courses}">
                                     <option ${course.equals(selectedCourse) ? 'selected' : ''}
                                             value="${course.id}" data-tokens="${course.name}">${course.name}</option>

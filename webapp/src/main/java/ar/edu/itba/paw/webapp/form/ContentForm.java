@@ -23,18 +23,26 @@ public class ContentForm {
     @NotNull
     private String courseId;
 
-    private Date content_Date;
+    private Date contentDate;
 
     @NotNull
     private Content.ContentType contentType;
 
-    public ContentForm(String name, String link, String description, String courseId, Date content_Date, Content.ContentType contentType) {
+    public ContentForm(String name, String link, String description, String courseId, Date contentDate, Content.ContentType contentType) {
         this.name = name;
         this.link = link;
         this.description = description;
         this.courseId = courseId;
-        this.content_Date = content_Date;
+        this.contentDate = contentDate;
         this.contentType = contentType;
+    }
+
+    public Date getContentDate() {
+        return contentDate;
+    }
+
+    public void setContentDate(Date contentDate) {
+        this.contentDate = contentDate;
     }
 
     public String getName() {
@@ -69,13 +77,7 @@ public class ContentForm {
         this.courseId = courseId;
     }
 
-    public Date getContent_Date() {
-        return content_Date;
-    }
 
-    public void setContent_Date(Date content_Date) {
-        this.content_Date = content_Date;
-    }
 
     public Content.ContentType getContentType() {
         return contentType;
