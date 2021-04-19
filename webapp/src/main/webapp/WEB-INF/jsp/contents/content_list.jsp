@@ -26,6 +26,7 @@
     <link rel="stylesheet" href="assets/css/fab.css">
     <link rel="stylesheet" href="assets/css/nav-tabs.css">
     <link rel="stylesheet" href="assets/css/sidebar.css">
+     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
 </head>
 
 <body id="page-top">
@@ -39,7 +40,7 @@
                 <jsp:include page="../common/header.jsp"/>
 
                 <div class="container-fluid">
-                    <div class="col-lg-12 col-xl-12 mb-4">
+                    <div class="col-lg-6 col-xl-6 mb-6">
                         <form action="<c:url value='/contents'/>" method="get">
 
                             <select name="courseId" class="selectpicker" data-live-search="true" title="Elegí una carrera">
@@ -125,7 +126,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.js"></script>
     <script src="assets/js/theme.js"></script>
 
-    <script src="<c:url value="/assets/js/contents.js"/>"></script>
+    <script src="<c:url value='assets/js/contents.js'/>"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" ></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
