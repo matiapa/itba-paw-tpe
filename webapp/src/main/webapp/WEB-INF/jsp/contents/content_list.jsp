@@ -54,7 +54,7 @@
                             <div class="row align-items-center" style="margin-top: 16px;margin-bottom: 32px;">
                                 <div class="col-lg-2 col-xl-2">
                                     <select class="custom-select my-1 mr-sm-2" name="contentType">
-                                        <option selected value="">...</option>
+                                        <option selected value="">Tipo</option>
                                         <option value="exam">Exámen</option>
                                         <option value="guide">Guía</option>
                                         <option value="resume">Resúmen</option>

@@ -8,3 +8,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
     }
 
 });
+
+$("#submitContent").click(function(){
+    $("div.spanner").addClass("show");
+    $("div.overlay").addClass("show");
+});

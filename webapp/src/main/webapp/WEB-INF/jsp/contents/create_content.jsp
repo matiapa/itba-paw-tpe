@@ -77,7 +77,7 @@
                         <div class="form-group">
                             <form:label path="contentType">Tipo: </form:label>
                             <form:select path="contentType" class="custom-select my-1 mr-sm-2" name="contentType">
-                                <option selected value="">...</option>
+                                <option selected value="">Tipo</option>
                                 <option value="exam">Exámen</option>
                                 <option value="guide">Guía</option>
                                 <option value="resume">Resúmen</option>
@@ -93,12 +93,8 @@
                             <form:errors path="contentDate" cssClass="invalid-feedback" element="div"/>
                         </div>
 
-
-
-
-
                         <div>
-                            <button id="submitAnnouncement" type="submit" class="btn btn-primary ml-3">Enviar</button>
+                            <button id="submitContent" type="submit" class="btn btn-primary ml-3">Enviar</button>
                         </div>
                     </form:form>
                 </div>
@@ -108,7 +104,7 @@
             <div class="overlay"></div>
             <div class="spanner">
                 <div class="loader"></div>
-                <p>Agregando anuncio</p>
+                <p>Agregando contenido</p>
             </div>
         </div>
 
@@ -120,7 +116,7 @@
     <script src="<c:url value="/assets/bootstrap/js/bootstrap.min.js"/>"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.js"></script>
 
-    <script src="<c:url value="/assets/js/announcements.js"/>"></script>
+    <script src="<c:url value="/assets/js/content.js"/>"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" ></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
