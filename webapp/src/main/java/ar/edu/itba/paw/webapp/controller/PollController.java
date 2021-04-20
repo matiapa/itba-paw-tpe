@@ -1,8 +1,5 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.models.HolderEntity;
-import ar.edu.itba.paw.services.UserService;
-import ar.edu.itba.paw.webapp.form.PollForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -12,18 +9,22 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 
+
 import java.text.DateFormat;
 import java.util.*;
 
 import ar.edu.itba.paw.models.Career;
 import ar.edu.itba.paw.models.Course;
 import ar.edu.itba.paw.models.Poll;
+import ar.edu.itba.paw.models.HolderEntity;
+import ar.edu.itba.paw.models.Poll.PollOption;
 import ar.edu.itba.paw.models.ui.NavigationItem;
 import ar.edu.itba.paw.services.CareerService;
 import ar.edu.itba.paw.services.CourseService;
 import ar.edu.itba.paw.services.PollService;
+import ar.edu.itba.paw.services.UserService;
 import ar.edu.itba.paw.webapp.mav.BaseMav;
-
+import ar.edu.itba.paw.webapp.form.PollForm;
 import javax.validation.Valid;
 
 @Controller
@@ -36,6 +37,9 @@ public class PollController {
     @Autowired private CareerService careerService;
 
     @Autowired private CourseService courseService;
+
+
+
 
     @RequestMapping("/polls")
     public ModelAndView getPolls(
@@ -80,6 +84,8 @@ public class PollController {
         modelAndView.addObject("user", userService.getUser());
         return modelAndView;
     }
+
+
 
 
     @RequestMapping("polls/byId")
@@ -169,6 +175,27 @@ public class PollController {
         );
 
         mav.addObject("polls", pollService.findGeneral());
+        return mav;
+    }
+
+    @RequestMapping("polls/detail")
+    public ModelAndView getPoll(
+            @RequestParam(name="id") int pollId
+    ){
+        final ModelAndView mav = new ModelAndView("polls/poll_detail");
+
+
+        Optional<Poll>  selectedPoll= pollService.findById(pollId);
+
+
+        if (!selectedPoll.isPresent())
+            throw new RuntimeException();
+        mav.addObject("poll",selectedPoll.get());
+
+        Map<PollOption,Integer> votes = pollService.getVotes(pollId);
+        mav.addObject("votes",votes);
+        mav.addObject("user", userService.getUser());
+
         return mav;
     }
 }
