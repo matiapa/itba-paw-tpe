@@ -19,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -55,6 +56,15 @@ public class ContentController {
                     .orElseThrow(RuntimeException::new);
             mav.addObject("selectedCourse", selectedCourse);
         }
+
+        mav.addObject("contentTypeEnumMap", new HashMap<Content.ContentType, String>()
+        {{
+            put(Content.ContentType.exam, "Exámen");
+            put(Content.ContentType.guide, "Guía");
+            put(Content.ContentType.note, "Apunte");
+            put(Content.ContentType.resume, "Resúmen");
+            put(Content.ContentType.other, "Otro");
+        }});
 
         mav.addObject("contents", contents);
 

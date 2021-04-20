@@ -63,9 +63,13 @@
                                     </select>
                                 </div>
 
-                                <div class="col-lg-4 col-xl-4 text-center"><label>Desde&nbsp;</label><input class="border rounded-0" type="date" name="minDate"></div>
+                                <div class="col-lg-4 col-xl-4 text-center">
+                                    <label>Desde&nbsp;</label><input class="border rounded-0" type="date" name="minDate">
+                                </div>
 
-                                <div class="col-lg-4 col-xl-4 text-center"><label>Hasta</label><input class="border rounded-0" type="date" name="maxDate"></div>
+                                <div class="col-lg-4 col-xl-4 text-center">
+                                    <label>Hasta</label><input class="border rounded-0" type="date" name="maxDate">
+                                </div>
 
                                 <button id="courseSearchBtn" type="submit" hidden class="btn btn-primary ml-3">Buscar</button>
 
@@ -91,7 +95,7 @@
                                             <c:set var="content" value="${content}" scope="request"/>
                                             <tr>
                                                 <td><c:out value="${content.name}"/></td>
-                                                <td><c:out value="${content.contentType}"/></td>
+                                                <td><c:out value="${contentTypeEnumMap.get(content.contentType)}"/></td>
                                                 <td><c:out value="${content.uploadDate}"/></td>
                                                 <td><img class="rounded-circle mr-2" width="30" height="30" src="<c:url value="assets/img/avatars/avatar.png"/>">
                                                     <c:out value="${content.submitter.name}"/></td>
