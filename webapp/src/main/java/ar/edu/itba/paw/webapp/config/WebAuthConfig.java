@@ -36,6 +36,12 @@ public class WebAuthConfig {
             .oauth2Login()
             ;
         }
+
+        @Override
+        public void configure(final WebSecurity web) throws Exception {
+            web.ignoring()
+                .antMatchers("/assets/**");
+        }
     }
 
     @Bean
