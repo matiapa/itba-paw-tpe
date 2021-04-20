@@ -35,7 +35,7 @@ public class GroupController {
 
     @Autowired private UserService userService;
 
-    @RequestMapping("chats")
+    @RequestMapping("/chats")
     public ModelAndView getChats(
             @RequestParam(name="filterBy", required = false, defaultValue = "general")HolderEntity filterBy,
             @RequestParam(name = "careerId", required = false) Integer careerId,
@@ -73,14 +73,26 @@ public class GroupController {
             @Valid @ModelAttribute("chatGroupForm") final ChatGroupForm chatGroupForm,
             final BindingResult errors
     ) {
+
+        System.out.println(chatGroupForm.getGroupName());
+        System.out.println(chatGroupForm.getGroupCareer());
+        System.out.println(chatGroupForm.getLink());
+        System.out.println(chatGroupForm.getGroupDate());
+/*
         if (errors.hasErrors()) {
-            return getChats(HolderEntity.general, null, chatGroupForm);
+            throw new RuntimeException("Error");
+            //return getChats(HolderEntity.general, null, chatGroupForm);
         }
+
+
+*/
         chatGroupService.addGroup(chatGroupForm.getGroupName(),
                 chatGroupForm.getGroupCareer(),
                 chatGroupForm.getLink(),
                 userService.getUser().getId(),
                 chatGroupForm.getGroupDate());
+
+
         return new ModelAndView("redirect:chats/chats_list");
     }
 

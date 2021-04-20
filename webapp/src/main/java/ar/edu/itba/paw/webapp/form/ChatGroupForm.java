@@ -10,14 +10,12 @@ import java.util.Date;
 public class ChatGroupForm {
 
     @Size(min = 6, max = 100)
-    @Pattern(regexp = "[a-zA-Z0-9 ]+")
     @NotNull
     private String groupName;
 
     @Size(min = 6, max = 100)
-    @Pattern(regexp = "[a-zA-z]+ [a-zA-z]+")
-    @NotNull
     private String groupCareer;
+
     @Size(min = 6, max = 100)
     @NotNull
     private String link;
@@ -42,6 +40,10 @@ public class ChatGroupForm {
         return groupDate;
     }
 
+    public void setGroupDate(Date groupDate) {
+        this.groupDate = groupDate;
+    }
+
     public void setGroupName(String groupName) {
         this.groupName = groupName;
     }
@@ -54,7 +56,4 @@ public class ChatGroupForm {
         this.link = link;
     }
 
-    public void setGroupDate(Date groupDate) {
-        this.groupDate = groupDate;
-    }
 }
