@@ -107,7 +107,8 @@
                                         <tr></tr>
                                         </tfoot>
                                     </table>
-                                </c:when>
+                                </div>
+                            </c:when>
                                 <c:otherwise>
                                     <div class="text-center"><i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
                                         <p style="margin-top: 16px;">Por favor, elegí un curso para ver los anuncios</p>
