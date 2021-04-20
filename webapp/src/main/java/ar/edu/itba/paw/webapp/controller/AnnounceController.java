@@ -1,33 +1,33 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.models.Announcement;
-import ar.edu.itba.paw.models.Career;
-import ar.edu.itba.paw.models.Course;
-import ar.edu.itba.paw.models.HolderEntity;
-import ar.edu.itba.paw.models.ui.NavigationItem;
-import ar.edu.itba.paw.services.AnnouncementService;
-import ar.edu.itba.paw.services.CareerService;
-import ar.edu.itba.paw.services.CourseService;
-import ar.edu.itba.paw.services.UserService;
-import ar.edu.itba.paw.webapp.mav.BaseMav;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Optional;
-import java.util.List;
-
-import static org.springframework.http.HttpStatus.NOT_FOUND;
+import ar.edu.itba.paw.models.Announcement;
+import ar.edu.itba.paw.models.Career;
+import ar.edu.itba.paw.models.Course;
+import ar.edu.itba.paw.models.HolderEntity;
+import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.ui.NavigationItem;
+import ar.edu.itba.paw.services.AnnouncementService;
+import ar.edu.itba.paw.services.CareerService;
+import ar.edu.itba.paw.services.CourseService;
+import ar.edu.itba.paw.webapp.mav.BaseMav;
 
 @Controller
 public class AnnounceController {
-
-    @Autowired private UserService userService;
 
     @Autowired private AnnouncementService announcementService;
 
@@ -40,7 +40,8 @@ public class AnnounceController {
     public ModelAndView getAnnouncements(
         @RequestParam(name="filterBy", required = false, defaultValue="general") HolderEntity filterBy,
         @RequestParam(name="careerId", required = false) Integer careerId,
-        @RequestParam(name="courseId", required = false) String courseId
+        @RequestParam(name="courseId", required = false) String courseId,
+        @AuthenticationPrincipal User user
     ){
         final ModelAndView mav = new ModelAndView("announcements/announcements_list");
 
@@ -77,7 +78,7 @@ public class AnnounceController {
 
         mav.addObject("announcements", announcements);
 
-        mav.addObject("user", userService.getUser());
+        mav.addObject("user", user);
 
         return mav;
     }

@@ -14,20 +14,6 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserDao userDao;
 
-    @SuppressWarnings("SameReturnValue")
-    private boolean isLogged() {
-        return true;
-    }
-
-    @Override
-    public User getUser() {
-        if(isLogged())
-            return new User(1, "Test User","user surname","email",1);
-//            throw new UnsupportedOperationException();
-        else
-            return null;
-    }
-
     @Override
     public Optional<User> findByEmail(String email) {
         return userDao.findByEmail(email);

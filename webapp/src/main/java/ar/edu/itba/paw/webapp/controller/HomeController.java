@@ -1,17 +1,17 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.exceptions.LoginRequiredException;
-import ar.edu.itba.paw.models.ui.NavigationItem;
-import ar.edu.itba.paw.models.ui.Panel;
-import ar.edu.itba.paw.services.*;
-import ar.edu.itba.paw.webapp.mav.BaseMav;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.Arrays;
-import java.util.Collections;
+import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.services.AnnouncementService;
+import ar.edu.itba.paw.services.CareerService;
+import ar.edu.itba.paw.services.CourseService;
+import ar.edu.itba.paw.services.PollService;
+import ar.edu.itba.paw.services.UserService;
 
 @Controller
 public class HomeController {
@@ -27,13 +27,13 @@ public class HomeController {
     @Autowired private PollService pollService;
 
     @RequestMapping("/")
-    public ModelAndView getDashboard() {
+    public ModelAndView getDashboard(@AuthenticationPrincipal User user) {
 
         final ModelAndView mav = new ModelAndView("index");
 
-        mav.addObject("user", userService.getUser());
+        mav.addObject("user", user);
 
-        mav.addObject("courses", courseService.findFavourites(4));
+        mav.addObject("courses", courseService.findFavourites(user, 4));
 
         mav.addObject("announcements", announcementService.findGeneral());
 
