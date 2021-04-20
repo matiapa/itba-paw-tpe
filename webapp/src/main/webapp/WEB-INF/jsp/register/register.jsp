@@ -27,7 +27,7 @@
     <div class="container">
             <div class="card shadow-lg o-hidden border-0 my-5">
                 <div class="card-body p-0">
-                    <c:url value="/registerUser" var="postFormUrl"/>
+                    <c:url value="/register" var="postFormUrl"/>
                     <form:form modelAttribute="UserForm" action="${postFormUrl}" method="post">
                         <div class="row">
                             <div class="col-lg-5 d-none d-lg-flex">

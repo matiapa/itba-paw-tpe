@@ -40,7 +40,8 @@ public class WebAuthConfig {
             http
             .authorizeRequests()
             .antMatchers("/login").anonymous()
-            .anyRequest().authenticated()
+            .antMatchers("/register").hasRole("UNREGISTERED")
+            .anyRequest().hasRole("USER")
             .and()
             .oauth2Login()
             .loginPage("/login")
