@@ -11,20 +11,20 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Cursos</title>
-    <link rel="icon" type="image/png" sizes="311x311" href="assets/img/logo-tran-white.png">
-    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="icon" type="image/png" sizes="311x311" href="<c:url value="/assets/img/logo-tran-white.png"/>">
+    <link rel="stylesheet" href="<c:url value="/assets/bootstrap/css/bootstrap.min.css"/>">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
-    <link rel="stylesheet" href="assets/fonts/fontawesome-all.min.css">
-    <link rel="stylesheet" href="assets/fonts/font-awesome.min.css">
-    <link rel="stylesheet" href="assets/fonts/material-icons.min.css">
-    <link rel="stylesheet" href="assets/fonts/simple-line-icons.min.css">
-    <link rel="stylesheet" href="assets/fonts/fontawesome5-overrides.min.css">
-    <link rel="stylesheet" href="assets/css/buttons.css">
-    <link rel="stylesheet" href="assets/css/cards.css">
-    <link rel="stylesheet" href="assets/css/colors.compiled.css">
-    <link rel="stylesheet" href="assets/css/fab.css">
-    <link rel="stylesheet" href="assets/css/nav-tabs.css">
-    <link rel="stylesheet" href="assets/css/sidebar.css">
+    <link rel="stylesheet" href="<c:url value="/assets/fonts/fontawesome-all.min.css"/>">
+    <link rel="stylesheet" href="<c:url value="/assets/fonts/font-awesome.min.css"/>">
+    <link rel="stylesheet" href="<c:url value="/assets/fonts/material-icons.min.css"/>">
+    <link rel="stylesheet" href="<c:url value="/assets/fonts/simple-line-icons.min.css"/>">
+    <link rel="stylesheet" href="<c:url value="/assets/fonts/fontawesome5-overrides.min.css"/>">
+    <link rel="stylesheet" href="<c:url value="/assets/css/buttons.css"/>">
+    <link rel="stylesheet" href="<c:url value="/assets/css/cards.css"/>">
+    <link rel="stylesheet" href="<c:url value="/assets/css/colors.compiled.css"/>">
+    <link rel="stylesheet" href="<c:url value="/assets/css/fab.css"/>">
+    <link rel="stylesheet" href="<c:url value="/assets/css/nav-tabs.css"/>">
+    <link rel="stylesheet" href="<c:url value="/assets/css/sidebar.css"/>">
 </head>
 
 <body id="page-top">
@@ -80,7 +80,9 @@
                                                                                 <td><c:out value="${course.name}"/></td>
                                                                                 <td><c:out value="${course.semester}"/></td>
                                                                                 <td><c:out value="${course.credits}"/></td>
-                                                                                <td><a class="btn btn-link" type="button" href="<c:url value='/courseByCourseId?courseId=${course.id}'/>">Abrir</a></td>
+                                                                                <td><a class="btn btn-link" type="button"
+                                                                                       href="<c:url value='/courses/detail?id=${course.id}'/>"
+                                                                                >Abrir</a></td>
                                                                             </tr>
                                                                         </c:forEach>
                                                                     </tbody>
@@ -107,12 +109,12 @@
         </div>
         <div id="content-1"></div>
     </div>
-    <script src="assets/js/jquery.min.js"></script>
-    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
-    <script src="assets/js/chart.min.js"></script>
-    <script src="assets/js/bs-init.js"></script>
+    <script src="<c:url value="/assets/js/jquery.min.js"/>"></script>
+    <script src="<c:url value="/assets/bootstrap/js/bootstrap.min.js"/>"></script>
+    <script src="<c:url value="/assets/js/chart.min.js"/>"></script>
+    <script src="<c:url value="/assets/js/bs-init.js"/>"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.js"></script>
-    <script src="assets/js/theme.js"></script>
+    <script src="<c:url value="/assets/js/theme.js"/>"></script>
 </body>
 
 </html>

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -62,21 +63,28 @@ public class CourseController {
 
         return mav;
     }
-    @RequestMapping("courseByCourseId")
+    @RequestMapping("courses/detail")
     public ModelAndView getCourse(
-            @RequestParam(name="courseId") String courseId
+        @RequestParam(name="id") String courseId
     ){
         final ModelAndView mav = new ModelAndView("courses/course_detail");
-
 
         List<Announcement> announcements;
         announcements = announcementService.findByCourse(courseId);
         mav.addObject("announcements",announcements);
 
-
         List<Content> contents;
         contents = contentService.findByCourse(courseId);
         mav.addObject("contents",contents);
+
+        mav.addObject("contentTypeEnumMap", new HashMap<Content.ContentType, String>()
+        {{
+            put(Content.ContentType.exam, "Exámen");
+            put(Content.ContentType.guide, "Guía");
+            put(Content.ContentType.note, "Apunte");
+            put(Content.ContentType.resume, "Resúmen");
+            put(Content.ContentType.other, "Otro");
+        }});
 
         List<Poll> polls;
         polls = pollService.findByCourse(courseId);
