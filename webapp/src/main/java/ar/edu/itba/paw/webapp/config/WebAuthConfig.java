@@ -18,6 +18,7 @@ import org.springframework.security.oauth2.client.registration.InMemoryClientReg
 
 import ar.edu.itba.paw.services.UserService;
 import ar.edu.itba.paw.webapp.auth.CustomOidcUserService;
+import ar.edu.itba.paw.webapp.auth.LoginSuccessHandler;
 
 @Configuration
 public class WebAuthConfig {
@@ -39,13 +40,17 @@ public class WebAuthConfig {
         protected void configure(HttpSecurity http) throws Exception {
             http
             .authorizeRequests()
-            .antMatchers("/login").anonymous()
-            .antMatchers("/register").hasRole("UNREGISTERED")
-            .anyRequest().hasRole("USER")
-            .and()
-            .oauth2Login()
-            .loginPage("/login")
-            .userInfoEndpoint().oidcUserService(new CustomOidcUserService(userService))
+                .antMatchers("/login").anonymous()
+                .antMatchers("/register").hasRole("UNREGISTERED")
+                .anyRequest().hasRole("USER")
+            .and().logout()
+                .logoutUrl("/signout")
+                .logoutSuccessUrl("/login")
+            .and().oauth2Login()
+                .loginPage("/login").successHandler(new LoginSuccessHandler())
+                .userInfoEndpoint().oidcUserService(new CustomOidcUserService(userService))
+                .and()
+            .and().csrf().disable()
             ;
         }
 
