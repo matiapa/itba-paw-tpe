@@ -22,7 +22,7 @@ public class UserPrincipal extends User implements OidcUser {
 	private Set<GrantedAuthority> authorities;
 
     public UserPrincipal(User user, Collection<? extends GrantedAuthority> authorities, OidcIdToken idToken, OidcUserInfo userInfo) {
-        super(user.getId(), user.getName());
+        super(user.getId(), user.getName(), user.getSurname(), user.getEmail(), user.getCareer_id());
         this.idToken = idToken;
         this.userInfo = userInfo;
 
