@@ -12,21 +12,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Anuncios</title>
-    <link rel="icon" type="image/png" sizes="311x311" href="<c:url value="/assets/img/logo-tran-white.png"/>">
-    <link rel="stylesheet" href="<c:url value="/assets/bootstrap/css/bootstrap.min.css"/>">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
-    <link rel="stylesheet" href="<c:url value="/assets/fonts/fontawesome-all.min.css"/>">
-    <link rel="stylesheet" href="<c:url value="/assets/fonts/font-awesome.min.css"/>">
-    <link rel="stylesheet" href="<c:url value="/assets/fonts/material-icons.min.css"/>">
-    <link rel="stylesheet" href="<c:url value="/assets/fonts/simple-line-icons.min.css"/>">
-    <link rel="stylesheet" href="<c:url value="/assets/fonts/fontawesome5-overrides.min.css"/>">
-    <link rel="stylesheet" href="<c:url value="/assets/css/buttons.css"/>">
-    <link rel="stylesheet" href="<c:url value="/assets/css/cards.css"/>">
-    <link rel="stylesheet" href="<c:url value="/assets/css/colors.compiled.css"/>">
-    <link rel="stylesheet" href="<c:url value="/assets/css/fab.css"/>">
-    <link rel="stylesheet" href="<c:url value="/assets/css/nav-tabs.css"/>">
-    <link rel="stylesheet" href="<c:url value="/assets/css/sidebar.css"/>">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+
+    <jsp:include page="../common/styles.jsp"/>
+
+    <link rel="stylesheet" href="<c:url value="/assets/bootstrap/css/bootstrap-select.min.css"/>">
 </head>
 
 <body id="page-top">
@@ -168,15 +157,13 @@
         </a>
     </div>
 
-    <script src="<c:url value="/assets/js/jquery.min.js"/>"></script>
-    <script src="<c:url value="/assets/js/theme.js"/>"></script>
-    <script src="<c:url value="/assets/bootstrap/js/bootstrap.min.js"/>"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.js"></script>
+    <jsp:include page="../common/scripts.jsp"/>
 
     <script src="<c:url value="/assets/js/announcements.js"/>"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" ></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+    <script src="<c:url value="/assets/js/jquery.easing.js"/>"></script>
+    <script src="<c:url value="/assets/js/popper.min.js"/>" ></script>
+    <script src="<c:url value="/assets/bootstrap/js/bootstrap-select.min.js"/>"></script>
 
 </body>
 
