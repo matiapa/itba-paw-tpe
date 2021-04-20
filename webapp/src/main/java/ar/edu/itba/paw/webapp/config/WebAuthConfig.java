@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -16,11 +17,11 @@ import org.springframework.security.oauth2.client.registration.ClientRegistratio
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
 
-import ar.edu.itba.paw.services.UserService;
-import ar.edu.itba.paw.webapp.auth.CustomOidcUserService;
+import ar.edu.itba.paw.webapp.auth.SgaOidcUserService;
 import ar.edu.itba.paw.webapp.auth.LoginSuccessHandler;
 
 @Configuration
+@ComponentScan("ar.edu.itba.paw.webapp.auth")
 public class WebAuthConfig {
     private Environment env;
 
@@ -31,7 +32,7 @@ public class WebAuthConfig {
     }
 
     @Autowired
-    private UserService userService;
+    private SgaOidcUserService sgaOidcUserService;
 
     @EnableWebSecurity
     @PropertySource("classpath:/ar/edu/itba/paw/webapp/config/auth.properties")
@@ -48,7 +49,7 @@ public class WebAuthConfig {
                 .logoutSuccessUrl("/login")
             .and().oauth2Login()
                 .loginPage("/login").successHandler(new LoginSuccessHandler())
-                .userInfoEndpoint().oidcUserService(new CustomOidcUserService(userService))
+                .userInfoEndpoint().oidcUserService(sgaOidcUserService)
                 .and()
             .and().csrf().disable()
             ;

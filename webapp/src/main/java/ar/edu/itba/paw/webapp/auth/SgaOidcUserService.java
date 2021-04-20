@@ -4,25 +4,31 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
-import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import org.springframework.stereotype.Component;
 
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.services.SgaService;
 import ar.edu.itba.paw.services.UserService;
 
-public class CustomOidcUserService implements OAuth2UserService<OidcUserRequest, OidcUser> {
+@Component
+public class SgaOidcUserService implements OAuth2UserService<OidcUserRequest, OidcUser> {
     
     private OidcUserService delegate;
+
+    @Autowired
+    private SgaService sgaService;
+    @Autowired
     private UserService userService;
 
-    public CustomOidcUserService(UserService userService) {
-        this.userService = userService;
+    public SgaOidcUserService() {
         this.delegate = new OidcUserService();
     }
 
@@ -38,7 +44,8 @@ public class CustomOidcUserService implements OAuth2UserService<OidcUserRequest,
         else
         {
             Collection<GrantedAuthority> mappedAuthorities = Arrays.asList(new SimpleGrantedAuthority("ROLE_UNREGISTERED"));
-            return new DefaultOidcUser(mappedAuthorities, oidcUser.getIdToken(), oidcUser.getUserInfo());
+            User fetchedUser = sgaService.fetchFromEmail(oidcUser.getEmail());
+            return new UserPrincipal(fetchedUser, mappedAuthorities, oidcUser.getIdToken(), oidcUser.getUserInfo());
         }
     }
     
