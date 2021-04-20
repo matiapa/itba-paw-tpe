@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -15,6 +16,9 @@ import org.springframework.security.oauth2.client.registration.ClientRegistratio
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
 
+import ar.edu.itba.paw.services.UserService;
+import ar.edu.itba.paw.webapp.auth.CustomOidcUserService;
+
 @Configuration
 public class WebAuthConfig {
     private Environment env;
@@ -24,6 +28,9 @@ public class WebAuthConfig {
     public WebAuthConfig(Environment env) {
         this.env = env;
     }
+
+    @Autowired
+    private UserService userService;
 
     @EnableWebSecurity
     @PropertySource("classpath:/ar/edu/itba/paw/webapp/config/auth.properties")
@@ -37,6 +44,7 @@ public class WebAuthConfig {
             .and()
             .oauth2Login()
             .loginPage("/login")
+            .userInfoEndpoint().oidcUserService(new CustomOidcUserService(userService))
             ;
         }
 

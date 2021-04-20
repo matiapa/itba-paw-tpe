@@ -33,4 +33,12 @@ public class UserDaoJdbc implements UserDao {
                 USER_ROW_MAPPER
         ).stream().findFirst();
     }
+
+    @Override
+    public Optional<User> findByEmail(String email) {
+        return jdbcTemplate.query(
+            String.format("SELECT * FROM users WHERE email='%s'", email),
+                USER_ROW_MAPPER
+        ).stream().findFirst();
+    }
 }

@@ -7,4 +7,5 @@ public interface UserDao {
 
     Optional<User> findById(int id);
 
+    Optional<User> findByEmail(String email);
 }
