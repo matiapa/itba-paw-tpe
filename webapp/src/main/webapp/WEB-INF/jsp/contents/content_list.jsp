@@ -12,20 +12,21 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Contenidos</title>
-    <link rel="icon" type="image/png" sizes="311x311" href="assets/img/logo-tran-white.png">
-    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="icon" type="image/png" sizes="311x311" href="<c:url value="assets/img/logo-tran-white.png"/>">
+    <link rel="stylesheet" href="<c:url value="assets/bootstrap/css/bootstrap.min.css"/>">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
-    <link rel="stylesheet" href="assets/fonts/fontawesome-all.min.css">
-    <link rel="stylesheet" href="assets/fonts/font-awesome.min.css">
-    <link rel="stylesheet" href="assets/fonts/material-icons.min.css">
-    <link rel="stylesheet" href="assets/fonts/simple-line-icons.min.css">
-    <link rel="stylesheet" href="assets/fonts/fontawesome5-overrides.min.css">
-    <link rel="stylesheet" href="assets/css/buttons.css">
-    <link rel="stylesheet" href="assets/css/cards.css">
-    <link rel="stylesheet" href="assets/css/colors.compiled.css">
-    <link rel="stylesheet" href="assets/css/fab.css">
-    <link rel="stylesheet" href="assets/css/nav-tabs.css">
-    <link rel="stylesheet" href="assets/css/sidebar.css">
+    <link rel="stylesheet" href="<c:url value="assets/fonts/fontawesome-all.min.css"/>">
+    <link rel="stylesheet" href="<c:url value="assets/fonts/font-awesome.min.css"/>">
+    <link rel="stylesheet" href="<c:url value="assets/fonts/material-icons.min.css"/>">
+    <link rel="stylesheet" href="<c:url value="assets/fonts/simple-line-icons.min.css"/>">
+    <link rel="stylesheet" href="<c:url value="assets/fonts/fontawesome5-overrides.min.css"/>">
+    <link rel="stylesheet" href="<c:url value="assets/css/buttons.css"/>">
+    <link rel="stylesheet" href="<c:url value="assets/css/cards.css"/>">
+    <link rel="stylesheet" href="<c:url value="assets/css/colors.compiled.css"/>">
+    <link rel="stylesheet" href="<c:url value="assets/css/fab.css"/>">
+    <link rel="stylesheet" href="<c:url value="assets/css/nav-tabs.css"/>">
+    <link rel="stylesheet" href="<c:url value="assets/css/sidebar.css"/>">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
 </head>
 
 <body id="page-top">
@@ -39,10 +40,11 @@
                 <jsp:include page="../common/header.jsp"/>
 
                 <div class="container-fluid">
-                    <div class="col-lg-12 col-xl-12 mb-4">
+                    <div class="col-lg-12 col-xl-12 mb-6">
                         <form action="<c:url value='/contents'/>" method="get">
 
-                            <select name="courseId" class="selectpicker" data-live-search="true" title="Elegí una carrera" data-width="75%">
+                            <select id="courseId" name="courseId" class="selectpicker" data-live-search="true"
+                                    data-style="btn-outline-secondary" title="Elegí un curso" data-width="75%">
                                 <c:forEach var="course" items="${courses}">
                                     <option ${course.equals(selectedCourse) ? 'selected' : ''}
                                             value="${course.id}" data-tokens="${course.name}">${course.name}</option>
@@ -52,7 +54,7 @@
                             <div class="row align-items-center" style="margin-top: 16px;margin-bottom: 32px;">
                                 <div class="col-lg-2 col-xl-2">
                                     <select class="custom-select my-1 mr-sm-2" name="contentType">
-                                        <option selected value="" >Tipo...</option>
+                                        <option selected value="">Tipo</option>
                                         <option value="exam">Exámen</option>
                                         <option value="guide">Guía</option>
                                         <option value="resume">Resúmen</option>
@@ -61,11 +63,16 @@
                                     </select>
                                 </div>
 
-                                <div class="col-lg-4 col-xl-4 text-center"><label>Desde&nbsp;</label><input class="border rounded-0" type="date" name="minDate"></div>
+                                <div class="col-lg-4 col-xl-4 text-center">
+                                    <label>Desde&nbsp;</label><input class="border rounded-0" type="date" name="minDate">
+                                </div>
 
-                                <div class="col-lg-4 col-xl-4 text-center"><label>Hasta</label><input class="border rounded-0" type="date" name="maxDate"></div>
+                                <div class="col-lg-4 col-xl-4 text-center">
+                                    <label>Hasta</label><input class="border rounded-0" type="date" name="maxDate">
+                                </div>
 
-                                <button type="submit" class="btn btn-primary ml-3">Buscar</button>
+                                <button id="courseSearchBtn" type="submit" hidden class="btn btn-primary ml-3">Buscar</button>
+
                             </div>
                         </form>
 
@@ -88,9 +95,10 @@
                                             <c:set var="content" value="${content}" scope="request"/>
                                             <tr>
                                                 <td><c:out value="${content.name}"/></td>
-                                                <td><c:out value="${content.contentType}"/></td>
+                                                <td><c:out value="${contentTypeEnumMap.get(content.contentType)}"/></td>
                                                 <td><c:out value="${content.uploadDate}"/></td>
-                                                <td><img class="rounded-circle mr-2" width="30" height="30" src="assets/img/avatars/avatar.png"><c:out value="${content.submitter.name}"/></td>
+                                                <td><img class="rounded-circle mr-2" width="30" height="30" src="<c:url value="assets/img/avatars/avatar.png"/>">
+                                                    <c:out value="${content.submitter.name}"/></td>
                                                 <td><a class="btn btn-link" href="<c:url value='${content.link}'/>" role="button">Link</a></td>
                                             </tr>
                                         </c:forEach>
@@ -115,14 +123,21 @@
         </div>
     </div>
 
+
     <div class="fab">
-        <i class="material-icons" style="font-size: 32px;color: rgb(255,255,255);">add</i>
+        <a href="<c:url value='/contents/create'/>">
+            <i class="material-icons" style="font-size: 32px;color: rgb(255,255,255);">add</i>
+        </a>
     </div>
 
-    <script src="assets/js/jquery.min.js"></script>
-    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="<c:url value="assets/js/jquery.min.js"/>"></script>
+    <script src="<c:url value="assets/bootstrap/js/bootstrap.min.js"/>"></script>
+    <script src="<c:url value="assets/js/theme.js"/>"></script>
+
+    <script src="<c:url value="assets/js/content.js"/>"></script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.js"></script>
-    <script src="assets/js/theme.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
 </body>
 
 </html>
