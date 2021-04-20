@@ -10,16 +10,19 @@ import ar.edu.itba.paw.services.CourseService;
 import ar.edu.itba.paw.services.UserService;
 import ar.edu.itba.paw.webapp.form.AnnouncementForm;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -81,6 +84,24 @@ public class AnnounceController {
         return mav;
     }
 
+    @RequestMapping("announcements/detail")
+    public ModelAndView getAnnouncementDetail(
+            @RequestParam(name="id", required = false) Integer id
+    ){
+        final ModelAndView mav = new ModelAndView("announcements/announcements_detail");
+
+        Optional<Announcement> optionalAnnouncement = announcementService.findById(id);
+        if (! optionalAnnouncement.isPresent()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Anuncio no encontrado");
+        }
+
+        mav.addObject("announcement", optionalAnnouncement.get());
+
+        mav.addObject("user", userService.getUser());
+
+        return mav;
+    }
+
 
     @RequestMapping(value = "announcements/markSeen", method = POST)
     public ModelAndView markSeen(
@@ -112,15 +133,14 @@ public class AnnounceController {
         @Valid @ModelAttribute("createForm") final AnnouncementForm form,
         final BindingResult errors
     ){
-        System.out.println(errors.hasErrors());
-
+        // TODO: Form validation is not working
         if (errors.hasErrors())
             throw new RuntimeException();
 
-//        final Announcement announcement = announcementService.create(
-//            form.getTitle(), form.getSummary(), form.getContent(),
-//            form.getCarrerId(), form.getCourseId(), form.getExpiryDate()
-//        );
+        announcementService.create(
+            form.getTitle(), form.getSummary(), form.getContent(),
+            form.getCarrerId(), form.getCourseId(), form.getExpiryDate()
+        );
 
         return new ModelAndView("redirect:/announcements");
     }
