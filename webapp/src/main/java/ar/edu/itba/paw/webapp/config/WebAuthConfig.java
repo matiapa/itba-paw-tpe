@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.oauth2.client.CommonOAuth2Provider;
@@ -26,14 +27,16 @@ public class WebAuthConfig {
 
     @EnableWebSecurity
     @PropertySource("classpath:/ar/edu/itba/paw/webapp/config/auth.properties")
-    public static class OAuth2LoginSecurityConfig extends WebSecurityConfigurerAdapter {
+    public class OAuth2LoginSecurityConfig extends WebSecurityConfigurerAdapter {
         @Override
         protected void configure(HttpSecurity http) throws Exception {
             http
             .authorizeRequests()
+            .antMatchers("/login").anonymous()
             .anyRequest().authenticated()
             .and()
             .oauth2Login()
+            .loginPage("/login")
             ;
         }
 
