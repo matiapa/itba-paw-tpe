@@ -1,9 +1,10 @@
 package ar.edu.itba.paw.persistence;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import javax.sql.DataSource;
+
+
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -36,11 +37,18 @@ public class PollDaoJdbc implements PollDao {
         );
     };
 
+
+
     private final RowMapper<PollOption> optionMapper = (rs, rowNum) ->
         new PollOption(
             rs.getInt("option_id"),
             rs.getString("option_value")
         );
+
+    private final RowMapper<Poll.PollVoteOption> voteMapper = (rs, rowNum) -> new Poll.PollVoteOption(
+            rs.getInt("option_id"),
+            rs.getString("option_value")
+            ,rs.getInt("votes"));
 
 
     @Autowired
@@ -71,6 +79,32 @@ public class PollDaoJdbc implements PollDao {
             rowMapper
         ));
     }
+
+    @Override
+    public Map<PollOption,Integer> getVotes(int id) {
+
+        List<Poll.PollVoteOption> list =
+
+        jdbcTemplate.query(
+                String.format(
+                "SELECT count(poll_option.option_id) AS votes , poll_option.option_value, poll_option.option_id FROM\n" +
+                "              poll  JOIN poll_option  on poll.id = poll_option.poll_id\n" +
+                "                  JOIN poll_submission on poll.id = poll_submission.poll_id and poll_option.option_id= poll_submission.option_id\n" +
+                "WHERE poll_option.poll_id='%d'\n" +
+                "GROUP BY poll_option.option_id,poll_option.option_value",id),voteMapper);
+        Map<PollOption,Integer> map= new HashMap<>();
+        for (Poll.PollVoteOption pair:list
+             ) {
+
+                map.put(new PollOption(pair.getId(), pair.getValue()), pair.getVote());
+            }
+        return map;
+
+        }
+
+
+
+
 
     @Override
     public List<Poll> findGeneral() {

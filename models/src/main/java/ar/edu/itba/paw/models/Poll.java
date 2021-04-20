@@ -67,4 +67,26 @@ public class Poll {
         }
     }
 
+    public static class PollVoteOption {
+        private final int id;
+        private final String value;
+        private final int vote;
+
+        public PollVoteOption(int id, String value,int vote) {
+            this.id = id;
+            this.value = value;
+            this.vote=vote;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public int getVote(){return vote;}
+    }
+
 }

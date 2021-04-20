@@ -11,7 +11,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>new-design</title>
+    <title><c:out value="${poll.name}"/></title>
     <link rel="icon" type="image/png" sizes="311x311" href="assets/img/logo-tran-white.png">
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
@@ -69,17 +69,17 @@
                                     <h6 class="font-weight-bold m-0">Resultados</h6>
                                 </div>
                                 <div class="col mr-2" style="padding-top: 16px;padding-right: 24px;padding-left: 24px;padding-bottom: 16px;">
-                                    <div class="row">
-                                        <div class="col"><span>3 Votos : Mejor&nbsp;&nbsp;</span></div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col"><span>3 Votos : Igual&nbsp;&nbsp;</span></div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col"><span>3 Votos : Peor&nbsp;&nbsp;</span></div>
-                                    </div>
+                                    <c:forEach var="vote" items="${votes}">
+                                        <div class="col">
+                                            <div class="row">
+                                                <div class="col"><span><c:out value="${vote.value}"/> Votos : <c:out value="${vote.key.value}"/> </span></div>
+                                            </div>
+                                        </div>
+                                    </c:forEach>
+
+
                                     <div class="row align-items-end" style="margin-top: 32px;">
-                                        <div class="col text-right"><span class="text-xs">Publicado por Vida Universitaria el 07/04/2021 a las 12:30 AM</span></div>
+                                        <div class="col text-right"><span class="text-xs">Publicado por <c:out value="${poll.submittedBy.name}"/> el <c:out value="${poll.creationDate}"/> REVISAR a las 12:30 AM</span></div>
                                     </div>
                                 </div>
                             </div>

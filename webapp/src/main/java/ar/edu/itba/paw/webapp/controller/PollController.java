@@ -2,9 +2,13 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.models.Announcement;
 import ar.edu.itba.paw.models.Content;
+import ar.edu.itba.paw.models.HolderEntity;
+
+import ar.edu.itba.paw.webapp.form.PollForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
@@ -17,6 +21,7 @@ import java.util.*;
 import ar.edu.itba.paw.models.Career;
 import ar.edu.itba.paw.models.Course;
 import ar.edu.itba.paw.models.Poll;
+import ar.edu.itba.paw.models.Poll.PollOption;
 import ar.edu.itba.paw.models.ui.NavigationItem;
 import ar.edu.itba.paw.services.CareerService;
 import ar.edu.itba.paw.services.CourseService;
@@ -24,8 +29,12 @@ import ar.edu.itba.paw.services.PollService;
 import ar.edu.itba.paw.services.UserService;
 import ar.edu.itba.paw.webapp.mav.BaseMav;
 
+import javax.validation.Valid;
+
 @Controller
 public class PollController {
+
+    @Autowired private UserService userService;
 
     @Autowired private PollService pollService;
 
@@ -33,7 +42,52 @@ public class PollController {
 
     @Autowired private CourseService courseService;
 
-    @Autowired private UserService userService;
+    @RequestMapping("/polls")
+    public ModelAndView getPolls(
+            @RequestParam(name="filterBy", required = false, defaultValue = "general") HolderEntity filterBy,
+            @RequestParam(name = "careerId", required = false) Integer careerId,
+            @RequestParam(name = "courseId", required = false) String courseId,
+            @ModelAttribute("pollForm") final PollForm pollForm
+            ){
+        final ModelAndView modelAndView = new ModelAndView("polls/polls_list");
+        modelAndView.addObject("filterBy", filterBy);
+
+        List<Poll> pollList = new ArrayList<>();
+        List<Career> careers = careerService.findAll();
+
+        modelAndView.addObject("careers", careers);
+
+        List<Course> courses = courseService.findAll();
+        modelAndView.addObject("courses", courses);
+        switch (filterBy){
+            case course:
+                if (courseId != null){
+                    pollList = pollService.findByCourse(courseId);
+                    Course selected = courses.stream().filter(c -> c.getId() == courseId).findFirst()
+                            .orElseThrow(RuntimeException::new);
+                    modelAndView.addObject("selectedCourse", selected);
+                }
+                break;
+            case career:
+                if (careerId != null){
+                    pollList = pollService.findByCareer(careerId);
+                    Career selected = careers.stream().filter(c -> c.getId() == careerId).findFirst()
+                            .orElseThrow(RuntimeException::new);
+                    modelAndView.addObject("selectedCareer", selected);
+                }
+                break;
+            case general:
+            default:
+                pollList = pollService.findGeneral();
+                break;
+        }
+        modelAndView.addObject("polls", pollList);
+        modelAndView.addObject("user", userService.getUser());
+        return modelAndView;
+    }
+
+
+
 
     @RequestMapping("polls/byId")
     public ModelAndView getPollDetails(@RequestParam int id)
@@ -139,7 +193,8 @@ public class PollController {
             throw new RuntimeException();
         mav.addObject("poll",selectedPoll.get());
 
-
+        Map<PollOption,Integer> votes = pollService.getVotes(pollId);
+        mav.addObject("votes",votes);
         mav.addObject("user", userService.getUser());
 
         return mav;
