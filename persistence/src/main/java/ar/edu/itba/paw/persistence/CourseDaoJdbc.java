@@ -19,7 +19,8 @@ public class CourseDaoJdbc implements CourseDao {
     private static final RowMapper<Course> COURSE_ROW_MAPPER = (rs, rowNum) ->
             new Course(
                 rs.getString("id"),
-                rs.getString("name")
+                rs.getString("name"),
+                rs.getInt("credits")
             );
 
     @Autowired
