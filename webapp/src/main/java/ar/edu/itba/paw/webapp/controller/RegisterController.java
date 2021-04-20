@@ -31,18 +31,20 @@ public class RegisterController {
     private UserService userService;
 
     @RequestMapping(path = "/register", method = RequestMethod.GET)
-    public ModelAndView createForm(@ModelAttribute("UserForm") final UserForm form) {
-        return new ModelAndView("register/register");
+    public ModelAndView createForm(@ModelAttribute("UserForm") final UserForm form, @AuthenticationPrincipal User fetchedUser) {
+        ModelAndView mav = new ModelAndView("register/register");
+        mav.addObject("user", fetchedUser);
+        return mav;
     }
 
     @RequestMapping(path = "/register", method = RequestMethod.POST)
-    public ModelAndView register(@ModelAttribute("UserForm") final UserForm form, @AuthenticationPrincipal OidcUser oidcUser){
-        final User user = userService.registerUser(form.getId(), form.getName(), form.getSurname(), form.getEmail(), form.getCareer_id());
+    public ModelAndView register(@ModelAttribute("UserForm") final UserForm form, @AuthenticationPrincipal UserPrincipal fetchedUser){
+        final User user = userService.registerUser(fetchedUser.getId(), fetchedUser.getName(), fetchedUser.getSurname(), fetchedUser.getEmail(), fetchedUser.getCareer_id());
         if(user != null)
         {
             OAuth2AuthenticationToken auth = (OAuth2AuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
             Collection<GrantedAuthority> authorities = Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
-            OAuth2User principal = new UserPrincipal(user, authorities, oidcUser.getIdToken(), oidcUser.getUserInfo());
+            OAuth2User principal = new UserPrincipal(user, authorities, fetchedUser.getIdToken(), fetchedUser.getUserInfo());
             Authentication newAuth = new OAuth2AuthenticationToken(principal, authorities, auth.getAuthorizedClientRegistrationId());
             SecurityContextHolder.getContext().setAuthentication(newAuth);
         }

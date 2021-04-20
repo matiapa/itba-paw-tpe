@@ -39,19 +39,19 @@
 
                                     <div class="row">
                                         <div class="col-sm-6 mb-3 mb-sm-0">
-                                            <form:input class="form-control form-control-user" type="text" id="exampleFirstName" placeholder="Nombre" path="name"/>
+                                            <form:input class="form-control form-control-user" type="text" id="exampleFirstName" placeholder="Nombre" path="name" value="${user.name}" disabled="true"/>
                                         </div>
                                         <div class="col-sm-6">
-                                            <form:input class="form-control form-control-user" type="text" id="exampleLastName" placeholder="Apellido" path="surname"/>
+                                            <form:input class="form-control form-control-user" type="text" id="exampleLastName" placeholder="Apellido" path="surname" value="${user.surname}" disabled="true"/>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-sm-12">
-                                            <form:input class="form-control form-control-user" type="email" id="exampleInputEmail"  placeholder="Email" path="email"/>
+                                            <form:input class="form-control form-control-user" type="email" id="exampleInputEmail"  placeholder="Email" path="email" value="${user.email}" disabled="true"/>
                                         </div>
                                     </div>
-                                    <form:input class="form-control form-control-user" type="text" id="exampleLegajo" placeholder="Legajo" path="id"/>
-                                    <form:input class="form-control form-control-user" type="text" id="exampleCareer_id" placeholder="Career_id" path="career_id"/>
+                                    <form:input class="form-control form-control-user" type="text" id="exampleLegajo" placeholder="Legajo" path="id" value="${user.id}" disabled="true"/>
+                                    <form:input class="form-control form-control-user" type="text" id="exampleCareer_id" placeholder="Career_id" path="career_id" value="${user.career_id}" disabled="true"/>
 
                                     <div class="text-center"></div>
                                     <div class="text-center"></div>
