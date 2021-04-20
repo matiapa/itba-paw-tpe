@@ -55,7 +55,7 @@
                         <%-- General chats --%>
                         <div class="tab-pane ${filterBy == "general" ? 'active' : ''}" role="tabpanel" id="tab-1">
                             <div class="col">
-                                <div class="card-group">
+                                <div class="card-group" style="display: flex; flex-direction: column">
                                     <c:forEach var="chat" items="${chats}">
                                         <c:set var="chat" value="${chat}" scope="request"/>
                                         <jsp:include page="chat_card.jsp"/>

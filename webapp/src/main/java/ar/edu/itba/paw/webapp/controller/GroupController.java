@@ -73,11 +73,6 @@ public class GroupController {
             @Valid @ModelAttribute("chatGroupForm") final ChatGroupForm chatGroupForm,
             final BindingResult errors
     ) {
-
-        System.out.println(chatGroupForm.getGroupName());
-        System.out.println(chatGroupForm.getGroupCareer());
-        System.out.println(chatGroupForm.getLink());
-        System.out.println(chatGroupForm.getGroupDate());
 /*
         if (errors.hasErrors()) {
             throw new RuntimeException("Error");
@@ -93,7 +88,7 @@ public class GroupController {
                 chatGroupForm.getGroupDate());
 
 
-        return new ModelAndView("redirect:chats/chats_list");
+        return new ModelAndView("redirect:/chats");
     }
 
 
