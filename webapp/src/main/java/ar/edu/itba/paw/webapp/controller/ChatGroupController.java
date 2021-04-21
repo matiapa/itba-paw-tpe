@@ -1,12 +1,17 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.models.Career;
-import ar.edu.itba.paw.models.ChatGroup;
-import ar.edu.itba.paw.services.CareerService;
-import ar.edu.itba.paw.services.ChatGroupService;
-import ar.edu.itba.paw.services.UserService;
-import ar.edu.itba.paw.webapp.form.ChatGroupForm;
+import static java.util.stream.Collectors.toList;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.stream.IntStream;
+
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -15,11 +20,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.validation.Valid;
-import java.util.*;
-import java.util.stream.IntStream;
-
-import static java.util.stream.Collectors.toList;
+import ar.edu.itba.paw.models.Career;
+import ar.edu.itba.paw.models.ChatGroup;
+import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.services.CareerService;
+import ar.edu.itba.paw.services.ChatGroupService;
+import ar.edu.itba.paw.webapp.form.ChatGroupForm;
 
 @Controller
 public class ChatGroupController {
@@ -28,20 +34,18 @@ public class ChatGroupController {
 
     @Autowired private CareerService careerService;
 
-    @Autowired private UserService userService;
-
-
     @RequestMapping("/chats")
     public ModelAndView get(
         @RequestParam(name = "careerId", required = false) Integer careerId,
         @RequestParam(name = "platform", required = false) String platform,
         @RequestParam(name = "year", required = false) Integer year,
         @RequestParam(name = "quarter", required = false) Integer quarter,
-        @ModelAttribute("chatGroupForm") final ChatGroupForm chatGroupForm
+        @ModelAttribute("chatGroupForm") final ChatGroupForm chatGroupForm,
+        @AuthenticationPrincipal User user
     ){
         final ModelAndView modelAndView = new ModelAndView("chats/chats_list");
 
-        modelAndView.addObject("user", userService.getUser());
+        modelAndView.addObject("user", user);
 
         // Filters
 
@@ -102,7 +106,8 @@ public class ChatGroupController {
 
     @RequestMapping("chats/create")
     public ModelAndView create(
-        @ModelAttribute("createForm") final ChatGroupForm form
+        @ModelAttribute("createForm") final ChatGroupForm form,
+        @AuthenticationPrincipal User user
     ) {
         ModelAndView mav = new ModelAndView("chats/create_chat");
 
@@ -115,7 +120,7 @@ public class ChatGroupController {
             put(ChatGroup.ChatPlatform.whatsapp, "WhatsApp");
         }});
 
-        mav.addObject("user", userService.getUser());
+        mav.addObject("user", user);
 
         return mav;
     }
@@ -124,7 +129,8 @@ public class ChatGroupController {
     @RequestMapping(value = "chats/create", method = {RequestMethod.POST})
     public ModelAndView create(
         @Valid @ModelAttribute("createForm") final ChatGroupForm chatGroupForm,
-        final BindingResult errors
+        final BindingResult errors,
+        @AuthenticationPrincipal User user
     ) {
         if(errors.hasErrors()){
             throw new RuntimeException();
@@ -134,7 +140,7 @@ public class ChatGroupController {
             chatGroupForm.getName(),
             chatGroupForm.getCareerId(),
             chatGroupForm.getLink(),
-            userService.getUser().getId(),
+            user.getId(),
             chatGroupForm.getCreationDate(),
             chatGroupForm.getPlatform()
         );
