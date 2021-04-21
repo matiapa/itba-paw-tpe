@@ -2,28 +2,21 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.models.Career;
 import ar.edu.itba.paw.models.ChatGroup;
-import ar.edu.itba.paw.models.Content;
-import ar.edu.itba.paw.models.HolderEntity;
-import ar.edu.itba.paw.models.ui.NavigationItem;
 import ar.edu.itba.paw.services.CareerService;
 import ar.edu.itba.paw.services.ChatGroupService;
 import ar.edu.itba.paw.services.UserService;
 import ar.edu.itba.paw.webapp.form.ChatGroupForm;
-import ar.edu.itba.paw.webapp.mav.BaseMav;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static java.util.stream.Collectors.toList;
@@ -105,54 +98,42 @@ public class GroupController {
         return modelAndView;
     }
 
-    @RequestMapping(value = "/chats", method = {RequestMethod.POST})
-    public ModelAndView addGroup(
-            @Valid @ModelAttribute("chatGroupForm") final ChatGroupForm chatGroupForm,
-            final BindingResult errors
+
+    @RequestMapping("chats/create")
+    public ModelAndView create(
+        @ModelAttribute("createForm") final ChatGroupForm form
     ) {
-/*
-        if (errors.hasErrors()) {
-            throw new RuntimeException("Error");
-            //return getChats(HolderEntity.general, null, chatGroupForm);
-        }
+        ModelAndView mav = new ModelAndView("chats/create_chat");
 
+        mav.addObject("careers", careerService.findAll());
 
-*/
-        chatGroupService.addGroup(chatGroupForm.getGroupName(),
-                chatGroupForm.getGroupCareer(),
-                chatGroupForm.getLink(),
-                userService.getUser().getId(),
-                chatGroupForm.getGroupDate());
+        mav.addObject("platforms", ChatGroup.ChatPlatform.values());
+        mav.addObject("platformsTranslate", new HashMap<ChatGroup.ChatPlatform, String>()
+        {{
+            put(ChatGroup.ChatPlatform.discord, "Discord");
+            put(ChatGroup.ChatPlatform.whatsapp, "WhatsApp");
+        }});
 
+        mav.addObject("user", userService.getUser());
 
-        return new ModelAndView("redirect:/chats");
+        return mav;
     }
 
-
-
-    @RequestMapping("/groups/byCareer")
-    public ModelAndView getGroupsByCareer(
-            @RequestParam(name = "careerId") int careerId
+    @RequestMapping(value = "chats/create", method = {RequestMethod.POST})
+    public ModelAndView addGroup(
+        @Valid @ModelAttribute("createForm") final ChatGroupForm chatGroupForm,
+        final BindingResult errors
     ) {
-        Optional<Career> careerOptional = careerService.findById(careerId);
-        if (! careerOptional.isPresent()){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Carrera no encontrada");
-        }
-        Career career = careerOptional.get();
-
-        final ModelAndView modelAndView = new BaseMav(
-            String.format("Grupos de %s", career.getName()),
-            "chat_group/chat_group_full_list.jsp",
-            Arrays.asList(
-                new NavigationItem("Home", "/"),
-                new NavigationItem(career.getName(), "/careers/byId?id=" + career.getId()),
-                new NavigationItem("Grupos","/groups/byCareer?careerId=" + career.getId())
-            )
+        chatGroupService.addGroup(
+            chatGroupForm.getName(),
+            chatGroupForm.getCareerId(),
+            chatGroupForm.getLink(),
+            userService.getUser().getId(),
+            chatGroupForm.getCreationDate(),
+            chatGroupForm.getPlatform()
         );
 
-        modelAndView.addObject("chat_groups", chatGroupService.findByCareer(careerId));
-
-        return modelAndView;
+        return new ModelAndView("redirect:/chats");
     }
 
 }

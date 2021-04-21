@@ -23,11 +23,12 @@ public class ChatGroupDaoJdbc implements ChatGroupDao{
     private static final RowMapper<ChatGroup> CHAT_GROUP_ROW_MAPPER = (rs, rowNum) ->
         new ChatGroup(
             rs.getInt("id"),
-            rs.getString("career_id"),
+            rs.getInt("career_id"),
             rs.getString("name"),
             rs.getString("link"),
             rs.getInt("submitted_by"),
-            rs.getDate("creation_date")
+            rs.getDate("creation_date"),
+            ChatPlatform.valueOf(rs.getString("platform"))
         );
 
     @Autowired
@@ -39,29 +40,46 @@ public class ChatGroupDaoJdbc implements ChatGroupDao{
                 .usingGeneratedKeyColumns("id");
 
         this.jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS chat_group(" +
-                "id             SERIAL," +
-                "career_id      INT NOT NULL," +
-                "creation_date  DATE NOT NULL," +
-                "name           VARCHAR(100) NOT NULL," +
-                "link           VARCHAR (100) NOT NULL," +
-                "submitted_by   INT NOT NULL," +
-                "PRIMARY KEY(id)," +
-                "FOREIGN KEY(career_id) REFERENCES career ON DELETE CASCADE," +
-                "FOREIGN KEY(submitted_by) REFERENCES users ON DELETE RESTRICT );");
+            "id             SERIAL," +
+            "career_id      INT NOT NULL," +
+            "creation_date  DATE NOT NULL," +
+            "name           VARCHAR(100) NOT NULL," +
+            "link           VARCHAR (100) NOT NULL," +
+            "submitted_by   INT NOT NULL," +
+            "PRIMARY KEY(id)," +
+            "FOREIGN KEY(career_id) REFERENCES career ON DELETE CASCADE," +
+            "FOREIGN KEY(submitted_by) REFERENCES users ON DELETE RESTRICT );");
     }
 
     @Override
-    public ChatGroup addGroup(String groupName, String careerId, String link, Integer user, Date date) {
-        final Map<String, Object> args = new HashMap<>();
-        args.put("career_id", careerId);
-        args.put("creation_date", date);
-        args.put("name", groupName);
-        args.put("link", link);
-        args.put("submitted_by", user);
+    public ChatGroup addGroup(String groupName, Integer careerId, String link, Integer createdBy, Date creationDate, ChatPlatform platform) {
 
-        final Number id = simpleJdbcInsert.executeAndReturnKey(args);
+        System.out.println(creationDate);
 
-        return new ChatGroup(id.intValue(), careerId, groupName, link, user, date);
+        return jdbcTemplate.queryForObject(
+            "INSERT INTO " +
+                    "chat_group(career_id, creation_date, name, link, submitted_by, platform)" +
+                " VALUES " +
+                    "(?,?,?,?,?,CAST(? AS chat_platform)) RETURNING *",
+            new Object[]{
+                    careerId, creationDate, groupName, link, createdBy,
+                    platform.toString().split("\\.")[0]
+            },
+            CHAT_GROUP_ROW_MAPPER
+        );
+
+//        final Map<String, Object> args = new HashMap<>();
+//
+//        args.put("career_id", careerId);
+//        args.put("creation_date", creationDate);
+//        args.put("name", groupName);
+//        args.put("link", link);
+//        args.put("submitted_by", createdBy);
+//        args.put("platform", platform);
+//
+//        final Number id = simpleJdbcInsert.executeAndReturnKey(args);
+//
+//        return new ChatGroup(id.intValue(), careerId, groupName, link, createdBy, creationDate);
     }
 
     @Override

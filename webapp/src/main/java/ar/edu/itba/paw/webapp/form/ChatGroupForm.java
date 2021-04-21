@@ -1,55 +1,67 @@
 package ar.edu.itba.paw.webapp.form;
 
+import ar.edu.itba.paw.models.ChatGroup.ChatPlatform;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.Date;
 
 public class ChatGroupForm {
 
-    @Size(min = 6, max = 100)
     @NotNull
-    private String groupName;
-
     @Size(min = 6, max = 100)
-    private String groupCareer;
+    private String name;
 
-    @Size(min = 6, max = 100)
     @NotNull
-    private String link;
+    private Integer careerId;
 
     @NotNull
     @DateTimeFormat(pattern = "dd-mm-yyyy")
-    private Date groupDate;
+    private Date creationDate;
 
-    public String getGroupName() {
-        return groupName;
+    @NotNull
+    private ChatPlatform platform;
+
+    @NotNull
+    @Size(min = 6, max = 100)
+    private String link;
+
+
+    public String getName() {
+        return name;
     }
 
-    public String getGroupCareer() {
-        return groupCareer;
+    public Integer getCareerId() {
+        return careerId;
+    }
+
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public ChatPlatform getPlatform() {
+        return platform;
     }
 
     public String getLink() {
         return link;
     }
 
-    public Date getGroupDate() {
-        return groupDate;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setGroupDate(Date groupDate) {
-        this.groupDate = groupDate;
+    public void setCareerId(Integer careerId) {
+        this.careerId = careerId;
     }
 
-    public void setGroupName(String groupName) {
-        this.groupName = groupName;
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
     }
 
-    public void setGroupCareer(String groupCareer) {
-        this.groupCareer = groupCareer;
+    public void setPlatform(ChatPlatform platform) {
+        this.platform = platform;
     }
 
     public void setLink(String link) {

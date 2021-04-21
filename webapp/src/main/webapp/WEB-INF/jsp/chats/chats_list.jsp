@@ -134,7 +134,9 @@
             </div>
 
             <div class="fab">
-                <i class="material-icons" style="font-size: 32px;color: rgb(255,255,255);">add</i>
+                <a href="<c:url value="/chats/create"/>">
+                    <i class="material-icons" style="font-size: 32px;color: rgb(255,255,255);">add</i>
+                </a>
             </div>
 
         </div>

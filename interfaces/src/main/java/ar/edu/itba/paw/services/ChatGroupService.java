@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface ChatGroupService {
 
-    ChatGroup addGroup(String groupName, String careerId, String link, Integer user, Date date);
+    ChatGroup addGroup(String groupName, Integer careerId, String link, Integer createdBy, Date creationDate, ChatPlatform platform);
 
     List<ChatGroup> getChatGroups();
 
