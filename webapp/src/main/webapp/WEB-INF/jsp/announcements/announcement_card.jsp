@@ -5,7 +5,7 @@
 <jsp:useBean type="ar.edu.itba.paw.models.Announcement" scope="request" id="announcement"/>
 
 <c:if test="${!announcement.seen}">
-    <div id="${announcement.id}" class="card shadow mb-4" style="margin-top: 32px;">
+    <div name="${announcement.id}" class="card shadow mb-4" style="margin-top: 32px;">
         <div class="card-header py-3">
             <h6 class="font-weight-bold m-0"><c:out value="${announcement.title}"/></h6>
         </div>

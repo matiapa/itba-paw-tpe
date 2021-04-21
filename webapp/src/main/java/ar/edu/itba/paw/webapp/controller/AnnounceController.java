@@ -8,6 +8,7 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
+import ar.edu.itba.paw.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -19,11 +20,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 
-import ar.edu.itba.paw.models.Announcement;
-import ar.edu.itba.paw.models.Career;
-import ar.edu.itba.paw.models.Course;
-import ar.edu.itba.paw.models.HolderEntity;
-import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.services.AnnouncementService;
 import ar.edu.itba.paw.services.CareerService;
 import ar.edu.itba.paw.services.CourseService;
@@ -44,36 +40,45 @@ public class AnnounceController {
         @RequestParam(name="filterBy", required = false, defaultValue="general") HolderEntity filterBy,
         @RequestParam(name="careerId", required = false) Integer careerId,
         @RequestParam(name="courseId", required = false) String courseId,
+        @ModelAttribute("createForm") final AnnouncementForm form,
         @AuthenticationPrincipal User user
     ){
         final ModelAndView mav = new ModelAndView("announcements/announcements_list");
 
+        // Filters
+
         mav.addObject("filterBy", filterBy);
+
+            // -- Career
+
+        List<Career> careers = careerService.findAll();
+        mav.addObject("careers", careers);
+
+        Career selectedCareer = careerId != null ? careers.stream().filter(c -> c.getId() == careerId).findFirst()
+                .orElseThrow(RuntimeException::new) : null;
+        mav.addObject("selectedCareer", selectedCareer);
+
+            // -- Course
+
+        List<Course> courses = courseService.findAll();
+        mav.addObject("courses", courses);
+
+        Course selectedCourse = courseId != null ? courses.stream().filter(c -> c.getId().equals(courseId)).findFirst()
+                .orElseThrow(RuntimeException::new) : null;
+        mav.addObject("selectedCourse", selectedCourse);
+
+        // Announcements
 
         List<Announcement> announcements = new ArrayList<>();
         switch(filterBy){
             case career:
-                List<Career> careers = careerService.findAll();
-                mav.addObject("careers", careers);
-                if(careerId != null){
+                if(careerId != null)
                     announcements = announcementService.findByCareer(careerId);
-                    Career selectedCareer = careers.stream().filter(c -> c.getId() == careerId).findFirst()
-                            .orElseThrow(RuntimeException::new);
-                    mav.addObject("selectedCareer", selectedCareer);
-                }
                 break;
-
             case course:
-                List<Course> courses = courseService.findAll();
-                mav.addObject("courses", courses);
-                if(courseId != null){
+                if(courseId != null)
                     announcements = announcementService.findByCourse(courseId);
-                    Course selectedCourse = courses.stream().filter(c -> c.getId().equals(courseId)).findFirst()
-                            .orElseThrow(RuntimeException::new);
-                    mav.addObject("selectedCourse", selectedCourse);
-                }
                 break;
-
             case general:
             default:
                 announcements = announcementService.findGeneral();
@@ -84,6 +89,35 @@ public class AnnounceController {
         mav.addObject("user", user);
 
         return mav;
+    }
+
+    @RequestMapping(value = "announcements", method = POST)
+    public ModelAndView create(
+            @Valid @ModelAttribute("createForm") final AnnouncementForm form,
+            final BindingResult errors,
+            @AuthenticationPrincipal User user
+    ){
+        // TODO: Form validation is not working
+        if (errors.hasErrors())
+            throw new RuntimeException();
+
+        announcementService.create(
+                form.getTitle(), form.getSummary(), form.getContent(),
+                form.getCareerId(), form.getCourseId(), form.getExpiryDate(),
+                user
+        );
+
+        HolderEntity filterBy;
+        if(form.getCareerId() == null && form.getCourseId() == null)
+            filterBy = HolderEntity.general;
+        else if(form.getCareerId() == null && form.getCourseId() != null)
+            filterBy = HolderEntity.course;
+        else if(form.getCareerId() != null && form.getCourseId() == null)
+            filterBy = HolderEntity.career;
+        else
+            filterBy = HolderEntity.general;
+
+        return getAnnouncements(filterBy, form.getCareerId(), form.getCourseId(), form, user);
     }
 
     @RequestMapping("announcements/detail")
@@ -119,37 +153,5 @@ public class AnnounceController {
         return mav;
     }
 
-    @RequestMapping("announcements/create")
-    public ModelAndView create(
-        @ModelAttribute("createForm") final AnnouncementForm form,
-        @AuthenticationPrincipal User user
-    ) {
-        ModelAndView mav = new ModelAndView("announcements/create_announcement");
-
-        mav.addObject("careers", careerService.findAll());
-        mav.addObject("courses", courseService.findAll());
-        mav.addObject("user", user);
-
-        return mav;
-    }
-
-    @RequestMapping(value = "announcements/create", method = POST)
-    public ModelAndView create(
-        @Valid @ModelAttribute("createForm") final AnnouncementForm form,
-        final BindingResult errors,
-        @AuthenticationPrincipal User user
-    ){
-        // TODO: Form validation is not working
-        if (errors.hasErrors())
-            throw new RuntimeException();
-
-        announcementService.create(
-            form.getTitle(), form.getSummary(), form.getContent(),
-            form.getCarrerId(), form.getCourseId(), form.getExpiryDate(),
-            user
-        );
-
-        return new ModelAndView("redirect:/announcements");
-    }
 
 }

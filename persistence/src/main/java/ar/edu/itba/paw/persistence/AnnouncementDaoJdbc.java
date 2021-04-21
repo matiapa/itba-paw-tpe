@@ -84,7 +84,8 @@ public class AnnouncementDaoJdbc implements AnnouncementDao {
     @Override
     public void markSeen(int announcementId, int userId){
         jdbcTemplate.update(
-        "INSERT INTO announcement_seen(announcement_id, user_id) VALUES (?,?)",
+        "INSERT INTO announcement_seen(announcement_id, user_id) VALUES (?,?)" +
+            "ON CONFLICT (announcement_id, user_id) DO NOTHING",
             announcementId, userId
         );
     }
@@ -98,7 +99,6 @@ public class AnnouncementDaoJdbc implements AnnouncementDao {
             new Object[]{title, summary, content, careerId, courseId, expiryDate, submittedBy},
             announcementRowMapper
         );
-//        return new Announcement(1, null, title, summary, content, new Date(), new Date(), false);
     }
 
 }

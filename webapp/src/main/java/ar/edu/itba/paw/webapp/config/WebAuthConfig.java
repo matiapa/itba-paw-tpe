@@ -35,7 +35,7 @@ public class WebAuthConfig {
     private SgaOidcUserService sgaOidcUserService;
 
     @EnableWebSecurity
-    @PropertySource("classpath:/ar/edu/itba/paw/webapp/config/auth.properties")
+//    @PropertySource("classpath:/ar/edu/itba/paw/webapp/config/auth.properties")
     public class OAuth2LoginSecurityConfig extends WebSecurityConfigurerAdapter {
         @Override
         protected void configure(HttpSecurity http) throws Exception {
@@ -70,8 +70,10 @@ public class WebAuthConfig {
 
     @Bean
     public ClientRegistrationRepository clientRegistrationRepository() {
-        String clientId = env.getRequiredProperty(CLIENT_PROPERTY_KEY + ".client-id");
-        String clientSecret = env.getRequiredProperty(CLIENT_PROPERTY_KEY + ".client-secret");
+//        String clientId = env.getRequiredProperty(CLIENT_PROPERTY_KEY + ".client-id");
+//        String clientSecret = env.getRequiredProperty(CLIENT_PROPERTY_KEY + ".client-secret");
+        String clientId = "991921071016-a10hrh7877uchu04bca45cdoabfh1in2.apps.googleusercontent.com";
+        String clientSecret = "qrjbjfn1ZwEL-B8iE3Zs2zRW";
         ClientRegistration repository = CommonOAuth2Provider.GOOGLE.getBuilder("google").clientId(clientId).clientSecret(clientSecret).build();
         return new InMemoryClientRegistrationRepository(repository);
     }

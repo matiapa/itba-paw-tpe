@@ -1,29 +1,29 @@
 package ar.edu.itba.paw.webapp.form;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
-public class AnnouncementForm {
+public class PollForm {
 
     @NotNull
-    @Size(min = 5, max = 50)
     private String title;
-
-    @NotNull
-    @Size(min = 5, max = 100)
-    private String summary;
-
-    @NotNull
-    @Size(min = 5, max = 500)
-    private String content;
 
     private Integer careerId;
 
     private String courseId;
 
-    private Date expiryDate;
+    @NotNull
+    private String description;
 
+    @NotNull
+    private ArrayList<String> options;
+
+    @DateTimeFormat(pattern = "dd-mm-yyyy")
+    private Date expiryDate;
 
     public String getTitle() {
         return title;
@@ -31,22 +31,6 @@ public class AnnouncementForm {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public String getSummary() {
-        return summary;
-    }
-
-    public void setSummary(String summary) {
-        this.summary = summary;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
     }
 
     public Integer getCareerId() {
@@ -71,6 +55,22 @@ public class AnnouncementForm {
 
     public void setExpiryDate(Date expiryDate) {
         this.expiryDate = expiryDate;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public List<String> getOptions() {
+        return options;
+    }
+
+    public void setOptions(ArrayList<String> options) {
+        this.options = options;
     }
 
 }

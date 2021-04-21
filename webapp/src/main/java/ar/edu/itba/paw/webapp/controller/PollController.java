@@ -1,52 +1,184 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.server.ResponseStatusException;
-import org.springframework.web.servlet.ModelAndView;
-
 import java.text.DateFormat;
-import java.util.Arrays;
-import java.util.Locale;
-import java.util.Optional;
+import java.text.ParseException;
+import java.util.*;
+
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
 import ar.edu.itba.paw.models.Career;
 import ar.edu.itba.paw.models.Course;
+import ar.edu.itba.paw.models.HolderEntity;
 import ar.edu.itba.paw.models.Poll;
-import ar.edu.itba.paw.models.ui.NavigationItem;
+import ar.edu.itba.paw.models.Poll.PollFormat;
+import ar.edu.itba.paw.models.Poll.PollOption;
+import ar.edu.itba.paw.models.User;
+
 import ar.edu.itba.paw.services.CareerService;
 import ar.edu.itba.paw.services.CourseService;
 import ar.edu.itba.paw.services.PollService;
-import ar.edu.itba.paw.webapp.mav.BaseMav;
+import ar.edu.itba.paw.services.UserService;
+import ar.edu.itba.paw.webapp.form.PollForm;
+import ar.edu.itba.paw.models.Poll.PollState;
+
 
 @Controller
 public class PollController {
 
-    @Autowired private PollService pollService;
+    @Autowired
+    private UserService userService;
 
-    @Autowired private CareerService careerService;
+    @Autowired
+    private PollService pollService;
 
-    @Autowired private CourseService courseService;
+    @Autowired
+    private CareerService careerService;
 
-    @RequestMapping("polls/byId")
-    public ModelAndView getPollDetails(@RequestParam int id)
-    {
-        Optional<Poll> optionalPoll = pollService.findById(id);
-        if(!optionalPoll.isPresent())
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Encuesta no encontrada");
-        Poll poll = optionalPoll.get();
+    @Autowired
+    private CourseService courseService;
+
+    @RequestMapping("/polls")
+    public ModelAndView getPolls(
+        @RequestParam(name = "filterBy", required = false, defaultValue = "general") HolderEntity filterBy,
+        @RequestParam(name = "careerId", required = false) Integer careerId,
+        @RequestParam(name = "courseId", required = false) String courseId,
+        @RequestParam(name = "type", required = false) String type,
+        @RequestParam(name = "state", required = false) String state,
+        @ModelAttribute("pollForm") final PollForm pollForm,
+        @AuthenticationPrincipal User user
+    ) {
+        final ModelAndView modelAndView = new ModelAndView("polls/polls_list");
+        modelAndView.addObject("filterBy", filterBy);
+
+        // Filters
+
+        List<Poll> pollList = new ArrayList<>();
+
+            // -- Career
+
+        List<Career> careers = careerService.findAll();
+        modelAndView.addObject("careers", careers);
+
+        Career selectedCareer = careerId != null ? careers.stream().filter(c -> c.getId() == careerId).findFirst()
+                .orElseThrow(RuntimeException::new) : null;
+        modelAndView.addObject("selectedCareer", selectedCareer);
+
+            // -- Course
+
+        List<Course> courses = courseService.findAll();
+        modelAndView.addObject("courses", courses);
+
+        Course selectedCourse = courseId != null ? courses.stream().filter(c -> c.getId().equals(courseId)).findFirst()
+                .orElseThrow(RuntimeException::new) : null;
+        modelAndView.addObject("selectedCourse", selectedCourse);
+
+            // -- Type
+
+        modelAndView.addObject("types", PollFormat.values());
+        modelAndView.addObject("typeTranslate", new HashMap<PollFormat, String>() {{
+            put(PollFormat.text, "Texto libre");
+            put(PollFormat.multiple_choice, "Opción múltiple");
+        }});
+
+        PollFormat selectedType = type != null ? PollFormat.valueOf(type) : null;
+        modelAndView.addObject("selectedType", selectedType);
+
+            // -- State
+
+        modelAndView.addObject("states", PollState.values());
+        modelAndView.addObject("stateTranslate", new HashMap<PollState, String>() {{
+            put(PollState.open, "Abiertas");
+            put(PollState.closed, "Cerradas");
+        }});
+
+        PollState selectedState = state != null ? PollState.valueOf(state) : null;
+        modelAndView.addObject("selectedState", selectedState);
+
+        // Polls
+
+        switch (filterBy) {
+            case course:
+                if (courseId != null)
+                    pollList = pollService.findByCourse(courseId, selectedType, selectedState);
+                break;
+            case career:
+                if (careerId != null)
+                    pollList = pollService.findByCareer(careerId, selectedType, selectedState);
+                break;
+            case general:
+            default:
+                pollList = pollService.findGeneral(selectedType, selectedState);
+                break;
+        }
+
+        modelAndView.addObject("polls", pollList);
+        modelAndView.addObject("user", user);
         
-        ModelAndView mav = new BaseMav(
-            poll.getName(),
-            "poll/poll_detail.jsp", 
-            Arrays.asList(
-                new NavigationItem("Home", "/"),
-                new NavigationItem(poll.getName(), "polls/byId?id=" + id)
-            )
+        return modelAndView;
+    }
+
+
+    @RequestMapping(value = "/polls", method = {RequestMethod.POST})
+    public ModelAndView addPoll(
+            @Valid @ModelAttribute("pollForm") final PollForm pollForm,
+            final BindingResult errors,
+            @AuthenticationPrincipal User user
+    ) throws ParseException {
+        if (errors.hasErrors()) {
+            throw new RuntimeException("Error al agregar encuesta: " + errors);
+        }
+
+        pollService.addPoll(
+            pollForm.getTitle(),
+            pollForm.getDescription(),
+            PollFormat.text,
+            pollForm.getCareerId(),
+            pollForm.getCourseId(),
+            pollForm.getExpiryDate(),
+            user,
+            pollForm.getOptions()
         );
+
+        HolderEntity filterBy;
+        if(pollForm.getCareerId() == null && pollForm.getCourseId() == null)
+            filterBy = HolderEntity.general;
+        else if(pollForm.getCareerId() == null && pollForm.getCourseId() != null)
+            filterBy = HolderEntity.course;
+        else if(pollForm.getCareerId() != null && pollForm.getCourseId() == null)
+            filterBy = HolderEntity.career;
+        else
+            filterBy = HolderEntity.general;
+
+        return getPolls(filterBy, pollForm.getCareerId(), pollForm.getCourseId(), null, null, pollForm, user);
+    }
+
+    @RequestMapping("polls/detail")
+    public ModelAndView getPoll(
+            @RequestParam(name="id") int pollId,
+            @AuthenticationPrincipal User user
+    ){
+        final ModelAndView mav = new ModelAndView("polls/poll_detail");
+
+        Optional<Poll> selectedPoll= pollService.findById(pollId);
+
+        if (!selectedPoll.isPresent())
+            throw new RuntimeException();
+        mav.addObject("poll",selectedPoll.get());
+
+        Map<PollOption,Integer> votes = pollService.getVotes(pollId);
+        mav.addObject("votes",votes);
+        mav.addObject("user", user);
+        mav.addObject("hasVoted", pollService.hasVoted(pollId, user));
 
         Locale loc = new Locale("es", "AR");
         DateFormat expiryFormat = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT, loc);
@@ -54,70 +186,18 @@ public class PollController {
 
         mav.addObject("expiryFormat", expiryFormat);
         mav.addObject("creationFormat", creationFormat);
-        mav.addObject("poll", poll);
 
         return mav;
     }
 
-    @RequestMapping("polls/byCareer")
-    public ModelAndView getPollsbyCareer(@RequestParam int careerId)
-    {
-        Optional<Career> careerOpt = careerService.findById(careerId);
-        if(!careerOpt.isPresent()){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Carrera no encontrada");
-        }
-        Career career = careerOpt.get();
-
-        ModelAndView mav = new BaseMav(
-            String.format("Encuestas de %s", career.getName()),
-            "poll/poll_full_list.jsp",
-            Arrays.asList(
-                new NavigationItem("Home", "/"),
-                new NavigationItem(career.getName(), "/careers/byId?id="+career.getId()),
-                new NavigationItem("Encuestas", "/polls/byCareer?careerId="+career.getId())
-            )
-        );
-
-        mav.addObject("polls", pollService.findByCareer(careerId));
-        return mav;
+    @RequestMapping(value = "polls/vote", method = {RequestMethod.POST})
+    public String votePoll(
+            @RequestParam int id,
+            @RequestParam int option,
+            @AuthenticationPrincipal User user
+    ) {
+        pollService.voteChoicePoll(id, option, user);
+        return "redirect:/polls/detail?id="+id;
     }
 
-    @RequestMapping("polls/byCourse")
-    public ModelAndView getPollsbyCourse(@RequestParam String courseId)
-    {
-        Optional<Course> courseOpt = courseService.findById(courseId);
-        if(!courseOpt.isPresent()){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Curso no encontrado");
-        }
-        Course course = courseOpt.get();
-
-        ModelAndView mav = new BaseMav(
-            String.format("Encuestas de %s", course.getName()),
-            "poll/poll_full_list.jsp",
-            Arrays.asList(
-                new NavigationItem("Home", "/"),
-                new NavigationItem(course.getName(), "/courses/byId?id="+course.getId()),
-                new NavigationItem("Encuestas", "/polls/byCourse?careerId="+course.getId())
-            )
-        );
-
-        mav.addObject("polls", pollService.findByCourse(courseId));
-        return mav;
-    }
-
-    @RequestMapping("polls/general")
-    public ModelAndView getGeneralPolls()
-    {
-        ModelAndView mav = new BaseMav(
-            "Encuestas generales",
-            "poll/poll_full_list.jsp",
-            Arrays.asList(
-                new NavigationItem("Home", "/"),
-                new NavigationItem("Encuestas", "/polls/general")
-            )
-        );
-
-        mav.addObject("polls", pollService.findGeneral());
-        return mav;
-    }
 }

@@ -14,20 +14,20 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Inicio</title>
-    <link rel="icon" type="image/png" sizes="311x311" href="assets/img/logo-tran-white.png">
-    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="icon" type="image/png" sizes="311x311" href="/assets/img/logo-tran-white.png">
+    <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
-    <link rel="stylesheet" href="assets/fonts/fontawesome-all.min.css">
-    <link rel="stylesheet" href="assets/fonts/font-awesome.min.css">
-    <link rel="stylesheet" href="assets/fonts/material-icons.min.css">
-    <link rel="stylesheet" href="assets/fonts/simple-line-icons.min.css">
-    <link rel="stylesheet" href="assets/fonts/fontawesome5-overrides.min.css">
-    <link rel="stylesheet" href="assets/css/buttons.css">
-    <link rel="stylesheet" href="assets/css/cards.css">
-    <link rel="stylesheet" href="assets/css/colors.compiled.css">
-    <link rel="stylesheet" href="assets/css/fab.css">
-    <link rel="stylesheet" href="assets/css/nav-tabs.css">
-    <link rel="stylesheet" href="assets/css/sidebar.css">
+    <link rel="stylesheet" href="/assets/fonts/fontawesome-all.min.css">
+    <link rel="stylesheet" href="/assets/fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="/assets/fonts/material-icons.min.css">
+    <link rel="stylesheet" href="/assets/fonts/simple-line-icons.min.css">
+    <link rel="stylesheet" href="/assets/fonts/fontawesome5-overrides.min.css">
+    <link rel="stylesheet" href="/assets/css/buttons.css">
+    <link rel="stylesheet" href="/assets/css/cards.css">
+    <link rel="stylesheet" href="/assets/css/colors.compiled.css">
+    <link rel="stylesheet" href="/assets/css/fab.css">
+    <link rel="stylesheet" href="/assets/css/nav-tabs.css">
+    <link rel="stylesheet" href="/assets/css/sidebar.css">
 </head>
 
 <body id="page-top" class="sidebar-toggled">
@@ -90,7 +90,8 @@
                                                 <div class="col mr-2">
                                                     <h6 class="mb-0"><strong><c:out value="${poll.name}"/></strong></h6>
                                                     <span class="text-xs">
-                                                        🕑 Expira el <fmt:formatDate type="both" dateStyle = "short" timeStyle = "short" value="${poll.expiryDate}"/>
+                                                        ${poll.isExpired ? "🕑 Expiró el " : "🕑 Expira el "}
+                                                        <fmt:formatDate type="both" dateStyle = "short" timeStyle = "short" value="${poll.expiryDate}"/>
                                                     </span>
                                                 </div>
                                                 <div class="col-auto">
@@ -147,10 +148,10 @@
         </div>
     </div>
 
-    <script src="assets/js/jquery.min.js"></script>
-    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/assets/js/jquery.min.js"></script>
+    <script src="/assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.js"></script>
-    <script src="assets/js/theme.js"></script>
+    <script src="/assets/js/theme.js"></script>
 
 </body>
 

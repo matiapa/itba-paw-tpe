@@ -16,6 +16,7 @@
     <jsp:include page="../common/styles.jsp"/>
 
     <link rel="stylesheet" href="<c:url value="/assets/bootstrap/css/bootstrap-select.min.css"/>">
+    <link rel="stylesheet" href="<c:url value="/assets/css/overlay.css"/>">
 </head>
 
 <body id="page-top">
@@ -102,14 +103,15 @@
                                     <form action="<c:url value="/announcements"/>" method="get">
                                         <input type="text" name="filterBy" value="course" hidden>
 
-                                        <select id="courseId" class="selectpicker" data-live-search="true" title="Elegí un curso">
+                                        <select required name="courseId" class="selectpicker" data-live-search="true"
+                                                data-width="75%" data-style="btn-outline-secondary" title="Elegí un curso">
                                             <c:forEach var="course" items="${courses}">
                                                 <option ${course.equals(selectedCourse) ? 'selected' : ''}
                                                     value="${course.id}" data-tokens="${course.name}">${course.name}</option>
                                             </c:forEach>
                                         </select>
 
-                                        <button hidden id="courseSearchBtn" type="submit" class="btn btn-primary ml-3">Buscar</button>
+                                        <button type="submit" class="btn btn-primary ml-3">Buscar</button>
                                     </form>
 
                                     <c:choose>
@@ -151,17 +153,18 @@
         </div>
     </div>
 
-    <div class="fab" data-toggle="modal">
-        <a href="<c:url value="/announcements/create"/>">
+    <div class="fab">
+        <a href="#popup" data-toggle="modal">
             <i class="material-icons" style="font-size: 32px;color: rgb(255,255,255);">add</i>
         </a>
     </div>
+
+    <jsp:include page="announcement_create.jsp"/>
 
     <jsp:include page="../common/scripts.jsp"/>
 
     <script src="<c:url value="/assets/js/announcements.js"/>"></script>
 
-    <script src="<c:url value="/assets/js/jquery.easing.js"/>"></script>
     <script src="<c:url value="/assets/js/popper.min.js"/>" ></script>
     <script src="<c:url value="/assets/bootstrap/js/bootstrap-select.min.js"/>"></script>
 
