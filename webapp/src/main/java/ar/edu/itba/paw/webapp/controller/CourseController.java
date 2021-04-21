@@ -1,28 +1,29 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.models.Announcement;
-import ar.edu.itba.paw.models.Career;
-import ar.edu.itba.paw.models.CareerCourse;
-import ar.edu.itba.paw.models.Content;
-import ar.edu.itba.paw.models.Poll;
-import ar.edu.itba.paw.models.Course;
-import ar.edu.itba.paw.services.AnnouncementService;
-import ar.edu.itba.paw.services.CareerService;
-import ar.edu.itba.paw.services.ContentService;
-import ar.edu.itba.paw.services.CourseService;
-import ar.edu.itba.paw.services.PollService;
-import ar.edu.itba.paw.services.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
+
+import ar.edu.itba.paw.models.Announcement;
+import ar.edu.itba.paw.models.Career;
+import ar.edu.itba.paw.models.CareerCourse;
+import ar.edu.itba.paw.models.Content;
+import ar.edu.itba.paw.models.Course;
+import ar.edu.itba.paw.models.Poll;
+import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.services.AnnouncementService;
+import ar.edu.itba.paw.services.CareerService;
+import ar.edu.itba.paw.services.ContentService;
+import ar.edu.itba.paw.services.CourseService;
+import ar.edu.itba.paw.services.PollService;
 
 @Controller
 public class CourseController {
@@ -37,12 +38,11 @@ public class CourseController {
 
     @Autowired private PollService pollService;
 
-    @Autowired private UserService userService;
-
 
     @RequestMapping("courses")
     public ModelAndView getCourses(
-            @RequestParam(name="careerId", required = false) Integer careerId
+            @RequestParam(name="careerId", required = false) Integer careerId,
+            @AuthenticationPrincipal User user
     ){
         final ModelAndView mav = new ModelAndView("courses/courses_list");
 
@@ -59,13 +59,15 @@ public class CourseController {
             mav.addObject("selectedCareer", selectedCareer);
         }
 
-        mav.addObject("user", userService.getUser());
+        mav.addObject("user", user);
 
         return mav;
     }
+
     @RequestMapping("courses/detail")
     public ModelAndView getCourse(
-        @RequestParam(name="id") String courseId
+        @RequestParam(name="id") String courseId,
+        @AuthenticationPrincipal User user
     ){
         final ModelAndView mav = new ModelAndView("courses/course_detail");
 
@@ -96,7 +98,7 @@ public class CourseController {
         mav.addObject("course", selectedCourse.get());
 
 
-        mav.addObject("user", userService.getUser());
+        mav.addObject("user", user);
 
         return mav;
     }

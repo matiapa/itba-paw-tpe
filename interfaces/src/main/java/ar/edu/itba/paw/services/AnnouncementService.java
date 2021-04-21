@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.models.Announcement;
+import ar.edu.itba.paw.models.User;
 
 import java.util.Date;
 import java.util.List;
@@ -15,9 +16,9 @@ public interface AnnouncementService {
 
     Optional<Announcement> findById(int id);
 
-    void markSeen(int id);
+    void markSeen(int announcementId, User user);
 
     Announcement create(String title, String summary, String content, Integer careerId,
-        String courseId, Date expiryDate);
+       String courseId, Date expiryDate, User author);
 
 }

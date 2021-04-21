@@ -52,8 +52,13 @@
                             <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i> Perfil
                         </a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="<c:url value="/signout"/>">
+                        <form action='<c:url value="/signout"/>' method="POST">
+                        <label class="dropdown-item">
                             <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i> Salir
+                            <input type="submit" hidden>
+                        </label>
+
+                        </form>
                         </a>
                     </div>
                 </div>

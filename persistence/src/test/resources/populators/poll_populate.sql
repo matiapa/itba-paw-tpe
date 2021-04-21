@@ -4,7 +4,7 @@ SET TIME ZONE INTERVAL '00:00' HOUR TO MINUTE;
 INSERT INTO career(id,name) VALUES (1, 'Career 1');
 INSERT INTO course(id,name) VALUES ('1.1', 'Course 1');
 INSERT INTO career_course(career_id, course_id) VALUES (1, '1.1');
-INSERT INTO users(id,name,email,career_id,signup_date) VALUES (1, 'User 1', 'usr1@test.com', 1, default);
+INSERT INTO users(id,name,surname,email,career_id,signup_date) VALUES (1, 'User 1', 'Surname', 'usr1@test.com', 1, default);
 
 INSERT INTO poll(name, description, career_id, course_id, expiry_date, submitted_by)
 VALUES 

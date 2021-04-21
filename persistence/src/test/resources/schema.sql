@@ -26,6 +26,7 @@ CREATE TABLE career_course(
 CREATE TABLE users(
     id          int,
     name        varchar(100) not null,
+    surname     varchar(100) not null,
     email       varchar(100) not null,
     career_id   int not null,
     signup_date date not null default now(),
