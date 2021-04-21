@@ -1,15 +1,18 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.models.ChatGroup;
-import ar.edu.itba.paw.models.ChatGroup.ChatPlatform;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+
+import javax.sql.DataSource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
-import javax.sql.DataSource;
-import java.util.*;
+import ar.edu.itba.paw.models.ChatGroup;
+import ar.edu.itba.paw.models.ChatGroup.ChatPlatform;
 
 @Repository
 public class ChatGroupDaoJdbc implements ChatGroupDao{
@@ -33,7 +36,7 @@ public class ChatGroupDaoJdbc implements ChatGroupDao{
     }
 
     @Override
-    public ChatGroup addGroup(String groupName, Integer careerId, String link, Integer createdBy, Date creationDate, ChatPlatform platform) {
+    public ChatGroup addGroup(String groupName, int careerId, String link, int createdBy, Date creationDate, ChatPlatform platform) {
         return jdbcTemplate.queryForObject(
             "INSERT INTO " +
                     "chat_group(career_id, creation_date, name, link, submitted_by, platform)" +

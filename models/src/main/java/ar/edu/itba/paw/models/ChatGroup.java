@@ -4,26 +4,26 @@ import java.util.Date;
 
 public class ChatGroup {
 
-    private final Integer id;
-    private final Integer careerId;
+    private final int id;
+    private final int careerId;
     private final String name, link;
     private final Date creationDate;
-    private final int submitted_by;
+    private final int submittedBy;
     private final ChatPlatform platform;
 
-    public ChatGroup(Integer id, Integer careerId, String name, String link, int user, Date creationDate, ChatPlatform platform){
+    public ChatGroup(int id, int careerId, String name, String link, int user, Date creationDate, ChatPlatform platform){
         this.id = id;
         this.careerId = careerId;
         this.name = name;
         this.link = link;
         this.creationDate = creationDate;
-        this.submitted_by = user;
+        this.submittedBy = user;
         this.platform = platform;
     }
 
-    public Integer getId() {return id;}
+    public int getId() {return id;}
 
-    public Integer getCareerId() {
+    public int getCareerId() {
         return careerId;
     }
 
@@ -35,8 +35,8 @@ public class ChatGroup {
         return name;
     }
 
-    public Integer getSubmitted_by() {
-        return submitted_by;
+    public int getSubmittedBy() {
+        return submittedBy;
     }
 
     public Date getCreationDate() {

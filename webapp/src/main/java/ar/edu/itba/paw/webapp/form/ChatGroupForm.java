@@ -14,7 +14,7 @@ public class ChatGroupForm {
     private String name;
 
     @NotNull
-    private Integer careerId;
+    private int careerId;
 
     @NotNull
     @DateTimeFormat(pattern = "dd-mm-yyyy")
@@ -32,7 +32,7 @@ public class ChatGroupForm {
         return name;
     }
 
-    public Integer getCareerId() {
+    public int getCareerId() {
         return careerId;
     }
 
@@ -52,7 +52,7 @@ public class ChatGroupForm {
         this.name = name;
     }
 
-    public void setCareerId(Integer careerId) {
+    public void setCareerId(int careerId) {
         this.careerId = careerId;
     }
 

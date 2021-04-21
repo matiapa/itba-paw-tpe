@@ -16,7 +16,7 @@ public class ChatGroupServiceImpl implements ChatGroupService{
     private ChatGroupDao chatGroupDao;
 
     @Override
-    public ChatGroup addGroup(String groupName, Integer careerId, String link, Integer createdBy, Date creationDate, ChatPlatform platform) {
+    public ChatGroup addGroup(String groupName, int careerId, String link, int createdBy, Date creationDate, ChatPlatform platform) {
         return chatGroupDao.addGroup(groupName, careerId, link, createdBy, creationDate, platform);
     }
 

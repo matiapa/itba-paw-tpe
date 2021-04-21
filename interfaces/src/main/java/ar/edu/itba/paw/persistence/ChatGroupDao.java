@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface ChatGroupDao {
 
-    ChatGroup addGroup(String groupName, Integer careerId, String link, Integer createdBy, Date creationDate, ChatPlatform platform);
+    ChatGroup addGroup(String groupName, int careerId, String link, int createdBy, Date creationDate, ChatPlatform platform);
 
     List<ChatGroup> findByCareer(int careerId);
 

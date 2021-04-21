@@ -16,10 +16,10 @@ import java.util.Date;
 @RunWith(MockitoJUnitRunner.class)
 public class ChatGroupServiceImplTest {
 
-    private static final Integer CAREER_ID = 1;
+    private static final int CAREER_ID = 1;
     private static final String GROUP_NAME = "Discord";
     private static final String LINK = "https://discord.com";
-    private static final Integer USER = 1;
+    private static final int USER = 1;
     private static final Date DATE = new Date();
 
     @InjectMocks
@@ -46,7 +46,7 @@ public class ChatGroupServiceImplTest {
         Assert.assertEquals(GROUP_NAME, chatGroup.getName());
         Assert.assertEquals(CAREER_ID, chatGroup.getCareerId());
         Assert.assertEquals(LINK, chatGroup.getLink());
-        Assert.assertEquals(USER, chatGroup.getSubmitted_by());
+        Assert.assertEquals(USER, chatGroup.getSubmittedBy());
         Assert.assertEquals(DATE, chatGroup.getCreationDate());
 
     }
