@@ -41,4 +41,16 @@ public class ChatGroup {
         return creationDate;
     }
 
+    public Integer getCreationYear() {
+        return creationDate.getYear() + 1900;
+    }
+
+    public Integer getCreationQuarter() {
+        return creationDate.getMonth() < 7 ? 1 : 2;
+    }
+
+    public enum ChatPlatform {
+        whatsapp, discord
+    }
+
 }

@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.models.ChatGroup;
-import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.ChatGroup.ChatPlatform;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -77,6 +77,37 @@ public class ChatGroupDaoJdbc implements ChatGroupDao{
             String.format("SELECT * FROM chat_group WHERE career_id='%d'", careerId),
             CHAT_GROUP_ROW_MAPPER
         );
+    }
+
+    @Override
+    public List<ChatGroup> findByCareer(int careerId, ChatPlatform platform, Integer year, Integer quarter) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(String.format("SELECT * FROM chat_group WHERE career_id='%d'", careerId));
+
+        if (platform != null)
+            stringBuilder.append(String.format(" AND platform='%s'", platform.toString().split("\\.")[0]));
+
+        String minDate, maxDate;
+        if(year != null && quarter != null){
+            minDate = String.format("%d-%d-01", year, quarter == 1 ? 1 : 7);
+            maxDate = String.format("%d-%d-%d", year, quarter == 1 ? 6 : 12, quarter == 1 ? 30 : 31);
+            stringBuilder.append(
+                String.format(" AND creation_date>='%s' AND creation_date<='%s'", minDate, maxDate)
+            );
+        }else if(year != null){
+            minDate = String.format("%d-01-01", year);
+            maxDate = String.format("%d-12-31", year);
+            stringBuilder.append(
+                String.format(" AND creation_date>='%s' AND creation_date<='%s'", minDate, maxDate)
+            );
+        }else if(quarter != null){
+            stringBuilder.append(
+                String.format(" AND EXTRACT(month FROM creation_date)>='%d' AND EXTRACT(month FROM creation_date)<='%d'",
+                    quarter == 1 ? 1 : 7, quarter == 1 ? 6 : 12)
+            );
+        }
+
+        return jdbcTemplate.query(stringBuilder.toString(), CHAT_GROUP_ROW_MAPPER);
     }
 
     @Override
