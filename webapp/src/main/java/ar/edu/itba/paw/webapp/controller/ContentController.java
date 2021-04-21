@@ -72,7 +72,7 @@ public class ContentController {
         mav.addObject("contents", contents);
 
 
-        mav.addObject("user", mav.addObject("user", userService.getLoggedUser()));
+        mav.addObject("user", userService.getLoggedUser());
 
         return mav;
     }

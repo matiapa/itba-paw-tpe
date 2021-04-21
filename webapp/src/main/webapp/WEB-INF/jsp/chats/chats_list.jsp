@@ -59,7 +59,7 @@
 
                             <div class="col-xl-1">
                                 <select class="custom-select my-1 mr-sm-2" name="year">
-                                    <option ${selectedYear == null ? 'selected' : ''} value="-1">
+                                    <option ${selectedYear == null ? 'selected' : ''} value="">
                                         Año
                                     </option>
                                     <c:forEach var="year" items="${years}">
@@ -72,7 +72,7 @@
 
                             <div class="col-xl-2">
                                 <select class="custom-select my-1 mr-sm-2" name="quarter">
-                                    <option ${selectedQuarter == null ? 'selected' : ''} value="-1">
+                                    <option ${selectedQuarter == null ? 'selected' : ''} value="">
                                         Cuatrimestre
                                     </option>
                                     <c:forEach var="quarter" items="${quarters}">
@@ -144,6 +144,8 @@
     </div>
 
     <jsp:include page="../common/scripts.jsp"/>
+
+    <script src="<c:url value="/assets/js/chat.js"/>"></script>
 
 </body>
 
