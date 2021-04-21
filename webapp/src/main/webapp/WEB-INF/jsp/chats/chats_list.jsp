@@ -110,7 +110,7 @@
                                                 <td>${chatgroup.creationYear}</td>
                                                 <td>${chatgroup.creationQuarter}</td>
                                                 <td>
-                                                    <button class="btn btn-link" type="button">Abrir</button>
+                                                    <a class="btn btn-link" href='<c:out value="${chatgroup.link}"/>' target="_blank" rel="noopener noreferrer">Abrir</button>
                                                 </td>
                                             </tr>
                                         </c:forEach>
