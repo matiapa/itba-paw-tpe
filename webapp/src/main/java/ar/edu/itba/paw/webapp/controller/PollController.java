@@ -60,7 +60,7 @@ public class PollController {
             case course:
                 if (courseId != null){
                     pollList = pollService.findByCourse(courseId);
-                    Course selected = courses.stream().filter(c -> c.getId() == courseId).findFirst()
+                    Course selected = courses.stream().filter(c -> c.getId().equals(courseId)).findFirst()
                             .orElseThrow(RuntimeException::new);
                     modelAndView.addObject("selectedCourse", selected);
                 }
@@ -90,7 +90,7 @@ public class PollController {
             final BindingResult errors
     ) throws ParseException {
         if (errors.hasErrors()){
-            throw new RuntimeException("Error al agregar encuesta");
+            throw new RuntimeException("Error al agregar encuesta: " + errors);
         }
 /*
         SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd");
@@ -108,7 +108,7 @@ public class PollController {
                 userService.getUser().getId(),
                 pollForm.getOptions());
 
-        return getPolls(null, null, null, pollForm);
+        return getPolls(HolderEntity.general, null, null, pollForm);
     }
 
 

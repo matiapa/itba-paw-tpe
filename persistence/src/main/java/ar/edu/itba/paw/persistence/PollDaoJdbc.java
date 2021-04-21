@@ -121,9 +121,10 @@ public class PollDaoJdbc implements PollDao {
 
     @Override
     public void addPoll(String name, String description, PollFormat format, Integer careerId, String courseId, Date creationDate, Date expiryDate, Integer user, List<String> pollOptions) {
-        jdbcTemplate.query(String.format("INSERT INTO " +
+        Poll poll = jdbcTemplate.queryForObject("INSERT INTO " +
                 "poll(name, description, format, career_id, course_id, creation_date, expiry_date, submitted_by) VALUES " +
-                "(?, ?, CAST(? AS poll_format_type), ?, ?, ?, ?, ?);", name, description, format.toString().replace("_","-"), careerId, courseId, null, expiryDate, user), rowMapper);
+                "(?, ?, CAST(? AS poll_format_type), ?, ?, DEFAULT, ?, ?) " +
+                "RETURNING *;", new Object[]{name, description, format.toString().replace("_","-"), careerId, courseId, expiryDate, user}, rowMapper);
         /*
         final Map<String, Object> args = new HashMap<>();
         args.put("name", name);
@@ -138,9 +139,7 @@ public class PollDaoJdbc implements PollDao {
         final Number id = simpleJdbcInsertPoll.executeAndReturnKey(args);
 
  */
-        final Number id = jdbcTemplate.query(String.format("SELECT id FROM poll WHERE name = %s", name), rowMapper)
-                .get(0)
-                .getId();
+        final Number id = poll.getId();
         for(String pollOption : pollOptions){
             addPollOption(id.intValue(), pollOption);
         }
