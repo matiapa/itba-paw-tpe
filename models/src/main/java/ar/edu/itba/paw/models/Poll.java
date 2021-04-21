@@ -92,7 +92,12 @@ public class Poll {
         public int getVote(){return vote;}
     }
 
+    public enum PollState {
+        open, closed
+    }
+
     public enum PollFormat {
         multiple_choice, text
     }
+    
 }

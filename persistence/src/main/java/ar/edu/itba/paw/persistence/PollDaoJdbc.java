@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.persistence;
 
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -16,9 +15,10 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import ar.edu.itba.paw.models.Poll;
+import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.Poll.PollState;
 import ar.edu.itba.paw.models.Poll.PollFormat;
 import ar.edu.itba.paw.models.Poll.PollOption;
-import ar.edu.itba.paw.models.User;
 
 @Repository
 public class PollDaoJdbc implements PollDao {
@@ -64,17 +64,17 @@ public class PollDaoJdbc implements PollDao {
 
     @Autowired
     public PollDaoJdbc(DataSource ds) {
-
         this.jdbcTemplate = new JdbcTemplate(ds);
 
         this.simpleJdbcInsertPoll = new SimpleJdbcInsert(this.jdbcTemplate)
                 .withTableName("poll")
                 .usingGeneratedKeyColumns("id");
+                
         this.simpleJdbcInsertPollOption = new SimpleJdbcInsert(this.jdbcTemplate)
                 .withTableName("poll_option")
                 .usingGeneratedKeyColumns("option_id");
 
-        this.simpleJdbcInsertPollChoiceVote = new SimpleJdbcInsert(this.jdbcTemplate)
+         this.simpleJdbcInsertPollChoiceVote = new SimpleJdbcInsert(this.jdbcTemplate)
                 .withTableName("poll_submission")
                 .usingGeneratedKeyColumns("value")
                 .usingGeneratedKeyColumns("date");
@@ -83,19 +83,75 @@ public class PollDaoJdbc implements PollDao {
                 .withTableName("poll_vote_registry");
     }
 
+    
+    private List<Poll> find(String baseQuery, PollFormat format, PollState state){
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(baseQuery);
+
+        if (format != null)
+            stringBuilder.append(
+                String.format(" AND format='%s'", format.toString().replace("_", "-"))
+            );
+
+        if (state != null){
+            if(state == PollState.open)
+                stringBuilder.append(" AND expiry_date>=now() OR expiry_date IS NULL");
+            else
+                stringBuilder.append(" AND expiry_date<now()");
+        }
+
+        return jdbcTemplate.query(stringBuilder.toString(), rowMapper);
+    }
+    
+
+    @Override
+    public List<Poll> findGeneral() {
+        return jdbcTemplate.query(
+            "SELECT * FROM poll WHERE career_id IS NULL AND course_id IS NULL",
+            rowMapper
+        );
+    }
+
+
+    @Override
+    public List<Poll> findGeneral(PollFormat format, PollState state) {
+        return find(
+            "SELECT * FROM poll WHERE career_id IS NULL AND course_id IS NULL",
+            format, state
+        );
+    }
+    
+
     @Override
     public List<Poll> findByCareer(int careerId) {
         return jdbcTemplate.query(
-            String.format("SELECT * FROM poll WHERE career_id='%d'", careerId),
+            String.format("SELECT * FROM poll WHERE career_id='%d' AND course_id IS NULL", careerId),
             rowMapper
         );
     }
 
     @Override
+    public List<Poll> findByCareer(int careerId, PollFormat format, PollState state) {
+        return find(
+            String.format("SELECT * FROM poll WHERE career_id='%d' AND course_id IS NULL", careerId),
+            format, state
+        );
+    }
+
+    
+    @Override
     public List<Poll> findByCourse(String courseId) {
         return jdbcTemplate.query(
-            String.format("SELECT * FROM poll WHERE course_id='%s'", courseId),
+            String.format("SELECT * FROM poll WHERE course_id='%s' AND career_id IS NULL", courseId),
             rowMapper
+        );
+    }
+
+    @Override
+    public List<Poll> findByCourse(String courseId, PollFormat format, PollState state) {
+        return find(
+            String.format("SELECT * FROM poll WHERE course_id='%s' AND career_id IS NULL", courseId),
+            format, state
         );
     }
 
@@ -160,15 +216,7 @@ public class PollDaoJdbc implements PollDao {
         args.put("option_value", value);
         final Number id_po = simpleJdbcInsertPollOption.executeAndReturnKey(args);
     }
-
-
-    @Override
-    public List<Poll> findGeneral() {
-        return jdbcTemplate.query(
-            "SELECT * FROM poll WHERE career_id IS NULL AND course_id IS NULL",
-            rowMapper
-        );
-    }
+    
 
     private List<PollOption> getOptions(int pollId) {
         return jdbcTemplate.query(

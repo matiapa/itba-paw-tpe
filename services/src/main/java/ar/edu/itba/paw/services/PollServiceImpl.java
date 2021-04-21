@@ -15,6 +15,7 @@ import ar.edu.itba.paw.models.Poll.PollFormat;
 import ar.edu.itba.paw.models.Poll.PollOption;
 import ar.edu.itba.paw.persistence.PollDao;
 
+
 @Service
 public class PollServiceImpl implements PollService {
 
@@ -27,8 +28,28 @@ public class PollServiceImpl implements PollService {
     }
 
     @Override
+    public List<Poll> findByCareer(int careerId, Poll.PollFormat format, Poll.PollState pollState) {
+        return pollDao.findByCareer(careerId, format, pollState);
+    }
+
+    @Override
     public List<Poll> findByCourse(String courseId) {
         return pollDao.findByCourse(courseId);
+    }
+
+    @Override
+    public List<Poll> findByCourse(String courseId, Poll.PollFormat format, Poll.PollState pollState) {
+        return pollDao.findByCourse(courseId, format, pollState);
+    }
+
+    @Override
+    public List<Poll> findGeneral() {
+        return pollDao.findGeneral();
+    }
+
+    @Override
+    public List<Poll> findGeneral(Poll.PollFormat format, Poll.PollState pollState) {
+        return pollDao.findGeneral(format, pollState);
     }
 
     @Override
@@ -46,12 +67,6 @@ public class PollServiceImpl implements PollService {
         pollDao.addPoll(name, description, format, careerId, courseId, expiryDate, user.getId(), pollOptions);
     }
 
-
-    @Override
-    public List<Poll> findGeneral() {
-        return pollDao.findGeneral();
-    }
-
     @Override
     public void voteChoicePoll(int pollId, int optionId, User user) {
         pollDao.voteChoicePoll(pollId, optionId, user.getId());
@@ -61,4 +76,5 @@ public class PollServiceImpl implements PollService {
     public boolean hasVoted(int pollId, User user) {
         return pollDao.hasVoted(pollId, user.getId());
     }
+
 }

@@ -20,7 +20,7 @@ import javax.sql.DataSource;
         "ar.edu.itba.paw.persistence"
 })
 @Configuration
-@PropertySource("classpath:/ar/edu/itba/paw/webapp/config/auth.properties")
+//@PropertySource("classpath:/ar/edu/itba/paw/webapp/config/auth.properties")
 public class WebConfig {
     private static String DB_PROPERTY_KEY = "itbahub.persistence.db";
     private Environment env;
@@ -43,9 +43,13 @@ public class WebConfig {
     @Bean
     public DataSource dataSource() {
         final SimpleDriverDataSource ds = new SimpleDriverDataSource();
-        String url = env.getRequiredProperty(DB_PROPERTY_KEY + ".url");
-        String user = env.getRequiredProperty(DB_PROPERTY_KEY + ".user");
-        String password = env.getRequiredProperty(DB_PROPERTY_KEY + ".password");
+//        String url = env.getRequiredProperty(DB_PROPERTY_KEY + ".url");
+//        String user = env.getRequiredProperty(DB_PROPERTY_KEY + ".user");
+//        String password = env.getRequiredProperty(DB_PROPERTY_KEY + ".password");
+
+        String url = "ec2-54-161-239-198.compute-1.amazonaws.com:5432/d8j7sdks62b5ck";
+        String user = "rnwisaepqwgigm";
+        String password = "4d6fe4204a429d92faa2a8dc671d799f3a53237da87868bb5362812473256456";
 
         ds.setDriverClass(org.postgresql.Driver.class);
         ds.setUrl("jdbc:postgresql://" + url);

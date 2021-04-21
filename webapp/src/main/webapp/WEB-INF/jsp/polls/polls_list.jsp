@@ -42,7 +42,7 @@
                         <ul class="nav nav-tabs" role="tablist">
                             <li class="nav-item" role="presentation">
                                 <a class="nav-link ${filterBy == "general" ? 'active' : ''}" role="tab"
-                                   href="<c:url value="/polls?filterBy=general"/>">Todos</a>
+                                   href="<c:url value="/polls?filterBy=general"/>">Generales</a>
                             </li>
                             <li class="nav-item" role="presentation">
                                 <a class="nav-link ${filterBy == "career" ? 'active' : ''}" role="tab"
@@ -56,9 +56,49 @@
 
                         <div class="tab-content">
 
+                            <c:set var="filterFormFields">
+                                <div class="col-xl-2">
+                                    <select class="custom-select my-1 mr-sm-2" name="type">
+                                        <option ${selectedType == null ? 'selected' : ''} value="">
+                                            Tipo
+                                        </option>
+                                        <c:forEach var="type" items="${types}">
+                                            <option ${selectedType == type ? 'selected' : ''} value="${type}">
+                                                    ${typeTranslate.get(type)}
+                                            </option>
+                                        </c:forEach>
+                                    </select>
+                                </div>
+
+                                <div class="col-xl-2">
+                                    <select class="custom-select my-1 mr-sm-2" name="state">
+                                        <option ${selectedState == null ? 'selected' : ''} value="">
+                                            Estado
+                                        </option>
+                                        <c:forEach var="state" items="${states}">
+                                            <option ${selectedState == state ? 'selected' : ''} value="${state}">
+                                                    ${stateTranslate.get(state)}
+                                            </option>
+                                        </c:forEach>
+                                    </select>
+                                </div>
+
+                                <div class="col-xl-2">
+                                    <button type="submit" class="btn btn-primary">Buscar</button>
+                                </div>
+                            </c:set>
+
                             <%-- General polls --%>
+
                             <div class="tab-pane ${filterBy == "general" ? 'active' : ''}" role="tabpanel" id="tab-1">
                                 <div class="col">
+                                    <form name="searchForm" method="get" class="mt-3">
+                                        <input hidden type="text" name="filterBy" value="general">
+                                        <div class="row">
+                                            ${filterFormFields}
+                                        </div>
+                                    </form>
+
                                     <div class="card-group" style="display: flex; flex-direction: column">
                                         <c:forEach var="poll" items="${polls}">
                                             <c:set var="poll" value="${poll}" scope="request"/>
@@ -71,6 +111,7 @@
                             <!--   Course Polls --->
                             <div class="tab-pane ${filterBy == "course" ? 'active' : ''}" role="tabpanel" id="tab-3">
                                 <div class="col-lg-6 col-xl-12 mb-4">
+
                                     <div class="dropdown">
                                         <button class="btn btn-block dropdown-toggle text-left text-dark bg-white" data-toggle="dropdown"
                                                 aria-expanded="false" type="button" style="margin-top: 32px;">
@@ -84,6 +125,15 @@
                                             </c:forEach>
                                         </div>
                                     </div>
+
+                                    <form name="searchForm" method="get" class="mt-3">
+                                        <input hidden type="text" name="filterBy" value="course">
+                                        <input hidden type="text" name="courseId" value="${selectedCourse.id}">
+                                        <div class="row">
+                                            ${filterFormFields}
+                                        </div>
+                                    </form>
+
                                     <c:choose>
                                         <c:when test="${selectedCourse != null}">
                                             <c:forEach var="poll" items="${polls}">
@@ -104,6 +154,7 @@
                             <%-- Career polls --%>
                             <div class="tab-pane ${filterBy == "career" ? 'active' : ''}" role="tabpanel" id="tab-2">
                                 <div class="col-lg-6 col-xl-12 mb-4">
+
                                     <div class="dropdown">
                                         <button class="btn btn-block dropdown-toggle text-left text-dark bg-white" data-toggle="dropdown"
                                                 aria-expanded="false" type="button" style="margin-top: 32px;">
@@ -117,6 +168,14 @@
                                             </c:forEach>
                                         </div>
                                     </div>
+
+                                    <form name="searchForm" method="get" class="mt-3">
+                                        <input hidden type="text" name="filterBy" value="career">
+                                        <input hidden type="text" name="careerId" value="${selectedCareer.id}">
+                                        <div class="row">
+                                            ${filterFormFields}
+                                        </div>
+                                    </form>
 
                                     <c:choose>
                                         <c:when test="${selectedCareer != null}">
@@ -238,9 +297,10 @@
         </div>
     </div>
 
-    <script src="/assets/js/jquery.min.js"></script>
-    <script src="/assets/bootstrap/js/bootstrap.min.js"></script>
-    <script src="/assets/js/theme.js"></script>
+    <jsp:include page="../common/scripts.jsp"/>
+
+    <script src="<c:url value="/assets/js/polls.js"/>"></script>
+
 </body>
 
 </html>
