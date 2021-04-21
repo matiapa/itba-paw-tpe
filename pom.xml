@@ -24,12 +24,12 @@
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
     <org.springframework.version>5.3.5</org.springframework.version>
-    <org.jstl.version>1.2</org.jstl.version>
     <org.postgresql.version>42.2.19</org.postgresql.version>
     <org.junit.version>4.13.2</org.junit.version>
     <org.mockito.version>2.25.1</org.mockito.version>
     <org.hsqldb.version>2.5.1</org.hsqldb.version>
     <spring-security.version>5.4.6</spring-security.version>
+    <org.jstl.version>1.2</org.jstl.version>
     <javax.validation-api.version>2.0.1.Final</javax.validation-api.version>
     <org.hibernate.validator>7.0.1.Final</org.hibernate.validator>
   </properties>
@@ -87,6 +87,13 @@
         <groupId>org.hibernate.validator</groupId>
         <artifactId>hibernate-validator</artifactId>
         <version>${org.hibernate.validator}</version>
+      </dependency>
+
+
+      <dependency>
+        <groupId>javax.servlet</groupId>
+        <artifactId>jstl</artifactId>
+        <version>${org.jstl.version}</version>
       </dependency>
 
       <!-- TESTING -->
@@ -168,7 +175,14 @@
         <groupId>org.eclipse.jetty</groupId>
         <artifactId>jetty-maven-plugin</artifactId>
       </plugin>
+
+      <plugin>
+        <groupId>org.apache.tomcat.maven</groupId>
+        <artifactId>tomcat7-maven-plugin</artifactId>
+        <version>2.2</version>
+      </plugin>
     </plugins>
+
   </build>
 
   <reporting>

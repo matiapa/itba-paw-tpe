@@ -21,7 +21,7 @@
                     <div class="p-5">
                         <h4 class="text-dark mb-4">¡Bienvenido a ITBAHub!</h4>
                         <p class="text-center">Por favor, continuá con tu cuenta del ITBA</p>
-                        <form action="/oauth2/authorization/google">
+                        <form action="<c:url value="/oauth2/authorization/google"/>">
                             <input class="btn btn-primary" type="submit" value="Login"></button>
                         </form>
                     </div>

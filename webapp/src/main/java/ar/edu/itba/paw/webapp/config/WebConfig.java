@@ -47,6 +47,10 @@ public class WebConfig {
 //        String user = env.getRequiredProperty(DB_PROPERTY_KEY + ".user");
 //        String password = env.getRequiredProperty(DB_PROPERTY_KEY + ".password");
 
+//        String url = "10.16.1.110/paw-2021a-13";
+//        String user = "paw-2021a-13";
+//        String password = "aPjzv76sH";
+
         String url = "ec2-54-161-239-198.compute-1.amazonaws.com:5432/d8j7sdks62b5ck";
         String user = "rnwisaepqwgigm";
         String password = "4d6fe4204a429d92faa2a8dc671d799f3a53237da87868bb5362812473256456";

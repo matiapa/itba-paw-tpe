@@ -34,7 +34,7 @@
                                 <h6 class="font-weight-bold m-0"><c:out value="${poll.name}"/></h6>
                             </div>
 
-                            <form action="/polls/vote" method="POST">
+                            <form action="<c:url value="/polls/vote"/>" method="POST">
 
                                 <input type="hidden" id="pollId" name="id" value="${poll.id}">
 
