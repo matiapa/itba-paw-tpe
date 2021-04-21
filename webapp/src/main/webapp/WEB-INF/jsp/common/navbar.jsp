@@ -3,7 +3,13 @@
 
 <nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion sidebar-toggled sidebar-dark p-0 toggled" style="background: rgb(2,86,138);">
 
-    <div class="container-fluid d-flex flex-column p-0"><a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="#"><img src="assets/img/logo-hor.png" height="50px"></a>
+    <div class="container-fluid d-flex flex-column p-0">
+
+        <a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0"
+           href="<c:url value="/"/>">
+            <img src="<c:url value="/assets/img/logo-hor.png"/>" height="50px">
+        </a>
+
         <ul class="nav navbar-nav text-light" id="accordionSidebar">
             <li class="nav-item">
                 <a class="nav-link active" href="<c:url value="/"/>">

@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -11,12 +12,10 @@ import ar.edu.itba.paw.services.AnnouncementService;
 import ar.edu.itba.paw.services.CareerService;
 import ar.edu.itba.paw.services.CourseService;
 import ar.edu.itba.paw.services.PollService;
-import ar.edu.itba.paw.services.UserService;
+
 
 @Controller
 public class HomeController {
-
-    @Autowired private UserService userService;
 
     @Autowired private AnnouncementService announcementService;
 

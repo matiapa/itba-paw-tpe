@@ -45,7 +45,7 @@
                 <div class="nav-item dropdown no-arrow">
                     <a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false" href="#">
                         <span class="d-none d-lg-inline mr-2 text-gray-600 small"><c:out value="${user.name}"/></span>
-                        <img class="border rounded-circle img-profile" src="assets/img/avatars/avatar.png">
+                        <img class="border rounded-circle img-profile" src="<c:url value="/assets/img/avatars/avatar.png"/>">
                     </a>
                     <div class="dropdown-menu shadow dropdown-menu-right animated--grow-in">
                         <a class="dropdown-item" href="<c:url value="/profile"/>">

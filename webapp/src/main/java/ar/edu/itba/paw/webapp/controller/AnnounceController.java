@@ -1,15 +1,19 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
@@ -20,11 +24,10 @@ import ar.edu.itba.paw.models.Career;
 import ar.edu.itba.paw.models.Course;
 import ar.edu.itba.paw.models.HolderEntity;
 import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.models.ui.NavigationItem;
 import ar.edu.itba.paw.services.AnnouncementService;
 import ar.edu.itba.paw.services.CareerService;
 import ar.edu.itba.paw.services.CourseService;
-import ar.edu.itba.paw.webapp.mav.BaseMav;
+import ar.edu.itba.paw.webapp.form.AnnouncementForm;
 
 @Controller
 public class AnnounceController {
@@ -83,28 +86,70 @@ public class AnnounceController {
         return mav;
     }
 
-    @RequestMapping("announcements/byId")
-    public ModelAndView getAnnouncementDetails(
-        @RequestParam(name = "id") int id
+    @RequestMapping("announcements/detail")
+    public ModelAndView getAnnouncementDetail(
+            @RequestParam(name="id", required = false) Integer id,
+            @AuthenticationPrincipal User user
     ){
-        Optional<Announcement> optionalAnnounce = announcementService.findById(id);
-        if (!optionalAnnounce.isPresent()){
-            throw new ResponseStatusException(NOT_FOUND, "Anuncio no encontrado");
+        final ModelAndView mav = new ModelAndView("announcements/announcements_detail");
+
+        Optional<Announcement> optionalAnnouncement = announcementService.findById(id);
+        if (! optionalAnnouncement.isPresent()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Anuncio no encontrado");
         }
-        Announcement announce = optionalAnnounce.get();
 
-        final ModelAndView mav = new BaseMav(
-            announce.getTitle(),
-            "announcement/announcement_detail.jsp",
-            Arrays.asList(
-                new NavigationItem("Home", "/"),
-                new NavigationItem(announce.getTitle(), "/announcement/byId?id=" + id)
-            )
-        );
+        mav.addObject("announcement", optionalAnnouncement.get());
 
-        mav.addObject("announcement", announce);
+        mav.addObject("user", user);
 
         return mav;
+    }
+
+
+    @RequestMapping(value = "announcements/markSeen", method = POST)
+    public ModelAndView markSeen(
+        @RequestParam(name = "id") int id,
+        @AuthenticationPrincipal User user
+    ) {
+        final ModelAndView mav = new ModelAndView("simple");
+        mav.addObject("text", "OK");
+
+        announcementService.markSeen(id, user);
+
+        return mav;
+    }
+
+    @RequestMapping("announcements/create")
+    public ModelAndView create(
+        @ModelAttribute("createForm") final AnnouncementForm form,
+        @AuthenticationPrincipal User user
+    ) {
+        ModelAndView mav = new ModelAndView("announcements/create_announcement");
+
+        mav.addObject("careers", careerService.findAll());
+        mav.addObject("courses", courseService.findAll());
+        mav.addObject("user", user);
+
+        return mav;
+    }
+
+    @RequestMapping(value = "announcements/create", method = POST)
+    public ModelAndView create(
+        @Valid @ModelAttribute("createForm") final AnnouncementForm form,
+        final BindingResult errors,
+        @AuthenticationPrincipal User user
+    ){
+        // TODO: Form validation is not working
+        if (errors.hasErrors())
+            throw new RuntimeException();
+
+        announcementService.create(
+            form.getTitle(), form.getSummary(), form.getContent(),
+            form.getCarrerId(), form.getCourseId(), form.getExpiryDate(),
+            user
+        );
+
+        return new ModelAndView("redirect:/announcements");
     }
 
 }

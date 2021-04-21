@@ -1,8 +1,8 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import static org.springframework.http.HttpStatus.NOT_FOUND;
-
-import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,121 +10,95 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 
+import ar.edu.itba.paw.models.Announcement;
 import ar.edu.itba.paw.models.Career;
+import ar.edu.itba.paw.models.CareerCourse;
+import ar.edu.itba.paw.models.Content;
 import ar.edu.itba.paw.models.Course;
+import ar.edu.itba.paw.models.Poll;
 import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.models.ui.NavigationItem;
-import ar.edu.itba.paw.models.ui.Panel;
 import ar.edu.itba.paw.services.AnnouncementService;
 import ar.edu.itba.paw.services.CareerService;
 import ar.edu.itba.paw.services.ContentService;
 import ar.edu.itba.paw.services.CourseService;
 import ar.edu.itba.paw.services.PollService;
-import ar.edu.itba.paw.webapp.mav.BaseMav;
 
 @Controller
 public class CourseController {
 
-    @Autowired private AnnouncementService announcementService;
-
-    @Autowired private CourseService courseService;
-
     @Autowired private CareerService careerService;
+
+    @Autowired private AnnouncementService announcementService;
 
     @Autowired private ContentService contentService;
 
+    @Autowired private CourseService courseService;
+
     @Autowired private PollService pollService;
 
-    @RequestMapping("/courses/byId")
-    public ModelAndView getCourseById(
-        @RequestParam(name = "id") String id
-    ) {
-        Optional<Course> courseOpt = courseService.findById(id);
-        if(! courseOpt.isPresent()){
-            throw new ResponseStatusException(NOT_FOUND, "Curso no encontrado");
+
+    @RequestMapping("courses")
+    public ModelAndView getCourses(
+            @RequestParam(name="careerId", required = false) Integer careerId,
+            @AuthenticationPrincipal User user
+    ){
+        final ModelAndView mav = new ModelAndView("courses/courses_list");
+
+
+
+        Map<Integer,List<CareerCourse>> courses;
+        List<Career> careers = careerService.findAll();
+        mav.addObject("careers", careers);
+        if(careerId != null) {
+            courses = careerService.findByCareer(careerId);
+            mav.addObject("careerCourses",courses);
+            Career selectedCareer = careers.stream().filter(c -> c.getId() == careerId).findFirst()
+                    .orElseThrow(RuntimeException::new);
+            mav.addObject("selectedCareer", selectedCareer);
         }
-        Course course = courseOpt.get();
 
-        final ModelAndView mav = new BaseMav(
-            course.getName(),
-            "panels.jsp",
-            Arrays.asList(
-                new NavigationItem("Home", "/"),
-                new NavigationItem(course.getName(), "/courses/byId?id="+course.getId())
-            )
-        );
-
-        mav.addObject("panels", Arrays.asList(
-            null,
-
-            new Panel("Contenido", "/contents/byCourse?&courseId="+course.getId(),
-                    "content_source/content_short_list.jsp"),
-
-            new Panel("Encuestas del curso", "/polls/byCourse?courseId="+course.getId(),
-                    "poll/poll_short_list.jsp"),
-
-            new Panel("Anuncios del curso", "",
-                    "announcement/announcement_list.jsp")
-        ));
-
-        mav.addObject("announcements", announcementService.findByCourse(course.getId()));
-
-        mav.addObject("contents", contentService.findByCourse(course.getId(), 4));
-
-        mav.addObject("polls", pollService.findByCourse(course.getId()));
+        mav.addObject("user", user);
 
         return mav;
     }
 
+    @RequestMapping("courses/detail")
+    public ModelAndView getCourse(
+        @RequestParam(name="id") String courseId,
+        @AuthenticationPrincipal User user
+    ){
+        final ModelAndView mav = new ModelAndView("courses/course_detail");
 
-    @RequestMapping("/courses/byCareer")
-    public ModelAndView getCoursesByCareer(
-        @RequestParam(name = "careerId") int careerId
-    ) {
-        Optional<Career> careerOpt = careerService.findById(careerId);
-        if(! careerOpt.isPresent()){
-            throw new ResponseStatusException(NOT_FOUND, "Carrera no encontrada");
-        }
-        Career career = careerOpt.get();
+        List<Announcement> announcements;
+        announcements = announcementService.findByCourse(courseId);
+        mav.addObject("announcements",announcements);
 
-        final ModelAndView mav = new BaseMav(
-            String.format("Cursos de %s", career.getName()),
-            "course/course_full_list.jsp",
-            Arrays.asList(
-                new NavigationItem("Home", "/"),
-                new NavigationItem(career.getName(), "/careers/byId?id="+career.getId()),
-                new NavigationItem("Cursos", "/courses/byCareer?careerId="+career.getId())
-            )
-        );
+        List<Content> contents;
+        contents = contentService.findByCourse(courseId);
+        mav.addObject("contents",contents);
 
-        mav.addObject("courses", courseService.findByCareer(careerId));
+        mav.addObject("contentTypeEnumMap", new HashMap<Content.ContentType, String>()
+        {{
+            put(Content.ContentType.exam, "Exámen");
+            put(Content.ContentType.guide, "Guía");
+            put(Content.ContentType.note, "Apunte");
+            put(Content.ContentType.resume, "Resúmen");
+            put(Content.ContentType.other, "Otro");
+        }});
 
-        return mav;
-    }
+        List<Poll> polls;
+        polls = pollService.findByCourse(courseId);
+        mav.addObject("polls",polls);
+
+        Optional<Course> selectedCourse = courseService.findById(courseId);
+        if (!selectedCourse.isPresent())
+            throw new RuntimeException();
+        mav.addObject("course", selectedCourse.get());
 
 
-    @RequestMapping("/courses/favourites")
-    public ModelAndView getFavouriteCourses(@AuthenticationPrincipal User user) {
-        final ModelAndView mav = new BaseMav(
-            "Tus cursos favoritos",
-            "course/course_full_list.jsp",
-            Arrays.asList(
-                new NavigationItem("Home", "/"),
-                new NavigationItem("Cursos favoritos", "/courses/favourites")
-            )
-        );
-
-        mav.addObject("title", "Tus cursos favoritos");
-
-        mav.addObject("navigationHistory", Arrays.asList(
-            new NavigationItem("Home", "/"),
-            new NavigationItem("Cursos favoritos","/courses/favourites")
-        ));
-
-        mav.addObject("courses", courseService.findFavourites(user));
+        mav.addObject("user", user);
 
         return mav;
     }

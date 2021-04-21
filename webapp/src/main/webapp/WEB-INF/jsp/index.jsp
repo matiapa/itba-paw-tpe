@@ -60,7 +60,7 @@
                                                     <h6 class="mb-0"><strong><c:out value="${announcement.title}"/></strong></h6>
                                                     <span><c:out value="${announcement.summary}"/><br></span></div>
                                                 <div class="col-auto">
-                                                    <a href="<c:url value="/announcements/byId?id=${announcement.id}"/>" class="btn btn-icon" type="button">
+                                                    <a href="<c:url value="/announcements/detail?id=${announcement.id}"/>" class="btn btn-icon" type="button">
                                                         <i class="material-icons">keyboard_arrow_right</i>
                                                     </a>
                                                 </div>
@@ -94,7 +94,7 @@
                                                     </span>
                                                 </div>
                                                 <div class="col-auto">
-                                                    <a href="<c:url value="/polls/byId?id=${poll.id}"/>" class="btn btn-icon" type="button">
+                                                    <a href="<c:url value="/polls/detail?id=${poll.id}"/>" class="btn btn-icon" type="button">
                                                         <i class="material-icons">keyboard_arrow_right</i>
                                                     </a>
                                                 </div>
@@ -126,11 +126,9 @@
                                                     <h6 class="mb-0">
                                                         <strong><c:out value="${course.name}"/></strong>
                                                     </h6>
-                                                    <%-- TODO: Fill this data --%>
-                                                    <span>(HARDCODED) 2 anuncios y 1 encuesta nueva.<br></span>
                                                 </div>
                                                 <div class="col-auto">
-                                                    <a href="<c:url value="/courses/byId?id=${course.id}"/>" class="btn btn-icon" type="button">
+                                                    <a href="<c:url value="/courses/detail?id=${course.id}"/>" class="btn btn-icon" type="button">
                                                         <i class="material-icons">keyboard_arrow_right</i>
                                                     </a>
                                                 </div>
@@ -151,8 +149,6 @@
 
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
-    <script src="assets/js/chart.min.js"></script>
-    <script src="assets/js/bs-init.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.js"></script>
     <script src="assets/js/theme.js"></script>
 
