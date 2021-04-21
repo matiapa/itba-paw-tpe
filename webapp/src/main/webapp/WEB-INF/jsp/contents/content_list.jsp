@@ -88,7 +88,7 @@
                                                 <td><c:out value="${content.uploadDate}"/></td>
                                                 <td><img class="rounded-circle mr-2" width="30" height="30" src="<c:url value="assets/img/avatars/avatar.png"/>">
                                                     <c:out value="${content.submitter.name}"/></td>
-                                                <td><a class="btn btn-link" href="<c:url value='${content.link}'/>" role="button">Link</a></td>
+                                                <td><a class="btn btn-link" target="_blank" rel="noopener noreferrer" href="<c:url value='${content.link}'/>" role="button">Link</a></td>
                                             </tr>
                                         </c:forEach>
                                         </tbody>
