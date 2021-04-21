@@ -1,26 +1,38 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.models.ChatGroup;
+import ar.edu.itba.paw.models.ChatGroup.ChatPlatform;
 import ar.edu.itba.paw.persistence.ChatGroupDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
 public class ChatGroupServiceImpl implements ChatGroupService{
 
     @Autowired
-    private ChatGroupDao chatGruopDao;
+    private ChatGroupDao chatGroupDao;
+
+    @Override
+    public ChatGroup addGroup(String groupName, int careerId, String link, int createdBy, Date creationDate, ChatPlatform platform) {
+        return chatGroupDao.addGroup(groupName, careerId, link, createdBy, creationDate, platform);
+    }
 
     @Override
     public List<ChatGroup> findByCareer(int careerId) {
-        return chatGruopDao.findByCareer(careerId);
+        return chatGroupDao.findByCareer(careerId);
     }
 
     @Override
     public List<ChatGroup> findByCareer(int careerId, int limit) {
-        return chatGruopDao.findByCareer(careerId, limit);
+        return chatGroupDao.findByCareer(careerId, limit);
+    }
+
+    @Override
+    public List<ChatGroup> findByCareer(int careerId, ChatGroup.ChatPlatform platform, Integer year, Integer quarter) {
+        return chatGroupDao.findByCareer(careerId, platform, year, quarter);
     }
 
 }
