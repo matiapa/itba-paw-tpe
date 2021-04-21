@@ -12,8 +12,11 @@
         <div class="col mr-2" style="padding: 16px 24px;">
             <p><c:out value="${poll.description}"/></p>
         </div>
-        <div class="col mr-10" style=" padding: 16px 24px; text-align: right">
+        <div class="col mr-10" style=" padding: 16px 24px; text-align: right;">
             <h6><c:out value="Caduca el: ${poll.expiryDate}"/></h6>
+            <a href="<c:url value="/polls/detail?id=${poll.id}"/>" class="btn btn-icon" type="button">
+                <i class="material-icons">keyboard_arrow_right</i>
+            </a>
         </div>
     </div>
 

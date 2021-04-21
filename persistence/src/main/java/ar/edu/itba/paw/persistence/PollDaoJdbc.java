@@ -62,7 +62,7 @@ public class PollDaoJdbc implements PollDao {
         this.jdbcTemplate = new JdbcTemplate(ds);
 
         this.simpleJdbcInsertPoll = new SimpleJdbcInsert(this.jdbcTemplate)
-                .withTableName("polls")
+                .withTableName("poll")
                 .usingGeneratedKeyColumns("id");
         this.simpleJdbcInsertPollOption = new SimpleJdbcInsert(this.jdbcTemplate)
                 .withTableName("poll_option")

@@ -53,7 +53,7 @@
                                         </c:forEach>
                                     </div>
                                 </div>
-                                <div class="row align-items-end" style="margin-top: 32px;">
+                                <div class="row align-items-end" style="margin: 10px 10px 10px;">
                                     <div class="col"><button class="btn btn-primary" type="button">Votar</button></div>
                                     <div class="col text-right"><span class="text-xs">Publicado por <c:out value="${poll.submittedBy.name}"/> el <c:out value="${poll.creationDate}"/> REVISAR a las 12:30 AM</span></div>
                                 </div>
