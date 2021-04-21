@@ -102,14 +102,15 @@
                                     <form action="<c:url value="/announcements"/>" method="get">
                                         <input type="text" name="filterBy" value="course" hidden>
 
-                                        <select id="courseId" class="selectpicker" data-live-search="true" title="Elegí un curso">
+                                        <select required name="courseId" class="selectpicker" data-live-search="true"
+                                                data-width="75%" data-style="btn-outline-secondary" title="Elegí un curso">
                                             <c:forEach var="course" items="${courses}">
                                                 <option ${course.equals(selectedCourse) ? 'selected' : ''}
                                                     value="${course.id}" data-tokens="${course.name}">${course.name}</option>
                                             </c:forEach>
                                         </select>
 
-                                        <button hidden id="courseSearchBtn" type="submit" class="btn btn-primary ml-3">Buscar</button>
+                                        <button type="submit" class="btn btn-primary ml-3">Buscar</button>
                                     </form>
 
                                     <c:choose>
