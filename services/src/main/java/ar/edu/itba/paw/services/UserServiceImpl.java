@@ -25,4 +25,8 @@ public class UserServiceImpl implements UserService {
         return userDao.registerUser(id,name,surname,email,career_id,courses);
     }
 
+    @Override
+    public User getLoggedUser() {
+        return userDao.findById(59714).orElseThrow(RuntimeException::new);
+    }
 }

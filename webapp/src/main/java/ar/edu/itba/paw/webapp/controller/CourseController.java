@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import ar.edu.itba.paw.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -19,11 +20,6 @@ import ar.edu.itba.paw.models.Content;
 import ar.edu.itba.paw.models.Course;
 import ar.edu.itba.paw.models.Poll;
 import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.services.AnnouncementService;
-import ar.edu.itba.paw.services.CareerService;
-import ar.edu.itba.paw.services.ContentService;
-import ar.edu.itba.paw.services.CourseService;
-import ar.edu.itba.paw.services.PollService;
 
 @Controller
 public class CourseController {
@@ -38,11 +34,12 @@ public class CourseController {
 
     @Autowired private PollService pollService;
 
+    @Autowired private UserService userService;
+
 
     @RequestMapping("courses")
     public ModelAndView getCourses(
-            @RequestParam(name="careerId", required = false) Integer careerId,
-            @AuthenticationPrincipal User user
+            @RequestParam(name="careerId", required = false) Integer careerId
     ){
         final ModelAndView mav = new ModelAndView("courses/courses_list");
 
@@ -59,15 +56,14 @@ public class CourseController {
             mav.addObject("selectedCareer", selectedCareer);
         }
 
-        mav.addObject("user", user);
+        mav.addObject("user", userService.getLoggedUser());
 
         return mav;
     }
 
     @RequestMapping("courses/detail")
     public ModelAndView getCourse(
-        @RequestParam(name="id") String courseId,
-        @AuthenticationPrincipal User user
+        @RequestParam(name="id") String courseId
     ){
         final ModelAndView mav = new ModelAndView("courses/course_detail");
 
@@ -98,7 +94,7 @@ public class CourseController {
         mav.addObject("course", selectedCourse.get());
 
 
-        mav.addObject("user", user);
+        mav.addObject("user", userService.getLoggedUser());
 
         return mav;
     }

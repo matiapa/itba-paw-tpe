@@ -23,11 +23,13 @@ import org.springframework.web.servlet.view.JstlView;
 //@PropertySource("classpath:/ar/edu/itba/paw/webapp/config/auth.properties")
 public class WebConfig {
     private static String DB_PROPERTY_KEY = "itbahub.persistence.db";
-    private Environment env;
+//    private Environment env;
 
-    public WebConfig(Environment env) {
-        this.env = env;
-    }
+//    public WebConfig(Environment env) {
+//        this.env = env;
+//    }
+
+    public WebConfig(){}
 
     @Bean
     public ViewResolver viewResolver() {

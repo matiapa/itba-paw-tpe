@@ -6,6 +6,7 @@ import ar.edu.itba.paw.models.Course;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.services.ContentService;
 import ar.edu.itba.paw.services.CourseService;
+import ar.edu.itba.paw.services.UserService;
 import ar.edu.itba.paw.webapp.form.ContentForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -33,13 +34,15 @@ public class ContentController {
 
     @Autowired private CourseService courseService;
 
+    @Autowired private UserService userService;
+
+
     @RequestMapping("contents")
     public ModelAndView getContents(
         @RequestParam(name="courseId", required = false) String courseId,
         @RequestParam(name="contentType", required = false) String contentType,
         @RequestParam(name="minDate",required = false) @DateTimeFormat(pattern="yyyy-MM-dd") Date minDate,
-        @RequestParam(name="maxDate",required = false) @DateTimeFormat(pattern="yyyy-MM-dd") Date maxDate,
-        @AuthenticationPrincipal User user
+        @RequestParam(name="maxDate",required = false) @DateTimeFormat(pattern="yyyy-MM-dd") Date maxDate
     ) {
         final ModelAndView mav = new ModelAndView("contents/content_list");
 
@@ -69,20 +72,19 @@ public class ContentController {
         mav.addObject("contents", contents);
 
 
-        mav.addObject("user", user);
+        mav.addObject("user", mav.addObject("user", userService.getLoggedUser()));
 
         return mav;
     }
 
     @RequestMapping("contents/create")
     public ModelAndView create(
-            @ModelAttribute("createForm") final ContentForm form,
-            @AuthenticationPrincipal User user
+            @ModelAttribute("createForm") final ContentForm form
     ) {
         ModelAndView mav = new ModelAndView("contents/create_content");
 
         mav.addObject("courses", courseService.findAll());
-        mav.addObject("user", user);
+        mav.addObject("user", userService.getLoggedUser());
 
         return mav;
     }
@@ -90,16 +92,13 @@ public class ContentController {
     @RequestMapping(value = "contents/create", method = POST)
     public ModelAndView create(
             @Valid @ModelAttribute("createForm") final ContentForm form,
-            final BindingResult errors,
-            @AuthenticationPrincipal User user
+            final BindingResult errors
     ){
 
-//        if (errors.hasErrors())
-//            throw new RuntimeException("Tiene errores");
-
-         contentService.createContent(form.getName(),form.getLink(), form.getCourseId(), form.getDescription(), form.getContentType(),form.getContentDate(), user);
-
-
+         contentService.createContent(
+             form.getName(),form.getLink(), form.getCourseId(), form.getDescription(), form.getContentType(),
+             form.getContentDate(), userService.getLoggedUser()
+         );
 
         return new ModelAndView("redirect:/contents");
     }

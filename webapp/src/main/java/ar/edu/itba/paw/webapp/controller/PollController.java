@@ -54,8 +54,7 @@ public class PollController {
         @RequestParam(name = "courseId", required = false) String courseId,
         @RequestParam(name = "type", required = false) String type,
         @RequestParam(name = "state", required = false) String state,
-        @ModelAttribute("pollForm") final PollForm pollForm,
-        @AuthenticationPrincipal User user
+        @ModelAttribute("pollForm") final PollForm pollForm
     ) {
         final ModelAndView modelAndView = new ModelAndView("polls/polls_list");
         modelAndView.addObject("filterBy", filterBy);
@@ -122,7 +121,7 @@ public class PollController {
         }
 
         modelAndView.addObject("polls", pollList);
-        modelAndView.addObject("user", user);
+        modelAndView.addObject("user", userService.getLoggedUser());
         
         return modelAndView;
     }
@@ -130,9 +129,8 @@ public class PollController {
 
     @RequestMapping(value = "/polls", method = {RequestMethod.POST})
     public ModelAndView addPoll(
-            @Valid @ModelAttribute("pollForm") final PollForm pollForm,
-            final BindingResult errors,
-            @AuthenticationPrincipal User user
+        @Valid @ModelAttribute("pollForm") final PollForm pollForm,
+        final BindingResult errors
     ) throws ParseException {
         if (errors.hasErrors()) {
             throw new RuntimeException("Error al agregar encuesta: " + errors);
@@ -145,7 +143,7 @@ public class PollController {
             pollForm.getCareerId(),
             pollForm.getCourseId(),
             pollForm.getExpiryDate(),
-            user,
+            userService.getLoggedUser(),
             pollForm.getOptions()
         );
 
@@ -159,13 +157,12 @@ public class PollController {
         else
             filterBy = HolderEntity.general;
 
-        return getPolls(filterBy, pollForm.getCareerId(), pollForm.getCourseId(), null, null, pollForm, user);
+        return getPolls(filterBy, pollForm.getCareerId(), pollForm.getCourseId(), null, null, pollForm);
     }
 
     @RequestMapping("polls/detail")
     public ModelAndView getPoll(
-            @RequestParam(name="id") int pollId,
-            @AuthenticationPrincipal User user
+        @RequestParam(name="id") int pollId
     ){
         final ModelAndView mav = new ModelAndView("polls/poll_detail");
 
@@ -177,8 +174,8 @@ public class PollController {
 
         Map<PollOption,Integer> votes = pollService.getVotes(pollId);
         mav.addObject("votes",votes);
-        mav.addObject("user", user);
-        mav.addObject("hasVoted", pollService.hasVoted(pollId, user));
+        mav.addObject("user", userService.getLoggedUser());
+        mav.addObject("hasVoted", pollService.hasVoted(pollId, userService.getLoggedUser()));
 
         Locale loc = new Locale("es", "AR");
         DateFormat expiryFormat = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT, loc);
@@ -192,11 +189,10 @@ public class PollController {
 
     @RequestMapping(value = "polls/vote", method = {RequestMethod.POST})
     public String votePoll(
-            @RequestParam int id,
-            @RequestParam int option,
-            @AuthenticationPrincipal User user
+        @RequestParam int id,
+        @RequestParam int option
     ) {
-        pollService.voteChoicePoll(id, option, user);
+        pollService.voteChoicePoll(id, option, userService.getLoggedUser());
         return "redirect:/polls/detail?id="+id;
     }
 

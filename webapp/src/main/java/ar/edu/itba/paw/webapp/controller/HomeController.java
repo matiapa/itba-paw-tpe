@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 
+import ar.edu.itba.paw.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -8,10 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.services.AnnouncementService;
-import ar.edu.itba.paw.services.CareerService;
-import ar.edu.itba.paw.services.CourseService;
-import ar.edu.itba.paw.services.PollService;
 
 
 @Controller
@@ -25,14 +22,16 @@ public class HomeController {
 
     @Autowired private PollService pollService;
 
+    @Autowired private UserService userService;
+
     @RequestMapping("/")
-    public ModelAndView getDashboard(@AuthenticationPrincipal User user) {
+    public ModelAndView getDashboard() {
 
         final ModelAndView mav = new ModelAndView("index");
 
-        mav.addObject("user", user);
+        mav.addObject("user", userService.getLoggedUser());
 
-        mav.addObject("courses", courseService.findFavourites(user, 4));
+        mav.addObject("courses", courseService.findFavourites(userService.getLoggedUser(), 4));
 
         mav.addObject("announcements", announcementService.findGeneral());
 

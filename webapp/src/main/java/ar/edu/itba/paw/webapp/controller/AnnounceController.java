@@ -9,15 +9,14 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import ar.edu.itba.paw.models.*;
+import ar.edu.itba.paw.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 
 import ar.edu.itba.paw.services.AnnouncementService;
@@ -34,14 +33,15 @@ public class AnnounceController {
 
     @Autowired private CourseService courseService;
 
+    @Autowired private UserService userService;
+
 
     @RequestMapping("announcements")
     public ModelAndView getAnnouncements(
         @RequestParam(name="filterBy", required = false, defaultValue="general") HolderEntity filterBy,
         @RequestParam(name="careerId", required = false) Integer careerId,
         @RequestParam(name="courseId", required = false) String courseId,
-        @ModelAttribute("createForm") final AnnouncementForm form,
-        @AuthenticationPrincipal User user
+        @ModelAttribute("createForm") final AnnouncementForm form
     ){
         final ModelAndView mav = new ModelAndView("announcements/announcements_list");
 
@@ -86,7 +86,7 @@ public class AnnounceController {
 
         mav.addObject("announcements", announcements);
 
-        mav.addObject("user", user);
+        mav.addObject("user", userService.getLoggedUser());
 
         return mav;
     }
@@ -94,17 +94,16 @@ public class AnnounceController {
     @RequestMapping(value = "announcements", method = POST)
     public ModelAndView create(
             @Valid @ModelAttribute("createForm") final AnnouncementForm form,
-            final BindingResult errors,
-            @AuthenticationPrincipal User user
+            final BindingResult errors
     ){
         // TODO: Form validation is not working
         if (errors.hasErrors())
             throw new RuntimeException();
 
         announcementService.create(
-                form.getTitle(), form.getSummary(), form.getContent(),
-                form.getCareerId(), form.getCourseId(), form.getExpiryDate(),
-                user
+            form.getTitle(), form.getSummary(), form.getContent(),
+            form.getCareerId(), form.getCourseId(), form.getExpiryDate(),
+            userService.getLoggedUser()
         );
 
         HolderEntity filterBy;
@@ -117,24 +116,23 @@ public class AnnounceController {
         else
             filterBy = HolderEntity.general;
 
-        return getAnnouncements(filterBy, form.getCareerId(), form.getCourseId(), form, user);
+        return getAnnouncements(filterBy, form.getCareerId(), form.getCourseId(), form);
     }
 
     @RequestMapping("announcements/detail")
     public ModelAndView getAnnouncementDetail(
-            @RequestParam(name="id", required = false) Integer id,
-            @AuthenticationPrincipal User user
+        @RequestParam(name="id", required = false) Integer id
     ){
         final ModelAndView mav = new ModelAndView("announcements/announcements_detail");
 
         Optional<Announcement> optionalAnnouncement = announcementService.findById(id);
         if (! optionalAnnouncement.isPresent()){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Anuncio no encontrado");
+            throw new RuntimeException("Anuncio no encontrado");
         }
 
         mav.addObject("announcement", optionalAnnouncement.get());
 
-        mav.addObject("user", user);
+        mav.addObject("user", userService.getLoggedUser());
 
         return mav;
     }
@@ -142,13 +140,12 @@ public class AnnounceController {
 
     @RequestMapping(value = "announcements/markSeen", method = POST)
     public ModelAndView markSeen(
-        @RequestParam(name = "id") int id,
-        @AuthenticationPrincipal User user
+        @RequestParam(name = "id") int id
     ) {
         final ModelAndView mav = new ModelAndView("simple");
         mav.addObject("text", "OK");
 
-        announcementService.markSeen(id, user);
+        announcementService.markSeen(id, userService.getLoggedUser());
 
         return mav;
     }

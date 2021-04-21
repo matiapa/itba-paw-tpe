@@ -10,6 +10,7 @@ import java.util.stream.IntStream;
 
 import javax.validation.Valid;
 
+import ar.edu.itba.paw.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -34,18 +35,19 @@ public class ChatGroupController {
 
     @Autowired private CareerService careerService;
 
+    @Autowired private UserService userService;
+
     @RequestMapping("/chats")
     public ModelAndView get(
         @RequestParam(name = "careerId", required = false) Integer careerId,
         @RequestParam(name = "platform", required = false) String platform,
         @RequestParam(name = "year", required = false) Integer year,
         @RequestParam(name = "quarter", required = false) Integer quarter,
-        @ModelAttribute("chatGroupForm") final ChatGroupForm chatGroupForm,
-        @AuthenticationPrincipal User user
+        @ModelAttribute("chatGroupForm") final ChatGroupForm chatGroupForm
     ){
         final ModelAndView modelAndView = new ModelAndView("chats/chats_list");
 
-        modelAndView.addObject("user", user);
+        modelAndView.addObject("user", userService.getLoggedUser());
 
         // Filters
 
@@ -106,8 +108,7 @@ public class ChatGroupController {
 
     @RequestMapping("chats/create")
     public ModelAndView create(
-        @ModelAttribute("createForm") final ChatGroupForm form,
-        @AuthenticationPrincipal User user
+        @ModelAttribute("createForm") final ChatGroupForm form
     ) {
         ModelAndView mav = new ModelAndView("chats/create_chat");
 
@@ -120,7 +121,7 @@ public class ChatGroupController {
             put(ChatGroup.ChatPlatform.whatsapp, "WhatsApp");
         }});
 
-        mav.addObject("user", user);
+        mav.addObject("user", userService.getLoggedUser());
 
         return mav;
     }
@@ -129,8 +130,7 @@ public class ChatGroupController {
     @RequestMapping(value = "chats/create", method = {RequestMethod.POST})
     public ModelAndView create(
         @Valid @ModelAttribute("createForm") final ChatGroupForm chatGroupForm,
-        final BindingResult errors,
-        @AuthenticationPrincipal User user
+        final BindingResult errors
     ) {
         if(errors.hasErrors()){
             throw new RuntimeException();
@@ -140,7 +140,7 @@ public class ChatGroupController {
             chatGroupForm.getName(),
             chatGroupForm.getCareerId(),
             chatGroupForm.getLink(),
-            user.getId(),
+            userService.getLoggedUser().getId(),
             chatGroupForm.getCreationDate(),
             chatGroupForm.getPlatform()
         );

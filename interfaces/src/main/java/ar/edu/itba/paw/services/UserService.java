@@ -10,4 +10,6 @@ public interface UserService {
     
     User registerUser(int id, String name, String surname, String email, int career_id, List<String> courses);
 
+    User getLoggedUser();
+
 }
