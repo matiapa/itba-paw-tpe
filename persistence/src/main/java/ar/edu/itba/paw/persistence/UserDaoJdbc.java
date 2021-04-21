@@ -8,10 +8,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 
 @Repository
@@ -19,6 +16,7 @@ public class UserDaoJdbc implements UserDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
+    private final SimpleJdbcInsert jdbcInsertFavCourses;
 
     private static final RowMapper<User> USER_ROW_MAPPER = (rs, rowNum) ->
         new User(
@@ -34,6 +32,7 @@ public class UserDaoJdbc implements UserDao {
         this.jdbcTemplate = new JdbcTemplate(ds);
         this.jdbcInsert= new SimpleJdbcInsert(ds)
                 .withTableName("users");
+        this.jdbcInsertFavCourses= new SimpleJdbcInsert(ds).withTableName("fav_course");
     }
 
     @Override
@@ -52,7 +51,18 @@ public class UserDaoJdbc implements UserDao {
         ).stream().findFirst();
     }
 
-    public User registerUser(int id, String name, String surname, String email,int career_id) {
+    private void addFavouriteCourse(int id,String courseId){
+        final Map<String,Object> args = new HashMap<>();
+        args.put("course_id",courseId);
+        args.put("user_id",id);
+        jdbcInsertFavCourses.execute(args);
+
+    }
+
+    @Override
+    public User registerUser(int id, String name, String surname, String email, int career_id, List<String> courses) {
+
+
         final Map<String,Object> args = new HashMap<>();
         args.put("id",id);
         args.put("name",name);
@@ -63,7 +73,11 @@ public class UserDaoJdbc implements UserDao {
 
         final Number userID = jdbcInsert.execute(args);
 
-        return new User(id,name,surname,email,career_id);
+        for (String course:courses ) {
+            addFavouriteCourse(id,course);
+        }
 
+        return new User(id,name,surname,email,career_id);
     }
+
 }

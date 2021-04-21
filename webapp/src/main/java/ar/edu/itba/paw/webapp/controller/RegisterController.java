@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import ar.edu.itba.paw.models.Course;
 import ar.edu.itba.paw.services.CourseService;
@@ -54,23 +55,17 @@ public class RegisterController {
         mav.addObject("user", fetchedUser);
         mav.addObject("careerName", careerName);
         mav.addObject("courseList",courseList);
+        mav.addObject("selectedCourse",null);
         return mav;
     }
 
     @RequestMapping(path = "/register", method = RequestMethod.POST)
     public ModelAndView register(@ModelAttribute("UserForm") final UserForm form, @AuthenticationPrincipal UserPrincipal fetchedUser){
 
-        if (form.getCourses()==null){
-            System.out.println("es null");
-        }
-        else {
-            System.out.println(form.getCourses().size());
-        }
-//        for (String str:form.getCourses()
-//             ) {
-//            System.out.println(str);
-//        }
-        final User user = userService.registerUser(fetchedUser.getId(), fetchedUser.getName(), fetchedUser.getSurname(), fetchedUser.getEmail(), fetchedUser.getCareerId());
+
+
+        List<String>filteredCourses=form.getCourses().stream().distinct().filter(c-> !c.equals("")).collect(Collectors.toList());
+        final User user = userService.registerUser(fetchedUser.getId(), fetchedUser.getName(), fetchedUser.getSurname(), fetchedUser.getEmail(), fetchedUser.getCareerId(),filteredCourses);
         if(user != null)
         {
             OAuth2AuthenticationToken auth = (OAuth2AuthenticationToken) SecurityContextHolder.getContext().getAuthentication();

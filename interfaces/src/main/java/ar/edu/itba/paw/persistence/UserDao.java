@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.models.User;
+
+import java.util.List;
 import java.util.Optional;
 
 public interface UserDao {
@@ -9,6 +11,6 @@ public interface UserDao {
 
     Optional<User> findByEmail(String email);
     
-    User registerUser(int id, String name, String surname, String email,int career_id);
+    User registerUser(int id, String name, String surname, String email, int career_id, List<String>courses);
 
 }

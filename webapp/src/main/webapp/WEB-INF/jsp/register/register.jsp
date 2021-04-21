@@ -63,16 +63,16 @@
                                         <h4 class="text-dark mb-4">Materias que cursas</h4>
                                     </div>
 
-                                    <c:forEach var ="i" begin="1" end ="5">
+                                    <c:forEach var ="i" begin="0" end ="4">
                                     <div class="row">
                                         <div class="form-group">
                                             <form:label path="courses[${i}]"  name="courses[${i}]">Nombre Materia: </form:label>
-                                            <select path= "courses[${i}]" class="selectpicker" data-live-search="true" title="Elegí un curso">
+                                            <form:select path= "courses[${i}]" class="selectpicker" data-live-search="true" title="Elegí un curso">
                                                 <c:forEach var="course" items="${courseList}">
                                                     <option ${course.equals(selectedCourse) ? 'selected' : ''}
                                                         path="courses[${i}]" value="${course.id}" data-tokens="${course.name}">${course.name}</option>
                                                 </c:forEach>
-                                            </select>
+                                            </form:select>
                                             <form:errors path="courses[${i}]" cssClass="invalid-feedback" element="div"/>
                                         </div>
                                     </div>
@@ -96,6 +96,7 @@
         <script src="assets/js/bs-init.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.js"></script>
         <script src="assets/js/theme.js"></script>
+        <jsp:include page="../common/scripts.jsp"/>
 </body>
 
 </html>
