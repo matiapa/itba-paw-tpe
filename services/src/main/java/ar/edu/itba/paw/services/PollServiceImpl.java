@@ -52,4 +52,13 @@ public class PollServiceImpl implements PollService {
         return pollDao.findGeneral();
     }
 
+    @Override
+    public void voteChoicePoll(int pollId, int optionId, User user) {
+        pollDao.voteChoicePoll(pollId, optionId, user.getId());
+    }
+
+    @Override
+    public boolean hasVoted(int pollId, User user) {
+        return pollDao.hasVoted(pollId, user.getId());
+    }
 }

@@ -27,6 +27,8 @@ public class PollDaoJdbc implements PollDao {
 
     private final SimpleJdbcInsert simpleJdbcInsertPoll;
     private final SimpleJdbcInsert simpleJdbcInsertPollOption;
+    private final SimpleJdbcInsert simpleJdbcInsertPollChoiceVote;
+    private final SimpleJdbcInsert simpleJdbcInsertPollRegisterVote;
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -72,6 +74,13 @@ public class PollDaoJdbc implements PollDao {
                 .withTableName("poll_option")
                 .usingGeneratedKeyColumns("option_id");
 
+        this.simpleJdbcInsertPollChoiceVote = new SimpleJdbcInsert(this.jdbcTemplate)
+                .withTableName("poll_submission")
+                .usingGeneratedKeyColumns("value")
+                .usingGeneratedKeyColumns("date");
+
+        this.simpleJdbcInsertPollRegisterVote = new SimpleJdbcInsert(this.jdbcTemplate)
+                .withTableName("poll_vote_registry");
     }
 
     @Override
@@ -166,6 +175,33 @@ public class PollDaoJdbc implements PollDao {
             String.format("SELECT * FROM poll_option WHERE poll_id='%d'", pollId),
             optionMapper
         );
+    }
+
+    
+    @Override
+    public void voteChoicePoll(int pollId, int optionId, int userId) {
+        boolean validOption = jdbcTemplate.queryForList(
+            "SELECT * FROM poll_option WHERE poll_id=? AND option_id=?", pollId, optionId)
+            .size() > 0;
+        if(!validOption || hasVoted(pollId, userId))
+            return;
+
+        Map<String, Object> args = new HashMap<>();
+        args.put("poll_id", pollId);
+        args.put("option_id", optionId);
+        simpleJdbcInsertPollChoiceVote.execute(args);
+
+        args = new HashMap<>();
+        args.put("poll_id", pollId);
+        args.put("user_id", userId);
+        simpleJdbcInsertPollRegisterVote.execute(args);
+    }
+    
+    @Override
+    public boolean hasVoted(int pollId, int userId) {
+        return jdbcTemplate.queryForList(
+            "SELECT * FROM poll_vote_registry WHERE poll_id=? AND user_id=?", pollId, userId
+        ).size() > 0;
     }
 
     private static class PollVoteOption {

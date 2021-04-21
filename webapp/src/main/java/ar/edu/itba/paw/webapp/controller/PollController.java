@@ -111,42 +111,13 @@ public class PollController {
         pollService.addPoll(pollForm.getName(),
                 pollForm.getDescription(),
                 PollFormat.text,
-                pollForm.getCareerId(),
+                pollForm.getCourseId() != null ? pollForm.getCareerId() : null,
                 pollForm.getCourseId(),
                 pollForm.getExpiryDate(),
                 user,
                 pollForm.getOptions());
 
         return getPolls(HolderEntity.general, null, null, pollForm, user);
-    }
-
-
-    @RequestMapping("polls/byId")
-    public ModelAndView getPollDetails(@RequestParam int id)
-    {
-        Optional<Poll> optionalPoll = pollService.findById(id);
-        if(!optionalPoll.isPresent())
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Encuesta no encontrada");
-        Poll poll = optionalPoll.get();
-        
-        ModelAndView mav = new BaseMav(
-            poll.getName(),
-            "poll/poll_detail.jsp", 
-            Arrays.asList(
-                new NavigationItem("Home", "/"),
-                new NavigationItem(poll.getName(), "polls/byId?id=" + id)
-            )
-        );
-
-        Locale loc = new Locale("es", "AR");
-        DateFormat expiryFormat = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT, loc);
-        DateFormat creationFormat = DateFormat.getDateInstance(DateFormat.MEDIUM, loc);
-
-        mav.addObject("expiryFormat", expiryFormat);
-        mav.addObject("creationFormat", creationFormat);
-        mav.addObject("poll", poll);
-
-        return mav;
     }
 
     @RequestMapping("polls/byCareer")
@@ -229,7 +200,25 @@ public class PollController {
         Map<PollOption,Integer> votes = pollService.getVotes(pollId);
         mav.addObject("votes",votes);
         mav.addObject("user", user);
+        mav.addObject("hasVoted", pollService.hasVoted(pollId, user));
+
+        Locale loc = new Locale("es", "AR");
+        DateFormat expiryFormat = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT, loc);
+        DateFormat creationFormat = DateFormat.getDateInstance(DateFormat.MEDIUM, loc);
+
+        mav.addObject("expiryFormat", expiryFormat);
+        mav.addObject("creationFormat", creationFormat);
 
         return mav;
+    }
+
+    @RequestMapping(value = "polls/vote", method = {RequestMethod.POST})
+    public String votePoll(
+        @RequestParam int id,
+        @RequestParam int option,
+        @AuthenticationPrincipal User user
+    ) {
+        pollService.voteChoicePoll(id, option, user);
+        return "redirect:/polls/detail?id="+id;
     }
 }

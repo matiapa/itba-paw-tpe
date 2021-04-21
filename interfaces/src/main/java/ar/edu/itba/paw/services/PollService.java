@@ -17,4 +17,6 @@ public interface PollService {
     Map<PollOption,Integer> getVotes(int id);
 
     void addPoll(String name, String description, PollFormat format, Integer careerId, String courseId, Date expiryDate, User user, List<String> pollOptions);
+    void voteChoicePoll(int pollId, int optionId, User user);
+    boolean hasVoted(int pollId, User user);
 }
