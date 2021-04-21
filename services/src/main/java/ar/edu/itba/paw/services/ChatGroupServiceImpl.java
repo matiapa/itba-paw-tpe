@@ -21,23 +21,18 @@ public class ChatGroupServiceImpl implements ChatGroupService{
     }
 
     @Override
-    public List<ChatGroup> getChatGroups() {
-        return chatGroupDao.getChats();
-    }
-
-    @Override
     public List<ChatGroup> findByCareer(int careerId) {
         return chatGroupDao.findByCareer(careerId);
     }
 
     @Override
-    public List<ChatGroup> findByCareer(int careerId, ChatGroup.ChatPlatform platform, Integer year, Integer quarter) {
-        return chatGroupDao.findByCareer(careerId, platform, year, quarter);
+    public List<ChatGroup> findByCareer(int careerId, int limit) {
+        return chatGroupDao.findByCareer(careerId, limit);
     }
 
     @Override
-    public List<ChatGroup> findByCareer(int careerId, int limit) {
-        return chatGroupDao.findByCareer(careerId, limit);
+    public List<ChatGroup> findByCareer(int careerId, ChatGroup.ChatPlatform platform, Integer year, Integer quarter) {
+        return chatGroupDao.findByCareer(careerId, platform, year, quarter);
     }
 
 }

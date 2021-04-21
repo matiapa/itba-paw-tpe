@@ -14,10 +14,6 @@ import java.util.*;
 @Repository
 public class ChatGroupDaoJdbc implements ChatGroupDao{
 
-    static int id = 2;
-    private final SimpleJdbcInsert simpleJdbcInsert;
-
-
     private final JdbcTemplate jdbcTemplate;
 
     private static final RowMapper<ChatGroup> CHAT_GROUP_ROW_MAPPER = (rs, rowNum) ->
@@ -33,59 +29,21 @@ public class ChatGroupDaoJdbc implements ChatGroupDao{
 
     @Autowired
     public ChatGroupDaoJdbc(DataSource ds){
-
         this.jdbcTemplate = new JdbcTemplate(ds);
-        this.simpleJdbcInsert = new SimpleJdbcInsert(this.jdbcTemplate)
-                .withTableName("chat_group")
-                .usingGeneratedKeyColumns("id");
-
-        this.jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS chat_group(" +
-            "id             SERIAL," +
-            "career_id      INT NOT NULL," +
-            "creation_date  DATE NOT NULL," +
-            "name           VARCHAR(100) NOT NULL," +
-            "link           VARCHAR (100) NOT NULL," +
-            "submitted_by   INT NOT NULL," +
-            "PRIMARY KEY(id)," +
-            "FOREIGN KEY(career_id) REFERENCES career ON DELETE CASCADE," +
-            "FOREIGN KEY(submitted_by) REFERENCES users ON DELETE RESTRICT );");
     }
 
     @Override
     public ChatGroup addGroup(String groupName, Integer careerId, String link, Integer createdBy, Date creationDate, ChatPlatform platform) {
-
-        System.out.println(creationDate);
-
         return jdbcTemplate.queryForObject(
             "INSERT INTO " +
                     "chat_group(career_id, creation_date, name, link, submitted_by, platform)" +
                 " VALUES " +
                     "(?,?,?,?,?,CAST(? AS chat_platform)) RETURNING *",
             new Object[]{
-                    careerId, creationDate, groupName, link, createdBy,
-                    platform.toString().split("\\.")[0]
+                careerId, creationDate, groupName, link, createdBy,
+                platform.toString()
             },
             CHAT_GROUP_ROW_MAPPER
-        );
-
-//        final Map<String, Object> args = new HashMap<>();
-//
-//        args.put("career_id", careerId);
-//        args.put("creation_date", creationDate);
-//        args.put("name", groupName);
-//        args.put("link", link);
-//        args.put("submitted_by", createdBy);
-//        args.put("platform", platform);
-//
-//        final Number id = simpleJdbcInsert.executeAndReturnKey(args);
-//
-//        return new ChatGroup(id.intValue(), careerId, groupName, link, createdBy, creationDate);
-    }
-
-    @Override
-    public List<ChatGroup> getChats() {
-        return jdbcTemplate.query(
-                String.format("SELECT * FROM chat_group"), CHAT_GROUP_ROW_MAPPER
         );
     }
 
@@ -94,6 +52,15 @@ public class ChatGroupDaoJdbc implements ChatGroupDao{
         return jdbcTemplate.query(
             String.format("SELECT * FROM chat_group WHERE career_id='%d'", careerId),
             CHAT_GROUP_ROW_MAPPER
+        );
+    }
+
+    @Override
+    public List<ChatGroup> findByCareer(int careerId, int limit) {
+        return jdbcTemplate.query(
+                String.format("SELECT * FROM chat_group WHERE career_id='%d' "+
+                        "ORDER BY id LIMIT %d", careerId, limit),
+                CHAT_GROUP_ROW_MAPPER
         );
     }
 
@@ -129,14 +96,6 @@ public class ChatGroupDaoJdbc implements ChatGroupDao{
     }
 
     @Override
-    public List<ChatGroup> findByCareer(int careerId, int limit) {
-        return jdbcTemplate.query(
-            String.format("SELECT * FROM chat_group WHERE career_id='%d' "+
-                "ORDER BY id LIMIT %d", careerId, limit),
-            CHAT_GROUP_ROW_MAPPER
-        );
-    }
-
     public Optional<ChatGroup> findById(String id) {
         return jdbcTemplate.query(
                 String.format("SELECT * FROM chat_group WHERE id='%s'", id),

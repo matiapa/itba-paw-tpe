@@ -22,7 +22,7 @@ import java.util.stream.IntStream;
 import static java.util.stream.Collectors.toList;
 
 @Controller
-public class GroupController {
+public class ChatGroupController {
 
     @Autowired private ChatGroupService chatGroupService;
 
@@ -30,8 +30,9 @@ public class GroupController {
 
     @Autowired private UserService userService;
 
+
     @RequestMapping("/chats")
-    public ModelAndView getChats(
+    public ModelAndView get(
         @RequestParam(name = "careerId", required = false) Integer careerId,
         @RequestParam(name = "platform", required = false) String platform,
         @RequestParam(name = "year", required = false) Integer year,
@@ -119,11 +120,16 @@ public class GroupController {
         return mav;
     }
 
+
     @RequestMapping(value = "chats/create", method = {RequestMethod.POST})
-    public ModelAndView addGroup(
+    public ModelAndView create(
         @Valid @ModelAttribute("createForm") final ChatGroupForm chatGroupForm,
         final BindingResult errors
     ) {
+        if(errors.hasErrors()){
+            throw new RuntimeException();
+        }
+
         chatGroupService.addGroup(
             chatGroupForm.getName(),
             chatGroupForm.getCareerId(),
