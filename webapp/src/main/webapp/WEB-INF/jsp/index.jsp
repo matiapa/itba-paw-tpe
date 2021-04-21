@@ -90,7 +90,8 @@
                                                 <div class="col mr-2">
                                                     <h6 class="mb-0"><strong><c:out value="${poll.name}"/></strong></h6>
                                                     <span class="text-xs">
-                                                        🕑 Expira el <fmt:formatDate type="both" dateStyle = "short" timeStyle = "short" value="${poll.expiryDate}"/>
+                                                        ${poll.isExpired ? "🕑 Expiró el " : "🕑 Expira el "}
+                                                        <fmt:formatDate type="both" dateStyle = "short" timeStyle = "short" value="${poll.expiryDate}"/>
                                                     </span>
                                                 </div>
                                                 <div class="col-auto">

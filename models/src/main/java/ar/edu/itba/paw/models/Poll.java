@@ -51,6 +51,10 @@ public class Poll {
         return options;
     }
 
+    public boolean getIsExpired(){
+        return expiryDate.before(new Date());
+    }
+
     public static class PollOption {
         private final int id;
         private final String value;
