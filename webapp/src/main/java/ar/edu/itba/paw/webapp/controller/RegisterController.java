@@ -3,8 +3,11 @@ package ar.edu.itba.paw.webapp.controller;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
+import ar.edu.itba.paw.models.Course;
+import ar.edu.itba.paw.services.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -35,18 +38,38 @@ public class RegisterController {
     @Autowired
     private CareerService careerService;
 
+    @Autowired
+    private CourseService courseService;
+
     @RequestMapping(path = "/register", method = RequestMethod.GET)
     public ModelAndView createForm(@ModelAttribute("UserForm") final UserForm form, @AuthenticationPrincipal User fetchedUser) {
         ModelAndView mav = new ModelAndView("register/register");
         Optional<Career> career = careerService.findById(fetchedUser.getCareerId());
         String careerName = career.isPresent() ? career.get().getName() : "";
+        if (!career.isPresent())
+            throw new RuntimeException("invalid career");
+        List<Course> courseList=courseService.findByCareer(career.get().getId());
+
+
         mav.addObject("user", fetchedUser);
         mav.addObject("careerName", careerName);
+        mav.addObject("courseList",courseList);
         return mav;
     }
 
     @RequestMapping(path = "/register", method = RequestMethod.POST)
     public ModelAndView register(@ModelAttribute("UserForm") final UserForm form, @AuthenticationPrincipal UserPrincipal fetchedUser){
+
+        if (form.getCourses()==null){
+            System.out.println("es null");
+        }
+        else {
+            System.out.println(form.getCourses().size());
+        }
+//        for (String str:form.getCourses()
+//             ) {
+//            System.out.println(str);
+//        }
         final User user = userService.registerUser(fetchedUser.getId(), fetchedUser.getName(), fetchedUser.getSurname(), fetchedUser.getEmail(), fetchedUser.getCareerId());
         if(user != null)
         {

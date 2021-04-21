@@ -63,6 +63,24 @@
                                         <h4 class="text-dark mb-4">Materias que cursas</h4>
                                     </div>
 
+                                    <c:forEach var ="i" begin="1" end ="5">
+                                    <div class="row">
+                                        <div class="form-group">
+                                            <form:label path="courses[${i}]"  name="courses[${i}]">Nombre Materia: </form:label>
+                                            <select path= "courses[${i}]" class="selectpicker" data-live-search="true" title="Elegí un curso">
+                                                <c:forEach var="course" items="${courseList}">
+                                                    <option ${course.equals(selectedCourse) ? 'selected' : ''}
+                                                        path="courses[${i}]" value="${course.id}" data-tokens="${course.name}">${course.name}</option>
+                                                </c:forEach>
+                                            </select>
+                                            <form:errors path="courses[${i}]" cssClass="invalid-feedback" element="div"/>
+                                        </div>
+                                    </div>
+                                    </c:forEach>
+
+
+
+
 
                                 </div>
                             </div>
