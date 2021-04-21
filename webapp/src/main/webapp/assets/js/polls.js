@@ -17,8 +17,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
         document.getElementById("careerTarget").hidden = true
         document.getElementById("careerId").value = ""
       }else{
-        document.getElementById("courseTarget").hidden = false
-        document.getElementById("careerTarget").hidden = false
+        document.getElementById("courseTarget").hidden = true
+        document.getElementById("careerTarget").hidden = true
         document.getElementById("courseId").value = ""
         document.getElementById("careerId").value = ""
       }

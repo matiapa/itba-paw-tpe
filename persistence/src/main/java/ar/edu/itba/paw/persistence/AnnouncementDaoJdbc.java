@@ -84,7 +84,8 @@ public class AnnouncementDaoJdbc implements AnnouncementDao {
     @Override
     public void markSeen(int announcementId, int userId){
         jdbcTemplate.update(
-        "INSERT INTO announcement_seen(announcement_id, user_id) VALUES (?,?)",
+        "INSERT INTO announcement_seen(announcement_id, user_id) VALUES (?,?)" +
+            "ON CONFLICT (announcement_id, user_id) DO NOTHING",
             announcementId, userId
         );
     }

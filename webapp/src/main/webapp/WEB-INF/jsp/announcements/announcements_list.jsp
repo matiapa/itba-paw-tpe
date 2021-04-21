@@ -16,7 +16,7 @@
     <jsp:include page="../common/styles.jsp"/>
 
     <link rel="stylesheet" href="<c:url value="/assets/bootstrap/css/bootstrap-select.min.css"/>">
-</head>
+    <link rel="stylesheet" href="<c:url value="/assets/css/overlay.css"/>"></head>
 
 <body id="page-top">
     <div id="wrapper">
@@ -152,16 +152,18 @@
         </div>
     </div>
 
-    <div class="fab" data-toggle="modal">
-        <a href="<c:url value="/announcements/create"/>">
+    <div class="fab">
+        <a href="#popup" data-toggle="modal">
             <i class="material-icons" style="font-size: 32px;color: rgb(255,255,255);">add</i>
         </a>
     </div>
 
+    <jsp:include page="create_announcement.jsp"/>
+
+
     <jsp:include page="../common/scripts.jsp"/>
 
     <script src="<c:url value="/assets/js/announcements.js"/>"></script>
-
 
     <script src="<c:url value="/assets/js/popper.min.js"/>" ></script>
     <script src="<c:url value="/assets/bootstrap/js/bootstrap-select.min.js"/>"></script>

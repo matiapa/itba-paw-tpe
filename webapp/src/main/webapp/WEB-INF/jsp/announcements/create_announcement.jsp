@@ -6,76 +6,81 @@
 <jsp:useBean type="java.util.List<ar.edu.itba.paw.models.Career>" scope="request" id="careers"/>
 <jsp:useBean type="java.util.List<ar.edu.itba.paw.models.Course>" scope="request" id="courses"/>
 
-<!DOCTYPE html>
-<html>
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Anuncios</title>
+<div class="modal fade" id="popup">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Agregar anuncio</h4>
+            </div>
 
-    <jsp:include page="../common/styles.jsp"/>
+            <div class="modal-body">
+                <form:form id="createAnnouncementForm" modelAttribute="createForm" method="post">
 
-    <link rel="stylesheet" href="<c:url value="/assets/css/overlay.css"/>">
-    <link rel="stylesheet" href="<c:url value="/assets/bootstrap/css/bootstrap-select.min.css"/>">
-</head>
+                    <div class="form-group">
+                        <label>Destino del anuncio</label>
+                        <select id="announcementTarget" class="form-control">
+                            <option value="general">La facultad en general</option>
+                            <option value="career">Una carrera específica</option>
+                            <option value="course">Un curso específico</option>
+                        </select>
+                    </div>
 
-<body id="page-top">
-    <div id="wrapper">
+                    <div hidden id="careerTarget" class="form-group">
+                        <form:label path="careerId">Carrera de destino</form:label>
+                        <form:select path="careerId" class="form-control">
+                            <form:option value="">Elegí una carrera...</form:option>
+                            <c:forEach var="career" items="${careers}">
+                                <form:option value="${career.id}"><c:out value="${career.name}"/></form:option>
+                            </c:forEach>
+                        </form:select>
+                        <form:errors path="careerId" element="div"/>
+                    </div>
 
-        <jsp:include page="../common/navbar.jsp"/>
+                    <div hidden id="courseTarget" class="form-group">
+                        <form:label path="courseId">Curso de destino</form:label>
+                        <form:select path="courseId" class="form-control selectpicker" data-live-search="true">
+                            <form:option value="">Elegí un curso...</form:option>
+                            <c:forEach var="course" items="${courses}">
+                                <form:option value="${course.id}"><c:out value="${course.name}"/></form:option>
+                            </c:forEach>
+                        </form:select>
+                        <form:errors path="courseId" element="div"/>
+                    </div>
 
-        <div class="d-flex flex-column" id="content-wrapper">
-            <div id="content">
+                    <div class="form-group">
+                        <form:label path="title">Título</form:label>
+                        <form:input type="text" path="title" cssClass="form-control"/>
+                        <form:errors path="title" cssClass="invalid-feedback" element="div"/>
+                    </div>
 
-                <jsp:include page="../common/header.jsp"/>
+                    <div class="form-group">
+                        <form:label path="summary">Breve descripción</form:label>
+                        <form:input type="text" path="summary" cssClass="form-control"/>
+                        <form:errors path="summary" cssClass="invalid-feedback" element="div"/>
+                    </div>
 
-                <div class="container-fluid">
-                    <form:form modelAttribute="createForm" method="post">
+                    <div class="form-group">
+                        <form:label path="content">Contenido</form:label>
+                        <form:textarea path="content" cssClass="form-control"/>
+                        <form:errors path="content" cssClass="invalid-feedback" element="div"/>
+                    </div>
 
-                        <div class="form-group">
-                            <form:label path="title">Título: </form:label>
-                            <form:input type="text" path="title" cssClass="form-control"/>
-                            <form:errors path="title" cssClass="invalid-feedback" element="div"/>
-                        </div>
-
-                        <div class="form-group">
-                            <form:label path="summary">Breve descripción:</form:label>
-                            <form:input type="text" path="summary" cssClass="form-control"/>
-                            <form:errors path="summary" cssClass="invalid-feedback" element="div"/>
-                        </div>
-
-                        <div class="form-group">
-                            <form:label path="content">Contenido: </form:label>
-                            <form:textarea path="content" cssClass="form-control"/>
-                            <form:errors path="content" cssClass="invalid-feedback" element="div"/>
-                        </div>
-
-                        <div>
-                            <button id="submitAnnouncement" type="submit" class="btn btn-primary ml-3">Enviar</button>
-                        </div>
-                    </form:form>
-                </div>
+                    <div>
+                        <button id="submitAnnouncement" type="submit" class="btn btn-primary">
+                            Enviar
+                        </button>
+                    </div>
+                </form:form>
 
             </div>
 
-            <div class="overlay"></div>
+            <div class="overlay" style="width: 798px; height: 509px"></div>
             <div class="spanner">
                 <div class="loader"></div>
                 <p>Agregando anuncio</p>
             </div>
+
         </div>
-
-
     </div>
-
-    <jsp:include page="../common/scripts.jsp"/>
-
-    <script src="<c:url value="/assets/js/announcements.js"/>"></script>
-
-    <script src="<c:url value="/assets/js/popper.min.js"/>" ></script>
-    <script src="<c:url value="/assets/bootstrap/js/bootstrap-select.min.js"/>"></script>
-
-</body>
-
-</html>
+</div>
