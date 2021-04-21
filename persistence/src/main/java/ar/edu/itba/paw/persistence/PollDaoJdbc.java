@@ -8,6 +8,7 @@ import javax.sql.DataSource;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import ar.edu.itba.paw.models.Poll;
@@ -21,6 +22,9 @@ public class PollDaoJdbc implements PollDao {
     @Autowired
     private UserDao userDao;
 
+    private final SimpleJdbcInsert simpleJdbcInsertPoll;
+    private final SimpleJdbcInsert simpleJdbcInsertPollOption;
+
     private final JdbcTemplate jdbcTemplate;
 
     private final RowMapper<Poll> rowMapper = (rs, rowNum) -> {
@@ -30,13 +34,14 @@ public class PollDaoJdbc implements PollDao {
             id,
             rs.getString("name"),
             rs.getString("description"),
+            rs.getInt("career_id"),
+            rs.getString("course_id"),
             rs.getTimestamp("creation_date"),
             rs.getTimestamp("expiry_date"),
             optUser.orElse(null),
             getOptions(id)
         );
     };
-
 
 
     private final RowMapper<PollOption> optionMapper = (rs, rowNum) ->
@@ -53,7 +58,16 @@ public class PollDaoJdbc implements PollDao {
 
     @Autowired
     public PollDaoJdbc(DataSource ds) {
+
         this.jdbcTemplate = new JdbcTemplate(ds);
+
+        this.simpleJdbcInsertPoll = new SimpleJdbcInsert(this.jdbcTemplate)
+                .withTableName("polls")
+                .usingGeneratedKeyColumns("id");
+        this.simpleJdbcInsertPollOption = new SimpleJdbcInsert(this.jdbcTemplate)
+                .withTableName("poll_option")
+                .usingGeneratedKeyColumns("option_id");
+
     }
 
     @Override
@@ -102,8 +116,31 @@ public class PollDaoJdbc implements PollDao {
 
         }
 
+    @Override
+    public void addPoll(String name, String description, Integer careerId, String courseId, Date creationDate, Date expiryDate, Integer user, List<String> pollOptions) {
 
+        final Map<String, Object> args = new HashMap<>();
+        args.put("name", name);
+        args.put("description", description);
+        args.put("career_id", careerId);
+        args.put("course_id", courseId);
+        args.put("format", "multiple-choice");      //TODO: Implementar otros format
+        args.put("creation_date", null);
+        args.put("expiry_date", expiryDate);
+        args.put("submitted_by", user);
 
+        final Number id = simpleJdbcInsertPoll.executeAndReturnKey(args);
+        for(String pollOption : pollOptions){
+            addPollOption(id.intValue(), pollOption);
+        }
+    }
+
+    private void addPollOption(Integer id, String value) {
+        final Map<String, Object> args = new HashMap<>();
+        args.put("poll_id", id);
+        args.put("option_value", value);
+        final Number id_po = simpleJdbcInsertPollOption.executeAndReturnKey(args);
+    }
 
 
     @Override

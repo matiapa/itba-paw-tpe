@@ -11,7 +11,7 @@ public class Poll {
     private final User submittedBy;
     private final List<PollOption> options;
     
-    public Poll(int id, String name, String description, Date creationDate, Date expiryDate, User submittedBy, List<PollOption> options) {
+    public Poll(int id, String name, String description, Integer careerId, String courseId, Date creationDate, Date expiryDate, User submittedBy, List<PollOption> options) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -52,10 +52,15 @@ public class Poll {
     public static class PollOption {
         private final int id;
         private final String value;
+
         
         public PollOption(int id, String value) {
             this.id = id;
             this.value = value;
+        }
+
+        public PollOption(String value){
+            this(0, value);
         }
     
         public int getId() {

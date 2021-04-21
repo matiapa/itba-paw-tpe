@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.services;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -35,6 +36,11 @@ public class PollServiceImpl implements PollService {
     @Override
     public Map<PollOption, Integer> getVotes(int id) {
         return pollDao.getVotes(id);
+    }
+
+    @Override
+    public void addPoll(String name, String description, Integer careerId, String courseId, Date creationDate, Date expiryDate, Integer user, List<String> pollOptions) {
+        pollDao.addPoll(name, description, careerId, courseId, creationDate, expiryDate, user, pollOptions);
     }
 
 

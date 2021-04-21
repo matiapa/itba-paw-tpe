@@ -152,7 +152,7 @@
     </div>
 
     <div class="modal fade" id="popup">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">Agregar encuesta</h4>
@@ -161,33 +161,70 @@
                 <div class="modal-body">
                     <c:url value="/polls" var="postPoll"/>
                     <form:form modelAttribute="pollForm" id="poll_form" method="post" action="${postPoll}">
-                        <div>
-                            <form:label path="name">Titulo</form:label>
-                            <form:input type="text" path="name" class="form-control"/>
-                            <form:errors path="name" element="p"/>
-                        </div>
-                        <div>
-                            <form:label path="careerId">Carrera de la encuesta</form:label>
-                            <form:select path="careerId" class="form-control">
-                                <c:forEach var="career" items="${careers}">
-                                    <form:option value="${career.id}"><c:out value="${career.name}"/></form:option>
-                                </c:forEach>
-                            </form:select>
-                            <form:errors path="careerId" element="div"/>
-                        </div>
-                        <div>
-                            <form:label path="courseId">Curso de la encuesta</form:label>
-                            <form:select path="courseId">
-                                <c:forEach var="course" items="${courses}">
-                                    <form:option value="${course.id}"><c:out value="${course.name}"/></form:option>
-                                </c:forEach>
-                            </form:select>
-                            <form:errors path="courseId" element="div"/>
-                        </div>
-                        <div>
-                            <form:label path="expiryDate">Fecha de Expiracion</form:label>
-                            <form:input type="text" path="expiryDate" class="form-control"/>
-                            <form:errors path="expiryDate" element="p"/>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <form:label path="name">Titulo</form:label>
+                                    <form:input type="text" path="name" class="form-control"/>
+                                    <form:errors path="name" element="p"/>
+                                </div>
+                                <div class="form-group">
+                                    <form:label path="careerId">Carrera de la encuesta</form:label>
+                                    <form:select path="careerId" class="form-control">
+                                        <c:forEach var="career" items="${careers}">
+                                            <form:option value="${career.id}"><c:out value="${career.name}"/></form:option>
+                                        </c:forEach>
+                                    </form:select>
+                                    <form:errors path="careerId" element="div"/>
+                                </div>
+                                <div class="form-group">
+                                    <form:label path="courseId">Curso de la encuesta</form:label>
+                                    <form:select path="courseId" class="form-control">
+                                        <c:forEach var="course" items="${courses}">
+                                            <form:option value="${course.id}"><c:out value="${course.name}"/></form:option>
+                                        </c:forEach>
+                                    </form:select>
+                                    <form:errors path="courseId" element="div"/>
+                                </div>
+                                <div class="form-group">
+                                    <form:label path="description">Descripcion: </form:label>
+                                    <form:textarea path="description" cssClass="form-control"/>
+                                    <form:errors path="description" cssClass="invalid-feedback" element="div"/>
+                                </div>
+                                <div class="form-group">
+                                    <form:label path="expiryDate">Fecha de Expiracion</form:label>
+                                    <form:input type="text" path="expiryDate" class="form-control"/>
+                                    <form:errors path="expiryDate" element="p"/>
+                                </div>
+
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <form:label path="options[0]">Opcion 1</form:label>
+                                    <form:input type="text" path="options[0]" class="form-control"/>
+                                    <form:errors path="options[0]" element="p"/>
+                                </div>
+                                <div class="form-group">
+                                    <form:label path="options[1]">Opcion 2</form:label>
+                                    <form:input type="text" path="options[1]" class="form-control"/>
+                                    <form:errors path="options[1]" element="p"/>
+                                </div>
+                                <div class="form-group">
+                                    <form:label path="options[2]">Opcion 3</form:label>
+                                    <form:input type="text" path="options[2]" class="form-control"/>
+                                    <form:errors path="options[2]" element="p"/>
+                                </div>
+                                <div class="form-group">
+                                    <form:label path="options[3]">Opcion 4</form:label>
+                                    <form:input type="text" path="options[3]" class="form-control"/>
+                                    <form:errors path="options[3]" element="p"/>
+                                </div>
+                                <div class="form-group">
+                                    <form:label path="options[4]">Opcion 5</form:label>
+                                    <form:input type="text" path="options[4]" class="form-control"/>
+                                    <form:errors path="options[4]" element="p"/>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="modal-footer">

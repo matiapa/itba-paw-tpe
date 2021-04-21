@@ -3,14 +3,18 @@ package ar.edu.itba.paw.webapp.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 
 
 import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import ar.edu.itba.paw.models.Career;
@@ -37,9 +41,6 @@ public class PollController {
     @Autowired private CareerService careerService;
 
     @Autowired private CourseService courseService;
-
-
-
 
     @RequestMapping("/polls")
     public ModelAndView getPolls(
@@ -86,6 +87,31 @@ public class PollController {
     }
 
 
+    @RequestMapping(value = "/polls", method = {RequestMethod.POST})
+    public ModelAndView addPoll(
+            @Valid @ModelAttribute("pollForm") final PollForm pollForm,
+            final BindingResult errors
+    ) throws ParseException {
+        if (errors.hasErrors()){
+            throw new RuntimeException("Error al agregar encuesta");
+        }
+/*
+        SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date(System.currentTimeMillis());
+*/
+        System.out.println(pollForm.getOptions().get(0));
+        pollService.addPoll(pollForm.getName(),
+                pollForm.getDescription(),
+                pollForm.getCareerId(),
+                pollForm.getCourseId(),
+                null,
+                //formatter.parse(formatter.format(date)),
+                pollForm.getExpiryDate(),
+                userService.getUser().getId(),
+                pollForm.getOptions());
+
+        return getPolls(null, null, null, pollForm);
+    }
 
 
     @RequestMapping("polls/byId")
