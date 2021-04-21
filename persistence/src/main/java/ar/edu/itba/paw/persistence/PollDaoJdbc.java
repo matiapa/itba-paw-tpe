@@ -1,21 +1,24 @@
 package ar.edu.itba.paw.persistence;
 
-import java.util.*;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import javax.sql.DataSource;
 
-
-import ar.edu.itba.paw.models.PollFormat;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import ar.edu.itba.paw.models.Poll;
-import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.Poll.PollFormat;
 import ar.edu.itba.paw.models.Poll.PollOption;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import ar.edu.itba.paw.models.User;
 
 @Repository
 public class PollDaoJdbc implements PollDao {
@@ -30,8 +33,6 @@ public class PollDaoJdbc implements PollDao {
     private final RowMapper<Poll> rowMapper = (rs, rowNum) -> {
         int id = rs.getInt("id");
         Optional<User> optUser = userDao.findById(rs.getInt("submitted_by"));
-        System.out.println(rs.getString("format").replace("-", "_"));
-        System.out.println(rs.getString("format"));
         return new Poll(
             id,
             rs.getString("name"),
@@ -53,10 +54,10 @@ public class PollDaoJdbc implements PollDao {
             rs.getString("option_value")
         );
 
-    private final RowMapper<Poll.PollVoteOption> voteMapper = (rs, rowNum) -> new Poll.PollVoteOption(
+    private final RowMapper<PollVoteOption> voteMapper = (rs, rowNum) -> new PollVoteOption(
             rs.getInt("option_id"),
-            rs.getString("option_value")
-            ,rs.getInt("votes"));
+            rs.getString("option_value"),
+            rs.getInt("votes"));
 
 
     @Autowired
@@ -100,7 +101,7 @@ public class PollDaoJdbc implements PollDao {
     @Override
     public Map<PollOption,Integer> getVotes(int id) {
 
-        List<Poll.PollVoteOption> list =
+        List<PollVoteOption> list =
 
         jdbcTemplate.query(
                 String.format(
@@ -110,21 +111,19 @@ public class PollDaoJdbc implements PollDao {
                 "WHERE poll_option.poll_id='%d'\n" +
                 "GROUP BY poll_option.option_id,poll_option.option_value",id),voteMapper);
         Map<PollOption,Integer> map= new HashMap<>();
-        for (Poll.PollVoteOption pair:list
-             ) {
-
-                map.put(new PollOption(pair.getId(), pair.getValue()), pair.getVote());
-            }
+        for (PollVoteOption pair:list) {
+            map.put(new PollOption(pair.getId(), pair.getValue()), pair.getVote());
+        }
         return map;
 
         }
 
     @Override
-    public void addPoll(String name, String description, PollFormat format, Integer careerId, String courseId, Date creationDate, Date expiryDate, Integer user, List<String> pollOptions) {
+    public void addPoll(String name, String description, PollFormat format, Integer careerId, String courseId, Date expiryDate, int userId, List<String> pollOptions) {
         Poll poll = jdbcTemplate.queryForObject("INSERT INTO " +
                 "poll(name, description, format, career_id, course_id, creation_date, expiry_date, submitted_by) VALUES " +
                 "(?, ?, CAST(? AS poll_format_type), ?, ?, DEFAULT, ?, ?) " +
-                "RETURNING *;", new Object[]{name, description, format.toString().replace("_","-"), careerId, courseId, expiryDate, user}, rowMapper);
+                "RETURNING *;", new Object[]{name, description, format.toString().replace("_","-"), careerId, courseId, expiryDate, userId}, rowMapper);
         /*
         final Map<String, Object> args = new HashMap<>();
         args.put("name", name);
@@ -167,5 +166,27 @@ public class PollDaoJdbc implements PollDao {
             String.format("SELECT * FROM poll_option WHERE poll_id='%d'", pollId),
             optionMapper
         );
+    }
+
+    private static class PollVoteOption {
+        private final int id;
+        private final String value;
+        private final int vote;
+
+        public PollVoteOption(int id, String value,int vote) {
+            this.id = id;
+            this.value = value;
+            this.vote=vote;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public int getVote(){return vote;}
     }
 }

@@ -60,10 +60,6 @@ public class Poll {
             this.id = id;
             this.value = value;
         }
-
-        public PollOption(String value){
-            this(0, value);
-        }
     
         public int getId() {
             return id;
@@ -96,4 +92,7 @@ public class Poll {
         public int getVote(){return vote;}
     }
 
+    public enum PollFormat {
+        multiple_choice, text
+    }
 }

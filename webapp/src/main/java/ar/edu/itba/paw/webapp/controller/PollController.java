@@ -1,6 +1,16 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.models.*;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
+
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -12,21 +22,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 
-
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
-
+import ar.edu.itba.paw.models.Career;
+import ar.edu.itba.paw.models.Course;
+import ar.edu.itba.paw.models.HolderEntity;
+import ar.edu.itba.paw.models.Poll;
+import ar.edu.itba.paw.models.Poll.PollFormat;
 import ar.edu.itba.paw.models.Poll.PollOption;
 import ar.edu.itba.paw.models.ui.NavigationItem;
 import ar.edu.itba.paw.services.CareerService;
 import ar.edu.itba.paw.services.CourseService;
 import ar.edu.itba.paw.services.PollService;
 import ar.edu.itba.paw.services.UserService;
-import ar.edu.itba.paw.webapp.mav.BaseMav;
 import ar.edu.itba.paw.webapp.form.PollForm;
-import javax.validation.Valid;
+import ar.edu.itba.paw.webapp.mav.BaseMav;
 
 @Controller
 public class PollController {
@@ -96,16 +104,13 @@ public class PollController {
         SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd");
         Date date = new Date(System.currentTimeMillis());
 */
-        System.out.println(pollForm.getOptions().get(0));
         pollService.addPoll(pollForm.getName(),
                 pollForm.getDescription(),
                 PollFormat.text,
                 pollForm.getCareerId(),
                 pollForm.getCourseId(),
-                null,
-                //formatter.parse(formatter.format(date)),
                 pollForm.getExpiryDate(),
-                userService.getUser().getId(),
+                userService.getUser(),
                 pollForm.getOptions());
 
         return getPolls(HolderEntity.general, null, null, pollForm);
