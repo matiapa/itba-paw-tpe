@@ -13,6 +13,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -28,6 +29,7 @@ import ar.edu.itba.paw.models.HolderEntity;
 import ar.edu.itba.paw.models.Poll;
 import ar.edu.itba.paw.models.Poll.PollFormat;
 import ar.edu.itba.paw.models.Poll.PollOption;
+import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.ui.NavigationItem;
 import ar.edu.itba.paw.services.CareerService;
 import ar.edu.itba.paw.services.CourseService;
@@ -52,7 +54,8 @@ public class PollController {
             @RequestParam(name="filterBy", required = false, defaultValue = "general") HolderEntity filterBy,
             @RequestParam(name = "careerId", required = false) Integer careerId,
             @RequestParam(name = "courseId", required = false) String courseId,
-            @ModelAttribute("pollForm") final PollForm pollForm
+            @ModelAttribute("pollForm") final PollForm pollForm,
+            @AuthenticationPrincipal User user
             ){
         final ModelAndView modelAndView = new ModelAndView("polls/polls_list");
         modelAndView.addObject("filterBy", filterBy);
@@ -87,7 +90,7 @@ public class PollController {
                 break;
         }
         modelAndView.addObject("polls", pollList);
-        modelAndView.addObject("user", userService.getUser());
+        modelAndView.addObject("user", user);
         return modelAndView;
     }
 
@@ -95,7 +98,8 @@ public class PollController {
     @RequestMapping(value = "/polls", method = {RequestMethod.POST})
     public ModelAndView addPoll(
             @Valid @ModelAttribute("pollForm") final PollForm pollForm,
-            final BindingResult errors
+            final BindingResult errors,
+            @AuthenticationPrincipal User user
     ) throws ParseException {
         if (errors.hasErrors()){
             throw new RuntimeException("Error al agregar encuesta: " + errors);
@@ -110,10 +114,10 @@ public class PollController {
                 pollForm.getCareerId(),
                 pollForm.getCourseId(),
                 pollForm.getExpiryDate(),
-                userService.getUser(),
+                user,
                 pollForm.getOptions());
 
-        return getPolls(HolderEntity.general, null, null, pollForm);
+        return getPolls(HolderEntity.general, null, null, pollForm, user);
     }
 
 
@@ -209,7 +213,8 @@ public class PollController {
 
     @RequestMapping("polls/detail")
     public ModelAndView getPoll(
-            @RequestParam(name="id") int pollId
+            @RequestParam(name="id") int pollId,
+            @AuthenticationPrincipal User user
     ){
         final ModelAndView mav = new ModelAndView("polls/poll_detail");
 
@@ -223,7 +228,7 @@ public class PollController {
 
         Map<PollOption,Integer> votes = pollService.getVotes(pollId);
         mav.addObject("votes",votes);
-        mav.addObject("user", userService.getUser());
+        mav.addObject("user", user);
 
         return mav;
     }
