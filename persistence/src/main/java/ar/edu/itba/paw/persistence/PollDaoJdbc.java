@@ -5,7 +5,7 @@ import java.util.*;
 import javax.sql.DataSource;
 
 
-
+import ar.edu.itba.paw.models.PollFormat;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -30,10 +30,13 @@ public class PollDaoJdbc implements PollDao {
     private final RowMapper<Poll> rowMapper = (rs, rowNum) -> {
         int id = rs.getInt("id");
         Optional<User> optUser = userDao.findById(rs.getInt("submitted_by"));
+        System.out.println(rs.getString("format").replace("-", "_"));
+        System.out.println(rs.getString("format"));
         return new Poll(
             id,
             rs.getString("name"),
             rs.getString("description"),
+            PollFormat.valueOf(rs.getString("format").replace("-", "_")),
             rs.getInt("career_id"),
             rs.getString("course_id"),
             rs.getTimestamp("creation_date"),
@@ -117,8 +120,11 @@ public class PollDaoJdbc implements PollDao {
         }
 
     @Override
-    public void addPoll(String name, String description, Integer careerId, String courseId, Date creationDate, Date expiryDate, Integer user, List<String> pollOptions) {
-
+    public void addPoll(String name, String description, PollFormat format, Integer careerId, String courseId, Date creationDate, Date expiryDate, Integer user, List<String> pollOptions) {
+        jdbcTemplate.query(String.format("INSERT INTO " +
+                "poll(name, description, format, career_id, course_id, creation_date, expiry_date, submitted_by) VALUES " +
+                "(?, ?, CAST(? AS poll_format_type), ?, ?, ?, ?, ?);", name, description, format.toString().replace("_","-"), careerId, courseId, null, expiryDate, user), rowMapper);
+        /*
         final Map<String, Object> args = new HashMap<>();
         args.put("name", name);
         args.put("description", description);
@@ -130,10 +136,16 @@ public class PollDaoJdbc implements PollDao {
         args.put("submitted_by", user);
 
         final Number id = simpleJdbcInsertPoll.executeAndReturnKey(args);
+
+ */
+        final Number id = jdbcTemplate.query(String.format("SELECT id FROM poll WHERE name = %s", name), rowMapper)
+                .get(0)
+                .getId();
         for(String pollOption : pollOptions){
             addPollOption(id.intValue(), pollOption);
         }
     }
+
 
     private void addPollOption(Integer id, String value) {
         final Map<String, Object> args = new HashMap<>();

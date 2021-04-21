@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.models.Poll;
 import ar.edu.itba.paw.models.Poll.PollOption;
+import ar.edu.itba.paw.models.PollFormat;
 
 import java.util.Date;
 import java.util.List;
@@ -14,5 +15,5 @@ public interface PollService {
     Optional<Poll> findById(int id);
     Map<PollOption,Integer> getVotes(int id);
 
-    void addPoll(String name, String description, Integer careerId, String courseId, Date creationDate, Date expiryDate, Integer user, List<String> pollOptions);
+    void addPoll(String name, String description, PollFormat format, Integer careerId, String courseId, Date creationDate, Date expiryDate, Integer user, List<String> pollOptions);
 }

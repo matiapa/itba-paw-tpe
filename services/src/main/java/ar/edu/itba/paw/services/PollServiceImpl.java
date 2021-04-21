@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import ar.edu.itba.paw.models.PollFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,8 +40,8 @@ public class PollServiceImpl implements PollService {
     }
 
     @Override
-    public void addPoll(String name, String description, Integer careerId, String courseId, Date creationDate, Date expiryDate, Integer user, List<String> pollOptions) {
-        pollDao.addPoll(name, description, careerId, courseId, creationDate, expiryDate, user, pollOptions);
+    public void addPoll(String name, String description, PollFormat format, Integer careerId, String courseId, Date creationDate, Date expiryDate, Integer user, List<String> pollOptions) {
+        pollDao.addPoll(name, description, format, careerId, courseId, creationDate, expiryDate, user, pollOptions);
     }
 
 

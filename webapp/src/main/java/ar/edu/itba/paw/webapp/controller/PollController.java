@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -17,10 +18,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import ar.edu.itba.paw.models.Career;
-import ar.edu.itba.paw.models.Course;
-import ar.edu.itba.paw.models.Poll;
-import ar.edu.itba.paw.models.HolderEntity;
 import ar.edu.itba.paw.models.Poll.PollOption;
 import ar.edu.itba.paw.models.ui.NavigationItem;
 import ar.edu.itba.paw.services.CareerService;
@@ -102,6 +99,7 @@ public class PollController {
         System.out.println(pollForm.getOptions().get(0));
         pollService.addPoll(pollForm.getName(),
                 pollForm.getDescription(),
+                PollFormat.text,
                 pollForm.getCareerId(),
                 pollForm.getCourseId(),
                 null,

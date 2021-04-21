@@ -7,14 +7,16 @@ public class Poll {
     
     private final int id;
     private final String name, description;
+    private final PollFormat pollFormat;
     private final Date creationDate, expiryDate;
     private final User submittedBy;
     private final List<PollOption> options;
     
-    public Poll(int id, String name, String description, Integer careerId, String courseId, Date creationDate, Date expiryDate, User submittedBy, List<PollOption> options) {
+    public Poll(int id, String name, String description, PollFormat format, Integer careerId, String courseId, Date creationDate, Date expiryDate, User submittedBy, List<PollOption> options) {
         this.id = id;
         this.name = name;
         this.description = description;
+        this.pollFormat = format;
         this.creationDate = creationDate;
         this.expiryDate = expiryDate;
         this.submittedBy = submittedBy;
