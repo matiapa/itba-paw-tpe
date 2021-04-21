@@ -23,7 +23,8 @@ public class CareerDaoJdbc implements CareerDao{
     private static final RowMapper<Career> CAREER_ROW_MAPPER = (rs, rowNum) ->
         new Career(
             rs.getInt("id"),
-            rs.getString("name")
+            rs.getString("name"),
+            rs.getString("code")
         );
 
 
@@ -70,7 +71,16 @@ public class CareerDaoJdbc implements CareerDao{
         ).stream().findFirst();
     }
 
-
+    @Override
+    public Optional<Career> findByCode(String code) {
+        return jdbcTemplate.query(
+            String.format(
+                "SELECT * FROM career WHERE code='%s'",
+                code
+            ),
+            CAREER_ROW_MAPPER
+        ).stream().findFirst();
+    }
 
 
     @Override

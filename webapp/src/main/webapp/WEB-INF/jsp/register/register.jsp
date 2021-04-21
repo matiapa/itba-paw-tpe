@@ -51,7 +51,7 @@
                                         </div>
                                     </div>
                                     <form:input class="form-control form-control-user" type="text" id="exampleLegajo" placeholder="Legajo" path="id" value="${user.id}" disabled="true"/>
-                                    <form:input class="form-control form-control-user" type="text" id="exampleCareer_id" placeholder="Career_id" path="career_id" value="${user.career_id}" disabled="true"/>
+                                    <input class="form-control form-control-user" type="text" id="exampleCareerName" placeholder="Carrera" value="${careerName}" disabled/>
 
                                     <div class="text-center"></div>
                                     <div class="text-center"></div>
