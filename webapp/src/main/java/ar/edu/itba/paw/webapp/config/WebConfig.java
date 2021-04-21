@@ -1,15 +1,12 @@
 package ar.edu.itba.paw.webapp.config;
 
-import ar.edu.itba.paw.models.HolderEntity;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.convert.converter.Converter;
-import org.springframework.format.FormatterRegistry;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
@@ -23,7 +20,14 @@ import javax.sql.DataSource;
         "ar.edu.itba.paw.persistence"
 })
 @Configuration
+@PropertySource("classpath:/ar/edu/itba/paw/webapp/config/auth.properties")
 public class WebConfig {
+    private static String DB_PROPERTY_KEY = "itbahub.persistence.db";
+    private Environment env;
+
+    public WebConfig(Environment env) {
+        this.env = env;
+    }
 
     @Bean
     public ViewResolver viewResolver() {
@@ -39,11 +43,14 @@ public class WebConfig {
     @Bean
     public DataSource dataSource() {
         final SimpleDriverDataSource ds = new SimpleDriverDataSource();
+        String url = env.getRequiredProperty(DB_PROPERTY_KEY + ".url");
+        String user = env.getRequiredProperty(DB_PROPERTY_KEY + ".user");
+        String password = env.getRequiredProperty(DB_PROPERTY_KEY + ".password");
 
         ds.setDriverClass(org.postgresql.Driver.class);
-        ds.setUrl("jdbc:postgresql://ec2-54-161-239-198.compute-1.amazonaws.com/d8j7sdks62b5ck");
-        ds.setUsername("rnwisaepqwgigm");
-        ds.setPassword("4d6fe4204a429d92faa2a8dc671d799f3a53237da87868bb5362812473256456");
+        ds.setUrl("jdbc:postgresql://" + url);
+        ds.setUsername(user);
+        ds.setPassword(password);
 
         return ds;
     }

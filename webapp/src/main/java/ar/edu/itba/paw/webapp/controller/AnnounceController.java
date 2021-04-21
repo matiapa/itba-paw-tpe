@@ -1,16 +1,16 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.models.Announcement;
-import ar.edu.itba.paw.models.Career;
-import ar.edu.itba.paw.models.Course;
-import ar.edu.itba.paw.models.HolderEntity;
-import ar.edu.itba.paw.services.AnnouncementService;
-import ar.edu.itba.paw.services.CareerService;
-import ar.edu.itba.paw.services.CourseService;
-import ar.edu.itba.paw.services.UserService;
-import ar.edu.itba.paw.webapp.form.AnnouncementForm;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -19,17 +19,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import ar.edu.itba.paw.models.Announcement;
+import ar.edu.itba.paw.models.Career;
+import ar.edu.itba.paw.models.Course;
+import ar.edu.itba.paw.models.HolderEntity;
+import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.services.AnnouncementService;
+import ar.edu.itba.paw.services.CareerService;
+import ar.edu.itba.paw.services.CourseService;
+import ar.edu.itba.paw.webapp.form.AnnouncementForm;
 
 @Controller
 public class AnnounceController {
-
-    @Autowired private UserService userService;
 
     @Autowired private AnnouncementService announcementService;
 
@@ -42,7 +43,8 @@ public class AnnounceController {
     public ModelAndView getAnnouncements(
         @RequestParam(name="filterBy", required = false, defaultValue="general") HolderEntity filterBy,
         @RequestParam(name="careerId", required = false) Integer careerId,
-        @RequestParam(name="courseId", required = false) String courseId
+        @RequestParam(name="courseId", required = false) String courseId,
+        @AuthenticationPrincipal User user
     ){
         final ModelAndView mav = new ModelAndView("announcements/announcements_list");
 
@@ -79,14 +81,15 @@ public class AnnounceController {
 
         mav.addObject("announcements", announcements);
 
-        mav.addObject("user", userService.getUser());
+        mav.addObject("user", user);
 
         return mav;
     }
 
     @RequestMapping("announcements/detail")
     public ModelAndView getAnnouncementDetail(
-            @RequestParam(name="id", required = false) Integer id
+            @RequestParam(name="id", required = false) Integer id,
+            @AuthenticationPrincipal User user
     ){
         final ModelAndView mav = new ModelAndView("announcements/announcements_detail");
 
@@ -97,7 +100,7 @@ public class AnnounceController {
 
         mav.addObject("announcement", optionalAnnouncement.get());
 
-        mav.addObject("user", userService.getUser());
+        mav.addObject("user", user);
 
         return mav;
     }
@@ -105,25 +108,27 @@ public class AnnounceController {
 
     @RequestMapping(value = "announcements/markSeen", method = POST)
     public ModelAndView markSeen(
-        @RequestParam(name = "id") int id
+        @RequestParam(name = "id") int id,
+        @AuthenticationPrincipal User user
     ) {
         final ModelAndView mav = new ModelAndView("simple");
         mav.addObject("text", "OK");
 
-        announcementService.markSeen(id);
+        announcementService.markSeen(id, user);
 
         return mav;
     }
 
     @RequestMapping("announcements/create")
     public ModelAndView create(
-        @ModelAttribute("createForm") final AnnouncementForm form
+        @ModelAttribute("createForm") final AnnouncementForm form,
+        @AuthenticationPrincipal User user
     ) {
         ModelAndView mav = new ModelAndView("announcements/create_announcement");
 
         mav.addObject("careers", careerService.findAll());
         mav.addObject("courses", courseService.findAll());
-        mav.addObject("user", userService.getUser());
+        mav.addObject("user", user);
 
         return mav;
     }
@@ -131,7 +136,8 @@ public class AnnounceController {
     @RequestMapping(value = "announcements/create", method = POST)
     public ModelAndView create(
         @Valid @ModelAttribute("createForm") final AnnouncementForm form,
-        final BindingResult errors
+        final BindingResult errors,
+        @AuthenticationPrincipal User user
     ){
         // TODO: Form validation is not working
         if (errors.hasErrors())
@@ -139,7 +145,8 @@ public class AnnounceController {
 
         announcementService.create(
             form.getTitle(), form.getSummary(), form.getContent(),
-            form.getCarrerId(), form.getCourseId(), form.getExpiryDate()
+            form.getCarrerId(), form.getCourseId(), form.getExpiryDate(),
+            user
         );
 
         return new ModelAndView("redirect:/announcements");

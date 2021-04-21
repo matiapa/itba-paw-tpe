@@ -29,6 +29,7 @@ public class UserDaoJdbcTest {
         User user = userOptional.get();
 
         Assert.assertEquals("User 1", user.getName());
+        Assert.assertEquals("Surname", user.getSurname());
         Assert.assertEquals(1, user.getId());
     }
 
