@@ -89,7 +89,6 @@
         <version>${org.hibernate.validator}</version>
       </dependency>
 
-
       <dependency>
         <groupId>javax.servlet</groupId>
         <artifactId>jstl</artifactId>
