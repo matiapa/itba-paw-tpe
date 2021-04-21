@@ -137,20 +137,29 @@ public class PollController {
         if (errors.hasErrors()) {
             throw new RuntimeException("Error al agregar encuesta: " + errors);
         }
-/*
-        SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd");
-        Date date = new Date(System.currentTimeMillis());
-*/
-        pollService.addPoll(pollForm.getName(),
-                pollForm.getDescription(),
-                PollFormat.text,
-                pollForm.getCourseId() != null ? pollForm.getCareerId() : null,
-                pollForm.getCourseId(),
-                pollForm.getExpiryDate(),
-                user,
-                pollForm.getOptions());
 
-        return getPolls(HolderEntity.general, null, null, null, null, pollForm, user);
+        pollService.addPoll(
+            pollForm.getTitle(),
+            pollForm.getDescription(),
+            PollFormat.text,
+            pollForm.getCareerId(),
+            pollForm.getCourseId(),
+            pollForm.getExpiryDate(),
+            user,
+            pollForm.getOptions()
+        );
+
+        HolderEntity filterBy;
+        if(pollForm.getCareerId() == null && pollForm.getCourseId() == null)
+            filterBy = HolderEntity.general;
+        else if(pollForm.getCareerId() == null && pollForm.getCourseId() != null)
+            filterBy = HolderEntity.course;
+        else if(pollForm.getCareerId() != null && pollForm.getCourseId() == null)
+            filterBy = HolderEntity.career;
+        else
+            filterBy = HolderEntity.general;
+
+        return getPolls(filterBy, pollForm.getCareerId(), pollForm.getCourseId(), null, null, pollForm, user);
     }
 
     @RequestMapping("polls/detail")

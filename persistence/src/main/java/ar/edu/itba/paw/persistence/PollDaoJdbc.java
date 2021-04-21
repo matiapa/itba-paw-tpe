@@ -185,24 +185,20 @@ public class PollDaoJdbc implements PollDao {
 
     @Override
     public void addPoll(String name, String description, PollFormat format, Integer careerId, String courseId, Date expiryDate, int userId, List<String> pollOptions) {
-        Poll poll = jdbcTemplate.queryForObject("INSERT INTO " +
-                "poll(name, description, format, career_id, course_id, creation_date, expiry_date, submitted_by) VALUES " +
+
+        Poll poll = jdbcTemplate.queryForObject(
+        "INSERT INTO " +
+                "poll(name, description, format, career_id, course_id, creation_date, expiry_date, submitted_by)" +
+            " VALUES " +
                 "(?, ?, CAST(? AS poll_format_type), ?, ?, DEFAULT, ?, ?) " +
-                "RETURNING *;", new Object[]{name, description, format.toString().replace("_","-"), careerId, courseId, expiryDate, userId}, rowMapper);
-        /*
-        final Map<String, Object> args = new HashMap<>();
-        args.put("name", name);
-        args.put("description", description);
-        args.put("career_id", careerId);
-        args.put("course_id", courseId);
-        args.put("format", "multiple-choice");      //TODO: Implementar otros format
-        args.put("creation_date", null);
-        args.put("expiry_date", expiryDate);
-        args.put("submitted_by", user);
+            "RETURNING *;",
+            new Object[]{
+                name, description, format.toString().replace("_","-"),
+                careerId, courseId, expiryDate, userId
+            },
+            rowMapper
+        );
 
-        final Number id = simpleJdbcInsertPoll.executeAndReturnKey(args);
-
- */
         final Number id = poll.getId();
         for(String pollOption : pollOptions){
             addPollOption(id.intValue(), pollOption);

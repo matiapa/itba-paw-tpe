@@ -1,5 +1,29 @@
-$("form[name='searchForm']").submit(function() {
-  console.log('OK')
-  $(this).find('input[type!="radio"][value=""],select:not(:has(option:selected[value!=""]))')
+$("form").submit(function() {
+  $(this).find('select:not(:has(option:selected[value!=""]))')
       .attr('name', '');
+});
+
+document.addEventListener("DOMContentLoaded", function(event) {
+
+  if(document.getElementById("createPollForm") != null) {
+    document.getElementById("pollTarget").addEventListener('change', (event) => {
+
+      if(event.target.value === "career"){
+        document.getElementById("careerTarget").hidden = false
+        document.getElementById("courseTarget").hidden = true
+        document.getElementById("courseId").value = ""
+      }else if(event.target.value === "course"){
+        document.getElementById("courseTarget").hidden = false
+        document.getElementById("careerTarget").hidden = true
+        document.getElementById("careerId").value = ""
+      }else{
+        document.getElementById("courseTarget").hidden = false
+        document.getElementById("careerTarget").hidden = false
+        document.getElementById("courseId").value = ""
+        document.getElementById("careerId").value = ""
+      }
+
+    });
+  }
+
 });

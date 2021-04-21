@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.webapp.form;
 
-import ar.edu.itba.paw.models.Poll;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
@@ -9,10 +8,14 @@ import java.util.Date;
 import java.util.List;
 
 public class PollForm {
+
     @NotNull
-    private String name;
+    private String title;
+
     private Integer careerId;
+
     private String courseId;
+
     @NotNull
     private String description;
 
@@ -22,12 +25,12 @@ public class PollForm {
     @DateTimeFormat(pattern = "dd-mm-yyyy")
     private Date expiryDate;
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public Integer getCareerId() {
@@ -69,4 +72,5 @@ public class PollForm {
     public void setOptions(ArrayList<String> options) {
         this.options = options;
     }
+
 }
