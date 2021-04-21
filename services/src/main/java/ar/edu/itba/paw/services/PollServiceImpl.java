@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import ar.edu.itba.paw.models.PollFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,8 +24,18 @@ public class PollServiceImpl implements PollService {
     }
 
     @Override
+    public List<Poll> findByCareer(int careerId, Poll.PollFormat format, Poll.PollState pollState) {
+        return pollDao.findByCareer(careerId, format, pollState);
+    }
+
+    @Override
     public List<Poll> findByCourse(String courseId) {
         return pollDao.findByCourse(courseId);
+    }
+
+    @Override
+    public List<Poll> findByCourse(String courseId, Poll.PollFormat format, Poll.PollState pollState) {
+        return pollDao.findByCourse(courseId, format, pollState);
     }
 
     @Override
@@ -40,7 +49,7 @@ public class PollServiceImpl implements PollService {
     }
 
     @Override
-    public void addPoll(String name, String description, PollFormat format, Integer careerId, String courseId, Date creationDate, Date expiryDate, Integer user, List<String> pollOptions) {
+    public void addPoll(String name, String description, Poll.PollFormat format, Integer careerId, String courseId, Date creationDate, Date expiryDate, Integer user, List<String> pollOptions) {
         pollDao.addPoll(name, description, format, careerId, courseId, creationDate, expiryDate, user, pollOptions);
     }
 
@@ -48,6 +57,11 @@ public class PollServiceImpl implements PollService {
     @Override
     public List<Poll> findGeneral() {
         return pollDao.findGeneral();
+    }
+
+    @Override
+    public List<Poll> findGeneral(Poll.PollFormat format, Poll.PollState pollState) {
+        return pollDao.findGeneral(format, pollState);
     }
 
 }
