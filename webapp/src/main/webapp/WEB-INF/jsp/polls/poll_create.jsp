@@ -37,10 +37,10 @@
                                 </form:select>
                                 <form:errors path="careerId" element="div"/>
                             </div>
-                            
+
                             <div hidden id="courseTarget" class="form-group">
                                 <form:label path="courseId">Curso de destino</form:label>
-                                <form:select path="courseId" class="form-control">
+                                <form:select path="courseId" class="form-control selectpicker" data-live-search="true">
                                     <form:option value="">Elegí un curso...</form:option>
                                     <c:forEach var="course" items="${courses}">
                                         <form:option value="${course.id}"><c:out value="${course.name}"/></form:option>
@@ -96,15 +96,23 @@
                                 <form:input type="text" path="options[3]" class="form-control"/>
                                 <form:errors path="options[3]" element="p"/>
                             </div>
+
                         </div>
 
                     </div>
 
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                        <button type="submit" class="btn btn-primary">Agregar</button>
+                    <div>
+                        <button id="submitPoll" type="submit" class="btn btn-primary">
+                            Enviar
+                        </button>
                     </div>
                 </form:form>
+            </div>
+
+            <div class="overlay" style="width: 798px; height: 549px"></div>
+            <div class="spanner">
+                <div class="loader"></div>
+                <p>Agregando encuesta</p>
             </div>
 
         </div>

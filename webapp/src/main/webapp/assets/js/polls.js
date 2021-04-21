@@ -3,6 +3,11 @@ $("form").submit(function() {
       .attr('name', '');
 });
 
+$("#submitPoll").click(function(){
+  $("div.spanner").addClass("show");
+  $("div.overlay").addClass("show");
+});
+
 document.addEventListener("DOMContentLoaded", function(event) {
 
   if(document.getElementById("createPollForm") != null) {

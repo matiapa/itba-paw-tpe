@@ -160,7 +160,6 @@
 
     <jsp:include page="create_announcement.jsp"/>
 
-
     <jsp:include page="../common/scripts.jsp"/>
 
     <script src="<c:url value="/assets/js/announcements.js"/>"></script>
