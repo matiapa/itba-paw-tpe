@@ -11,8 +11,8 @@ import javax.validation.Valid;
 
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.services.UserService;
+import ar.edu.itba.paw.webapp.controller.common.FiltersController;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -21,8 +21,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import ar.edu.itba.paw.services.AnnouncementService;
-import ar.edu.itba.paw.services.CareerService;
-import ar.edu.itba.paw.services.CourseService;
 import ar.edu.itba.paw.webapp.form.AnnouncementForm;
 
 @Controller
@@ -30,46 +28,28 @@ public class AnnounceController {
 
     @Autowired private AnnouncementService announcementService;
 
-    @Autowired private CareerService careerService;
-
-    @Autowired private CourseService courseService;
-
     @Autowired private UserService userService;
 
+    @Autowired private FiltersController commonFilters;
 
-    @RequestMapping(value = "announcements", method = GET)
+
+    @RequestMapping(value = "/announcements", method = GET)
     public ModelAndView getAnnouncements(
         @RequestParam(name="filterBy", required = false, defaultValue="general") HolderEntity filterBy,
         @RequestParam(name="careerId", required = false) Integer careerId,
         @RequestParam(name="courseId", required = false) String courseId,
-        @RequestParam(name="courseId", required = false, defaultValue="false") Boolean showCreateForm,
+        @RequestParam(name="showCreateForm", required = false, defaultValue="false") Boolean showCreateForm,
         @ModelAttribute("createForm") final AnnouncementForm form
     ){
         final ModelAndView mav = new ModelAndView("announcements/announcements_list");
 
-        // Filters
+        // Add filters options
 
         mav.addObject("filterBy", filterBy);
+        commonFilters.addCareers(mav, careerId);
+        commonFilters.addCourses(mav, courseId);
 
-            // -- Career
-
-        List<Career> careers = careerService.findAll();
-        mav.addObject("careers", careers);
-
-        Career selectedCareer = careerId != null ? careers.stream().filter(c -> c.getId() == careerId).findFirst()
-                .orElseThrow(RuntimeException::new) : null;
-        mav.addObject("selectedCareer", selectedCareer);
-
-            // -- Course
-
-        List<Course> courses = courseService.findAll();
-        mav.addObject("courses", courses);
-
-        Course selectedCourse = courseId != null ? courses.stream().filter(c -> c.getId().equals(courseId)).findFirst()
-                .orElseThrow(RuntimeException::new) : null;
-        mav.addObject("selectedCourse", selectedCourse);
-
-        // Announcements
+        // Add filtered announcements
 
         List<Announcement> announcements = new ArrayList<>();
         switch(filterBy){
@@ -86,22 +66,22 @@ public class AnnounceController {
                 announcements = announcementService.findGeneral();
         }
 
-        mav.addObject("showCreateForm", showCreateForm);
-
         mav.addObject("announcements", announcements);
 
+        // Add other parameters
+
+        mav.addObject("showCreateForm", showCreateForm);
         mav.addObject("user", userService.getLoggedUser());
 
         return mav;
     }
 
 
-    @RequestMapping(value = "announcements", method = POST)
+    @RequestMapping(value = "/announcements/create", method = POST)
     public ModelAndView create(
             @Valid @ModelAttribute("createForm") final AnnouncementForm form,
             final BindingResult errors
     ){
-        // TODO: Form validation is not working
         if (errors.hasErrors()) {
             return getAnnouncements(
                 HolderEntity.general, null, null, true, form
@@ -128,7 +108,7 @@ public class AnnounceController {
     }
 
 
-    @RequestMapping(value = "announcements/detail", method = GET)
+    @RequestMapping(value = "/announcements/detail", method = GET)
     public ModelAndView getAnnouncementDetail(
         @RequestParam(name="id", required = false) Integer id
     ){
@@ -147,7 +127,7 @@ public class AnnounceController {
     }
 
 
-    @RequestMapping(value = "announcements/markSeen", method = POST)
+    @RequestMapping(value = "/announcements/markSeen", method = POST)
     public ModelAndView markSeen(
         @RequestParam(name = "id") int id
     ) {

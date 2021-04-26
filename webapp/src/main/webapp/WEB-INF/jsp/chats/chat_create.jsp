@@ -14,8 +14,8 @@
             </div>
 
             <div class="modal-body">
-                <c:url value="/polls" var="postPoll"/>
-                <form:form modelAttribute="createForm" method="post">
+                <c:url value="/chats/create" var="postUrl"/>
+                <form:form modelAttribute="createForm" action="${postUrl}" method="post">
 
                     <div class="form-group">
                         <form:label path="name">Nombre del grupo</form:label>

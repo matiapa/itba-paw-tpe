@@ -15,7 +15,8 @@
             </div>
 
             <div class="modal-body">
-                <form:form id="createAnnouncementForm" modelAttribute="createForm" method="post">
+                <c:url value="/announcements/create" var="postUrl"/>
+                <form:form id="createAnnouncementForm" modelAttribute="createForm" action="${postUrl}" method="post">
 
                     <div class="form-group">
                         <label>Destino del anuncio</label>

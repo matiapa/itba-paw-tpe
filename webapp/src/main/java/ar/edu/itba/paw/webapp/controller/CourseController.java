@@ -19,6 +19,8 @@ import ar.edu.itba.paw.models.Content;
 import ar.edu.itba.paw.models.Course;
 import ar.edu.itba.paw.models.Poll;
 
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+
 @Controller
 public class CourseController {
 
@@ -35,20 +37,21 @@ public class CourseController {
     @Autowired private UserService userService;
 
 
-    @RequestMapping("courses")
+    @RequestMapping(value = "/courses", method = GET)
     public ModelAndView getCourses(
             @RequestParam(name="careerId", required = false) Integer careerId
     ){
         final ModelAndView mav = new ModelAndView("courses/course_list");
 
-
-
         Map<Integer,List<CareerCourse>> courses;
+
         List<Career> careers = careerService.findAll();
         mav.addObject("careers", careers);
+
         if(careerId != null) {
             courses = careerService.findByCareer(careerId);
             mav.addObject("careerCourses",courses);
+
             Career selectedCareer = careers.stream().filter(c -> c.getId() == careerId).findFirst()
                     .orElseThrow(RuntimeException::new);
             mav.addObject("selectedCareer", selectedCareer);
@@ -59,15 +62,20 @@ public class CourseController {
         return mav;
     }
 
-    @RequestMapping("courses/detail")
+
+    @RequestMapping(value = "/courses/detail", method = GET)
     public ModelAndView getCourse(
         @RequestParam(name="id") String courseId
     ){
         final ModelAndView mav = new ModelAndView("courses/course_detail");
 
+        // Course announcements
+
         List<Announcement> announcements;
         announcements = announcementService.findByCourse(courseId);
         mav.addObject("announcements",announcements);
+
+        // Course content
 
         List<Content> contents;
         contents = contentService.findByCourse(courseId);
@@ -82,15 +90,18 @@ public class CourseController {
             put(Content.ContentType.other, "Otro");
         }});
 
+        // Course polls
+
         List<Poll> polls;
         polls = pollService.findByCourse(courseId);
         mav.addObject("polls",polls);
+
+        // Course details
 
         Optional<Course> selectedCourse = courseService.findById(courseId);
         if (!selectedCourse.isPresent())
             throw new RuntimeException();
         mav.addObject("course", selectedCourse.get());
-
 
         mav.addObject("user", userService.getLoggedUser());
 

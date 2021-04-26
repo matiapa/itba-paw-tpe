@@ -11,8 +11,8 @@
             </div>
 
             <div class="modal-body">
-                <c:url value="/polls" var="postPoll"/>
-                <form:form modelAttribute="createForm" method="post">
+                <c:url value="/contents/create" var="postUrl"/>
+                <form:form modelAttribute="createForm" action="${postUrl}" method="post">
 
                     <div class="form-group">
                         <form:label path="courseId">Curso de destino</form:label>

@@ -5,46 +5,40 @@ import java.util.*;
 
 import javax.validation.Valid;
 
+import ar.edu.itba.paw.webapp.controller.common.FiltersController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import ar.edu.itba.paw.models.Career;
-import ar.edu.itba.paw.models.Course;
 import ar.edu.itba.paw.models.HolderEntity;
 import ar.edu.itba.paw.models.Poll;
 import ar.edu.itba.paw.models.Poll.PollFormat;
 import ar.edu.itba.paw.models.Poll.PollOption;
 
-import ar.edu.itba.paw.services.CareerService;
-import ar.edu.itba.paw.services.CourseService;
 import ar.edu.itba.paw.services.PollService;
 import ar.edu.itba.paw.services.UserService;
 import ar.edu.itba.paw.webapp.form.PollForm;
 import ar.edu.itba.paw.models.Poll.PollState;
 
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
+
 
 @Controller
 public class PollController {
 
-    @Autowired
-    private UserService userService;
+    @Autowired private UserService userService;
 
-    @Autowired
-    private PollService pollService;
+    @Autowired private PollService pollService;
 
-    @Autowired
-    private CareerService careerService;
+    @Autowired private FiltersController commonFilters;
 
-    @Autowired
-    private CourseService courseService;
 
-    @RequestMapping("/polls")
+    @RequestMapping(value = "/polls", method = GET)
     public ModelAndView getPolls(
         @RequestParam(name = "filterBy", required = false, defaultValue = "general") HolderEntity filterBy,
         @RequestParam(name = "careerId", required = false) Integer careerId,
@@ -52,56 +46,42 @@ public class PollController {
         @RequestParam(name = "type", required = false) String type,
         @RequestParam(name = "state", required = false) String state,
         @RequestParam(name = "showCreateForm", required = false, defaultValue="false") Boolean showCreateForm,
-        @ModelAttribute("pollForm") final PollForm pollForm
+        @ModelAttribute("createForm") final PollForm pollForm
     ) {
-        final ModelAndView modelAndView = new ModelAndView("polls/poll_list");
-        modelAndView.addObject("filterBy", filterBy);
+        final ModelAndView mav = new ModelAndView("polls/poll_list");
+        mav.addObject("filterBy", filterBy);
 
-        // Filters
+        // Add filters options
 
         List<Poll> pollList = new ArrayList<>();
 
-            // -- Career
+        commonFilters.addCareers(mav, careerId);
 
-        List<Career> careers = careerService.findAll();
-        modelAndView.addObject("careers", careers);
+        commonFilters.addCourses(mav, courseId);
 
-        Career selectedCareer = careerId != null ? careers.stream().filter(c -> c.getId() == careerId).findFirst()
-                .orElseThrow(RuntimeException::new) : null;
-        modelAndView.addObject("selectedCareer", selectedCareer);
+        // -- Type
 
-            // -- Course
-
-        List<Course> courses = courseService.findAll();
-        modelAndView.addObject("courses", courses);
-
-        Course selectedCourse = courseId != null ? courses.stream().filter(c -> c.getId().equals(courseId)).findFirst()
-                .orElseThrow(RuntimeException::new) : null;
-        modelAndView.addObject("selectedCourse", selectedCourse);
-
-            // -- Type
-
-        modelAndView.addObject("types", PollFormat.values());
-        modelAndView.addObject("typeTranslate", new HashMap<PollFormat, String>() {{
+        mav.addObject("types", PollFormat.values());
+        mav.addObject("typeTranslate", new HashMap<PollFormat, String>() {{
             put(PollFormat.text, "Texto libre");
             put(PollFormat.multiple_choice, "Opción múltiple");
         }});
 
         PollFormat selectedType = type != null ? PollFormat.valueOf(type) : null;
-        modelAndView.addObject("selectedType", selectedType);
+        mav.addObject("selectedType", selectedType);
 
-            // -- State
+        // -- State
 
-        modelAndView.addObject("states", PollState.values());
-        modelAndView.addObject("stateTranslate", new HashMap<PollState, String>() {{
+        mav.addObject("states", PollState.values());
+        mav.addObject("stateTranslate", new HashMap<PollState, String>() {{
             put(PollState.open, "Abiertas");
             put(PollState.closed, "Cerradas");
         }});
 
         PollState selectedState = state != null ? PollState.valueOf(state) : null;
-        modelAndView.addObject("selectedState", selectedState);
+        mav.addObject("selectedState", selectedState);
 
-        // Polls
+        // Add filtered polls
 
         switch (filterBy) {
             case course:
@@ -118,17 +98,20 @@ public class PollController {
                 break;
         }
 
-        modelAndView.addObject("showCreateForm", showCreateForm);
-        modelAndView.addObject("polls", pollList);
-        modelAndView.addObject("user", userService.getLoggedUser());
+        mav.addObject("polls", pollList);
+
+        // Add other parameters
+
+        mav.addObject("showCreateForm", showCreateForm);
+        mav.addObject("user", userService.getLoggedUser());
         
-        return modelAndView;
+        return mav;
     }
 
 
-    @RequestMapping(value = "/polls", method = {RequestMethod.POST})
+    @RequestMapping(value = "/polls/create", method = POST)
     public ModelAndView addPoll(
-        @Valid @ModelAttribute("pollForm") final PollForm pollForm,
+        @Valid @ModelAttribute("createForm") final PollForm pollForm,
         final BindingResult errors
     ) {
         if (errors.hasErrors()) {
@@ -162,7 +145,8 @@ public class PollController {
         return getPolls(filterBy, pollForm.getCareerId(), pollForm.getCourseId(), null, null, false, pollForm);
     }
 
-    @RequestMapping("polls/detail")
+
+    @RequestMapping(value = "/polls/detail", method = GET)
     public ModelAndView getPoll(
         @RequestParam(name="id") int pollId
     ){
@@ -189,7 +173,8 @@ public class PollController {
         return mav;
     }
 
-    @RequestMapping(value = "polls/vote", method = {RequestMethod.POST})
+
+    @RequestMapping(value = "/polls/vote", method = POST)
     public String votePoll(
         @RequestParam int id,
         @RequestParam int option

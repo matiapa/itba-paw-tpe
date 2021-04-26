@@ -11,8 +11,8 @@
             </div>
 
             <div class="modal-body">
-                <c:url value="/polls" var="postPoll"/>
-                <form:form modelAttribute="pollForm" id="createPollForm" method="post" action="${postPoll}">
+                <c:url value="/polls/create" var="postUrl"/>
+                <form:form modelAttribute="createForm" id="createPollForm" method="post" action="${postUrl}">
                     <div class="row">
                         <div class="col">
 

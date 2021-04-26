@@ -1,14 +1,9 @@
 package ar.edu.itba.paw.webapp.controller;
 
-
-import ar.edu.itba.paw.models.Career;
 import ar.edu.itba.paw.models.Content;
-import ar.edu.itba.paw.models.Course;
-import ar.edu.itba.paw.models.Poll;
 import ar.edu.itba.paw.services.ContentService;
-import ar.edu.itba.paw.services.CourseService;
 import ar.edu.itba.paw.services.UserService;
-import ar.edu.itba.paw.webapp.form.ChatGroupForm;
+import ar.edu.itba.paw.webapp.controller.common.FiltersController;
 import ar.edu.itba.paw.webapp.form.ContentForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -24,6 +19,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 
@@ -32,12 +28,12 @@ public class ContentController {
 
     @Autowired private ContentService contentService;
 
-    @Autowired private CourseService courseService;
-
     @Autowired private UserService userService;
 
+    @Autowired private FiltersController commonFilters;
 
-    @RequestMapping("/contents")
+
+    @RequestMapping(value = "/contents", method = GET)
     public ModelAndView getContents(
         @RequestParam(name = "courseId", required = false) String courseId,
         @RequestParam(name = "contentType", required = false) String contentType,
@@ -48,20 +44,13 @@ public class ContentController {
     ) {
         final ModelAndView mav = new ModelAndView("contents/content_list");
 
-        // Filters
+        // Add filters options
 
         List<Content> contents;
 
-            // -- Course
+        commonFilters.addCourses(mav, courseId);
 
-        List<Course> courses = courseService.findAll();
-        mav.addObject("courses", courses);
-
-        Course selectedCourse = courseId != null ? courses.stream().filter(c -> c.getId().equals(courseId)).findFirst()
-                .orElseThrow(RuntimeException::new) : null;
-        mav.addObject("selectedCourse", selectedCourse);
-
-            // -- Type
+        // -- Type
 
         mav.addObject("contentTypeEnumMap", new HashMap<Content.ContentType, String>()
         {{
@@ -75,9 +64,13 @@ public class ContentController {
         Content.ContentType selectedType = contentType != null ? Content.ContentType.valueOf(contentType) : null;
         mav.addObject("selectedType", selectedType);
 
-        contents = contentService.findByCourse(courseId, selectedType, minDate, maxDate);
+        // Add filtered content
 
+        contents = contentService.findByCourse(courseId, selectedType, minDate, maxDate);
         mav.addObject("contents", contents);
+
+        // Add other parameters
+
         mav.addObject("showCreateForm", showCreateForm);
         mav.addObject("user", userService.getLoggedUser());
 
@@ -85,17 +78,14 @@ public class ContentController {
     }
 
 
-    @RequestMapping(value = "/contents", method = POST)
+    @RequestMapping(value = "/contents/create", method = POST)
     public ModelAndView create(
             @Valid @ModelAttribute("createForm") final ContentForm form,
             final BindingResult errors
     ){
         if(errors.hasErrors()){
-            System.out.println("ERRORS");
             return getContents(null, null, null, null, true, form);
         }
-
-        System.out.println("NO ERRORS");
 
          contentService.createContent(
              form.getName(),form.getLink(), form.getCourseId(), form.getDescription(), form.getContentType(),
