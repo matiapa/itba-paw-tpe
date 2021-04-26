@@ -80,7 +80,7 @@
                                                                     path="courses[${i}]" value="${course.id}" data-tokens="${course.name}">${course.name}</option>
                                                         </c:forEach>
                                                     </form:select>
-                                                    <form:errors path="courses[${i}]" cssClass="invalid-feedback" element="div"/>
+                                                    <form:errors path="courses[${i}]" cssStyle="color: red" element="p"/>
                                                 </div>
                                             </div>
                                         </c:forEach>

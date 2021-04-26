@@ -16,6 +16,7 @@
     <jsp:include page="../common/styles.jsp"/>
 
     <link rel="stylesheet" href="<c:url value="/assets/bootstrap/css/bootstrap-select.min.css"/>">
+    <link rel="stylesheet" href="<c:url value="/assets/css/overlay.css"/>"></head>
 </head>
 
 <body id="page-top">
@@ -113,17 +114,21 @@
         </div>
     </div>
 
-
     <div class="fab">
-        <a href="<c:url value='/contents/create'/>">
+        <a href="#popup" data-toggle="modal">
             <i class="material-icons" style="font-size: 32px;color: rgb(255,255,255);">add</i>
         </a>
     </div>
 
+    <jsp:include page="content_create.jsp"/>
+
     <jsp:include page="../common/scripts.jsp"/>
 
-    <script src="<c:url value="/assets/js/content.js"/>"></script>
+    <c:if test="${showCreateForm}">
+        <script>$('#popup').modal('show');</script>
+    </c:if>
 
+    <script src="<c:url value="/assets/js/content.js"/>"></script>
 
     <script src="<c:url value="/assets/js/popper.min.js"/>" ></script>
     <script src="<c:url value="/assets/bootstrap/js/bootstrap-select.min.js"/>"></script>

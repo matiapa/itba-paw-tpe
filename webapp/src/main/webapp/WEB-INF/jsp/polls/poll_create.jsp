@@ -52,19 +52,19 @@
                             <div class="form-group">
                                 <form:label path="title">Título</form:label>
                                 <form:input type="text" path="title" class="form-control"/>
-                                <form:errors path="title" cssClass="invalid-feedback" element="div"/>
+                                <form:errors path="title" cssStyle="color: red" element="p"/>
                             </div>
 
                             <div class="form-group">
                                 <form:label path="description">Descripción</form:label>
                                 <form:textarea path="description" cssClass="form-control"/>
-                                <form:errors path="description" cssClass="invalid-feedback" element="div"/>
+                                <form:errors path="description" cssStyle="color: red" element="p"/>
                             </div>
 
                             <div class="form-group">
                                 <form:label path="expiryDate">Fecha de expiración (dd-mm-yyyy)</form:label>
-                                <form:input type="text" path="expiryDate" class="form-control"/>
-                                <form:errors path="expiryDate" element="p"/>
+                                <form:input type="date" path="expiryDate" class="form-control"/>
+                                <form:errors path="expiryDate" cssStyle="color: red" element="p"/>
                             </div>
 
                         </div>
@@ -96,6 +96,8 @@
                                 <form:input type="text" path="options[3]" class="form-control"/>
                                 <form:errors path="options[3]" element="p"/>
                             </div>
+
+                            <form:errors path="options" element="p"/>
 
                         </div>
 

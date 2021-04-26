@@ -5,3 +5,4 @@
 <script src="<c:url value="/assets/js/theme.js"/>"></script>
 <script src="<c:url value="/assets/bootstrap/js/bootstrap.min.js"/>"></script>
 <script src="<c:url value="/assets/js/jquery.easing.js"/>"></script>
+<script src="<c:url value="/assets/js/forms.js"/>"></script>

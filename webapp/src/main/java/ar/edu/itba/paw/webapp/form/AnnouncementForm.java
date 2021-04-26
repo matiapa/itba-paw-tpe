@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.webapp.form;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Date;
@@ -22,6 +24,8 @@ public class AnnouncementForm {
 
     private String courseId;
 
+    @NotNull
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private Date expiryDate;
 
 

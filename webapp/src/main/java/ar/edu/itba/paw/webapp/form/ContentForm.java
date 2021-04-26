@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.webapp.form;
 
-import ar.edu.itba.paw.models.Content;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -23,19 +23,11 @@ public class ContentForm {
     @NotNull
     private String courseId;
 
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private Date contentDate;
 
     @NotNull
     private String contentType;
-
-    public ContentForm(String name, String link, String description, String courseId, Date contentDate, String contentType) {
-        this.name = name;
-        this.link = link;
-        this.description = description;
-        this.courseId = courseId;
-        this.contentDate = contentDate;
-        this.contentType = contentType;
-    }
 
     public Date getContentDate() {
         return contentDate;

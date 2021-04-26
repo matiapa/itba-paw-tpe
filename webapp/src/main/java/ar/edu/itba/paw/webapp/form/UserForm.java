@@ -1,24 +1,35 @@
 package ar.edu.itba.paw.webapp.form;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 
 public class UserForm {
 
 
+    @NotNull
+    @Size(min = 5, max = 20)
     private String name;
 
+    @NotNull
+    @Size(min = 5, max = 20)
     private String surname;
 
+    @NotNull
+    @Size(min = 5, max = 50)
     private String email;
 
-
+    @NotNull
     private int id;
 
+    @NotNull
     private int career_id;
 
-
+    @NotNull
+    @NotEmpty
     private ArrayList<String> courses;
 
 

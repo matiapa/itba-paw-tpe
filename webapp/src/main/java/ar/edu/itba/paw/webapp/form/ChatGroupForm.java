@@ -10,21 +10,21 @@ import java.util.Date;
 public class ChatGroupForm {
 
     @NotNull
-    @Size(min = 6, max = 100)
+    @Size(min = 5, max = 50)
     private String name;
 
     @NotNull
     private int careerId;
 
     @NotNull
-    @DateTimeFormat(pattern = "dd-mm-yyyy")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private Date creationDate;
 
     @NotNull
     private ChatPlatform platform;
 
     @NotNull
-    @Size(min = 6, max = 100)
+    @Size(min = 5, max = 100)
     private String link;
 
 

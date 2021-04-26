@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import java.util.ArrayList;
@@ -36,11 +37,12 @@ public class AnnounceController {
     @Autowired private UserService userService;
 
 
-    @RequestMapping("announcements")
+    @RequestMapping(value = "announcements", method = GET)
     public ModelAndView getAnnouncements(
         @RequestParam(name="filterBy", required = false, defaultValue="general") HolderEntity filterBy,
         @RequestParam(name="careerId", required = false) Integer careerId,
         @RequestParam(name="courseId", required = false) String courseId,
+        @RequestParam(name="courseId", required = false, defaultValue="false") Boolean showCreateForm,
         @ModelAttribute("createForm") final AnnouncementForm form
     ){
         final ModelAndView mav = new ModelAndView("announcements/announcements_list");
@@ -84,6 +86,8 @@ public class AnnounceController {
                 announcements = announcementService.findGeneral();
         }
 
+        mav.addObject("showCreateForm", showCreateForm);
+
         mav.addObject("announcements", announcements);
 
         mav.addObject("user", userService.getLoggedUser());
@@ -91,14 +95,18 @@ public class AnnounceController {
         return mav;
     }
 
+
     @RequestMapping(value = "announcements", method = POST)
     public ModelAndView create(
             @Valid @ModelAttribute("createForm") final AnnouncementForm form,
             final BindingResult errors
     ){
         // TODO: Form validation is not working
-        if (errors.hasErrors())
-            throw new RuntimeException();
+        if (errors.hasErrors()) {
+            return getAnnouncements(
+                HolderEntity.general, null, null, true, form
+            );
+        }
 
         announcementService.create(
             form.getTitle(), form.getSummary(), form.getContent(),
@@ -116,10 +124,11 @@ public class AnnounceController {
         else
             filterBy = HolderEntity.general;
 
-        return getAnnouncements(filterBy, form.getCareerId(), form.getCourseId(), form);
+        return getAnnouncements(filterBy, form.getCareerId(), form.getCourseId(), false, form);
     }
 
-    @RequestMapping("announcements/detail")
+
+    @RequestMapping(value = "announcements/detail", method = GET)
     public ModelAndView getAnnouncementDetail(
         @RequestParam(name="id", required = false) Integer id
     ){
@@ -149,6 +158,5 @@ public class AnnounceController {
 
         return mav;
     }
-
 
 }

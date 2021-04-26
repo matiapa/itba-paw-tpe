@@ -163,6 +163,10 @@
 
     <jsp:include page="../common/scripts.jsp"/>
 
+    <c:if test="${showCreateForm}">
+        <script>$('#popup').modal('show');</script>
+    </c:if>
+
     <script src="<c:url value="/assets/js/announcements.js"/>"></script>
 
     <script src="<c:url value="/assets/js/popper.min.js"/>" ></script>

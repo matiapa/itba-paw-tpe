@@ -7,7 +7,6 @@ import java.util.Optional;
 
 import ar.edu.itba.paw.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,7 +18,6 @@ import ar.edu.itba.paw.models.CareerCourse;
 import ar.edu.itba.paw.models.Content;
 import ar.edu.itba.paw.models.Course;
 import ar.edu.itba.paw.models.Poll;
-import ar.edu.itba.paw.models.User;
 
 @Controller
 public class CourseController {
@@ -41,7 +39,7 @@ public class CourseController {
     public ModelAndView getCourses(
             @RequestParam(name="careerId", required = false) Integer careerId
     ){
-        final ModelAndView mav = new ModelAndView("courses/courses_list");
+        final ModelAndView mav = new ModelAndView("courses/course_list");
 
 
 

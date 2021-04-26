@@ -1,8 +1,14 @@
 package ar.edu.itba.paw.webapp.form;
 
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -10,6 +16,7 @@ import java.util.List;
 public class PollForm {
 
     @NotNull
+    @Size(min = 5, max = 50)
     private String title;
 
     private Integer careerId;
@@ -17,12 +24,15 @@ public class PollForm {
     private String courseId;
 
     @NotNull
+    @Size(min = 5, max = 100)
     private String description;
 
     @NotNull
+    @NotEmpty
     private ArrayList<String> options;
 
-    @DateTimeFormat(pattern = "dd-mm-yyyy")
+    @NotNull
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private Date expiryDate;
 
     public String getTitle() {
@@ -53,7 +63,7 @@ public class PollForm {
         return expiryDate;
     }
 
-    public void setExpiryDate(Date expiryDate) {
+    public void setExpiryDate(Date expiryDate) throws ParseException {
         this.expiryDate = expiryDate;
     }
 

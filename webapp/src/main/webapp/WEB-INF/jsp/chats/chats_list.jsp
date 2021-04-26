@@ -15,6 +15,8 @@
     <title>Grupos de chat</title>
 
     <jsp:include page="../common/styles.jsp"/>
+
+    <link rel="stylesheet" href="<c:url value="/assets/css/overlay.css"/>"></head>
 </head>
 
 <body id="page-top">
@@ -134,7 +136,7 @@
             </div>
 
             <div class="fab">
-                <a href="<c:url value="/chats/create"/>">
+                <a href="#popup" data-toggle="modal">
                     <i class="material-icons" style="font-size: 32px;color: rgb(255,255,255);">add</i>
                 </a>
             </div>
@@ -143,7 +145,13 @@
 
     </div>
 
+    <jsp:include page="chat_create.jsp"/>
+
     <jsp:include page="../common/scripts.jsp"/>
+
+    <c:if test="${showCreateForm}">
+        <script>$('#popup').modal('show');</script>
+    </c:if>
 
     <script src="<c:url value="/assets/js/chat.js"/>"></script>
 

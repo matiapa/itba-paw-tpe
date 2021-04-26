@@ -71,11 +71,11 @@ public class ContentDaoJdbc implements ContentDao{
     }
 
     @Override
-    public List<Content> findContent(String courseId, String contentType, Date minDate, Date maxDate) {
+    public List<Content> findContent(String courseId, Content.ContentType contentType, Date minDate, Date maxDate) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(String.format("SELECT * FROM course_content WHERE course_id='%s'",courseId));
         if (contentType!= null)
-            stringBuilder.append(String.format(" AND content_type='%s'",contentType));
+            stringBuilder.append(String.format(" AND content_type='%s'", contentType.toString().replace("_", "-")));
         if (minDate!= null)
             stringBuilder.append(String.format(" AND creation_date>='%s'", minDate));
         if (maxDate!= null)

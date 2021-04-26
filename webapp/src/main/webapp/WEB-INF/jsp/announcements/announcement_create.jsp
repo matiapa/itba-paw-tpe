@@ -51,19 +51,19 @@
                     <div class="form-group">
                         <form:label path="title">Título</form:label>
                         <form:input type="text" path="title" cssClass="form-control"/>
-                        <form:errors path="title" cssClass="invalid-feedback" element="div"/>
+                        <form:errors path="title" cssStyle="color: red" element="p"/>
                     </div>
 
                     <div class="form-group">
                         <form:label path="summary">Breve descripción</form:label>
                         <form:input type="text" path="summary" cssClass="form-control"/>
-                        <form:errors path="summary" cssClass="invalid-feedback" element="div"/>
+                        <form:errors path="summary" cssStyle="color: red" element="p"/>
                     </div>
 
                     <div class="form-group">
                         <form:label path="content">Contenido</form:label>
                         <form:textarea path="content" cssClass="form-control"/>
-                        <form:errors path="content" cssClass="invalid-feedback" element="div"/>
+                        <form:errors path="content" cssStyle="color: red" element="p"/>
                     </div>
 
                     <div>
