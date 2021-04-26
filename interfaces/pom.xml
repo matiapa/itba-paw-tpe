@@ -15,11 +15,13 @@
   <name>interfaces</name>
 
   <dependencies>
+
     <dependency>
       <groupId>ar.edu.itba.paw</groupId>
       <artifactId>models</artifactId>
       <version>${project.parent.version}</version>
     </dependency>
+
   </dependencies>
 
 </project>

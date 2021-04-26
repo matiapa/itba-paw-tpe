@@ -15,11 +15,11 @@ import ar.edu.itba.paw.models.User;
 
 @Service
 public class SgaServiceImpl implements SgaService {
-    
+
     private ObjectMapper mapper;
     private static final String EMAIL_ENDPOINT = "https://itbagw.itba.edu.ar/api/v1/people/1wXxftFa4NTfsmOstgnQHDq55m7jZL1jq7r7gWlprbHg?email=";
     private static final String DNI_ENDPOINT = "https://itbagw.itba.edu.ar/api/v1/students/1wXxftFa4NTfsmOstgnQHDq55m7jZL1jq7r7gWlprbHg/";
-    
+
     @Autowired
     private CareerService careerService;
 
@@ -27,7 +27,7 @@ public class SgaServiceImpl implements SgaService {
         this.mapper = new ObjectMapper();
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
     }
-    
+
     @Override
     public User fetchFromEmail(String email) {
         try {
@@ -40,7 +40,7 @@ public class SgaServiceImpl implements SgaService {
             return null;
         }
     }
-    
+
     private static class SgaBasicData {
         @JsonProperty(required = true) private String dni;
         @JsonProperty(required = true) private String firstName;

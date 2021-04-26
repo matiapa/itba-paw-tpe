@@ -20,22 +20,23 @@
   </modules>
 
   <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
-    <org.springframework.version>5.3.5</org.springframework.version>
-    <org.postgresql.version>42.2.19</org.postgresql.version>
-    <org.junit.version>4.13.2</org.junit.version>
-    <org.mockito.version>2.25.1</org.mockito.version>
-    <org.hsqldb.version>2.5.1</org.hsqldb.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+    <org.springframework.version>4.2.5.RELEASE</org.springframework.version>
+    <servlet-api.version>2.5</servlet-api.version>
+    <jstl.version>1.2</jstl.version>
+    <org.postgresql.version>42.2.5</org.postgresql.version>
+    <mockito.version>2.25.1</mockito.version>
+    <org.hsqldb.version>2.3.1</org.hsqldb.version>
+    <javax.validation-api.version>1.0.0.GA</javax.validation-api.version>
+    <org.hibernate.validator>4.3.1.Final</org.hibernate.validator>
     <spring-security.version>4.0.4.RELEASE</spring-security.version>
-    <org.jstl.version>1.2</org.jstl.version>
-    <javax.validation-api.version>2.0.1.Final</javax.validation-api.version>
-    <org.hibernate.validator>7.0.1.Final</org.hibernate.validator>
   </properties>
 
   <dependencyManagement>
-
     <dependencies>
 
       <dependency>
@@ -51,11 +52,23 @@
       </dependency>
 
       <dependency>
+        <groupId>javax.servlet</groupId>
+        <artifactId>servlet-api</artifactId>
+        <version>${servlet-api.version}</version>
+        <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>javax.servlet</groupId>
+        <artifactId>jstl</artifactId>
+        <version>${jstl.version}</version>
+      </dependency>
+
+      <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-jdbc</artifactId>
         <version>${org.springframework.version}</version>
       </dependency>
-
 
       <dependency>
         <groupId>org.postgresql</groupId>
@@ -63,40 +76,12 @@
         <version>${org.postgresql.version}</version>
       </dependency>
 
-
       <dependency>
-        <groupId>org.springframework.security</groupId>
-        <artifactId>spring-security-bom</artifactId>
-        <version>${spring-security.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-core</artifactId>
+        <version>${mockito.version}</version>
+        <scope>test</scope>
       </dependency>
-
-      <dependency>
-        <groupId>com.fasterxml.jackson.core</groupId>
-        <artifactId>jackson-databind</artifactId>
-        <version>2.12.3</version>
-      </dependency>
-
-      <dependency>
-        <groupId>javax.validation</groupId>
-        <artifactId>validation-api</artifactId>
-        <version>${javax.validation-api.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.hibernate.validator</groupId>
-        <artifactId>hibernate-validator</artifactId>
-        <version>${org.hibernate.validator}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>javax.servlet</groupId>
-        <artifactId>jstl</artifactId>
-        <version>${org.jstl.version}</version>
-      </dependency>
-
-      <!-- TESTING -->
 
       <dependency>
         <groupId>org.springframework</groupId>
@@ -106,24 +91,47 @@
       </dependency>
 
       <dependency>
-        <groupId>org.mockito</groupId>
-        <artifactId>mockito-core</artifactId>
-        <version>${org.mockito.version}</version>
-        <scope>test</scope>
-      </dependency>
-
-      <dependency>
-        <groupId>junit</groupId>
-        <artifactId>junit</artifactId>
-        <version>${org.junit.version}</version>
-        <scope>test</scope>
-      </dependency>
-
-      <dependency>
         <groupId>org.hsqldb</groupId>
         <artifactId>hsqldb</artifactId>
         <version>${org.hsqldb.version}</version>
         <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>javax.validation</groupId>
+        <artifactId>validation-api</artifactId>
+        <version>${javax.validation-api.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.hibernate</groupId>
+        <artifactId>hibernate-validator</artifactId>
+        <version>${org.hibernate.validator}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.springframework.security</groupId>
+        <artifactId>spring-security-core</artifactId>
+        <version>${spring-security.version}</version>
+      </dependency>
+
+      <dependency><groupId>org.springframework.security</groupId>
+        <artifactId>spring-security-web</artifactId>
+        <version>${spring-security.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.springframework.security</groupId>
+        <artifactId>spring-security-config</artifactId>
+        <version>${spring-security.version}</version>
+      </dependency>
+
+      <!-- Extra dependencies -->
+
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-databind</artifactId>
+        <version>2.12.3</version>
       </dependency>
 
     </dependencies>
@@ -140,15 +148,21 @@
         </plugin>
 
         <plugin>
-          <groupId>org.eclipse.jetty</groupId>
+          <groupId>org.mortbay.jetty</groupId>
           <artifactId>jetty-maven-plugin</artifactId>
-          <version>9.4.8.v20180619</version>
+          <version>8.0.0.M3</version>
           <configuration>
             <scanIntervalSeconds>10</scanIntervalSeconds>
             <webApp>
               <contextPath>/</contextPath>
             </webApp>
           </configuration>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.tomcat.maven</groupId>
+          <artifactId>tomcat7-maven-plugin</artifactId>
+          <version>2.2</version>
         </plugin>
 
         <plugin>
@@ -172,14 +186,13 @@
 
     <plugins>
       <plugin>
-        <groupId>org.eclipse.jetty</groupId>
+        <groupId>org.mortbay.jetty</groupId>
         <artifactId>jetty-maven-plugin</artifactId>
       </plugin>
 
       <plugin>
         <groupId>org.apache.tomcat.maven</groupId>
         <artifactId>tomcat7-maven-plugin</artifactId>
-        <version>2.2</version>
       </plugin>
     </plugins>
 
