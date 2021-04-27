@@ -184,14 +184,21 @@
                                     </form>
 
                                     <c:choose>
-                                        <c:when test="${selectedCourse != null}">
+                                        <c:when test="${selectedCourse != null && polls.size() > 0}">
                                             <c:forEach var="poll" items="${polls}">
                                                 <c:set var="poll" value="${poll}" scope="request"/>
                                                 <jsp:include page="poll_card.jsp"/>
                                             </c:forEach>
                                         </c:when>
+                                        <c:when test="${selectedCourse != null && polls.size() == 0}">
+                                            <div class="text-center mt-5">
+                                                <i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
+                                                <p style="margin-top: 16px;">Ups, no hay nada por acá</p>
+                                            </div>
+                                        </c:when>
                                         <c:otherwise>
-                                            <div class="text-center"><i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
+                                            <div class="text-center mt-5">
+                                                <i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
                                                 <p style="margin-top: 16px;">Por favor, elegí un curso para ver las encuestas</p>
                                             </div>
                                         </c:otherwise>

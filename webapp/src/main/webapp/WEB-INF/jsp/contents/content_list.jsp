@@ -85,7 +85,7 @@
 
 
                         <c:choose>
-                            <c:when test="${selectedCourse != null}">
+                            <c:when test="${selectedCourse != null && contents.size() > 0}">
                                 <hr class="mb-5 mt-5"/>
                                 <div class="table-responsive table mt-2" id="dataTable-1" role="grid" aria-describedby="dataTable_info" style="margin-top: 32px;background: #ffffff;">
                                     <table class="table my-0" id="dataTable">
@@ -117,12 +117,21 @@
                                     </table>
                                 </div>
                             </c:when>
-                                <c:otherwise>
-                                    <div class="text-center"><i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
-                                        <p style="margin-top: 16px;">Por favor, elegí un curso para ver los anuncios</p>
-                                    </div>
-                                </c:otherwise>
-                            </c:choose>
+
+                            <c:when test="${selectedCourse != null && contents.size() == 0}">
+                                <div class="text-center mt-5">
+                                    <i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
+                                    <p style="margin-top: 16px;">Ups, no hay nada por acá</p>
+                                </div>
+                            </c:when>
+
+                            <c:otherwise>
+                                <div class="text-center mt-5">
+                                    <i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
+                                    <p style="margin-top: 16px;">Por favor, elegí un curso para ver los anuncios</p>
+                                </div>
+                            </c:otherwise>
+                        </c:choose>
 
                         </div>
                     </div>

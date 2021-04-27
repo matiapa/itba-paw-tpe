@@ -61,10 +61,20 @@
 
                             <div class="tab-pane ${filterBy == "general" ? 'active' : ''}" role="tabpanel" id="tab-1">
                                 <div class="col">
-                                    <c:forEach var="announcement" items="${announcements}">
-                                        <c:set var="announcement" value="${announcement}" scope="request"/>
-                                        <jsp:include page="announcement_card.jsp"/>
-                                    </c:forEach>
+                                    <c:choose>
+                                        <c:when test="${announcements.size() > 0}">
+                                            <c:forEach var="announcement" items="${announcements}">
+                                                <c:set var="announcement" value="${announcement}" scope="request"/>
+                                                <jsp:include page="announcement_card.jsp"/>
+                                            </c:forEach>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <div class="text-center mt-5">
+                                                <i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
+                                                <p style="margin-top: 16px;">Ups, no hay nada por acá</p>
+                                            </div>
+                                        </c:otherwise>
+                                    </c:choose>
                                 </div>
                             </div>
 
@@ -94,8 +104,15 @@
                                                 <jsp:include page="announcement_card.jsp"/>
                                             </c:forEach>
                                         </c:when>
+                                        <c:when test="${selectedCareer != null && announcements.size() == 0}">
+                                            <div class="text-center mt-5">
+                                                <i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
+                                                <p style="margin-top: 16px;">Ups, no hay nada por acá</p>
+                                            </div>
+                                        </c:when>
                                         <c:otherwise>
-                                            <div class="text-center"><i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
+                                            <div class="text-center mt-5">
+                                                <i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
                                                 <p style="margin-top: 16px;">Por favor, elegí una carrera para ver los anuncios</p>
                                             </div>
                                         </c:otherwise>
@@ -124,14 +141,21 @@
                                     </form>
 
                                     <c:choose>
-                                        <c:when test="${selectedCourse != null}">
+                                        <c:when test="${selectedCourse != null && announcements.size() > 0}">
                                             <c:forEach var="announcement" items="${announcements}">
                                                 <c:set var="announcement" value="${announcement}" scope="request"/>
                                                 <jsp:include page="announcement_card.jsp"/>
                                             </c:forEach>
                                         </c:when>
+                                        <c:when test="${selectedCourse != null && announcements.size() == 0}">
+                                            <div class="text-center mt-5">
+                                                <i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
+                                                <p style="margin-top: 16px;">Ups, no hay nada por acá</p>
+                                            </div>
+                                        </c:when>
                                         <c:otherwise>
-                                            <div class="text-center"><i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
+                                            <div class="text-center mt-5">
+                                                <i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
                                                 <p style="margin-top: 16px;">Por favor, elegí un curso para ver los anuncios</p>
                                             </div>
                                         </c:otherwise>
