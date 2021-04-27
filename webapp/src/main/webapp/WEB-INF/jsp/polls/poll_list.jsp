@@ -53,7 +53,7 @@
 
                             <c:set var="filterFormFields">
                                 <div class="col-xl-2">
-                                    <select class="custom-select my-1 mr-sm-2" name="type">
+                                    <select class="form-control" name="type">
                                         <option ${selectedType == null ? 'selected' : ''} value="">
                                             Tipo
                                         </option>
@@ -66,7 +66,7 @@
                                 </div>
 
                                 <div class="col-xl-2">
-                                    <select class="custom-select my-1 mr-sm-2" name="state">
+                                    <select class="form-control" name="state">
                                         <option ${selectedState == null ? 'selected' : ''} value="">
                                             Estado
                                         </option>
@@ -79,7 +79,7 @@
                                 </div>
 
                                 <div class="col-xl-2">
-                                    <button type="submit" class="btn btn-primary">Buscar</button>
+                                    <button type="submit" class="btn btn-primary">Filtrar</button>
                                 </div>
                             </c:set>
 
@@ -87,9 +87,9 @@
 
                             <div class="tab-pane ${filterBy == "general" ? 'active' : ''}" role="tabpanel" id="tab-1">
                                 <div class="col">
-                                    <form name="searchForm" method="get" class="mt-3">
+                                    <form method="get" class="mt-3">
                                         <input hidden type="text" name="filterBy" value="general">
-                                        <div class="row">
+                                        <div class="row align-items-center">
                                             ${filterFormFields}
                                         </div>
                                     </form>
@@ -103,50 +103,8 @@
                                 </div>
                             </div>
 
-                            <!--   Course Polls --->
-                            <div class="tab-pane ${filterBy == "course" ? 'active' : ''}" role="tabpanel" id="tab-3">
-                                <div class="col-lg-6 col-xl-12 mb-4">
-
-                                    <div class="dropdown">
-                                        <button class="btn btn-block dropdown-toggle text-left text-dark bg-white" data-toggle="dropdown"
-                                                aria-expanded="false" type="button" style="margin-top: 32px;">
-                                            ${selectedCourse!=null ? selectedCourse.name : 'Elegí un curso'}
-                                        </button>
-                                        <div class="dropdown-menu">
-                                            <c:forEach var="course" items="${courses}">
-                                                <a class="dropdown-item" href="<c:url value="/polls?filterBy=course&courseId=${course.id}"/>">
-                                                    <c:out value="${course.name}"/>
-                                                </a>
-                                            </c:forEach>
-                                        </div>
-                                    </div>
-
-                                    <form name="searchForm" method="get" class="mt-3">
-                                        <input hidden type="text" name="filterBy" value="course">
-                                        <input hidden type="text" name="courseId" value="${selectedCourse.id}">
-                                        <div class="row">
-                                            ${filterFormFields}
-                                        </div>
-                                    </form>
-
-                                    <c:choose>
-                                        <c:when test="${selectedCourse != null}">
-                                            <c:forEach var="poll" items="${polls}">
-                                                <c:set var="poll" value="${poll}" scope="request"/>
-                                                <jsp:include page="poll_card.jsp"/>
-                                            </c:forEach>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <div class="text-center"><i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
-                                                <p style="margin-top: 16px;">Por favor, elegí un curso para ver las encuestas</p>
-                                            </div>
-                                        </c:otherwise>
-                                    </c:choose>
-
-                                </div>
-                            </div>
-
                             <%-- Career polls --%>
+
                             <div class="tab-pane ${filterBy == "career" ? 'active' : ''}" role="tabpanel" id="tab-2">
                                 <div class="col-lg-6 col-xl-12 mb-4">
 
@@ -164,13 +122,15 @@
                                         </div>
                                     </div>
 
-                                    <form name="searchForm" method="get" class="mt-3">
-                                        <input hidden type="text" name="filterBy" value="career">
-                                        <input hidden type="text" name="careerId" value="${selectedCareer.id}">
-                                        <div class="row">
-                                            ${filterFormFields}
-                                        </div>
-                                    </form>
+                                    <c:if test="${selectedCareer != null}">
+                                        <form name="searchForm" method="get" class="mt-3">
+                                            <input hidden type="text" name="filterBy" value="career">
+                                            <input hidden type="text" name="careerId" value="${selectedCareer.id}">
+                                            <div class="row align-items-center">
+                                                    ${filterFormFields}
+                                            </div>
+                                        </form>
+                                    </c:if>
 
                                     <c:choose>
                                         <c:when test="${selectedCareer != null}">
@@ -182,6 +142,48 @@
                                         <c:otherwise>
                                             <div class="text-center"><i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
                                                 <p style="margin-top: 16px;">Por favor, elegí una carrera para ver las encuestas</p>
+                                            </div>
+                                        </c:otherwise>
+                                    </c:choose>
+
+                                </div>
+                            </div>
+
+                            <!--   Course Polls --->
+
+                            <div class="tab-pane ${filterBy == "course" ? 'active' : ''}" role="tabpanel" id="tab-3">
+                                <div class="col">
+
+                                    <form id="coursesPollFilterForm" method="get" class="mt-3">
+                                        <input hidden type="text" name="filterBy" value="course">
+
+                                        <div style="border: thin solid grey">
+                                            <select id="courseId" name="courseId" class="selectpicker" data-live-search="true"
+                                                    title="Elegí un curso" data-width="100%">
+                                                <c:forEach var="course" items="${courses}">
+                                                    <option ${course.equals(selectedCourse) ? 'selected' : ''}
+                                                            value="${course.id}" data-tokens="${course.name}">${course.name}</option>
+                                                </c:forEach>
+                                            </select>
+                                        </div>
+
+                                        <c:if test="${selectedCourse != null}">
+                                            <div class="row align-items-center mt-3">
+                                                    ${filterFormFields}
+                                            </div>
+                                        </c:if>
+                                    </form>
+
+                                    <c:choose>
+                                        <c:when test="${selectedCourse != null}">
+                                            <c:forEach var="poll" items="${polls}">
+                                                <c:set var="poll" value="${poll}" scope="request"/>
+                                                <jsp:include page="poll_card.jsp"/>
+                                            </c:forEach>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <div class="text-center"><i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
+                                                <p style="margin-top: 16px;">Por favor, elegí un curso para ver las encuestas</p>
                                             </div>
                                         </c:otherwise>
                                     </c:choose>

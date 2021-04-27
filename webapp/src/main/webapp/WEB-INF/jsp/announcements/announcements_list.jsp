@@ -100,18 +100,18 @@
                             <div class="tab-pane ${filterBy == "course" ? 'active' : ''}" role="tabpanel" id="tab-3">
                                 <div class="col-lg-6 col-xl-12 mb-4 mt-4">
 
-                                    <form action="<c:url value="/announcements"/>" method="get">
+                                    <form id="courseAnnouncementsFilterForm" action="<c:url value="/announcements"/>" method="get">
                                         <input type="text" name="filterBy" value="course" hidden>
 
-                                        <select required name="courseId" class="selectpicker" data-live-search="true"
-                                                data-width="75%" data-style="btn-outline-secondary" title="Elegí un curso">
-                                            <c:forEach var="course" items="${courses}">
-                                                <option ${course.equals(selectedCourse) ? 'selected' : ''}
-                                                    value="${course.id}" data-tokens="${course.name}">${course.name}</option>
-                                            </c:forEach>
-                                        </select>
-
-                                        <button type="submit" class="btn btn-primary ml-3">Buscar</button>
+                                        <div style="border: thin solid black">
+                                            <select required id="courseId" name="courseId" class="selectpicker" data-live-search="true"
+                                                    data-width="100%" title="Elegí un curso">
+                                                <c:forEach var="course" items="${courses}">
+                                                    <option ${course.equals(selectedCourse) ? 'selected' : ''}
+                                                        value="${course.id}" data-tokens="${course.name}">${course.name}</option>
+                                                </c:forEach>
+                                            </select>
+                                        </div>
                                     </form>
 
                                     <c:choose>

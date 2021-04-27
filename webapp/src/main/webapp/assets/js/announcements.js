@@ -5,26 +5,29 @@ $("#submitAnnouncement").click(function(){
 
 document.addEventListener("DOMContentLoaded", function(event) {
 
-    if(document.getElementById("createAnnouncementForm") != null) {
-        document.getElementById("announcementTarget").addEventListener('change', (event) => {
+    document.getElementById("courseId").addEventListener('change', (event) => {
+        $(this).find('select:not(:has(option:selected[value!=""]))').attr('name', '');
+        document.getElementById("courseAnnouncementsFilterForm").submit()
+    });
 
-            if(event.target.value === "career"){
-                document.getElementById("careerTarget").hidden = false
-                document.getElementById("courseTarget").hidden = true
-                document.getElementById("courseId").value = ""
-            }else if(event.target.value === "course"){
-                document.getElementById("courseTarget").hidden = false
-                document.getElementById("careerTarget").hidden = true
-                document.getElementById("careerId").value = ""
-            }else{
-                document.getElementById("courseTarget").hidden = true
-                document.getElementById("careerTarget").hidden = true
-                document.getElementById("courseId").value = ""
-                document.getElementById("careerId").value = ""
-            }
+    document.getElementById("announcementTarget").addEventListener('change', (event) => {
 
-        });
-    }
+        if(event.target.value === "career"){
+            document.getElementById("careerTarget").hidden = false
+            document.getElementById("courseTarget").hidden = true
+            document.getElementById("courseId").value = ""
+        }else if(event.target.value === "course"){
+            document.getElementById("courseTarget").hidden = false
+            document.getElementById("careerTarget").hidden = true
+            document.getElementById("careerId").value = ""
+        }else{
+            document.getElementById("courseTarget").hidden = true
+            document.getElementById("careerTarget").hidden = true
+            document.getElementById("courseId").value = ""
+            document.getElementById("careerId").value = ""
+        }
+
+    });
 
 });
 

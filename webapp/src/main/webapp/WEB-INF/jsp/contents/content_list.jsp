@@ -31,44 +31,53 @@
 
                 <div class="container-fluid">
                     <div class="col-lg-12 col-xl-12 mb-6">
-                        <form action="<c:url value='/contents'/>" method="get">
+                        <form id="contentListFilterForm" action="<c:url value='/contents'/>" method="get">
 
-                            <select id="courseId" name="courseId" class="selectpicker" data-live-search="true"
-                                    data-style="btn-outline-secondary" title="Elegí un curso" data-width="75%">
-                                <c:forEach var="course" items="${courses}">
-                                    <option ${course.equals(selectedCourse) ? 'selected' : ''}
-                                            value="${course.id}" data-tokens="${course.name}">${course.name}</option>
-                                </c:forEach>
-                            </select>
-
-                            <div class="row align-items-center" style="margin-top: 16px;margin-bottom: 32px;">
-                                <div class="col-lg-2 col-xl-2">
-                                    <select class="custom-select my-1 mr-sm-2" name="contentType">
-                                        <option selected value="">Tipo</option>
-                                        <option value="exam">Exámen</option>
-                                        <option value="guide">Guía</option>
-                                        <option value="resume">Resúmen</option>
-                                        <option value="note">Apunte</option>
-                                        <option value="other">Otro</option>
-                                    </select>
-                                </div>
-
-                                <div class="col-lg-4 col-xl-4 text-center">
-                                    <label>Desde&nbsp;</label><input class="border rounded-0" type="date" name="minDate">
-                                </div>
-
-                                <div class="col-lg-4 col-xl-4 text-center">
-                                    <label>Hasta</label><input class="border rounded-0" type="date" name="maxDate">
-                                </div>
-
-                                <button id="courseSearchBtn" type="submit" hidden class="btn btn-primary ml-3">Buscar</button>
-
+                            <div style="border: thin solid black">
+                                <select id="courseId" name="courseId" class="selectpicker" data-live-search="true"
+                                        title="Elegí un curso" data-width="100%">
+                                    <c:forEach var="course" items="${courses}">
+                                        <option ${course.equals(selectedCourse) ? 'selected' : ''}
+                                                value="${course.id}" data-tokens="${course.name}">${course.name}</option>
+                                    </c:forEach>
+                                </select>
                             </div>
+
+                            <c:if test="${selectedCourse != null}">
+                                <div class="row align-items-center" style="margin-top: 16px;margin-bottom: 32px;">
+                                    <div class="col-xl-2">
+                                        <select class="form-control-sm" style="border: thin solid grey"
+                                                name="contentType">
+                                            <option value="">Tipo de material</option>
+                                            <option value="exam">Exámen</option>
+                                            <option value="guide">Guía</option>
+                                            <option value="resume">Resúmen</option>
+                                            <option value="note">Apunte</option>
+                                            <option value="other">Otro</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-xl-3">
+                                        <label>Desde</label>
+                                        <input class="form-control-sm" style="border: thin solid grey" type="date" name="minDate">
+                                    </div>
+
+                                    <div class="col-xl-3">
+                                        <label>Hasta</label>
+                                        <input class="form-control-sm" style="border: thin solid grey" type="date" name="maxDate">
+                                    </div>
+
+                                    <div class="col">
+                                        <button id="courseSearchBtn" type="submit" class="btn btn-primary ml-3">Filtrar</button>
+                                    </div>
+                                </div>
+                            </c:if>
                         </form>
 
 
                         <c:choose>
                             <c:when test="${selectedCourse != null}">
+                                <hr class="mb-5 mt-5"/>
                                 <div class="table-responsive table mt-2" id="dataTable-1" role="grid" aria-describedby="dataTable_info" style="margin-top: 32px;background: #ffffff;">
                                     <table class="table my-0" id="dataTable">
                                         <thead>

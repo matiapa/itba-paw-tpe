@@ -30,109 +30,112 @@
 
                 <jsp:include page="../common/header.jsp"/>
 
-                <div class="col-lg-6 col-xl-12 mb-4">
+                <div class="container-fluid">
+                    <div class="col-lg-6 col-xl-12 mb-4">
 
-                    <form method="get">
-                        <select class="custom-select my-1 mr-sm-2" name="careerId">
-                            <option ${selectedCareer == null ? 'selected' : ''} value="">
-                                Elegí una carrera...
-                            </option>
-                            <c:forEach var="career" items="${careers}">
-                                <option ${selectedCareer.id == career.id ? 'selected' : ''} value="${career.id}">
-                                        ${career.name}
+                        <form method="get" id="chatListFilterForm">
+                            <select class="custom-select my-1 mr-sm-2" name="careerId" id="careerId">
+                                <option ${selectedCareer == null ? 'selected' : ''} value="">
+                                    Elegí una carrera...
                                 </option>
-                            </c:forEach>
-                        </select>
-
-                        <div class="row align-items-center" style="margin-top: 16px;margin-bottom: 32px;">
-
-                            <div class="col-xl-2">
-                                <select class="custom-select my-1 mr-sm-2" name="platform">
-                                    <option ${selectedPlatform == null ? 'selected' : ''} value="">
-                                        Plataforma
+                                <c:forEach var="career" items="${careers}">
+                                    <option ${selectedCareer.id == career.id ? 'selected' : ''} value="${career.id}">
+                                            ${career.name}
                                     </option>
-                                    <c:forEach var="platform" items="${platforms}">
-                                        <option ${selectedPlatform == platform ? 'selected' : ''} value="${platform}">
-                                                ${platformsTranslate.get(platform)}
-                                        </option>
-                                    </c:forEach>
-                                </select>
-                            </div>
+                                </c:forEach>
+                            </select>
 
-                            <div class="col-xl-1">
-                                <select class="custom-select my-1 mr-sm-2" name="year">
-                                    <option ${selectedYear == null ? 'selected' : ''} value="">
-                                        Año
-                                    </option>
-                                    <c:forEach var="year" items="${years}">
-                                        <option ${selectedYear == year ? 'selected' : ''} value="${year}">
-                                                ${year}
-                                        </option>
-                                    </c:forEach>
-                                </select>
-                            </div>
+                            <c:if test="${selectedCareer != null}">
+                                <div class="row align-items-center" style="margin-top: 16px;margin-bottom: 32px;">
 
-                            <div class="col-xl-2">
-                                <select class="custom-select my-1 mr-sm-2" name="quarter">
-                                    <option ${selectedQuarter == null ? 'selected' : ''} value="">
-                                        Cuatrimestre
-                                    </option>
-                                    <c:forEach var="quarter" items="${quarters}">
-                                        <option ${selectedQuarter == quarter ? 'selected' : ''} value="${quarter}">
-                                                ${quartersTranslate.get(quarter)}
-                                        </option>
-                                    </c:forEach>
-                                </select>
-                            </div>
+                                    <div class="col-xl-2">
+                                        <select class="custom-select my-1 mr-sm-2" name="platform">
+                                            <option ${selectedPlatform == null ? 'selected' : ''} value="">
+                                                Plataforma
+                                            </option>
+                                            <c:forEach var="platform" items="${platforms}">
+                                                <option ${selectedPlatform == platform ? 'selected' : ''} value="${platform}">
+                                                        ${platformsTranslate.get(platform)}
+                                                </option>
+                                            </c:forEach>
+                                        </select>
+                                    </div>
 
-                            <div class="col-xl-2">
-                               <input type="submit" class="btn btn-primary" value="Buscar">
-                            </div>
+                                    <div class="col-xl-1">
+                                        <select class="custom-select my-1 mr-sm-2" name="year">
+                                            <option ${selectedYear == null ? 'selected' : ''} value="">
+                                                Año
+                                            </option>
+                                            <c:forEach var="year" items="${years}">
+                                                <option ${selectedYear == year ? 'selected' : ''} value="${year}">
+                                                        ${year}
+                                                </option>
+                                            </c:forEach>
+                                        </select>
+                                    </div>
 
-                        </div>
-                    </form>
+                                    <div class="col-xl-2">
+                                        <select class="custom-select my-1 mr-sm-2" name="quarter">
+                                            <option ${selectedQuarter == null ? 'selected' : ''} value="">
+                                                Cuatrimestre
+                                            </option>
+                                            <c:forEach var="quarter" items="${quarters}">
+                                                <option ${selectedQuarter == quarter ? 'selected' : ''} value="${quarter}">
+                                                        ${quartersTranslate.get(quarter)}
+                                                </option>
+                                            </c:forEach>
+                                        </select>
+                                    </div>
 
-                    <c:choose>
-                        <c:when test="${chatgroups.size() > 0}">
-                            <div class="table-responsive table mt-2" id="dataTable-1" role="grid"
-                                 aria-describedby="dataTable_info" style="margin-top: 32px;background: #ffffff;">
-                                <table class="table my-0" id="dataTable">
-                                    <thead>
-                                        <tr>
-                                            <th>Plataforma</th>
-                                            <th>Año</th>
-                                            <th>Cuatrimestre</th>
-                                            <th>Link</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <c:forEach var="chatgroup" items="${chatgroups}">
+                                    <div class="col-xl-2">
+                                        <input type="submit" class="btn btn-primary" value="Filtrar">
+                                    </div>
+
+                                </div>
+                            </c:if>
+                        </form>
+
+                        <c:choose>
+                            <c:when test="${chatgroups.size() > 0}">
+                                <div class="table-responsive table mt-2" id="dataTable-1" role="grid"
+                                     aria-describedby="dataTable_info" style="margin-top: 32px;background: #ffffff;">
+                                    <table class="table my-0" id="dataTable">
+                                        <thead>
                                             <tr>
-                                                <td>${chatgroup.name}</td>
-                                                <td>${chatgroup.creationYear}</td>
-                                                <td>${chatgroup.creationQuarter}</td>
-                                                <td>
-                                                    <a class="btn btn-link" href='<c:out value="${chatgroup.link}"/>' target="_blank" rel="noopener noreferrer">Abrir</button>
-                                                </td>
+                                                <th>Plataforma</th>
+                                                <th>Año</th>
+                                                <th>Cuatrimestre</th>
+                                                <th>Link</th>
                                             </tr>
-                                        </c:forEach>
-                                    </tbody>
-                                    <tfoot>
-                                        <tr></tr>
-                                    </tfoot>
-                                </table>
-                            </div>
-                        </c:when>
-                        <c:otherwise>
-                            <div class="text-center">
-                                <i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
-                                <p style="margin-top: 16px;">Por favor, elegí una carrera para ver los grupos</p>
-                            </div>
-                        </c:otherwise>
-                    </c:choose>
+                                        </thead>
+                                        <tbody>
+                                            <c:forEach var="chatgroup" items="${chatgroups}">
+                                                <tr>
+                                                    <td>${chatgroup.name}</td>
+                                                    <td>${chatgroup.creationYear}</td>
+                                                    <td>${chatgroup.creationQuarter}</td>
+                                                    <td>
+                                                        <a class="btn btn-link" href='<c:out value="${chatgroup.link}"/>' target="_blank" rel="noopener noreferrer">Abrir</button>
+                                                    </td>
+                                                </tr>
+                                            </c:forEach>
+                                        </tbody>
+                                        <tfoot>
+                                            <tr></tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </c:when>
+                            <c:otherwise>
+                                <div class="text-center">
+                                    <i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
+                                    <p style="margin-top: 16px;">Por favor, elegí una carrera para ver los grupos</p>
+                                </div>
+                            </c:otherwise>
+                        </c:choose>
 
+                    </div>
                 </div>
-
             </div>
 
             <div class="fab">
