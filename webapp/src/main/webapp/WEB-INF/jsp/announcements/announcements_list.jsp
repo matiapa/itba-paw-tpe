@@ -31,13 +31,20 @@
 
                 <div class="container-fluid">
                     <div>
-                        <div align="right">
-                            <a href="#popup" data-toggle="modal">
-                                <button class="btn btn-primary btn-sm">
-                                    <i class="material-icons pull-left">add</i>
-                                    Agregar anuncio
-                                </button>
-                            </a>
+                        <div class="row align-items-center">
+                            <div class="col"></div>
+                            <div class="col col-xl-2 custom-control custom-switch">
+                                <input type="checkbox" class="custom-control-input" id="showHiddenSwitch">
+                                <label class="custom-control-label" for="showHiddenSwitch">Ver anuncios ocultos</label>
+                            </div>
+                            <div class="col col-xl-2">
+                                <a href="#popup" data-toggle="modal">
+                                    <button class="btn btn-primary btn-sm">
+                                        <i class="material-icons pull-left">add</i>
+                                        Agregar anuncio
+                                    </button>
+                                </a>
+                            </div>
                         </div>
 
                         <ul class="nav nav-tabs" role="tablist">

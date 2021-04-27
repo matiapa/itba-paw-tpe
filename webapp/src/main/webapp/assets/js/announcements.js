@@ -29,6 +29,14 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     });
 
+    const showHiddenSwitch = document.getElementById("showHiddenSwitch")
+    showHiddenSwitch.addEventListener('change', (event) => {
+        for(let d of document.getElementsByClassName("card")){
+            console.log(d.children[0].innerText === true)
+            d.hidden = showHiddenSwitch.checked ? false : (d.children[0].innerText === 'true')
+        }
+    });
+
 });
 
 async function hideAnnouncement(id){
