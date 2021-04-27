@@ -12,7 +12,7 @@
 
         <ul class="nav navbar-nav text-light" id="accordionSidebar">
             <li class="nav-item">
-                <a class="nav-link active" href="<c:url value="/"/>">
+                <a class="nav-link" href="<c:url value="/"/>">
                     <i class="material-icons">home</i>
                     <span>Inicio</span>
                 </a>
