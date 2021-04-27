@@ -122,10 +122,6 @@
             </div>
         </div>
 
-        <div class="fab">
-            <i class="material-icons" style="font-size: 32px;color: rgb(255,255,255);">add</i>
-        </div>
-
     </div>
 
     <script src="<c:url value="/assets/js/polls.js"/>"></script>

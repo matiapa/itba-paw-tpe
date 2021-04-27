@@ -62,7 +62,7 @@
                             </div>
 
                             <div class="form-group">
-                                <form:label path="expiryDate">Fecha de expiración (dd-mm-yyyy)</form:label>
+                                <form:label path="expiryDate">Fecha de expiración</form:label>
                                 <form:input type="date" path="expiryDate" class="form-control"/>
                                 <form:errors path="expiryDate" cssStyle="color: red" element="p"/>
                             </div>

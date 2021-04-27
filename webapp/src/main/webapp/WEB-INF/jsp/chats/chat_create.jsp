@@ -10,7 +10,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Agregar encuesta</h4>
+                <h4 class="modal-title">Agregar grupo de chat</h4>
             </div>
 
             <div class="modal-body">
@@ -39,7 +39,7 @@
                     </div>
 
                     <div class="form-group">
-                        <form:label path="creationDate">Fecha de creación (dd-mm-yyyy)</form:label>
+                        <form:label path="creationDate">Fecha de creación del grupo</form:label>
                         <form:input type="date" path="creationDate" class="form-control"/>
                         <form:errors path="creationDate" cssStyle="color: red" element="p"/>
                     </div>

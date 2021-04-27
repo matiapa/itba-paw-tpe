@@ -140,7 +140,7 @@
 
     </div>
 
-    <div id="errorToast" class="toast" data-autohide="false"
+    <div hidden id="errorToast" class="toast" data-autohide="false"
          style="position: fixed; top: 0; right: 0; background-color: orange; color: white">
         <div class="toast-header">
             <strong class="mr-auto">Ups!</strong>

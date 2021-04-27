@@ -21,7 +21,7 @@
                 </div>
                 <div class="col-auto">
                     <button class="btn btn-icon" type="button" onclick="hideAnnouncement(${announcement.id})">
-                        <i class="material-icons">close</i>
+                        <i class="material-icons">done</i>
                     </button>
                 </div>
             </div>

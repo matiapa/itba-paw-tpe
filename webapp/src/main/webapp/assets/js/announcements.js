@@ -38,6 +38,7 @@ async function hideAnnouncement(id){
 
     if(res.status !== 200){
         document.getElementById(id).hidden = false
+        document.querySelector("#errorToast .toast-body").hidden = false
         document.querySelector("#errorToast .toast-body").innerHTML =
             "No se ha podido marcar el anuncio como visualizado";
         $('#errorToast').toast("show");
