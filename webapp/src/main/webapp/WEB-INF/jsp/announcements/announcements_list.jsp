@@ -31,6 +31,15 @@
 
                 <div class="container-fluid">
                     <div>
+                        <div align="right">
+                            <a href="#popup" data-toggle="modal">
+                                <button class="btn btn-primary btn-sm">
+                                    <i class="material-icons pull-left">add</i>
+                                    Agregar anuncio
+                                </button>
+                            </a>
+                        </div>
+
                         <ul class="nav nav-tabs" role="tablist">
                             <li class="nav-item" role="presentation">
                                 <a class="nav-link ${filterBy == "general" ? 'active' : ''}" role="tab"
@@ -153,11 +162,11 @@
         </div>
     </div>
 
-    <div class="fab">
-        <a href="#popup" data-toggle="modal">
-            <i class="material-icons" style="font-size: 32px;color: rgb(255,255,255);">add</i>
-        </a>
-    </div>
+<%--    <div class="fab">--%>
+<%--        <a href="#popup" data-toggle="modal">--%>
+<%--            <i class="material-icons" style="font-size: 32px;color: rgb(255,255,255);">add</i>--%>
+<%--        </a>--%>
+<%--    </div>--%>
 
     <jsp:include page="announcement_create.jsp"/>
 

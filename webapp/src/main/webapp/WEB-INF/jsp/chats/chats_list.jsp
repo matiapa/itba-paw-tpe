@@ -33,6 +33,15 @@
                 <div class="container-fluid">
                     <div class="col-lg-6 col-xl-12 mb-4">
 
+                        <div class="mb-3" align="right">
+                            <a href="#popup" data-toggle="modal">
+                                <button class="btn btn-primary btn-sm">
+                                    <i class="material-icons pull-left">add</i>
+                                    Agregar grupo
+                                </button>
+                            </a>
+                        </div>
+
                         <form method="get" id="chatListFilterForm">
                             <select class="custom-select my-1 mr-sm-2" name="careerId" id="careerId">
                                 <option ${selectedCareer == null ? 'selected' : ''} value="">
@@ -136,12 +145,6 @@
 
                     </div>
                 </div>
-            </div>
-
-            <div class="fab">
-                <a href="#popup" data-toggle="modal">
-                    <i class="material-icons" style="font-size: 32px;color: rgb(255,255,255);">add</i>
-                </a>
             </div>
 
         </div>

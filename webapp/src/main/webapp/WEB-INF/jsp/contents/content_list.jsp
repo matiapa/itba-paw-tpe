@@ -31,6 +31,15 @@
 
                 <div class="container-fluid">
                     <div class="col-lg-12 col-xl-12 mb-6">
+                        <div class="mb-4" align="right">
+                            <a href="#popup" data-toggle="modal">
+                                <button class="btn btn-primary btn-sm">
+                                    <i class="material-icons pull-left">add</i>
+                                    Agregar contenido
+                                </button>
+                            </a>
+                        </div>
+
                         <form id="contentListFilterForm" action="<c:url value='/contents'/>" method="get">
 
                             <div style="border: thin solid black">
@@ -121,12 +130,6 @@
 
             </div>
         </div>
-    </div>
-
-    <div class="fab">
-        <a href="#popup" data-toggle="modal">
-            <i class="material-icons" style="font-size: 32px;color: rgb(255,255,255);">add</i>
-        </a>
     </div>
 
     <jsp:include page="content_create.jsp"/>
