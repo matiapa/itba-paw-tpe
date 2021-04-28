@@ -2,13 +2,15 @@
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 
+<%@ taglib prefix = "spring" uri="http://www.springframework.org/tags"%>
+
 <!DOCTYPE html>
 <html>
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Inicio de sesión</title>
+    <title>"login"</title>
 
     <jsp:include page="common/styles.jsp"/>
 </head>
@@ -19,8 +21,8 @@
             <div class="card-body p-0">
                 <div class="col-lg-6 col-xl-12" style="text-align: center;"><img style="margin-top: 20px;width: 200px;" src="<c:url value="/assets/img/logo-tran-blue.png"/>">
                     <div class="p-5">
-                        <h4 class="text-dark mb-4">¡Bienvenido a ITBAHub!</h4>
-                        <p class="text-center">Por favor, continuá con tu cuenta del ITBA</p>
+                        <h4 class="text-dark mb-4">"welcome"</h4>
+                        <p class="text-center">"continueWithAccount"</p>
                         <form action="<c:url value="/oauth2/authorization/google"/>">
                             <input class="btn btn-primary" type="submit" value="Login"></button>
                         </form>

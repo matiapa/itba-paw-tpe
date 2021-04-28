@@ -2,6 +2,8 @@
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 
+<%@ taglib prefix = "spring" uri="http://www.springframework.org/tags"%>
+
 <jsp:useBean type="java.util.List<ar.edu.itba.paw.models.ChatGroup>" scope="request" id="chatgroups"/>
 <jsp:useBean type="java.util.List<ar.edu.itba.paw.models.Career>" scope="request" id="careers"/>
 <jsp:useBean type="ar.edu.itba.paw.models.ChatGroup.ChatPlatform[]" scope="request" id="platforms"/>
@@ -37,7 +39,7 @@
                             <a href="#popup" data-toggle="modal">
                                 <button class="btn btn-primary btn-sm">
                                     <i class="material-icons pull-left">add</i>
-                                    Agregar grupo
+                                    "chat.add"
                                 </button>
                             </a>
                         </div>
@@ -45,7 +47,7 @@
                         <form method="get" id="chatListFilterForm">
                             <select class="custom-select my-1 mr-sm-2" name="careerId" id="careerId">
                                 <option ${selectedCareer == null ? 'selected' : ''} value="">
-                                    Elegí una carrera...
+                                    "chooseCareer"
                                 </option>
                                 <c:forEach var="career" items="${careers}">
                                     <option ${selectedCareer.id == career.id ? 'selected' : ''} value="${career.id}">
@@ -60,7 +62,7 @@
                                     <div class="col-xl-2">
                                         <select class="custom-select my-1 mr-sm-2" name="platform">
                                             <option ${selectedPlatform == null ? 'selected' : ''} value="">
-                                                Plataforma
+                                                "chat.platform"
                                             </option>
                                             <c:forEach var="platform" items="${platforms}">
                                                 <option ${selectedPlatform == platform ? 'selected' : ''} value="${platform}">
@@ -73,7 +75,7 @@
                                     <div class="col-xl-1">
                                         <select class="custom-select my-1 mr-sm-2" name="year">
                                             <option ${selectedYear == null ? 'selected' : ''} value="">
-                                                Año
+                                                "year"
                                             </option>
                                             <c:forEach var="year" items="${years}">
                                                 <option ${selectedYear == year ? 'selected' : ''} value="${year}">
@@ -86,7 +88,7 @@
                                     <div class="col-xl-2">
                                         <select class="custom-select my-1 mr-sm-2" name="quarter">
                                             <option ${selectedQuarter == null ? 'selected' : ''} value="">
-                                                Cuatrimestre
+                                                "quarter"
                                             </option>
                                             <c:forEach var="quarter" items="${quarters}">
                                                 <option ${selectedQuarter == quarter ? 'selected' : ''} value="${quarter}">
@@ -111,10 +113,10 @@
                                     <table class="table my-0" id="dataTable">
                                         <thead>
                                             <tr>
-                                                <th>Plataforma</th>
-                                                <th>Año</th>
-                                                <th>Cuatrimestre</th>
-                                                <th>Link</th>
+                                                <th>"chat.platform"</th>
+                                                <th>"year"</th>
+                                                <th>"quarter"</th>
+                                                <th>"chat.link"</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -138,13 +140,13 @@
                             <c:when test="${selectedCareer != null && chatgroups.size() == 0}">
                                 <div class="text-center mt-5">
                                     <i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
-                                    <p style="margin-top: 16px;">Ups, no hay nada por acá</p>
+                                    <p style="margin-top: 16px;">"noContent"</p>
                                 </div>
                             </c:when>
                             <c:otherwise>
                                 <div class="text-center mt-5">
                                     <i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
-                                    <p style="margin-top: 16px;">Por favor, elegí una carrera para ver los grupos</p>
+                                    <p style="margin-top: 16px;">"chat.chooseCareerPlease"</p>
                                 </div>
                             </c:otherwise>
                         </c:choose>

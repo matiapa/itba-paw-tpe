@@ -2,6 +2,8 @@
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 
+<%@ taglib prefix = "spring" uri="http://www.springframework.org/tags"%>
+
 <jsp:useBean type="java.util.List<ar.edu.itba.paw.models.Career>" scope="request" id="careers"/>
 
 <!DOCTYPE html>
@@ -54,11 +56,11 @@
                                                                 <table class="table">
                                                                     <thead>
                                                                         <tr>
-                                                                            <th>Código</th>
-                                                                            <th>Nombre</th>
-                                                                            <th>Cuatrimestre</th>
-                                                                            <th>Créditos</th>
-                                                                            <th>Link</th>
+                                                                            <th>"code"</th>
+                                                                            <th>"name"</th>
+                                                                            <th>"quarters"</th>
+                                                                            <th>"credits"</th>
+                                                                            <th>"form.link"</th>
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody>
@@ -83,7 +85,7 @@
                                         </c:when>
                                         <c:otherwise>
                                             <div class="text-center"><i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
-                                                <p style="margin-top: 16px;">Por favor, elegí una carrera para ver los Cursos</p>
+                                                <p style="margin-top: 16px;">"chooseCareerPlease"</p>
                                             </div>
                                         </c:otherwise>
                                     </c:choose>

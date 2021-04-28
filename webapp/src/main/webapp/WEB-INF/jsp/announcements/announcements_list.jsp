@@ -2,6 +2,8 @@
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 
+<%@ taglib prefix = "spring" uri="http://www.springframework.org/tags"%>
+
 <jsp:useBean type="java.util.List<ar.edu.itba.paw.models.Announcement>" scope="request" id="announcements"/>
 <jsp:useBean type="ar.edu.itba.paw.models.HolderEntity" scope="request" id="filterBy"/>
 
@@ -35,13 +37,13 @@
                             <div class="col"></div>
                             <div class="col col-xl-2 custom-control custom-switch">
                                 <input type="checkbox" class="custom-control-input" id="showHiddenSwitch">
-                                <label class="custom-control-label" for="showHiddenSwitch">Ver anuncios ocultos</label>
+                                <label class="custom-control-label" for="showHiddenSwitch">"announcement.seeHidden"</label>
                             </div>
                             <div class="col col-xl-2">
                                 <a href="#popup" data-toggle="modal">
                                     <button class="btn btn-primary btn-sm">
                                         <i class="material-icons pull-left">add</i>
-                                        Agregar anuncio
+                                        "announcement.add"
                                     </button>
                                 </a>
                             </div>
@@ -50,15 +52,15 @@
                         <ul class="nav nav-tabs" role="tablist">
                             <li class="nav-item" role="presentation">
                                 <a class="nav-link ${filterBy == "general" ? 'active' : ''}" role="tab"
-                                   href="<c:url value="/announcements?filterBy=general"/>">Generales</a>
+                                   href="<c:url value="/announcements?filterBy=general"/>">"generals"</a>
                             </li>
                             <li class="nav-item" role="presentation">
                                 <a class="nav-link ${filterBy == "career" ? 'active' : ''}" role="tab"
-                                   href="<c:url value="/announcements?filterBy=career"/>">Por carrera</a>
+                                   href="<c:url value="/announcements?filterBy=career"/>">"byCareer"</a>
                             </li>
                             <li class="nav-item" role="presentation">
                                 <a class="nav-link ${filterBy == "course" ? 'active' : ''}" role="tab"
-                                   href="<c:url value="/announcements?filterBy=course"/>">Por curso</a>
+                                   href="<c:url value="/announcements?filterBy=course"/>">"byCourse"</a>
                             </li>
                         </ul>
 
@@ -78,7 +80,7 @@
                                         <c:otherwise>
                                             <div class="text-center mt-5">
                                                 <i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
-                                                <p style="margin-top: 16px;">Ups, no hay nada por acá</p>
+                                                <p style="margin-top: 16px;">"noContent"</p>
                                             </div>
                                         </c:otherwise>
                                     </c:choose>
@@ -93,7 +95,7 @@
                                     <div class="dropdown">
                                         <button class="btn btn-block dropdown-toggle text-left text-dark bg-white" data-toggle="dropdown"
                                           aria-expanded="false" type="button" style="margin-top: 32px;">
-                                            ${selectedCareer!=null ? selectedCareer.name : 'Elegí una carrera'}
+                                            ${selectedCareer!=null ? selectedCareer.name : "announcement.chooseCareer"}
                                         </button>
                                         <div class="dropdown-menu">
                                             <c:forEach var="career" items="${careers}">
@@ -114,13 +116,13 @@
                                         <c:when test="${selectedCareer != null && announcements.size() == 0}">
                                             <div class="text-center mt-5">
                                                 <i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
-                                                <p style="margin-top: 16px;">Ups, no hay nada por acá</p>
+                                                <p style="margin-top: 16px;">"noContent"</p>
                                             </div>
                                         </c:when>
                                         <c:otherwise>
                                             <div class="text-center mt-5">
                                                 <i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
-                                                <p style="margin-top: 16px;">Por favor, elegí una carrera para ver los anuncios</p>
+                                                <p style="margin-top: 16px;">"announcement.chooseCareerPlease"</p>
                                             </div>
                                         </c:otherwise>
                                     </c:choose>
@@ -138,7 +140,7 @@
 
                                         <div style="border: thin solid black">
                                             <select required id="courseId" name="courseId" class="selectpicker" data-live-search="true"
-                                                    data-width="100%" title="Elegí un curso">
+                                                    data-width="100%" title="announcement.chooseCourse">
                                                 <c:forEach var="course" items="${courses}">
                                                     <option ${course.equals(selectedCourse) ? 'selected' : ''}
                                                         value="${course.id}" data-tokens="${course.name}">${course.name}</option>
@@ -157,13 +159,13 @@
                                         <c:when test="${selectedCourse != null && announcements.size() == 0}">
                                             <div class="text-center mt-5">
                                                 <i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
-                                                <p style="margin-top: 16px;">Ups, no hay nada por acá</p>
+                                                <p style="margin-top: 16px;">"noContent"</p>
                                             </div>
                                         </c:when>
                                         <c:otherwise>
                                             <div class="text-center mt-5">
                                                 <i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
-                                                <p style="margin-top: 16px;">Por favor, elegí un curso para ver los anuncios</p>
+                                                <p style="margin-top: 16px;">"announcement.chooseCoursePlease"</p>
                                             </div>
                                         </c:otherwise>
                                     </c:choose>

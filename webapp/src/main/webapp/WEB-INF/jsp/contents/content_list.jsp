@@ -2,6 +2,8 @@
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 
+<%@ taglib prefix = "spring" uri="http://www.springframework.org/tags"%>
+
 <jsp:useBean type="java.util.List<ar.edu.itba.paw.models.Content>" scope="request" id="contents"/>
 
 
@@ -11,7 +13,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Apuntes</title>
+    <title>"contents"</title>
 
     <jsp:include page="../common/styles.jsp"/>
 
@@ -35,7 +37,7 @@
                             <a href="#popup" data-toggle="modal">
                                 <button class="btn btn-primary btn-sm">
                                     <i class="material-icons pull-left">add</i>
-                                    Agregar contenido
+                                    "content.add"
                                 </button>
                             </a>
                         </div>
@@ -57,12 +59,12 @@
                                     <div class="col-xl-2">
                                         <select class="form-control-sm" style="border: thin solid grey"
                                                 name="contentType">
-                                            <option value="">Tipo de material</option>
-                                            <option value="exam">Exámen</option>
-                                            <option value="guide">Guía</option>
-                                            <option value="resume">Resúmen</option>
-                                            <option value="note">Apunte</option>
-                                            <option value="other">Otro</option>
+                                            <option value="">"form.type"</option>
+                                            <option value="exam">"exam"</option>
+                                            <option value="guide">"guide"</option>
+                                            <option value="resume">"resume"</option>
+                                            <option value="note">"note"</option>
+                                            <option value="other">"other"</option>
                                         </select>
                                     </div>
 
@@ -77,7 +79,7 @@
                                     </div>
 
                                     <div class="col">
-                                        <button id="courseSearchBtn" type="submit" class="btn btn-primary ml-3">Filtrar</button>
+                                        <button id="courseSearchBtn" type="submit" class="btn btn-primary ml-3">"filter"</button>
                                     </div>
                                 </div>
                             </c:if>
@@ -91,11 +93,11 @@
                                     <table class="table my-0" id="dataTable">
                                         <thead>
                                         <tr>
-                                            <th>Descripción</th>
-                                            <th>Tipo</th>
-                                            <th>Fecha</th>
-                                            <th>Autor</th>
-                                            <th>Link</th>
+                                            <th>"form.description"</th>
+                                            <th>"form.type"</th>
+                                            <th>"date"</th>
+                                            <th>"author"</th>
+                                            <th>"form.link"</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -107,7 +109,7 @@
                                                 <td><c:out value="${content.uploadDate}"/></td>
                                                 <td><img class="rounded-circle mr-2" width="30" height="30" src="<c:url value="/assets/img/avatars/avatar.png"/>">
                                                     <c:out value="${content.submitter.name}"/></td>
-                                                <td><a class="btn btn-link" target="_blank" rel="noopener noreferrer" href="<c:url value='${content.link}'/>" role="button">Link</a></td>
+                                                <td><a class="btn btn-link" target="_blank" rel="noopener noreferrer" href="<c:url value='${content.link}'/>" role="button">"form.link"</a></td>
                                             </tr>
                                         </c:forEach>
                                         </tbody>
@@ -121,14 +123,14 @@
                             <c:when test="${selectedCourse != null && contents.size() == 0}">
                                 <div class="text-center mt-5">
                                     <i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
-                                    <p style="margin-top: 16px;">Ups, no hay nada por acá</p>
+                                    <p style="margin-top: 16px;">"noContent"</p>
                                 </div>
                             </c:when>
 
                             <c:otherwise>
                                 <div class="text-center mt-5">
                                     <i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
-                                    <p style="margin-top: 16px;">Por favor, elegí un curso para ver los anuncios</p>
+                                    <p style="margin-top: 16px;">chooseCoursePlease</p>
                                 </div>
                             </c:otherwise>
                         </c:choose>

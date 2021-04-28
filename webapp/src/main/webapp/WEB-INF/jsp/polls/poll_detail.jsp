@@ -2,6 +2,8 @@
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 
+<%@ taglib prefix = "spring" uri="http://www.springframework.org/tags"%>
+
 <jsp:useBean type="ar.edu.itba.paw.models.Poll" scope="request" id="poll"/>
 
 
@@ -57,10 +59,10 @@
 
                                 <div class="row align-items-end" style="margin: 10px 10px 10px;">
                                     <c:if test="${!hasVoted}">
-                                        <div class="col"><input class="btn btn-primary" type="submit" value="Votar"></div>
+                                        <div class="col"><input class="btn btn-primary" type="submit" value="vote"></div>
                                     </c:if>
                                     <c:if test="${hasVoted}">
-                                        <div class="col"><input class="btn btn-primary" type="submit" value="Ya voté" disabled></div>
+                                        <div class="col"><input class="btn btn-primary" type="submit" value="voted" disabled></div>
                                     </c:if>
                                     <div class="col text-right">
                                     <span class="text-xs">
@@ -87,7 +89,7 @@
                         <div class="card shadow mb-4" style="margin-top: 32px;">
 
                             <div class="card-header py-3">
-                                <h6 class="font-weight-bold m-0">Resultados</h6>
+                                <h6 class="font-weight-bold m-0">"results"</h6>
                             </div>
 
                             <div class="col mr-2" style="padding-top: 16px;padding-right: 24px;padding-left: 24px;padding-bottom: 16px;">
@@ -97,14 +99,14 @@
                                             <div class="col">
                                                 <div class="row">
                                                     <div class="col">
-                                                        <span><c:out value="${vote.value}"/> Votos : <c:out value="${vote.key.value}"/> </span>
+                                                        <span><c:out value="${vote.value}"/> "votes" : <c:out value="${vote.key.value}"/> </span>
                                                     </div>
                                                 </div>
                                             </div>
                                         </c:forEach>
                                     </c:when>
                                     <c:otherwise>
-                                        ${poll.isExpired ? 'No se han registrado votos y la encuesta ha expirado' : 'No se han registrado votos aún'}
+                                        ${poll.isExpired ? "poll.noVotesAndExpired" : 'poll.noVotes'}
                                     </c:otherwise>
                                 </c:choose>
 

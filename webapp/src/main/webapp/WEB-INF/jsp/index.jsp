@@ -2,6 +2,9 @@
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 
+<%@ taglib prefix = "spring" uri="http://www.springframework.org/tags"%>
+
+
 <jsp:useBean type="java.util.List<ar.edu.itba.paw.models.Announcement>" scope="request" id="announcements"/>
 <jsp:useBean type="java.util.List<ar.edu.itba.paw.models.Poll>" scope="request" id="polls"/>
 <jsp:useBean type="java.util.List<ar.edu.itba.paw.models.Course>" scope="request" id="courses"/>
@@ -34,7 +37,7 @@
                             <div class="card shadow mb-4">
 
                                 <div class="card-header py-3">
-                                    <h6 class="font-weight-bold m-0">Anuncios más relevantes</h6>
+                                    <h6 class="font-weight-bold m-0">"mostRelevantAnnounce"</h6>
                                 </div>
 
                                 <%-- Relevant announcement list --%>
@@ -65,7 +68,7 @@
                             <div class="card shadow mb-4">
 
                                 <div class="card-header py-3">
-                                    <h6 class="font-weight-bold m-0">Encuestas relevantes</h6>
+                                    <h6 class="font-weight-bold m-0">"relevantPolls"</h6>
                                 </div>
 
                                 <%-- Relevant polls list --%>
@@ -78,7 +81,7 @@
                                                 <div class="col mr-2">
                                                     <h6 class="mb-0"><strong><c:out value="${poll.name}"/></strong></h6>
                                                     <span class="text-xs">
-                                                        ${poll.isExpired ? "🕑 Expiró el " : "🕑 Expira el "}
+                                                        ${poll.isExpired ? "expiredOn" : "expireOn"}
                                                         <fmt:formatDate type="both" dateStyle = "short" timeStyle = "short" value="${poll.expiryDate}"/>
                                                     </span>
                                                 </div>
@@ -101,7 +104,7 @@
                             <div class="card shadow mb-4">
 
                                 <div class="card-header py-3">
-                                    <h6 class="font-weight-bold m-0">Tus cursos</h6>
+                                    <h6 class="font-weight-bold m-0">"yourCourses"</h6>
                                 </div>
 
                                 <%-- Relevant courses list --%>

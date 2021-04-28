@@ -2,6 +2,9 @@
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 
+<%@ taglib prefix = "spring" uri="http://www.springframework.org/tags"%>
+
+
 <jsp:useBean type="ar.edu.itba.paw.models.Announcement" scope="request" id="announcement"/>
 
 <!DOCTYPE html>
@@ -28,7 +31,7 @@
                 <div class="container-fluid">
                     <div class="col">
                         <div class="row">
-                            <a href="javascript:history.back()">Volver</a>
+                            <a href="javascript:history.back()">"back"</a>
                         </div>
                         <div class="row">
                             <div id="${announcement.id}" class="card shadow mb-4" style="margin-top: 32px; width: 100%">
