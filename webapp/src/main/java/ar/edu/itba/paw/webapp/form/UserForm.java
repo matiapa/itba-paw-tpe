@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.form;
 
+import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.NotNull;
@@ -18,9 +19,14 @@ public class UserForm {
     @Size(min = 5, max = 20)
     private String surname;
 
+    @Email
     @NotNull
     @Size(min = 5, max = 50)
     private String email;
+
+    @NotNull
+    @Size(min = 8, max = 20)
+    private String password;
 
     @NotNull
     private int id;
@@ -32,7 +38,13 @@ public class UserForm {
     @NotEmpty
     private ArrayList<String> courses;
 
+    public String getPassword() {
+        return password;
+    }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     public String getName() {
         return name;
