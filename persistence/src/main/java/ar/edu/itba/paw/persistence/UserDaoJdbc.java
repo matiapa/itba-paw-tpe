@@ -24,6 +24,7 @@ public class UserDaoJdbc implements UserDao {
             rs.getString("name"),
             rs.getString("surname"),
             rs.getString("email"),
+            rs.getString("profile_picture"),
             rs.getString("career_code")
         );
 
@@ -61,9 +62,8 @@ public class UserDaoJdbc implements UserDao {
 
     @Override
     public User registerUser(int id, String name, String surname, String email, String career_code, List<String> courses) {
-
-
         final Map<String,Object> args = new HashMap<>();
+
         args.put("id",id);
         args.put("name",name);
         args.put("surname",surname);
@@ -77,7 +77,16 @@ public class UserDaoJdbc implements UserDao {
             addFavouriteCourse(id,course);
         }
 
-        return new User(id,name,surname,email,career_code);
+        return findById(userID.intValue())
+            .orElseThrow(() -> new RuntimeException("Could not register user"));
+    }
+
+    @Override
+    public void setProfilePicture(String pictureDataURI, int userId) {
+        jdbcTemplate.update(
+        "UPDATE users SET profile_picture=? WHERE id=?",
+            pictureDataURI, userId
+        );
     }
 
 }

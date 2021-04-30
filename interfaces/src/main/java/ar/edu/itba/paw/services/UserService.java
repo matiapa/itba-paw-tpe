@@ -12,4 +12,6 @@ public interface UserService {
 
     User getLoggedUser();
 
+    void setProfilePicture(String pictureDataURI);
+
 }

@@ -29,4 +29,9 @@ public class UserServiceImpl implements UserService {
     public User getLoggedUser() {
         return userDao.findById(59714).orElseThrow(RuntimeException::new);
     }
+
+    @Override
+    public void setProfilePicture(String pictureDataURI) {
+        userDao.setProfilePicture(pictureDataURI, getLoggedUser().getId());
+    }
 }
