@@ -21,16 +21,16 @@
                 <form:form modelAttribute="createForm" action="${postUrl}" method="post">
 
                     <div class="form-group">
-                        <form:label path="name">"chat.name"</form:label>
+                        <form:label path="name"><spring:message code="chat.name"/></form:label>
                         <form:input type="text" path="name" class="form-control"/>
                         <form:errors path="name" cssStyle="color: red" element="p"/>
                     </div>
 
                     <div class="form-group">
-                        <form:label path="careerId">"chat.career"</form:label>
+                        <form:label path="careerId"><spring:message code="chat.career"/></form:label>
 
                         <form:select path="careerId" class="form-control">
-                            <option value="">"chooseCareer"</option>
+                            <option value=""><spring:message code="chooseCareer"/></option>
                             <c:forEach var="career" items="${careers}">
                                 <form:option value="${career.id}">
                                     <c:out value="${career.name}"/>
@@ -42,17 +42,17 @@
                     </div>
 
                     <div class="form-group">
-                        <form:label path="creationDate">"chat.creationDate"</form:label>
+                        <form:label path="creationDate"><spring:message code="chat.creationDate"/></form:label>
                         <form:input type="date" path="creationDate" class="form-control"/>
                         <form:errors path="creationDate" cssStyle="color: red" element="p"/>
                     </div>
 
                     <div class="form-group">
-                        <form:label path="platform">"chat.platform"</form:label>
+                        <form:label path="platform"><spring:message code="chat.platform"/></form:label>
 
                         <form:select path="platform" class="form-control">
                             <c:forEach var="platform" items="${platforms}">
-                                <option value="">"chat.choosePlatform"</option>
+                                <option value=""><spring:message code="chat.choosePlatform"/></option>
                                 <form:option value="${platform}">
                                     <c:out value="${platformsTranslate.get(platform)}"/>
                                 </form:option>
@@ -63,13 +63,13 @@
                     </div>
 
                     <div class="form-group">
-                        <form:label path="link">"chat.link"</form:label>
+                        <form:label path="link"><spring:message code="chat.link"/></form:label>
                         <form:input type="text" path="link" class="form-control"/>
                         <form:errors path="link" cssStyle="color: red" element="p"/>
                     </div>
 
                     <div>
-                        <button id="submitChatGroup" type="submit" class="btn btn-primary">"chat.formAdd"</button>
+                        <button id="submitChatGroup" type="submit" class="btn btn-primary"><spring:message code="chat.formAdd"/></button>
                     </div>
                 </form:form>
             </div>
@@ -77,7 +77,7 @@
             <div class="overlay" style="width: 798px; height: 549px"></div>
             <div class="spanner">
                 <div class="loader"></div>
-                <p>"chat.adding"</p>
+                <p><spring:message code="chat.adding"/></p>
             </div>
 
         </div>

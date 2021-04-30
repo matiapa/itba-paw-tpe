@@ -21,8 +21,8 @@
             <div class="card-body p-0">
                 <div class="col-lg-6 col-xl-12" style="text-align: center;"><img style="margin-top: 20px;width: 200px;" src="<c:url value="/assets/img/logo-tran-blue.png"/>">
                     <div class="p-5">
-                        <h4 class="text-dark mb-4">"welcome"</h4>
-                        <p class="text-center">"continueWithAccount"</p>
+                        <h4 class="text-dark mb-4"><spring:message code="welcome"/></h4>
+                        <p class="text-center"><spring:message code="continueWithAccount"/></p>
                         <form action="<c:url value="/oauth2/authorization/google"/>">
                             <input class="btn btn-primary" type="submit" value="Login"></button>
                         </form>

@@ -37,13 +37,13 @@
                             <div class="col"></div>
                             <div class="col col-xl-2 custom-control custom-switch">
                                 <input type="checkbox" class="custom-control-input" id="showHiddenSwitch">
-                                <label class="custom-control-label" for="showHiddenSwitch">"announcement.seeHidden"</label>
+                                <label class="custom-control-label" for="showHiddenSwitch"><spring:message code="announcement.seeHidden"/></label>
                             </div>
                             <div class="col col-xl-2">
                                 <a href="#popup" data-toggle="modal">
                                     <button class="btn btn-primary btn-sm">
                                         <i class="material-icons pull-left">add</i>
-                                        "announcement.add"
+                                        <spring:message code="announcement.add"/>
                                     </button>
                                 </a>
                             </div>
@@ -52,15 +52,15 @@
                         <ul class="nav nav-tabs" role="tablist">
                             <li class="nav-item" role="presentation">
                                 <a class="nav-link ${filterBy == "general" ? 'active' : ''}" role="tab"
-                                   href="<c:url value="/announcements?filterBy=general"/>">"generals"</a>
+                                   href="<c:url value="/announcements?filterBy=general"/>"><spring:message code="generals"/></a>
                             </li>
                             <li class="nav-item" role="presentation">
                                 <a class="nav-link ${filterBy == "career" ? 'active' : ''}" role="tab"
-                                   href="<c:url value="/announcements?filterBy=career"/>">"byCareer"</a>
+                                   href="<c:url value="/announcements?filterBy=career"/>"><spring:message code="byCareer"/></a>
                             </li>
                             <li class="nav-item" role="presentation">
                                 <a class="nav-link ${filterBy == "course" ? 'active' : ''}" role="tab"
-                                   href="<c:url value="/announcements?filterBy=course"/>">"byCourse"</a>
+                                   href="<c:url value="/announcements?filterBy=course"/>"><spring:message code="byCourse"/></a>
                             </li>
                         </ul>
 
@@ -80,7 +80,7 @@
                                         <c:otherwise>
                                             <div class="text-center mt-5">
                                                 <i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
-                                                <p style="margin-top: 16px;">"noContent"</p>
+                                                <p style="margin-top: 16px;"><spring:message code="noContent"/></p>
                                             </div>
                                         </c:otherwise>
                                     </c:choose>
@@ -95,7 +95,14 @@
                                     <div class="dropdown">
                                         <button class="btn btn-block dropdown-toggle text-left text-dark bg-white" data-toggle="dropdown"
                                           aria-expanded="false" type="button" style="margin-top: 32px;">
-                                            ${selectedCareer!=null ? selectedCareer.name : "announcement.chooseCareer"}
+                                            <c:choose>
+                                                <c:when test="${selectedCareer!=null}">
+                                                    selectedCaereer.name
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <spring:message code="chooseCareer"/>
+                                                </c:otherwise>
+                                            </c:choose>
                                         </button>
                                         <div class="dropdown-menu">
                                             <c:forEach var="career" items="${careers}">
@@ -116,13 +123,13 @@
                                         <c:when test="${selectedCareer != null && announcements.size() == 0}">
                                             <div class="text-center mt-5">
                                                 <i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
-                                                <p style="margin-top: 16px;">"noContent"</p>
+                                                <p style="margin-top: 16px;"><spring:message code="noContent"/></p>
                                             </div>
                                         </c:when>
                                         <c:otherwise>
                                             <div class="text-center mt-5">
                                                 <i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
-                                                <p style="margin-top: 16px;">"announcement.chooseCareerPlease"</p>
+                                                <p style="margin-top: 16px;"><spring:message code="announcement.chooseCareerPlease"/></p>
                                             </div>
                                         </c:otherwise>
                                     </c:choose>
@@ -165,7 +172,7 @@
                                         <c:otherwise>
                                             <div class="text-center mt-5">
                                                 <i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
-                                                <p style="margin-top: 16px;">"announcement.chooseCoursePlease"</p>
+                                                <p style="margin-top: 16px;"><spring:message code="announcement.chooseCoursePlease"/></p>
                                             </div>
                                         </c:otherwise>
                                     </c:choose>
@@ -185,13 +192,13 @@
     <div hidden id="errorToast" class="toast" data-autohide="false"
          style="position: fixed; top: 0; right: 0; background-color: orange; color: white">
         <div class="toast-header">
-            <strong class="mr-auto">Ups!</strong>
+            <strong class="mr-auto"><spring:message code="ups"/></strong>
             <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
         <div class="toast-body">
-            Mensaje de error
+            <spring:message code="errorMessage"/>
         </div>
     </div>
 

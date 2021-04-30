@@ -39,7 +39,7 @@
                             <a href="#popup" data-toggle="modal">
                                 <button class="btn btn-primary btn-sm">
                                     <i class="material-icons pull-left">add</i>
-                                    "chat.add"
+                                    <spring:message code="chat.add"/>
                                 </button>
                             </a>
                         </div>
@@ -47,7 +47,7 @@
                         <form method="get" id="chatListFilterForm">
                             <select class="custom-select my-1 mr-sm-2" name="careerId" id="careerId">
                                 <option ${selectedCareer == null ? 'selected' : ''} value="">
-                                    "chooseCareer"
+                                    <spring:message code="chooseCareer"/>
                                 </option>
                                 <c:forEach var="career" items="${careers}">
                                     <option ${selectedCareer.id == career.id ? 'selected' : ''} value="${career.id}">
@@ -62,7 +62,7 @@
                                     <div class="col-xl-2">
                                         <select class="custom-select my-1 mr-sm-2" name="platform">
                                             <option ${selectedPlatform == null ? 'selected' : ''} value="">
-                                                "chat.platform"
+                                                <spring:message code="chat.platform"/>
                                             </option>
                                             <c:forEach var="platform" items="${platforms}">
                                                 <option ${selectedPlatform == platform ? 'selected' : ''} value="${platform}">
@@ -75,7 +75,7 @@
                                     <div class="col-xl-1">
                                         <select class="custom-select my-1 mr-sm-2" name="year">
                                             <option ${selectedYear == null ? 'selected' : ''} value="">
-                                                "year"
+                                                <spring:message code="year"/>
                                             </option>
                                             <c:forEach var="year" items="${years}">
                                                 <option ${selectedYear == year ? 'selected' : ''} value="${year}">
@@ -88,7 +88,7 @@
                                     <div class="col-xl-2">
                                         <select class="custom-select my-1 mr-sm-2" name="quarter">
                                             <option ${selectedQuarter == null ? 'selected' : ''} value="">
-                                                "quarter"
+                                                <spring:message code="quarter"/>
                                             </option>
                                             <c:forEach var="quarter" items="${quarters}">
                                                 <option ${selectedQuarter == quarter ? 'selected' : ''} value="${quarter}">
@@ -99,7 +99,7 @@
                                     </div>
 
                                     <div class="col-xl-2">
-                                        <input type="submit" class="btn btn-primary" value="Filtrar">
+                                        <input type="submit" class="btn btn-primary" value=<spring:message code="filter"/>>
                                     </div>
 
                                 </div>
@@ -113,10 +113,10 @@
                                     <table class="table my-0" id="dataTable">
                                         <thead>
                                             <tr>
-                                                <th>"chat.platform"</th>
-                                                <th>"year"</th>
-                                                <th>"quarter"</th>
-                                                <th>"chat.link"</th>
+                                                <th><spring:message code="chat.platform"/></th>
+                                                <th><spring:message code="year"/></th>
+                                                <th><spring:message code="quarter"/></th>
+                                                <th><spring:message code="chat.link"/></th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -126,7 +126,7 @@
                                                     <td>${chatgroup.creationYear}</td>
                                                     <td>${chatgroup.creationQuarter}</td>
                                                     <td>
-                                                        <a class="btn btn-link" href='<c:out value="${chatgroup.link}"/>' target="_blank" rel="noopener noreferrer">Abrir</button>
+                                                        <button><a class="btn btn-link" href='<c:out value="${chatgroup.link}"/>' target="_blank" rel="noopener noreferrer"><spring:message code="open"/></a></button>
                                                     </td>
                                                 </tr>
                                             </c:forEach>
@@ -140,13 +140,13 @@
                             <c:when test="${selectedCareer != null && chatgroups.size() == 0}">
                                 <div class="text-center mt-5">
                                     <i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
-                                    <p style="margin-top: 16px;">"noContent"</p>
+                                    <p style="margin-top: 16px;"><spring:message code="noContent"/></p>
                                 </div>
                             </c:when>
                             <c:otherwise>
                                 <div class="text-center mt-5">
                                     <i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
-                                    <p style="margin-top: 16px;">"chat.chooseCareerPlease"</p>
+                                    <p style="margin-top: 16px;"><spring:message code="chat.chooseCareerPlease"/></p>
                                 </div>
                             </c:otherwise>
                         </c:choose>

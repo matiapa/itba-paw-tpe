@@ -13,7 +13,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>"contents"</title>
+    <title><spring:message code="contents"/></title>
 
     <jsp:include page="../common/styles.jsp"/>
 
@@ -37,7 +37,7 @@
                             <a href="#popup" data-toggle="modal">
                                 <button class="btn btn-primary btn-sm">
                                     <i class="material-icons pull-left">add</i>
-                                    "content.add"
+                                    <spring:message code="content.add"/>
                                 </button>
                             </a>
                         </div>
@@ -46,7 +46,7 @@
 
                             <div style="border: thin solid black">
                                 <select id="courseId" name="courseId" class="selectpicker" data-live-search="true"
-                                        title="Elegí un curso" data-width="100%">
+                                        title=<spring:message code="chooseCourse"/> data-width="100%">
                                     <c:forEach var="course" items="${courses}">
                                         <option ${course.equals(selectedCourse) ? 'selected' : ''}
                                                 value="${course.id}" data-tokens="${course.name}">${course.name}</option>
@@ -59,27 +59,27 @@
                                     <div class="col-xl-2">
                                         <select class="form-control-sm" style="border: thin solid grey"
                                                 name="contentType">
-                                            <option value="">"form.type"</option>
-                                            <option value="exam">"exam"</option>
-                                            <option value="guide">"guide"</option>
-                                            <option value="resume">"resume"</option>
-                                            <option value="note">"note"</option>
-                                            <option value="other">"other"</option>
+                                            <option value=""><spring:message code="form.type"/></option>
+                                            <option value="exam"><spring:message code="exam"/></option>
+                                            <option value="guide"><spring:message code="guide"/></option>
+                                            <option value="resume"><spring:message code="resume"/></option>
+                                            <option value="note"><spring:message code="note"/></option>
+                                            <option value="other"><spring:message code="other"/></option>
                                         </select>
                                     </div>
 
                                     <div class="col-xl-3">
-                                        <label>Desde</label>
+                                        <label><spring:message code="since"/></label>
                                         <input class="form-control-sm" style="border: thin solid grey" type="date" name="minDate">
                                     </div>
 
                                     <div class="col-xl-3">
-                                        <label>Hasta</label>
+                                        <label><spring:message code="until"/></label>
                                         <input class="form-control-sm" style="border: thin solid grey" type="date" name="maxDate">
                                     </div>
 
                                     <div class="col">
-                                        <button id="courseSearchBtn" type="submit" class="btn btn-primary ml-3">"filter"</button>
+                                        <button id="courseSearchBtn" type="submit" class="btn btn-primary ml-3"><spring:message code="filter"/></button>
                                     </div>
                                 </div>
                             </c:if>
@@ -93,11 +93,11 @@
                                     <table class="table my-0" id="dataTable">
                                         <thead>
                                         <tr>
-                                            <th>"form.description"</th>
-                                            <th>"form.type"</th>
-                                            <th>"date"</th>
-                                            <th>"author"</th>
-                                            <th>"form.link"</th>
+                                            <th><spring:message code="form.description"/></th>
+                                            <th><spring:message code="form.type"/></th>
+                                            <th><spring:message code="date"/></th>
+                                            <th><spring:message code="author"/></th>
+                                            <th><spring:message code="form.link"/></th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -123,14 +123,14 @@
                             <c:when test="${selectedCourse != null && contents.size() == 0}">
                                 <div class="text-center mt-5">
                                     <i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
-                                    <p style="margin-top: 16px;">"noContent"</p>
+                                    <p style="margin-top: 16px;"><spring:message code="noContent"/></p>
                                 </div>
                             </c:when>
 
                             <c:otherwise>
                                 <div class="text-center mt-5">
                                     <i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
-                                    <p style="margin-top: 16px;">chooseCoursePlease</p>
+                                    <p style="margin-top: 16px;"><spring:message code="announcement.chooseCoursePlease"/></p>
                                 </div>
                             </c:otherwise>
                         </c:choose>

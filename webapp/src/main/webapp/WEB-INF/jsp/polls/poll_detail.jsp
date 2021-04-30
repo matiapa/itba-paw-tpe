@@ -67,7 +67,7 @@
                                     <div class="col text-right">
                                     <span class="text-xs">
                                         <c:if test="${poll.submittedBy != null}">
-                                            <c:out value="Publicado por ${poll.submittedBy.name} el ${creationFormat.format(poll.creationDate)}."/>
+                                            <spring:message code="publishedBy" arguments="${poll.submittedBy.name}, ${creationFormat.format(poll.creationDate)}"/>
                                         </c:if>
                                         <c:if test="${poll.submittedBy == null}">
                                             <c:out value="Creado el ${creationFormat.format(poll.creationDate)}."/>
@@ -89,7 +89,7 @@
                         <div class="card shadow mb-4" style="margin-top: 32px;">
 
                             <div class="card-header py-3">
-                                <h6 class="font-weight-bold m-0">"results"</h6>
+                                <h6 class="font-weight-bold m-0"><spring:message code="results"/></h6>
                             </div>
 
                             <div class="col mr-2" style="padding-top: 16px;padding-right: 24px;padding-left: 24px;padding-bottom: 16px;">
@@ -99,14 +99,21 @@
                                             <div class="col">
                                                 <div class="row">
                                                     <div class="col">
-                                                        <span><c:out value="${vote.value}"/> "votes" : <c:out value="${vote.key.value}"/> </span>
+                                                        <span><c:out value="${vote.value}"/> <spring:message code="votes"/> : <c:out value="${vote.key.value}"/> </span>
                                                     </div>
                                                 </div>
                                             </div>
                                         </c:forEach>
                                     </c:when>
                                     <c:otherwise>
-                                        ${poll.isExpired ? "poll.noVotesAndExpired" : 'poll.noVotes'}
+                                        <c:choose>
+                                            <c:when test="${poll.isExpired}">
+                                                <spring:message code="poll.noVotesAndExpired"/>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <spring:message code="poll.noVotes"/>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </c:otherwise>
                                 </c:choose>
 

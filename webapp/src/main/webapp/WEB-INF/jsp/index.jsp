@@ -37,7 +37,7 @@
                             <div class="card shadow mb-4">
 
                                 <div class="card-header py-3">
-                                    <h6 class="font-weight-bold m-0">"mostRelevantAnnounce"</h6>
+                                    <h6 class="font-weight-bold m-0"><spring:message code="mostRelevantAnnounce"/></h6>
                                 </div>
 
                                 <%-- Relevant announcement list --%>
@@ -68,7 +68,7 @@
                             <div class="card shadow mb-4">
 
                                 <div class="card-header py-3">
-                                    <h6 class="font-weight-bold m-0">"relevantPolls"</h6>
+                                    <h6 class="font-weight-bold m-0"><spring:message code="relevantPolls"/></h6>
                                 </div>
 
                                 <%-- Relevant polls list --%>
@@ -104,7 +104,7 @@
                             <div class="card shadow mb-4">
 
                                 <div class="card-header py-3">
-                                    <h6 class="font-weight-bold m-0">"yourCourses"</h6>
+                                    <h6 class="font-weight-bold m-0"><spring:message code="yourcourses"/></h6>
                                 </div>
 
                                 <%-- Relevant courses list --%>

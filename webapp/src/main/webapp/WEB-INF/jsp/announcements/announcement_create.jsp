@@ -14,7 +14,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">"announcement.add"</h4>
+                <h4 class="modal-title"><spring:message code="announcement.add"/></h4>
             </div>
 
             <div class="modal-body">
@@ -24,16 +24,16 @@
                     <div class="form-group">
                         <label>"announcement.destination"</label>
                         <select id="announcementTarget" class="form-control">
-                            <option value="general">"announcement.generalDestination"</option>
-                            <option value="career">"announcement.careerDestination"</option>
-                            <option value="course">"announcement.courseDestination"</option>
+                            <option value="general"><spring:message code="announcement.generalDestination"/></option>
+                            <option value="career"><spring:message code="announcement.careerDestination"/></option>
+                            <option value="course"><spring:message code="announcement.courseDestination"/></option>
                         </select>
                     </div>
 
                     <div hidden id="careerTarget" class="form-group">
-                        <form:label path="careerId">"announcement.targetCareer"</form:label>
+                        <form:label path="careerId"><spring:message code="announcement.targetCareer"/></form:label>
                         <form:select path="careerId" class="form-control">
-                            <form:option value="">"chooseCareer"</form:option>
+                            <form:option value=""><spring:message code="chooseCareer"/></form:option>
                             <c:forEach var="career" items="${careers}">
                                 <form:option value="${career.id}"><c:out value="${career.name}"/></form:option>
                             </c:forEach>
@@ -42,9 +42,9 @@
                     </div>
 
                     <div hidden id="courseTarget" class="form-group">
-                        <form:label path="courseId">"announcement.targetCourse"</form:label>
+                        <form:label path="courseId"><spring:message code="announcement.targetCourse"/></form:label>
                         <form:select path="courseId" class="form-control selectpicker" data-live-search="true">
-                            <form:option value="">"announcement.chooseCourse"</form:option>
+                            <form:option value=""><spring:message code="announcement.chooseCourse"/></form:option>
                             <c:forEach var="course" items="${courses}">
                                 <form:option value="${course.id}"><c:out value="${course.name}"/></form:option>
                             </c:forEach>
@@ -53,26 +53,26 @@
                     </div>
 
                     <div class="form-group">
-                        <form:label path="title">"announcement.formTitle"</form:label>
+                        <form:label path="title"><spring:message code="announcement.formTitle"/></form:label>
                         <form:input type="text" path="title" cssClass="form-control"/>
                         <form:errors path="title" cssStyle="color: red" element="p"/>
                     </div>
 
                     <div class="form-group">
-                        <form:label path="summary">"announcement.formDescription"</form:label>
+                        <form:label path="summary"><spring:message code="announcement.formDescription"/></form:label>
                         <form:input type="text" path="summary" cssClass="form-control"/>
                         <form:errors path="summary" cssStyle="color: red" element="p"/>
                     </div>
 
                     <div class="form-group">
-                        <form:label path="content">"announcement.formContent"</form:label>
+                        <form:label path="content"><spring:message code="announcement.formContent"/></form:label>
                         <form:textarea path="content" cssClass="form-control"/>
                         <form:errors path="content" cssStyle="color: red" element="p"/>
                     </div>
 
                     <div>
                         <button id="submitAnnouncement" type="submit" class="btn btn-primary">
-                            "announcement.formSendButton"
+                            <spring:message code="form.sendButton"/>
                         </button>
                     </div>
                 </form:form>
@@ -82,7 +82,7 @@
             <div class="overlay" style="width: 798px; height: 509px"></div>
             <div class="spanner">
                 <div class="loader"></div>
-                <p>"announcement.adding"</p>
+                <p><spring:message code="announcement.adding"/></p>
             </div>
 
         </div>

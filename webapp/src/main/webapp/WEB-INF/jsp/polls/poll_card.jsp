@@ -2,6 +2,8 @@
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 
+<%@ taglib prefix = "spring" uri="http://www.springframework.org/tags"%>
+
 <jsp:useBean type="ar.edu.itba.paw.models.Poll" scope="request" id="poll"/>
 
 <div class="card shadow mb-4" style="margin-top: 32px;">
@@ -15,7 +17,14 @@
                 <p><c:out value="${poll.description}"/></p>
                 <span class="text-xs">
                     <c:if test="${poll.expiryDate != null}">
-                        ${poll.isExpired ? "🕑 Expiró el ": "🕑 Expira el "}
+                        <c:choose>
+                            <c:when test="${poll.isExpired}">
+                                <spring:message code="expiredOn"/>
+                            </c:when>
+                            <c:otherwise>
+                                <spring:message code="expireOn"/>
+                            </c:otherwise>
+                        </c:choose>
                         <fmt:formatDate type="both" dateStyle = "short" timeStyle = "short" value="${poll.expiryDate}"/>
                     </c:if>
                 </span>

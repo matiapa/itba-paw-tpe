@@ -31,7 +31,7 @@
                 <div class="container-fluid">
                     <div class="col">
                         <div class="row">
-                            <a href="javascript:history.back()">"back"</a>
+                            <a href="javascript:history.back()"><spring:message code="back"/></a>
                         </div>
                         <div class="row">
                             <div id="${announcement.id}" class="card shadow mb-4" style="margin-top: 32px; width: 100%">

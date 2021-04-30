@@ -16,14 +16,14 @@
             <li class="nav-item">
                 <a class="nav-link" href="<c:url value="/"/>">
                     <i class="material-icons">home</i>
-                    <span>"home"</span>
+                    <span><spring:message code="home"/></span>
                 </a>
             </li>
 
             <li class="nav-item">
                 <a class="nav-link" href="<c:url value="/courses"/>">
                     <i class="icon-graduation"></i>
-                    <span>"courses"</span>
+                    <span><spring:message code="courses"/></span>
                 </a>
                 <hr class="sidebar-divider">
             </li>
@@ -31,28 +31,28 @@
             <li class="nav-item">
                 <a class="nav-link" href="<c:url value="/announcements"/>">
                     <i class="material-icons">fiber_new</i>
-                    <span>"announcement"</span>
+                    <span><spring:message code="announcement"/></span>
                 </a>
             </li>
 
             <li class="nav-item">
                 <a class="nav-link" href="<c:url value="/polls"/>">
                     <i class="fas fa-poll"></i>
-                    <span>"polls"</span>
+                    <span><spring:message code="polls"/></span>
                 </a>
             </li>
 
             <li class="nav-item">
                 <a class="nav-link" href="<c:url value="/chats"/>">
                     <i class="material-icons">people</i>
-                    <span>"chatGroups"</span>
+                    <span><spring:message code="chatGroups"/></span>
                 </a>
             </li>
 
             <li class="nav-item">
                 <a class="nav-link" href="<c:url value="/contents"/>">
                     <i class="fas fa-book"></i>
-                    <span>"contents"</span>
+                    <span><spring:message code="contents"/></span>
                 </a>
             </li>
         </ul>

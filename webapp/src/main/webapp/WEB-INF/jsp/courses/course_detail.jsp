@@ -28,7 +28,7 @@
                 <div class="col-lg-6 mb-4">
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h6 class="font-weight-bold m-0">"course.recentAnnouncements"</h6>
+                            <h6 class="font-weight-bold m-0"><spring:message code="course.recentAnnouncements"/></h6>
                         </div>
                         <ul class="list-group list-group-flush">
                             <c:forEach var="announcement" items="${announcements}">
@@ -53,7 +53,7 @@
                 <div class="col">
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h6 class="font-weight-bold m-0">"polls"</h6>
+                            <h6 class="font-weight-bold m-0"><spring:message code="polls"/></h6>
                         </div>
                         <c:forEach var="poll" items="${polls}">
                             <ul class="list-group list-group-flush">
@@ -83,11 +83,11 @@
                                     <table class="table my-0" id="dataTable">
                                         <thead>
                                         <tr>
-                                            <th>"form.description"</th>
-                                            <th>"form.type"</th>
-                                            <th>"date"</th>
-                                            <th>"author"</th>
-                                            <th>"form.link"</th>
+                                            <th><spring:message code="form.description"/></th>
+                                            <th><spring:message code="form.type"/></th>
+                                            <th><spring:message code="date"/></th>
+                                            <th><spring:message code="author"/></th>
+                                            <th><spring:message code="form.link"/></th>
                                         </tr>
                                         </thead>
                                         <tbody>
