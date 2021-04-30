@@ -28,7 +28,7 @@ public class CareerDaoJdbcTest {
 
     @Test
     public void testFindById() {
-        Optional<Career> careerOptional = careerDao.findById(1);
+        Optional<Career> careerOptional = careerDao.findByCode("S");
 
         Assert.assertTrue(careerOptional.isPresent());
         Assert.assertEquals("Career 1", careerOptional.get().getName());
@@ -39,6 +39,6 @@ public class CareerDaoJdbcTest {
 
         Assert.assertEquals(1,careers.size());
         Assert.assertEquals("Career 1", careers.get(0).getName());
-        Assert.assertEquals(1, careers.get(0).getId());
+        //TODO: assert code
     }
 }

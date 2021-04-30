@@ -23,13 +23,13 @@ public class PollServiceImpl implements PollService {
     private PollDao pollDao;
 
     @Override
-    public List<Poll> findByCareer(int careerId) {
-        return pollDao.findByCareer(careerId);
+    public List<Poll> findByCareer(String careerCode) {
+        return pollDao.findByCareer(careerCode);
     }
 
     @Override
-    public List<Poll> findByCareer(int careerId, Poll.PollFormat format, Poll.PollState pollState) {
-        return pollDao.findByCareer(careerId, format, pollState);
+    public List<Poll> findByCareer(String careerCode, Poll.PollFormat format, Poll.PollState pollState) {
+        return pollDao.findByCareer(careerCode, format, pollState);
     }
 
     @Override
@@ -63,8 +63,8 @@ public class PollServiceImpl implements PollService {
     }
 
     @Override
-    public void addPoll(String name, String description, PollFormat format, Integer careerId, String courseId, Date expiryDate, User user, List<String> pollOptions) {
-        pollDao.addPoll(name, description, format, careerId, courseId, expiryDate, user.getId(), pollOptions);
+    public void addPoll(String name, String description, PollFormat format, String careerCode, String courseId, Date expiryDate, User user, List<String> pollOptions) {
+        pollDao.addPoll(name, description, format, careerCode, courseId, expiryDate, user.getId(), pollOptions);
     }
 
     @Override

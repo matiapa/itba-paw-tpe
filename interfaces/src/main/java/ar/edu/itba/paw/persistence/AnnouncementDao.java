@@ -11,13 +11,13 @@ public interface AnnouncementDao {
 
     List<Announcement> findByCourse(String courseId);
 
-    List<Announcement> findByCareer(int careerId);
+    List<Announcement> findByCareer(String careerCode);
 
     Optional<Announcement> findById(int id);
 
     void markSeen(int announcementId, int userId);
 
-    Announcement create(String title, String summary, String content, Integer carrerId,
+    Announcement create(String title, String summary, String content, String careerCode,
         String courseId, Date expiryDate, Integer submittedBy);
 
 }

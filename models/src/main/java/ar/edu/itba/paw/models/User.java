@@ -7,14 +7,14 @@ public class User {
     private final String surname;
     private final String email;
 
-    private final int career_id;
+    private final String careerCode;
 
-    public User(int id, String name, String surname, String email,int career_id) {
+    public User(int id, String name, String surname, String email, String careerCode) {
         this.id = id;
         this.name = name;
         this.surname = surname;
         this.email = email;
-        this.career_id=career_id;
+        this.careerCode=careerCode;
     }
 
     public int getId() {
@@ -33,7 +33,7 @@ public class User {
         return email;
     }
 
-    public int getCareerId() {
-        return career_id;
+    public String getCareerCode() {
+        return careerCode;
     }
 }

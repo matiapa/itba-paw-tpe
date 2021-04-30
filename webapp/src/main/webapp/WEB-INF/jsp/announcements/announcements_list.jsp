@@ -97,7 +97,7 @@
                                         </button>
                                         <div class="dropdown-menu">
                                             <c:forEach var="career" items="${careers}">
-                                                <a class="dropdown-item" href="<c:url value="/announcements?filterBy=career&careerId=${career.id}"/>">
+                                                <a class="dropdown-item" href="<c:url value="/announcements?filterBy=career&careerCode=${career.code}"/>">
                                                     <c:out value="${career.name}"/>
                                                 </a>
                                             </c:forEach>

@@ -14,7 +14,7 @@ public class ChatGroupForm {
     private String name;
 
     @NotNull
-    private int careerId;
+    private String careerCode;
 
     @NotNull
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
@@ -32,8 +32,8 @@ public class ChatGroupForm {
         return name;
     }
 
-    public int getCareerId() {
-        return careerId;
+    public String getCareerCode() {
+        return careerCode;
     }
 
     public Date getCreationDate() {
@@ -52,8 +52,8 @@ public class ChatGroupForm {
         this.name = name;
     }
 
-    public void setCareerId(int careerId) {
-        this.careerId = careerId;
+    public void setCareerCode(String careerCode) {
+        this.careerCode = careerCode;
     }
 
     public void setCreationDate(Date creationDate) {

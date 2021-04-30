@@ -14,9 +14,9 @@ public interface PollDao {
 
     List<Poll> findGeneral(Poll.PollFormat format, Poll.PollState pollState);
 
-    List<Poll> findByCareer(int careerId);
+    List<Poll> findByCareer(String careerCode);
 
-    List<Poll> findByCareer(int careerId, Poll.PollFormat format, Poll.PollState pollState);
+    List<Poll> findByCareer(String careerCode, Poll.PollFormat format, Poll.PollState pollState);
 
     List<Poll> findByCourse(String courseId);
 
@@ -26,7 +26,7 @@ public interface PollDao {
 
     Map<PollOption,Integer> getVotes(int id);
 
-    void addPoll(String name, String description, PollFormat format, Integer careerId, String courseId, Date expiryDate, int userId, List<String> pollOptions);
+    void addPoll(String name, String description, PollFormat format, String careerCode, String courseId, Date expiryDate, int userId, List<String> pollOptions);
 
     void voteChoicePoll(int pollId, int optionId, int userId);
     

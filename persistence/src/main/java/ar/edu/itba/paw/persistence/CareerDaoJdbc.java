@@ -22,7 +22,6 @@ public class CareerDaoJdbc implements CareerDao{
 
     private static final RowMapper<Career> CAREER_ROW_MAPPER = (rs, rowNum) ->
         new Career(
-            rs.getInt("id"),
             rs.getString("name"),
             rs.getString("code")
         );
@@ -44,9 +43,9 @@ public class CareerDaoJdbc implements CareerDao{
     }
 
     @Override
-    public Map<Integer, List<CareerCourse>> findByCareer(int careerId) {
+    public Map<Integer, List<CareerCourse>> findByCareer(String careerCode) {
         List<CareerCourse> list = jdbcTemplate.query(
-                String.format("SELECT * FROM career_course  JOIN course  on career_course.course_id = course.id WHERE career_id='%s'", careerId),
+                String.format("SELECT * FROM career_course  JOIN course  on career_course.course_id = course.id WHERE career_code='%s'", careerCode),
                 CAREER_COURSE_ROW_MAPPER
         );
         Map<Integer, List<CareerCourse>> result = new HashMap<>();
@@ -57,18 +56,6 @@ public class CareerDaoJdbc implements CareerDao{
             result.get((careerCourse.getYear())).add(careerCourse);
         }
         return result;
-    }
-
-
-    @Override
-    public Optional<Career> findById(int id) {
-        return jdbcTemplate.query(
-            String.format(
-                "SELECT * FROM career WHERE id='%d'",
-                id
-            ),
-            CAREER_ROW_MAPPER
-        ).stream().findFirst();
     }
 
     @Override

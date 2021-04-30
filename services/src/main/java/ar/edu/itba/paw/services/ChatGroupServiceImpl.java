@@ -16,23 +16,23 @@ public class ChatGroupServiceImpl implements ChatGroupService{
     private ChatGroupDao chatGroupDao;
 
     @Override
-    public ChatGroup addGroup(String groupName, int careerId, String link, int createdBy, Date creationDate, ChatPlatform platform) {
-        return chatGroupDao.addGroup(groupName, careerId, link, createdBy, creationDate, platform);
+    public ChatGroup addGroup(String groupName, String careerCode, String link, int createdBy, Date creationDate, ChatPlatform platform) {
+        return chatGroupDao.addGroup(groupName, careerCode, link, createdBy, creationDate, platform);
     }
 
     @Override
-    public List<ChatGroup> findByCareer(int careerId) {
-        return chatGroupDao.findByCareer(careerId);
+    public List<ChatGroup> findByCareer(String careerCode) {
+        return chatGroupDao.findByCareer(careerCode);
     }
 
     @Override
-    public List<ChatGroup> findByCareer(int careerId, int limit) {
-        return chatGroupDao.findByCareer(careerId, limit);
+    public List<ChatGroup> findByCareer(String careerCode, int limit) {
+        return chatGroupDao.findByCareer(careerCode, limit);
     }
 
     @Override
-    public List<ChatGroup> findByCareer(int careerId, ChatGroup.ChatPlatform platform, Integer year, Integer quarter) {
-        return chatGroupDao.findByCareer(careerId, platform, year, quarter);
+    public List<ChatGroup> findByCareer(String careerCode, ChatGroup.ChatPlatform platform, Integer year, Integer quarter) {
+        return chatGroupDao.findByCareer(careerCode, platform, year, quarter);
     }
 
 }

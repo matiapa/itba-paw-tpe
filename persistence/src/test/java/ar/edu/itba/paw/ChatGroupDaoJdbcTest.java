@@ -24,12 +24,12 @@ public class ChatGroupDaoJdbcTest {
 
     @Test
     public void testFindByCareer(){
-        List<ChatGroup> chatGroups = chatGroupDaoJdbc.findByCareer(1);
+        List<ChatGroup> chatGroups = chatGroupDaoJdbc.findByCareer("S");
 
         Assert.assertEquals(3, chatGroups.size());
         Assert.assertEquals("1", chatGroups.get(0).getId());
 
-        chatGroups = chatGroupDaoJdbc.findByCareer(1, 2);
+        chatGroups = chatGroupDaoJdbc.findByCareer("S", 2);
 
         Assert.assertTrue(chatGroups.size() <= 2);
     }
@@ -40,7 +40,7 @@ public class ChatGroupDaoJdbcTest {
 
         Assert.assertTrue(chatGroupOptional.isPresent());
         Assert.assertEquals("1", chatGroupOptional.get().getId());
-        Assert.assertEquals("1", chatGroupOptional.get().getCareerId());
+        Assert.assertEquals("1", chatGroupOptional.get().getCareerCode());
         Assert.assertEquals("whatsapp", chatGroupOptional.get().getName().toLowerCase());
         Assert.assertEquals("linkwhatsapp", chatGroupOptional.get().getLink().toLowerCase());
     }

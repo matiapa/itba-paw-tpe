@@ -11,10 +11,8 @@ public interface CareerDao {
 
     List<Career> findAll();
 
-    Optional<Career> findById(int id);
-
     Optional<Career> findByCode(String code);
 
-    Map<Integer, List<CareerCourse>> findByCareer(int careerId);
+    Map<Integer, List<CareerCourse>> findByCareer(String careerCode);
 
 }

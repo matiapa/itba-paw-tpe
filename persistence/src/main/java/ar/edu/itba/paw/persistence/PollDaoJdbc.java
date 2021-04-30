@@ -40,7 +40,7 @@ public class PollDaoJdbc implements PollDao {
             rs.getString("name"),
             rs.getString("description"),
             PollFormat.valueOf(rs.getString("format").replace("-", "_")),
-            rs.getInt("career_id"),
+            rs.getString("career_code"),
             rs.getString("course_id"),
             rs.getTimestamp("creation_date"),
             rs.getTimestamp("expiry_date"),
@@ -107,7 +107,7 @@ public class PollDaoJdbc implements PollDao {
     @Override
     public List<Poll> findGeneral() {
         return jdbcTemplate.query(
-            "SELECT * FROM poll WHERE career_id IS NULL AND course_id IS NULL",
+            "SELECT * FROM poll WHERE career_code IS NULL AND course_id IS NULL",
             rowMapper
         );
     }
@@ -116,24 +116,24 @@ public class PollDaoJdbc implements PollDao {
     @Override
     public List<Poll> findGeneral(PollFormat format, PollState state) {
         return find(
-            "SELECT * FROM poll WHERE career_id IS NULL AND course_id IS NULL",
+            "SELECT * FROM poll WHERE career_code IS NULL AND course_id IS NULL",
             format, state
         );
     }
     
 
     @Override
-    public List<Poll> findByCareer(int careerId) {
+    public List<Poll> findByCareer(String careerCode) {
         return jdbcTemplate.query(
-            String.format("SELECT * FROM poll WHERE career_id='%d' AND course_id IS NULL", careerId),
+            String.format("SELECT * FROM poll WHERE career_code='%s' AND course_id IS NULL", careerCode),
             rowMapper
         );
     }
 
     @Override
-    public List<Poll> findByCareer(int careerId, PollFormat format, PollState state) {
+    public List<Poll> findByCareer(String careerCode, PollFormat format, PollState state) {
         return find(
-            String.format("SELECT * FROM poll WHERE career_id='%d' AND course_id IS NULL", careerId),
+            String.format("SELECT * FROM poll WHERE career_code='%s' AND course_id IS NULL", careerCode),
             format, state
         );
     }
@@ -142,7 +142,7 @@ public class PollDaoJdbc implements PollDao {
     @Override
     public List<Poll> findByCourse(String courseId) {
         return jdbcTemplate.query(
-            String.format("SELECT * FROM poll WHERE course_id='%s' AND career_id IS NULL", courseId),
+            String.format("SELECT * FROM poll WHERE course_id='%s' AND career_code IS NULL", courseId),
             rowMapper
         );
     }
@@ -150,7 +150,7 @@ public class PollDaoJdbc implements PollDao {
     @Override
     public List<Poll> findByCourse(String courseId, PollFormat format, PollState state) {
         return find(
-            String.format("SELECT * FROM poll WHERE course_id='%s' AND career_id IS NULL", courseId),
+            String.format("SELECT * FROM poll WHERE course_id='%s' AND career_code IS NULL", courseId),
             format, state
         );
     }
@@ -184,17 +184,17 @@ public class PollDaoJdbc implements PollDao {
         }
 
     @Override
-    public void addPoll(String name, String description, PollFormat format, Integer careerId, String courseId, Date expiryDate, int userId, List<String> pollOptions) {
+    public void addPoll(String name, String description, PollFormat format, String careerCode, String courseId, Date expiryDate, int userId, List<String> pollOptions) {
 
         Poll poll = jdbcTemplate.queryForObject(
         "INSERT INTO " +
-                "poll(name, description, format, career_id, course_id, creation_date, expiry_date, submitted_by)" +
+                "poll(name, description, format, career_code, course_id, creation_date, expiry_date, submitted_by)" +
             " VALUES " +
                 "(?, ?, CAST(? AS poll_format_type), ?, ?, DEFAULT, ?, ?) " +
             "RETURNING *;",
             new Object[]{
                 name, description, format.toString().replace("_","-"),
-                careerId, courseId, expiryDate, userId
+                careerCode, courseId, expiryDate, userId
             },
             rowMapper
         );

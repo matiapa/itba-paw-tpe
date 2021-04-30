@@ -16,9 +16,9 @@ public interface PollService {
 
     List<Poll> findGeneral(PollFormat format, PollState pollState);
 
-    List<Poll> findByCareer(int careerId);
+    List<Poll> findByCareer(String careerCode);
 
-    List<Poll> findByCareer(int careerId, PollFormat format, PollState pollState);
+    List<Poll> findByCareer(String careerCode, PollFormat format, PollState pollState);
 
     List<Poll> findByCourse(String courseId);
 
@@ -28,7 +28,7 @@ public interface PollService {
 
     Map<PollOption,Integer> getVotes(int id);
 
-    void addPoll(String name, String description, PollFormat format, Integer careerId, String courseId, Date expiryDate, User user, List<String> pollOptions);
+    void addPoll(String name, String description, PollFormat format, String careerCode, String courseId, Date expiryDate, User user, List<String> pollOptions);
     
     void voteChoicePoll(int pollId, int optionId, User user);
     

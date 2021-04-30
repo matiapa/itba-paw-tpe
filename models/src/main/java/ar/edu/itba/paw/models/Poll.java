@@ -12,7 +12,7 @@ public class Poll {
     private final User submittedBy;
     private final List<PollOption> options;
     
-    public Poll(int id, String name, String description, PollFormat format, Integer careerId, String courseId, Date creationDate, Date expiryDate, User submittedBy, List<PollOption> options) {
+    public Poll(int id, String name, String description, PollFormat format, String careerCode, String courseId, Date creationDate, Date expiryDate, User submittedBy, List<PollOption> options) {
         this.id = id;
         this.name = name;
         this.description = description;

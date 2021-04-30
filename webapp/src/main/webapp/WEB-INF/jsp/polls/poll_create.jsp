@@ -28,14 +28,14 @@
                             </div>
                             
                             <div hidden id="careerTarget" class="form-group">
-                                <form:label path="careerId">Carrera de destino</form:label>
-                                <form:select path="careerId" class="form-control">
+                                <form:label path="careerCode">Carrera de destino</form:label>
+                                <form:select path="careerCode" class="form-control">
                                     <form:option value="">Elegí una carrera...</form:option>
                                     <c:forEach var="career" items="${careers}">
-                                        <form:option value="${career.id}"><c:out value="${career.name}"/></form:option>
+                                        <form:option value="${career.code}"><c:out value="${career.name}"/></form:option>
                                     </c:forEach>
                                 </form:select>
-                                <form:errors path="careerId" element="div"/>
+                                <form:errors path="careerCode" element="div"/>
                             </div>
 
                             <div hidden id="courseTarget" class="form-group">

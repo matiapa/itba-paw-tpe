@@ -24,7 +24,7 @@ public class UserDaoJdbc implements UserDao {
             rs.getString("name"),
             rs.getString("surname"),
             rs.getString("email"),
-            rs.getInt("career_id")
+            rs.getString("career_code")
         );
 
     @Autowired
@@ -60,7 +60,7 @@ public class UserDaoJdbc implements UserDao {
     }
 
     @Override
-    public User registerUser(int id, String name, String surname, String email, int career_id, List<String> courses) {
+    public User registerUser(int id, String name, String surname, String email, String career_code, List<String> courses) {
 
 
         final Map<String,Object> args = new HashMap<>();
@@ -68,7 +68,7 @@ public class UserDaoJdbc implements UserDao {
         args.put("name",name);
         args.put("surname",surname);
         args.put("email",email);
-        args.put("career_id",career_id);
+        args.put("career_code",career_code);
         args.put("signup_date",new Date());
 
         final Number userID = jdbcInsert.execute(args);
@@ -77,7 +77,7 @@ public class UserDaoJdbc implements UserDao {
             addFavouriteCourse(id,course);
         }
 
-        return new User(id,name,surname,email,career_id);
+        return new User(id,name,surname,email,career_code);
     }
 
 }

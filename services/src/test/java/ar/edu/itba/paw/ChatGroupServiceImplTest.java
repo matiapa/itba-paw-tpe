@@ -16,7 +16,7 @@ import java.util.Date;
 @RunWith(MockitoJUnitRunner.class)
 public class ChatGroupServiceImplTest {
 
-    private static final int CAREER_ID = 1;
+    private static final String CAREER_CODE = "S";
     private static final String GROUP_NAME = "Discord";
     private static final String LINK = "https://discord.com";
     private static final int USER = 1;
@@ -32,19 +32,19 @@ public class ChatGroupServiceImplTest {
     public void testAddGroup(){
         Mockito.when(
                 mockDao.addGroup(Mockito.eq(GROUP_NAME),
-                        Mockito.eq(CAREER_ID),
+                        Mockito.eq(CAREER_CODE),
                         Mockito.eq(LINK),
                         Mockito.eq(USER),
                         Mockito.eq(DATE),
                         ChatGroup.ChatPlatform.whatsapp))
-        .thenReturn(new ChatGroup(1, CAREER_ID, GROUP_NAME, LINK, USER, DATE, ChatGroup.ChatPlatform.whatsapp));
+        .thenReturn(new ChatGroup(1, CAREER_CODE, GROUP_NAME, LINK, USER, DATE, ChatGroup.ChatPlatform.whatsapp));
 
         ChatGroup chatGroup = chatGroupService.addGroup(
-                GROUP_NAME, CAREER_ID, LINK, USER, DATE, ChatGroup.ChatPlatform.whatsapp);
+                GROUP_NAME, CAREER_CODE, LINK, USER, DATE, ChatGroup.ChatPlatform.whatsapp);
 
         Assert.assertNotNull(chatGroup);
         Assert.assertEquals(GROUP_NAME, chatGroup.getName());
-        Assert.assertEquals(CAREER_ID, chatGroup.getCareerId());
+        Assert.assertEquals(CAREER_CODE, chatGroup.getCareerCode());
         Assert.assertEquals(LINK, chatGroup.getLink());
         Assert.assertEquals(USER, chatGroup.getSubmittedBy());
         Assert.assertEquals(DATE, chatGroup.getCreationDate());

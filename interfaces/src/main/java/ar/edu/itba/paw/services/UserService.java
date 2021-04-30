@@ -8,7 +8,7 @@ public interface UserService {
 
     Optional<User> findByEmail(String email);
     
-    User registerUser(int id, String name, String surname, String email, int career_id, List<String> courses);
+    User registerUser(int id, String name, String surname, String email, String careerCode, List<String> courses);
 
     User getLoggedUser();
 

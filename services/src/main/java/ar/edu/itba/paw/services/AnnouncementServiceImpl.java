@@ -27,8 +27,8 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     }
 
     @Override
-    public List<Announcement> findByCareer(int careerId) {
-        return announcementDao.findByCareer(careerId);
+    public List<Announcement> findByCareer(String careerCode) {
+        return announcementDao.findByCareer(careerCode);
     }
 
     @Override
@@ -42,9 +42,9 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     }
 
     @Override
-    public Announcement create(String title, String summary, String content, Integer careerId,
+    public Announcement create(String title, String summary, String content, String careerCode,
        String courseId, Date expiryDate, User author) {
-        return announcementDao.create(title, summary, content, careerId, courseId, expiryDate,
+        return announcementDao.create(title, summary, content, careerCode, courseId, expiryDate,
             author.getId());
     }
 

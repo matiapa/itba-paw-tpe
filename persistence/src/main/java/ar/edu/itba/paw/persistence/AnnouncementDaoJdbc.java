@@ -52,7 +52,7 @@ public class AnnouncementDaoJdbc implements AnnouncementDao {
     @Override
     public List<Announcement> findGeneral() {
         return jdbcTemplate.query(
-            "SELECT * FROM announcement WHERE career_id IS NULL AND course_id IS NULL",
+            "SELECT * FROM announcement WHERE career_code IS NULL AND course_id IS NULL",
                 announcementRowMapper
         );
     }
@@ -66,9 +66,9 @@ public class AnnouncementDaoJdbc implements AnnouncementDao {
     }
 
     @Override
-    public List<Announcement> findByCareer(int careerId) {
+    public List<Announcement> findByCareer(String careerCode) {
         return jdbcTemplate.query(
-            String.format("SELECT * FROM announcement WHERE career_id='%d'", careerId),
+            String.format("SELECT * FROM announcement WHERE career_code='%s'", careerCode),
                 announcementRowMapper
         );
     }
@@ -91,12 +91,12 @@ public class AnnouncementDaoJdbc implements AnnouncementDao {
     }
 
     @Override
-    public Announcement create(String title, String summary, String content, Integer careerId,
+    public Announcement create(String title, String summary, String content, String careerCode,
                    String courseId, Date expiryDate, Integer submittedBy) {
         return jdbcTemplate.queryForObject(
-        "INSERT INTO announcement(title, summary, content, career_id, course_id, expiry_date, " +
+        "INSERT INTO announcement(title, summary, content, career_code, course_id, expiry_date, " +
                 "submitted_by) VALUES (?,?,?,?,?,?,?) RETURNING *",
-            new Object[]{title, summary, content, careerId, courseId, expiryDate, submittedBy},
+            new Object[]{title, summary, content, careerCode, courseId, expiryDate, submittedBy},
             announcementRowMapper
         );
     }

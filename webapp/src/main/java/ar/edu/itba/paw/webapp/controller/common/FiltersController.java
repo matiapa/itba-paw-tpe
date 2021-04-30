@@ -16,12 +16,12 @@ public class FiltersController {
     @Autowired private CareerService careerService;
     @Autowired private CourseService courseService;
 
-    public void addCareers(ModelAndView mav, Integer selectedCareerId){
+    public void addCareers(ModelAndView mav, String selectedCareerCode){
         List<Career> careers = careerService.findAll();
         mav.addObject("careers", careers);
 
-        Career selectedCareer = selectedCareerId != null ?
-            careers.stream().filter(c -> c.getId() == selectedCareerId).findFirst()
+        Career selectedCareer = selectedCareerCode != null ?
+            careers.stream().filter(c -> c.getCode().equals(selectedCareerCode)).findFirst()
                 .orElseThrow(RuntimeException::new)
             : null;
         mav.addObject("selectedCareer", selectedCareer);

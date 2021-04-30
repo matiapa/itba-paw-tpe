@@ -12,13 +12,13 @@ public interface AnnouncementService {
 
     List<Announcement> findByCourse(String courseId);
 
-    List<Announcement> findByCareer(int careerId);
+    List<Announcement> findByCareer(String careerCode);
 
     Optional<Announcement> findById(int id);
 
     void markSeen(int announcementId, User user);
 
-    Announcement create(String title, String summary, String content, Integer careerId,
+    Announcement create(String title, String summary, String content, String careerCode,
        String courseId, Date expiryDate, User author);
 
 }

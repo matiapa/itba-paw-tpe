@@ -36,7 +36,7 @@ public class AnnounceController {
     @RequestMapping(value = "/announcements", method = GET)
     public ModelAndView getAnnouncements(
         @RequestParam(name="filterBy", required = false, defaultValue="general") HolderEntity filterBy,
-        @RequestParam(name="careerId", required = false) Integer careerId,
+        @RequestParam(name="careerCode", required = false) String careerCode,
         @RequestParam(name="courseId", required = false) String courseId,
         @RequestParam(name="showCreateForm", required = false, defaultValue="false") Boolean showCreateForm,
         @ModelAttribute("createForm") final AnnouncementForm form
@@ -46,16 +46,16 @@ public class AnnounceController {
         // Add filters options
 
         mav.addObject("filterBy", filterBy);
-        commonFilters.addCareers(mav, careerId);
-        commonFilters.addCourses(mav, courseId);
+        commonFilters.addCareers(mav, careerCode);
+        commonFilters.addCourses(mav, careerCode);
 
         // Add filtered announcements
 
         List<Announcement> announcements = new ArrayList<>();
         switch(filterBy){
             case career:
-                if(careerId != null)
-                    announcements = announcementService.findByCareer(careerId);
+                if(careerCode != null)
+                    announcements = announcementService.findByCareer(careerCode);
                 break;
             case course:
                 if(courseId != null)
@@ -90,21 +90,21 @@ public class AnnounceController {
 
         announcementService.create(
             form.getTitle(), form.getSummary(), form.getContent(),
-            form.getCareerId(), form.getCourseId(), form.getExpiryDate(),
+            form.getCareerCode(), form.getCourseId(), form.getExpiryDate(),
             userService.getLoggedUser()
         );
 
         HolderEntity filterBy;
-        if(form.getCareerId() == null && form.getCourseId() == null)
+        if(form.getCareerCode() == null && form.getCourseId() == null)
             filterBy = HolderEntity.general;
-        else if(form.getCareerId() == null && form.getCourseId() != null)
+        else if(form.getCareerCode() == null && form.getCourseId() != null)
             filterBy = HolderEntity.course;
-        else if(form.getCareerId() != null && form.getCourseId() == null)
+        else if(form.getCareerCode() != null && form.getCourseId() == null)
             filterBy = HolderEntity.career;
         else
             filterBy = HolderEntity.general;
 
-        return getAnnouncements(filterBy, form.getCareerId(), form.getCourseId(), false, form);
+        return getAnnouncements(filterBy, form.getCareerCode(), form.getCourseId(), false, form);
     }
 
 
