@@ -25,6 +25,7 @@ public class UserDaoJdbc implements UserDao {
             rs.getString("surname"),
             rs.getString("email"),
             rs.getString("profile_picture"),
+            rs.getDate("signup_date"),
             rs.getString("career_code")
         );
 
