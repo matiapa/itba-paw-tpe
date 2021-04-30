@@ -9,7 +9,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Perfil</title>
+    <title><c:out value="${user.name} ${user.surname}"/></title>
 
     <jsp:include page="../common/styles.jsp"/>
 </head>
@@ -25,7 +25,7 @@
         <jsp:include page="../common/header.jsp"/>
 
         <div class="container-fluid">
-            <h3 class="text-dark mb-4">${user.name} ${user.surname}</h3>
+            <h3 class="text-dark mb-4"><c:out value="${user.name} ${user.surname}"/></h3>
 
             <div class="row mb-3">
 
@@ -50,13 +50,13 @@
                                     <div class="col">
                                         <div class="form-group">
                                             <label><strong>Legajo</strong></label>
-                                            <p>${user.id}</p>
+                                            <p><c:out value="${user.id}"/></p>
                                         </div>
                                     </div>
                                     <div class="col">
                                         <div class="form-group">
                                             <label><strong>Email</strong></label>
-                                            <p>${user.email}</p>
+                                            <p><c:out value="${user.email}"/></p>
                                         </div>
                                     </div>
                                 </div>
@@ -64,7 +64,7 @@
                                     <div class="col">
                                         <div class="form-group">
                                             <label><strong>Carrera</strong></label>
-                                            <p>${userCareer.name}</p>
+                                            <p><c:out value="${user.name}"/></p>
                                         </div>
                                     </div>
                                     <div class="col">

@@ -8,7 +8,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Perfil</title>
+    <title>Tu Perfil</title>
 
     <jsp:include page="../common/styles.jsp"/>
 </head>
@@ -65,13 +65,15 @@
                                     <div class="col">
                                         <div class="form-group">
                                             <label><strong>Legajo</strong></label>
-                                            <input class="form-control" type="text" value="${user.id}" disabled="true">
+                                            <input class="form-control" type="text"
+                                               value="<c:out value="${user.id}"/>" disabled="true">
                                         </div>
                                     </div>
                                     <div class="col">
                                         <div class="form-group">
                                             <label><strong>Email</strong></label>
-                                            <input class="form-control" type="email" value="${user.email}" disabled="true">
+                                            <input class="form-control" type="email"
+                                               value="<c:out value="${user.email}"/>" disabled="true">
                                         </div>
                                     </div>
                                 </div>
@@ -79,13 +81,15 @@
                                     <div class="col">
                                         <div class="form-group">
                                             <label><strong>Nombre</strong></label>
-                                            <input class="form-control" type="text" value="${user.name}" disabled="true">
+                                            <input class="form-control" type="text"
+                                               value="<c:out value="${user.name}"/>" disabled="true">
                                         </div>
                                     </div>
                                     <div class="col">
                                         <div class="form-group">
                                             <label><strong>Apellido</strong></label>
-                                            <input class="form-control" type="text" value="${user.surname}" disabled="true">
+                                            <input class="form-control" type="text"
+                                               value="<c:out value="${user.surname}"/>" disabled="true">
                                         </div>
                                     </div>
                                 </div>

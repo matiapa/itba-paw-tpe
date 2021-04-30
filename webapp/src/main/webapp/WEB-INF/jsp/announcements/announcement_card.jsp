@@ -15,7 +15,8 @@
                 <p style="padding-top: 0;"><c:out value="${announcement.summary}"/></p>
                 <p style="padding-top: 0;"><c:out value="${announcement.content}"/></p>
                 <span class="text-xs">
-                    <c:out value="Publicado por ${announcement.uploader.name} el "/>
+                    <c:url var="profileUrl" value="/profile?id=${announcement.uploader.id}"/>
+                    Publicado por <a href="${profileUrl}"><c:out value="${announcement.uploader.name}"/></a> el
                     <fmt:formatDate type="both" dateStyle = "short" timeStyle = "short" value="${announcement.uploadDate}"/>
                 </span>
             </div>
