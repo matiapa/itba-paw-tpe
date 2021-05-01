@@ -18,17 +18,7 @@ public class UserDaoJdbc implements UserDao {
     private final SimpleJdbcInsert jdbcInsert;
     private final SimpleJdbcInsert jdbcInsertFavCourses;
 
-    private static final RowMapper<User> USER_ROW_MAPPER = (rs, rowNum) ->
-        new User(
-            rs.getInt("id"),
-            rs.getString("name"),
-            rs.getString("surname"),
-            rs.getString("email"),
-            rs.getString("password"),
-            rs.getString("profile_picture"),
-            rs.getDate("signup_date"),
-            rs.getString("career_code")
-        );
+    private final RowMapper<User> USER_ROW_MAPPER;
 
     @Autowired
     public UserDaoJdbc(DataSource ds) {
@@ -36,6 +26,25 @@ public class UserDaoJdbc implements UserDao {
         this.jdbcInsert= new SimpleJdbcInsert(ds)
                 .withTableName("users");
         this.jdbcInsertFavCourses= new SimpleJdbcInsert(ds).withTableName("fav_course");
+
+        USER_ROW_MAPPER = (rs, rowNum) -> {
+            List<String> permissions = jdbcTemplate.query(
+                String.format("SELECT * FROM permission WHERE user_id=%d", rs.getInt("id")),
+                (rs2, rowNum2) -> rs.getString("entity")+"."+rs.getString("action")
+            );
+
+            return new User(
+                rs.getInt("id"),
+                rs.getString("name"),
+                rs.getString("surname"),
+                rs.getString("email"),
+                rs.getString("password"),
+                rs.getString("profile_picture"),
+                rs.getDate("signup_date"),
+                permissions,
+                rs.getString("career_code")
+            );
+        };
     }
 
     @Override

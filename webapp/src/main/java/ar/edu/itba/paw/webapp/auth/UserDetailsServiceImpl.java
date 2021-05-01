@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Component
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -28,10 +29,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         final User user = userOpt.get();
 
-        final Collection<? extends GrantedAuthority> authorities = Arrays.asList(
-            new SimpleGrantedAuthority("ROLE_USER"),
-            new SimpleGrantedAuthority("ROLE_ADMIN")
-        );
+        final Collection<? extends GrantedAuthority> authorities = user.getPermissions().stream()
+                .map(SimpleGrantedAuthority::new).collect(Collectors.toList());
 
         return new org.springframework.security.core.userdetails.User(
             user.getName(), user.getPassword(), authorities
