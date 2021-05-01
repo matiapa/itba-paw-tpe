@@ -6,8 +6,6 @@ public class Permission {
 
     public enum Action { CREATE, READ, UPDATE, DELETE }
 
-    public enum Entity { ANNOUNCEMENT, POLL, COURSE_CONTENT, CHAT_GROUP, CAREER, COURSE, PERMISSION, USER }
-
     private final Action action;
     private final Entity entity;
 

@@ -78,7 +78,7 @@ public class AnnounceController {
         User loggedUser = userService.getLoggedUser();
         mav.addObject("user", loggedUser);
         mav.addObject("canDelete", loggedUser.getPermissions().contains(
-            new Permission(Permission.Action.DELETE, Permission.Entity.ANNOUNCEMENT)
+            new Permission(Permission.Action.DELETE, Entity.ANNOUNCEMENT)
         ));
 
         return mav;

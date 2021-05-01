@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.models.Entity;
 import ar.edu.itba.paw.models.Permission;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,20 @@ public class UserDaoJdbc implements UserDao {
     private final SimpleJdbcInsert jdbcInsert;
     private final SimpleJdbcInsert jdbcInsertFavCourses;
 
-    private final RowMapper<User> USER_ROW_MAPPER;
+    private RowMapper<User> USER_ROW_MAPPER;
+
+    static final RowMapper<User> USER_ROW_MAPPER_ST = (rs, rowNum) -> new User(
+        rs.getInt("id"),
+        rs.getString("name"),
+        rs.getString("surname"),
+        rs.getString("email"),
+        rs.getString("password"),
+        rs.getString("profile_picture"),
+        rs.getDate("signup_date"),
+        null,
+        rs.getString("career_code")
+    );
+
 
     @Autowired
     public UserDaoJdbc(DataSource ds) {
@@ -32,7 +46,7 @@ public class UserDaoJdbc implements UserDao {
             List<Permission> permissions = jdbcTemplate.query(
                 String.format("SELECT * FROM permission WHERE user_id=%d", rs.getInt("id")),
                 (rs2, rowNum2) -> {
-                    Permission.Entity entity = Permission.Entity.valueOf(rs2.getString("entity").toUpperCase());
+                    Entity entity = Entity.valueOf(rs2.getString("entity").toUpperCase());
                     Permission.Action action = Permission.Action.valueOf(rs2.getString("action").toUpperCase());
                     return new Permission(action, entity);
                 }

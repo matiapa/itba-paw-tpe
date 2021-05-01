@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.models.Announcement;
+import ar.edu.itba.paw.models.Entity;
 import ar.edu.itba.paw.models.Permission;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.persistence.AnnouncementDao;
@@ -54,7 +55,7 @@ public class AnnouncementServiceImpl implements AnnouncementService {
 
     @Override
     public void delete(int id) {
-        Permission reqPerm = new Permission(Permission.Action.DELETE, Permission.Entity.ANNOUNCEMENT);
+        Permission reqPerm = new Permission(Permission.Action.DELETE, Entity.ANNOUNCEMENT);
         if(! userService.getLoggedUser().getPermissions().contains(reqPerm))
             throw new UnauthorizedException();
 

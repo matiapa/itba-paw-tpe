@@ -20,7 +20,7 @@ public class CareerDaoJdbc implements CareerDao{
 
     private final JdbcTemplate jdbcTemplate;
 
-    private static final RowMapper<Career> CAREER_ROW_MAPPER = (rs, rowNum) ->
+    static final RowMapper<Career> CAREER_ROW_MAPPER = (rs, rowNum) ->
         new Career(
             rs.getString("name"),
             rs.getString("code")
