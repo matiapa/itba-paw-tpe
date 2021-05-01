@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.models.Announcement;
+import ar.edu.itba.paw.models.HolderEntity;
 
 import java.util.Date;
 import java.util.List;
@@ -7,11 +8,13 @@ import java.util.Optional;
 
 public interface AnnouncementDao {
 
-    List<Announcement> findGeneral();
+    List<Announcement> findGeneral(int offset, int limit);
 
     List<Announcement> findByCourse(String courseId);
 
     List<Announcement> findByCareer(String careerCode);
+
+    int getSize(HolderEntity holderEntity, String code);
 
     Optional<Announcement> findById(int id);
 

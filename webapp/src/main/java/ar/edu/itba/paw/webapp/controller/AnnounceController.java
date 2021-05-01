@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
+import java.awt.print.Pageable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -10,6 +11,7 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import ar.edu.itba.paw.models.*;
+import ar.edu.itba.paw.models.ui.Pager;
 import ar.edu.itba.paw.services.UserService;
 import ar.edu.itba.paw.webapp.controller.common.FiltersController;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,7 @@ import ar.edu.itba.paw.webapp.form.AnnouncementForm;
 @Controller
 public class AnnounceController {
 
+    static final int LIMIT = 5;
     @Autowired private AnnouncementService announcementService;
 
     @Autowired private UserService userService;
@@ -35,11 +38,12 @@ public class AnnounceController {
 
     @RequestMapping(value = "/announcements", method = GET)
     public ModelAndView getAnnouncements(
-        @RequestParam(name="filterBy", required = false, defaultValue="general") HolderEntity filterBy,
-        @RequestParam(name="careerCode", required = false) String careerCode,
-        @RequestParam(name="courseId", required = false) String courseId,
-        @RequestParam(name="showCreateForm", required = false, defaultValue="false") Boolean showCreateForm,
-        @ModelAttribute("createForm") final AnnouncementForm form
+            @RequestParam(name="filterBy", required = false, defaultValue="general") HolderEntity filterBy,
+            @RequestParam(name="careerCode", required = false) String careerCode,
+            @RequestParam(name="courseId", required = false) String courseId,
+            @RequestParam(name="showCreateForm", required = false, defaultValue="false") Boolean showCreateForm,
+            @RequestParam(name="page", required = false, defaultValue = "0") int page,
+            @ModelAttribute("createForm") final AnnouncementForm form
     ){
         final ModelAndView mav = new ModelAndView("announcements/announcements_list");
 
@@ -50,22 +54,24 @@ public class AnnounceController {
         commonFilters.addCourses(mav, careerCode);
 
         // Add filtered announcements
-
         List<Announcement> announcements = new ArrayList<>();
+        Pager pager = new Pager(announcementService.getSize(HolderEntity.general, ""), page, page * LIMIT , LIMIT);
         switch(filterBy){
             case career:
                 if(careerCode != null)
+                    pager = new Pager(announcementService.getSize(filterBy, careerCode), page, page * LIMIT, LIMIT);
                     announcements = announcementService.findByCareer(careerCode);
                 break;
             case course:
                 if(courseId != null)
+                    pager = new Pager(announcementService.getSize(filterBy, courseId), page, page * LIMIT, LIMIT);
                     announcements = announcementService.findByCourse(courseId);
                 break;
             case general:
             default:
-                announcements = announcementService.findGeneral();
+                announcements = announcementService.findGeneral(page * LIMIT, LIMIT);
         }
-
+        mav.addObject("pager", pager);
         mav.addObject("announcements", announcements);
 
         // Add other parameters
@@ -84,7 +90,7 @@ public class AnnounceController {
     ){
         if (errors.hasErrors()) {
             return getAnnouncements(
-                HolderEntity.general, null, null, true, form
+                HolderEntity.general, null, null, true, 0, form
             );
         }
 
@@ -104,7 +110,7 @@ public class AnnounceController {
         else
             filterBy = HolderEntity.general;
 
-        return getAnnouncements(filterBy, form.getCareerCode(), form.getCourseId(), false, form);
+        return getAnnouncements(filterBy, form.getCareerCode(), form.getCourseId(), false, 0, form);
     }
 
 

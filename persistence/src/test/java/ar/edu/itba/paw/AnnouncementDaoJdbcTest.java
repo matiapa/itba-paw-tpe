@@ -28,7 +28,7 @@ public class AnnouncementDaoJdbcTest {
 
     @Test
     public void testFindGeneral() {
-        List<Announcement> announcements = announcementDaoJdbc.findGeneral();
+        List<Announcement> announcements = announcementDaoJdbc.findGeneral(0,0);
 
         Assert.assertEquals(1, announcements.size());
 

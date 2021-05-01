@@ -33,7 +33,7 @@ public class HomeController {
 
         mav.addObject("courses", courseService.findFavourites(userService.getLoggedUser(), 4));
 
-        mav.addObject("announcements", announcementService.findGeneral());
+        mav.addObject("announcements", announcementService.findGeneral(0, 5));
 
         mav.addObject("careers", careerService.findAll());
 

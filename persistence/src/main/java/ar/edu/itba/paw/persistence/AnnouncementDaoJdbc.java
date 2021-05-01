@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.models.Announcement;
+import ar.edu.itba.paw.models.HolderEntity;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -50,9 +51,10 @@ public class AnnouncementDaoJdbc implements AnnouncementDao {
     }
 
     @Override
-    public List<Announcement> findGeneral() {
+    public List<Announcement> findGeneral(int offset, int limit) {
         return jdbcTemplate.query(
-            "SELECT * FROM announcement WHERE career_code IS NULL AND course_id IS NULL",
+                String.format("SELECT * FROM announcement WHERE career_code IS NULL AND course_id IS NULL " +
+                        "OFFSET %d LIMIT %d ", offset, limit),
                 announcementRowMapper
         );
     }
@@ -71,6 +73,23 @@ public class AnnouncementDaoJdbc implements AnnouncementDao {
             String.format("SELECT * FROM announcement WHERE career_code='%s'", careerCode),
                 announcementRowMapper
         );
+    }
+
+    @Override
+    public int getSize(HolderEntity holderEntity, String code){
+        switch (holderEntity){
+            case career:
+                return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM announcement WHERE career_code= ?",
+                        new Object[] {code}, Integer.class);
+            case course:
+                return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM announcement WHERE course_id= ?",
+                        new Object[] {code}, Integer.class);
+            case general:
+            default:
+                return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM announcement",
+                        new Object[] {}, Integer.class);
+        }
+
     }
 
     @Override

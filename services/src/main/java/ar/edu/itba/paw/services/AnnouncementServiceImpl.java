@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.models.Announcement;
+import ar.edu.itba.paw.models.HolderEntity;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.persistence.AnnouncementDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +18,8 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     private AnnouncementDao announcementDao;
 
     @Override
-    public List<Announcement> findGeneral() {
-        return announcementDao.findGeneral();
+    public List<Announcement> findGeneral(int offset, int limit) {
+        return announcementDao.findGeneral(offset, limit);
     }
 
     @Override
@@ -31,6 +32,10 @@ public class AnnouncementServiceImpl implements AnnouncementService {
         return announcementDao.findByCareer(careerCode);
     }
 
+    @Override
+    public int getSize(HolderEntity holderEntity, String code){
+        return announcementDao.getSize(holderEntity, code);
+    }
     @Override
     public Optional<Announcement> findById(int id) {
         return announcementDao.findById(id);
