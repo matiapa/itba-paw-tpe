@@ -5,6 +5,8 @@
 <jsp:useBean type="java.util.List<ar.edu.itba.paw.models.ChatGroup>" scope="request" id="chatgroups"/>
 <jsp:useBean type="java.util.List<ar.edu.itba.paw.models.Career>" scope="request" id="careers"/>
 <jsp:useBean type="ar.edu.itba.paw.models.ChatGroup.ChatPlatform[]" scope="request" id="platforms"/>
+<jsp:useBean type="java.lang.Boolean" scope="request" id="canDelete"/>
+
 
 <!DOCTYPE html>
 <html>
@@ -115,6 +117,9 @@
                                                 <th>Año</th>
                                                 <th>Cuatrimestre</th>
                                                 <th>Link</th>
+                                                <c:if test="${canDelete}">
+                                                    <th>Admin Options</th>
+                                                </c:if>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -124,8 +129,19 @@
                                                     <td>${chatgroup.creationYear}</td>
                                                     <td>${chatgroup.creationQuarter}</td>
                                                     <td>
-                                                        <a class="btn btn-link" href='<c:out value="${chatgroup.link}"/>' target="_blank" rel="noopener noreferrer">Abrir</button>
+                                                        <a class="btn btn-link" href='<c:out value="${chatgroup.link}"/>' target="_blank" rel="noopener noreferrer">Abrir</a>
                                                     </td>
+                                                    <c:if test="${canDelete}">
+                                                        <td>
+                                                            <c:url var="url" value="/chats/${chatgroup.id}/delete"/>
+                                                            <form action="${url}" method="post">
+                                                                <button type="submit" class="btn btn-icon" style="color:red">
+                                                                    <i class="material-icons">delete</i>
+                                                                </button>
+                                                            </form>
+
+                                                        </td>
+                                                    </c:if>
                                                 </tr>
                                             </c:forEach>
                                         </tbody>

@@ -17,4 +17,6 @@ public interface ChatGroupService {
 
     List<ChatGroup> findByCareer(String careerCode, ChatPlatform platform, Integer year, Integer quarter);
 
+    void delete(int id);
+
 }

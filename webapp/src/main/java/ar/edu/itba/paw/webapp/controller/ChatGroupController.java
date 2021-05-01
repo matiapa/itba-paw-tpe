@@ -1,8 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import static java.util.stream.Collectors.toList;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -10,14 +9,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.IntStream;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import ar.edu.itba.paw.models.Permission;
+import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.services.UserService;
 import ar.edu.itba.paw.webapp.controller.common.FiltersController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -98,7 +101,13 @@ public class ChatGroupController {
         // Add other parameters
 
         mav.addObject("showCreateForm", showCreateForm);
-        mav.addObject("user", userService.getLoggedUser());
+
+
+        User loggedUser = userService.getLoggedUser();
+        mav.addObject("user", loggedUser);
+        mav.addObject("canDelete", loggedUser.getPermissions().contains(
+                new Permission(Permission.Action.DELETE, Permission.Entity.CHAT_GROUP)
+        ));
 
         return mav;
     }
@@ -123,6 +132,23 @@ public class ChatGroupController {
         );
 
         return get(chatGroupForm.getCareerCode(), null, null, null, false, chatGroupForm);
+    }
+
+    @RequestMapping(value = "/chats/{id}", method = DELETE)
+    public String delete(
+            @PathVariable(value="id") int id, HttpServletRequest request
+    ) {
+        chatGroupService.delete(id);
+
+        String referer = request.getHeader("Referer");
+        return "redirect:"+ referer;
+    }
+
+    @RequestMapping(value = "/chats/{id}/delete", method = POST)
+    public String deleteWithPost(
+            @PathVariable(value="id") int id, HttpServletRequest request
+    ) {
+        return delete(id, request);
     }
 
 }
