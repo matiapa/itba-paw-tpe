@@ -248,6 +248,13 @@ public class PollDaoJdbc implements PollDao {
         ).size() > 0;
     }
 
+    @Override
+    public void delete(int id){
+        jdbcTemplate.execute(
+                String.format("DELETE FROM poll WHERE id=%d", id)
+        );
+    }
+
     private static class PollVoteOption {
         private final int id;
         private final String value;

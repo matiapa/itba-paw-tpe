@@ -3,6 +3,7 @@
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 
 <jsp:useBean type="ar.edu.itba.paw.models.Poll" scope="request" id="poll"/>
+<jsp:useBean type="java.lang.Boolean" scope="request" id="canDelete"/>
 
 <div class="card shadow mb-4" style="margin-top: 32px;">
     <div class="card-header py-3">
@@ -19,6 +20,16 @@
                         <fmt:formatDate type="both" dateStyle = "short" timeStyle = "short" value="${poll.expiryDate}"/>
                     </c:if>
                 </span>
+            </div>
+            <div class="col-auto">
+                <c:if test="${canDelete}">
+                    <c:url var="url" value="/polls/${poll.id}/delete"/>
+                    <form action="${url}" method="post">
+                        <button type="submit" class="btn btn-icon" style="color:red">
+                            <i class="material-icons">delete</i>
+                        </button>
+                    </form>
+                </c:if>
             </div>
             <div class="col-auto">
                 <a href="<c:url value="/polls/detail?id=${poll.id}"/>" class="btn btn-icon" type="button">
