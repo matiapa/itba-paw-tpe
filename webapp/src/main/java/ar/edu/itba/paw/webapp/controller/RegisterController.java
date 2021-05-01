@@ -39,6 +39,7 @@ public class RegisterController {
     @RequestMapping(value ="/register", method = GET)
     public ModelAndView getRegister(
             @ModelAttribute("UserForm") final UserForm form
+
     ) {
 
         final ModelAndView mav = new ModelAndView("register/register");

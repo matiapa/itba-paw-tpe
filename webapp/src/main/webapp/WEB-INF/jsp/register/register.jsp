@@ -105,6 +105,7 @@
                                                 </div>
                                             </div>
                                         </c:forEach>
+                                        <form:errors path="courses" cssStyle="color: red" element="p"/>
                                     </div>
                                 </div>
 

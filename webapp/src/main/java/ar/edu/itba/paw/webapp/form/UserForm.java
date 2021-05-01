@@ -12,11 +12,11 @@ public class UserForm {
 
 
     @NotNull
-    @Size(min = 5, max = 20)
+    @Size(min = 1, max = 20)
     private String name;
 
     @NotNull
-    @Size(min = 5, max = 20)
+    @Size(min = 1, max = 20)
     private String surname;
 
     @Email
@@ -34,7 +34,7 @@ public class UserForm {
     @NotNull
     private String careerCode;
 
-    @NotNull
+
     @NotEmpty
     private ArrayList<String> courses;
 
