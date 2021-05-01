@@ -1,5 +1,9 @@
+<%@ page import="ar.edu.itba.paw.models.Permission" %>
+<%@ page import="ar.edu.itba.paw.models.Entity" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
+
+<jsp:useBean type="ar.edu.itba.paw.models.User" scope="request" id="user"/>
 
 <nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion sidebar-toggled sidebar-dark p-0 toggled" style="background: rgb(2,86,138);">
 
@@ -53,6 +57,16 @@
                     <span>Apuntes</span>
                 </a>
             </li>
+
+            <c:if test="<%= user.getPermissions().contains(new Permission(Permission.Action.READ, Entity.STATISTIC)) %>">
+                <li class="nav-item">
+                    <hr class="sidebar-divider">
+                    <a class="nav-link" href="<c:url value="/admin/statistics"/>">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Estadísticas</span>
+                    </a>
+                </li>
+            </c:if>
         </ul>
         <div class="text-center d-none d-md-inline"></div>
     </div>

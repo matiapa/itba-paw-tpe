@@ -154,11 +154,17 @@
                             <div class="row align-items-center no-gutters">
                                 <div class="col mr-2">
                                     <h6 class="mb-0">
-                                        <strong>${contribution.key.name}</strong>
+                                        <strong>${contribution.key.name} ${contribution.key.surname}</strong>
                                     </h6>
                                     <span class="text-xs">
                                         ${contribution.value} contribuciones
                                     </span>
+                                </div>
+                                <div class="col-auto">
+                                    <c:url var="url" value="/profile?id=${contribution.key.id}"/>
+                                    <a href="${url}" class="btn btn-icon" type="button">
+                                        <i class="material-icons">keyboard_arrow_right</i>
+                                    </a>
                                 </div>
                             </div>
                         </li>
@@ -183,6 +189,12 @@
                                     <span class="text-xs">
                                         ${contribution.value} contribuciones
                                     </span>
+                                </div>
+                                <div class="col-auto">
+                                    <c:url var="url" value="/courses/detail?id=${contribution.key.id}"/>
+                                    <a href="${url}" class="btn btn-icon" type="button">
+                                        <i class="material-icons">keyboard_arrow_right</i>
+                                    </a>
                                 </div>
                             </div>
                         </li>
