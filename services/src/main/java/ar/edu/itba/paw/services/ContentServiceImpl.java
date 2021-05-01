@@ -35,4 +35,9 @@ public class ContentServiceImpl implements ContentService{
         return contentDao.createContent(name, link, courseId, description, contentType, contentDate,user);
     }
 
+    @Override
+    public void delete(int id) {
+            contentDao.delete(id);
+    }
+
 }

@@ -3,6 +3,7 @@
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 
 <jsp:useBean type="java.util.List<ar.edu.itba.paw.models.Content>" scope="request" id="contents"/>
+<jsp:useBean type="java.lang.Boolean" scope="request" id="canDelete"/>
 
 
 <!DOCTYPE html>
@@ -96,6 +97,9 @@
                                             <th>Fecha</th>
                                             <th>Autor</th>
                                             <th>Link</th>
+                                            <c:if test="${canDelete}">
+                                                <th>Admin Options</th>
+                                            </c:if>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -110,6 +114,18 @@
                                                     <a href="${profileUrl}"><c:out value="${content.submitter.name}"/></a>
                                                 </td>
                                                 <td><a class="btn btn-link" target="_blank" rel="noopener noreferrer" href="<c:url value='${content.link}'/>" role="button">Link</a></td>
+
+                                                <c:if test="${canDelete}">
+                                                    <td>
+                                                        <c:url var="url" value="/contents/${content.id}/delete"/>
+                                                        <form action="${url}" method="post">
+                                                            <button type="submit" class="btn btn-icon" style="color:red">
+                                                                <i class="material-icons">delete</i>
+                                                            </button>
+                                                        </form>
+
+                                                    </td>
+                                                </c:if>
                                             </tr>
                                         </c:forEach>
                                         </tbody>

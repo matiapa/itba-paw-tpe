@@ -110,4 +110,11 @@ public class ContentDaoJdbc implements ContentDao{
         ).stream().findFirst();
     }
 
+    @Override
+    public void delete(int id){
+        jdbcTemplate.execute(
+                String.format("DELETE FROM course_content WHERE id=%d", id)
+        );
+    }
+
 }
