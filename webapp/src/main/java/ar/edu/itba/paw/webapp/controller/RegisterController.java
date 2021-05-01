@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.validation.Valid;
 import java.util.Optional;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -52,14 +53,14 @@ public class RegisterController {
 
     @RequestMapping(value ="/register", method = POST)
     public ModelAndView RegisterUser(
-            @ModelAttribute("UserForm") final UserForm form,final BindingResult errors
+            @Valid @ModelAttribute("UserForm") final UserForm form, final BindingResult errors
     ) {
 
 
 
 
         if (errors.hasErrors()){
-            return new ModelAndView("register/register");
+            return getRegister(form);
         }
 
 
