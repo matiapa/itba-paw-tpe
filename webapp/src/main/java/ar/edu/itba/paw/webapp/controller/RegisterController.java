@@ -75,10 +75,10 @@ public class RegisterController {
 
     @RequestMapping(value ="/register/verification")
     public ModelAndView VerifyUser(
-            @RequestParam(name="verificationCode", required = true) String verification_code,
+            @RequestParam(name="verificationCode", required = true) Integer verification_code,
             @RequestParam(name="email",required = true)String email
     ) {
-        Integer.getInteger(verification_code);
+        final ModelAndView mav = new ModelAndView("register/validate_email");
 
         Optional<User> userOptional= userService.findByEmail(email);
 
@@ -87,8 +87,9 @@ public class RegisterController {
            throw new RuntimeException( "email not found");
        }
 
-        userService.verifyEmail(userOptional.get().getId(),Integer.getInteger(verification_code));
+        mav.addObject("worked",userService.verifyEmail(userOptional.get().getId(),verification_code));
 
-        return new ModelAndView("redirect:/");
+        return mav;
+
     }
 }

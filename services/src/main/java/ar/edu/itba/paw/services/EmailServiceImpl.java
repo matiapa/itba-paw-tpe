@@ -29,7 +29,7 @@ public class EmailServiceImpl implements EmailService{
     @Autowired
     private UserDao userDao;
 
-    private String email="jsackmann@itba.edu.ar";
+    private String email="noreplyitbahub@gmail.com";
 
     private String BaseURL="http://localhost:8080/webapp";
 
@@ -37,7 +37,7 @@ public class EmailServiceImpl implements EmailService{
     public void sendMessageUsingThymeleafTemplate(String to, String subject, Map<String, Object> templateModel) {
         Context thymeleafContext = new Context();
         thymeleafContext.setVariables(templateModel);
-        String htmlBody = thymeleafTemplateEngine.process("mail-templates/template-thymeleaf.html",thymeleafContext);
+        String htmlBody = thymeleafTemplateEngine.process("template-thymeleaf.html",thymeleafContext);
 
         sendHTMLMessage(to,subject,htmlBody);
     }
@@ -75,7 +75,8 @@ public class EmailServiceImpl implements EmailService{
 
 
         Map<String,Object> model = new HashMap<>();
-        model.put("buttonLink",BaseURL+"register/verification?verificationCode"+getVerificationCode(email)+"&email="+email);
+        model.put("buttonLink",BaseURL+"/register/verification?verificationCode="+getVerificationCode(email)+"&email="+email);
+        model.put("name","testvar");
         String subject="Verificar cuenta";
         sendMessageUsingThymeleafTemplate(email,subject,model);
 

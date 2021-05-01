@@ -107,13 +107,21 @@ public class UserDaoJdbc implements UserDao {
                 VERIFICATION_CODE_MAPPER
         ).stream().findFirst();
 
-        if (!db_verification_code.isPresent())
+
+        if (!db_verification_code.isPresent()){
+
             return false;
-        if (db_verification_code.get()!=verification_code)
+        }
+
+        if (db_verification_code.get()!=verification_code){
+
             return false;
 
+        }
+
         jdbcTemplate.execute(String.format("DELETE FROM user_verification WHERE user_id=%d",user_id));
-        jdbcTemplate.execute(String.format("UPDATE users SET verified='true' WHERE user_id=%d",user_id));
+
+        jdbcTemplate.execute(String.format("UPDATE users SET verified='true' WHERE id=%d",user_id));
 
         return true;
     }

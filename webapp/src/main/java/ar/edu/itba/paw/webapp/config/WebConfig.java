@@ -73,8 +73,8 @@ public class WebConfig {
         mailSender.setHost("smtp.gmail.com");
         mailSender.setPort(587);
 
-        mailSender.setUsername("jsackmann@itba.edu.ar");
-        mailSender.setPassword("");
+        mailSender.setUsername("noreplyitbahub@gmail.com");
+        mailSender.setPassword("ITBAHUB2021!");
 
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.transport.protocol","smtp");
@@ -89,8 +89,8 @@ public class WebConfig {
     @Bean
     public ITemplateResolver thymeleafTemplateResolver(){
         ClassLoaderTemplateResolver templateResolver= new ClassLoaderTemplateResolver();
-        templateResolver.setPrefix("src/main/mail-templates/");
-        templateResolver.setPrefix(".html");
+        templateResolver.setPrefix("mail-templates/");
+//        templateResolver.set(".html");
         templateResolver.setTemplateMode("HTML");
         templateResolver.setCharacterEncoding("UTF-8");
         return templateResolver;
