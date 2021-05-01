@@ -115,7 +115,7 @@ public class AnnouncementDaoJdbc implements AnnouncementDao {
     @Override
     public void delete(int id){
         jdbcTemplate.execute(
-            String.format("DELETE FROM announcements WHERE id=%d", id)
+            String.format("DELETE FROM announcement WHERE id=%d", id)
         );
     }
 

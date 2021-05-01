@@ -32,8 +32,8 @@ public class UserDaoJdbc implements UserDao {
             List<Permission> permissions = jdbcTemplate.query(
                 String.format("SELECT * FROM permission WHERE user_id=%d", rs.getInt("id")),
                 (rs2, rowNum2) -> {
-                    Permission.Entity entity = Permission.Entity.valueOf(rs.getString("entity"));
-                    Permission.Action action = Permission.Action.valueOf(rs.getString("action"));
+                    Permission.Entity entity = Permission.Entity.valueOf(rs2.getString("entity").toUpperCase());
+                    Permission.Action action = Permission.Action.valueOf(rs2.getString("action").toUpperCase());
                     return new Permission(action, entity);
                 }
             );

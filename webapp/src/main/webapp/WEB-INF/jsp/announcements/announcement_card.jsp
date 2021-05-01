@@ -24,7 +24,7 @@
                 <c:if test="${canDelete}">
                     <c:url var="url" value="/announcements/${announcement.id}/delete"/>
                     <form action="${url}" method="post">
-                       <button type="submit" class="btn btn-icon">
+                       <button type="submit" class="btn btn-icon" style="color:red">
                            <i class="material-icons">delete</i>
                        </button>
                     </form>
