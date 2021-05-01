@@ -35,7 +35,8 @@ public class SgaServiceImpl implements SgaService {
             SgaExtendedData extendedData = mapper.readValue(new URL(DNI_ENDPOINT + basicData.dni), SgaExtendedData.class);
             Career career = careerService.findByCode(extendedData.careerCode).get();
             // TODO: Fix all this nulls
-            return new User(extendedData.code, basicData.firstName, basicData.lastName, email, null, null, null, permissions, career.getCode());
+            return new User(extendedData.code, basicData.firstName, basicData.lastName, email, null,
+        null, null, null, career.getCode());
         } catch (IOException e) {
             e.printStackTrace();
             return null;
