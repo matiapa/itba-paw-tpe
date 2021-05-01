@@ -102,7 +102,7 @@
                                                          src="<c:url value="/assets/img/avatars/avatar-male.png"/>">
                                                     <c:out value="${content.submitter.name}"/>
                                                  </td>
-                                                <td><a class="btn btn-link" target="_blank" rel="noopener noreferrer" href="<c:url value='${content.link}'/>" role="button">"form.link"</a></td>
+                                                <td><a class="btn btn-link" target="_blank" rel="noopener noreferrer" href="<c:url value='${content.link}'/>" role="button"><spring:message code="form.link"/></a></td>
                                             </tr>
                                         </c:forEach>
                                         </tbody>

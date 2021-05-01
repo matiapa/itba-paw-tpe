@@ -15,7 +15,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>"polls"</title>
+    <title><spring:message code="polls"/></title>
 
     <jsp:include page="../common/styles.jsp"/>
 
@@ -124,7 +124,7 @@
                                                 aria-expanded="false" type="button" style="margin-top: 32px;">
                                             <c:choose>
                                                 <c:when test="${selectedCareer!=mull}">
-                                                    selectedCareer.name
+                                                    ${selectedCareer.name}
                                                 </c:when>
                                                 <c:otherwise>
                                                     <spring:message code="chooseCareer"/>

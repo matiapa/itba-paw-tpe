@@ -99,7 +99,7 @@
                                           aria-expanded="false" type="button" style="margin-top: 32px;">
                                             <c:choose>
                                                 <c:when test="${selectedCareer!=null}">
-                                                    selectedCaereer.name
+                                                    ${selectedCareer.name}
                                                 </c:when>
                                                 <c:otherwise>
                                                     <spring:message code="chooseCareer"/>

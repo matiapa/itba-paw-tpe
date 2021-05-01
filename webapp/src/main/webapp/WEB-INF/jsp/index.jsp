@@ -16,7 +16,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Inicio</title>
+    <title><spring:message code="home"/></title>
 
     <jsp:include page="common/styles.jsp"/>
 </head>
@@ -81,7 +81,12 @@
                                                 <div class="col mr-2">
                                                     <h6 class="mb-0"><strong><c:out value="${poll.name}"/></strong></h6>
                                                     <span class="text-xs">
-                                                        ${poll.isExpired ? "expiredOn" : "expireOn"}
+                                                        <c:if test="${poll.isExpired}">
+                                                            <spring:message code="expiredOn"/>
+                                                        </c:if>
+                                                        <c:if test="${!poll.isExpired}">
+                                                            <spring:message code="expireOn"/>
+                                                        </c:if>
                                                         <fmt:formatDate type="both" dateStyle = "short" timeStyle = "short" value="${poll.expiryDate}"/>
                                                     </span>
                                                 </div>

@@ -1,7 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
-
+<%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib prefix = "spring" uri="http://www.springframework.org/tags"%>
 
 
@@ -42,8 +42,10 @@
                                     <p style="padding-top: 0;"><c:out value="${announcement.summary}"/></p>
                                     <p style="padding-top: 0;"><c:out value="${announcement.content}"/></p>
                                     <span class="text-xs">
-                                        <c:out value="Publicado por ${announcement.uploader.name} el "/>
-                                        <fmt:formatDate type="both" dateStyle = "short" timeStyle = "short" value="${announcement.uploadDate}"/>
+                                        <fmt:formatDate type="both" dateStyle = "short" timeStyle = "short" value="${announcement.uploadDate}" var="uploadDateFormatted"/>
+                                        <spring:message code="publishedBy" htmlEscape="false" arguments=
+                                            '${fn:escapeXml(announcement.uploader.name)},
+                                            ${uploadDateFormatted}'/>
                                     </span>
                                 </div>
                             </div>

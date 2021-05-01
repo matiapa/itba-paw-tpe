@@ -111,7 +111,7 @@
                                                     <c:url var="profileUrl" value="/profile?id=${content.submitter.id}"/>
                                                     <a href="${profileUrl}"><c:out value="${content.submitter.name}"/></a>
                                                 </td>
-                                                <td><a class="btn btn-link" target="_blank" rel="noopener noreferrer" href="<c:url value='${content.link}'/>" role="button">"form.link"</a></td>
+                                                <td><a class="btn btn-link" target="_blank" rel="noopener noreferrer" href="<c:url value='${content.link}'/>" role="button"><spring:message code="form.link"/></a></td>
                                             </tr>
                                         </c:forEach>
                                         </tbody>

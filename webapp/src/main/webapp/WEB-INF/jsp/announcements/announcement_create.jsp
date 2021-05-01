@@ -22,7 +22,7 @@
                 <form:form id="createAnnouncementForm" modelAttribute="createForm" action="${postUrl}" method="post">
 
                     <div class="form-group">
-                        <label>"announcement.destination"</label>
+                        <label><spring:message code="announcement.destination"/></label>
                         <select id="announcementTarget" class="form-control">
                             <option value="general"><spring:message code="announcement.generalDestination"/></option>
                             <option value="career"><spring:message code="announcement.careerDestination"/></option>
