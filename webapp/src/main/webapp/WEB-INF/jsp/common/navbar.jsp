@@ -4,6 +4,7 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 
 <jsp:useBean type="ar.edu.itba.paw.models.User" scope="request" id="user"/>
+<%@ taglib prefix = "spring" uri="http://www.springframework.org/tags"%>
 
 <nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion sidebar-toggled sidebar-dark p-0 toggled" style="background: rgb(2,86,138);">
 
@@ -18,14 +19,14 @@
             <li class="nav-item">
                 <a class="nav-link" href="<c:url value="/"/>">
                     <i class="material-icons">home</i>
-                    <span>Inicio</span>
+                    <span><spring:message code="home"/></span>
                 </a>
             </li>
 
             <li class="nav-item">
                 <a class="nav-link" href="<c:url value="/courses"/>">
                     <i class="icon-graduation"></i>
-                    <span>Cursos</span>
+                    <span><spring:message code="courses"/></span>
                 </a>
                 <hr class="sidebar-divider">
             </li>
@@ -33,28 +34,28 @@
             <li class="nav-item">
                 <a class="nav-link" href="<c:url value="/announcements"/>">
                     <i class="material-icons">fiber_new</i>
-                    <span>Anuncios</span>
+                    <span><spring:message code="announcement"/></span>
                 </a>
             </li>
 
             <li class="nav-item">
                 <a class="nav-link" href="<c:url value="/polls"/>">
                     <i class="fas fa-poll"></i>
-                    <span>Encuestas</span>
+                    <span><spring:message code="polls"/></span>
                 </a>
             </li>
 
             <li class="nav-item">
                 <a class="nav-link" href="<c:url value="/chats"/>">
                     <i class="material-icons">people</i>
-                    <span>Grupos de chat</span>
+                    <span><spring:message code="chatGroups"/></span>
                 </a>
             </li>
 
             <li class="nav-item">
                 <a class="nav-link" href="<c:url value="/contents"/>">
                     <i class="fas fa-book"></i>
-                    <span>Apuntes</span>
+                    <span><spring:message code="contents"/></span>
                 </a>
             </li>
 

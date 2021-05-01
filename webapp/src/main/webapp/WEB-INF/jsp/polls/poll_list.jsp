@@ -3,6 +3,8 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 
+<%@ taglib prefix = "spring" uri="http://www.springframework.org/tags"%>
+
 <jsp:useBean type="java.util.List<ar.edu.itba.paw.models.Poll>" scope="request" id="polls"/>
 <jsp:useBean type="ar.edu.itba.paw.models.HolderEntity" scope="request" id="filterBy"/>
 
@@ -13,7 +15,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Encuestas</title>
+    <title><spring:message code="polls"/></title>
 
     <jsp:include page="../common/styles.jsp"/>
 
@@ -38,7 +40,7 @@
                             <a href="#popup" data-toggle="modal">
                                 <button class="btn btn-primary btn-sm">
                                     <i class="material-icons pull-left">add</i>
-                                    Agregar encuesta
+                                    <spring:message code="poll.add"/>
                                 </button>
                             </a>
                         </div>
@@ -46,15 +48,15 @@
                         <ul class="nav nav-tabs" role="tablist">
                             <li class="nav-item" role="presentation">
                                 <a class="nav-link ${filterBy == "general" ? 'active' : ''}" role="tab"
-                                   href="<c:url value="/polls?filterBy=general"/>">Generales</a>
+                                   href="<c:url value="/polls?filterBy=general"/>"><spring:message code="generals"/></a>
                             </li>
                             <li class="nav-item" role="presentation">
                                 <a class="nav-link ${filterBy == "career" ? 'active' : ''}" role="tab"
-                                   href="<c:url value="/polls?filterBy=career"/>">Por carrera</a>
+                                   href="<c:url value="/polls?filterBy=career"/>"><spring:message code="byCareer"/></a>
                             </li>
                             <li class="nav-item" role="presentation">
                                 <a class="nav-link ${filterBy == "course" ? "active" : ''}" role="tab"
-                                    href="<c:url value="polls?filterBy=course"/>">Por curso</a>
+                                    href="<c:url value="polls?filterBy=course"/>"><spring:message code="byCourse"/></a>
                             </li>
                         </ul>
 
@@ -64,7 +66,7 @@
                                 <div class="col-xl-2">
                                     <select class="form-control" name="type">
                                         <option ${selectedType == null ? 'selected' : ''} value="">
-                                            Tipo
+                                            <spring:message code="form.type"/>
                                         </option>
                                         <c:forEach var="type" items="${types}">
                                             <option ${selectedType == type ? 'selected' : ''} value="${type}">
@@ -77,7 +79,7 @@
                                 <div class="col-xl-2">
                                     <select class="form-control" name="state">
                                         <option ${selectedState == null ? 'selected' : ''} value="">
-                                            Estado
+                                            <spring:message code="poll.state"/>
                                         </option>
                                         <c:forEach var="state" items="${states}">
                                             <option ${selectedState == state ? 'selected' : ''} value="${state}">
@@ -88,7 +90,7 @@
                                 </div>
 
                                 <div class="col-xl-2">
-                                    <button type="submit" class="btn btn-primary">Filtrar</button>
+                                    <button type="submit" class="btn btn-primary"><spring:message code="filter"/></button>
                                 </div>
                             </c:set>
 
@@ -120,7 +122,14 @@
                                     <div class="dropdown">
                                         <button class="btn btn-block dropdown-toggle text-left text-dark bg-white" data-toggle="dropdown"
                                                 aria-expanded="false" type="button" style="margin-top: 32px;">
-                                            ${selectedCareer!=null ? selectedCareer.name : 'Elegí una carrera'}
+                                            <c:choose>
+                                                <c:when test="${selectedCareer!=mull}">
+                                                    ${selectedCareer.name}
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <spring:message code="chooseCareer"/>
+                                                </c:otherwise>
+                                            </c:choose>
                                         </button>
                                         <div class="dropdown-menu">
                                             <c:forEach var="career" items="${careers}">
@@ -150,7 +159,7 @@
                                         </c:when>
                                         <c:otherwise>
                                             <div class="text-center"><i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
-                                                <p style="margin-top: 16px;">Por favor, elegí una carrera para ver las encuestas</p>
+                                                <p style="margin-top: 16px;"><spring:message code="poll.chooseCareerPlease"/></p>
                                             </div>
                                         </c:otherwise>
                                     </c:choose>
@@ -168,7 +177,7 @@
 
                                         <div style="border: thin solid grey">
                                             <select id="courseId" name="courseId" class="selectpicker" data-live-search="true"
-                                                    title="Elegí un curso" data-width="100%">
+                                                    title=<spring:message code="chooseCourse"/> data-width="100%">
                                                 <c:forEach var="course" items="${courses}">
                                                     <option ${course.equals(selectedCourse) ? 'selected' : ''}
                                                             value="${course.id}" data-tokens="${course.name}">${course.name}</option>
@@ -193,13 +202,13 @@
                                         <c:when test="${selectedCourse != null && polls.size() == 0}">
                                             <div class="text-center mt-5">
                                                 <i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
-                                                <p style="margin-top: 16px;">Ups, no hay nada por acá</p>
+                                                <p style="margin-top: 16px;"><spring:message code="noContent"/></p>
                                             </div>
                                         </c:when>
                                         <c:otherwise>
                                             <div class="text-center mt-5">
                                                 <i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
-                                                <p style="margin-top: 16px;">Por favor, elegí un curso para ver las encuestas</p>
+                                                <p style="margin-top: 16px;"><spring:message code="poll.chooseCoursePlease"/></p>
                                             </div>
                                         </c:otherwise>
                                     </c:choose>

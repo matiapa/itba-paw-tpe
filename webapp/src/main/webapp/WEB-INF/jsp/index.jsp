@@ -2,6 +2,9 @@
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 
+<%@ taglib prefix = "spring" uri="http://www.springframework.org/tags"%>
+
+
 <jsp:useBean type="java.util.List<ar.edu.itba.paw.models.Announcement>" scope="request" id="announcements"/>
 <jsp:useBean type="java.util.List<ar.edu.itba.paw.models.Poll>" scope="request" id="polls"/>
 <jsp:useBean type="java.util.List<ar.edu.itba.paw.models.Course>" scope="request" id="courses"/>
@@ -13,7 +16,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Inicio</title>
+    <title><spring:message code="home"/></title>
 
     <jsp:include page="common/styles.jsp"/>
 </head>
@@ -34,7 +37,7 @@
                             <div class="card shadow mb-4">
 
                                 <div class="card-header py-3">
-                                    <h6 class="font-weight-bold m-0">Anuncios más relevantes</h6>
+                                    <h6 class="font-weight-bold m-0"><spring:message code="mostRelevantAnnounce"/></h6>
                                 </div>
 
                                 <%-- Relevant announcement list --%>
@@ -65,7 +68,7 @@
                             <div class="card shadow mb-4">
 
                                 <div class="card-header py-3">
-                                    <h6 class="font-weight-bold m-0">Encuestas relevantes</h6>
+                                    <h6 class="font-weight-bold m-0"><spring:message code="relevantPolls"/></h6>
                                 </div>
 
                                 <%-- Relevant polls list --%>
@@ -78,7 +81,12 @@
                                                 <div class="col mr-2">
                                                     <h6 class="mb-0"><strong><c:out value="${poll.name}"/></strong></h6>
                                                     <span class="text-xs">
-                                                        ${poll.isExpired ? "🕑 Expiró el " : "🕑 Expira el "}
+                                                        <c:if test="${poll.isExpired}">
+                                                            <spring:message code="expiredOn"/>
+                                                        </c:if>
+                                                        <c:if test="${!poll.isExpired}">
+                                                            <spring:message code="expireOn"/>
+                                                        </c:if>
                                                         <fmt:formatDate type="both" dateStyle = "short" timeStyle = "short" value="${poll.expiryDate}"/>
                                                     </span>
                                                 </div>
@@ -101,7 +109,7 @@
                             <div class="card shadow mb-4">
 
                                 <div class="card-header py-3">
-                                    <h6 class="font-weight-bold m-0">Tus cursos</h6>
+                                    <h6 class="font-weight-bold m-0"><spring:message code="yourcourses"/></h6>
                                 </div>
 
                                 <%-- Relevant courses list --%>

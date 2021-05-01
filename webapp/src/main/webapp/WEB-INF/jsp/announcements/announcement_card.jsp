@@ -1,5 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix = "spring" uri="http://www.springframework.org/tags"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 
 <jsp:useBean type="java.lang.Boolean" scope="request" id="canDelete"/>
@@ -15,9 +17,12 @@
                 <p style="padding-top: 0;"><c:out value="${announcement.summary}"/></p>
                 <p style="padding-top: 0;"><c:out value="${announcement.content}"/></p>
                 <span class="text-xs">
+                    <fmt:formatDate type="both" dateStyle = "short" timeStyle = "short" value="${announcement.uploadDate}" var="uploadDateFormatted"/>
                     <c:url var="profileUrl" value="/profile?id=${announcement.uploader.id}"/>
-                    Publicado por <a href="${profileUrl}"><c:out value="${announcement.uploader.name}"/></a> el
-                    <fmt:formatDate type="both" dateStyle = "short" timeStyle = "short" value="${announcement.uploadDate}"/>
+                    <spring:message code="publishedBy" htmlEscape="false" arguments=
+                        '<a href="${profileUrl}">${fn:escapeXml(announcement.uploader.name)}</a>,
+                        ${uploadDateFormatted}'
+                    />
                 </span>
             </div>
             <div class="col-auto">

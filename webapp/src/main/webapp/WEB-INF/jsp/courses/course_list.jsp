@@ -2,6 +2,8 @@
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 
+<%@ taglib prefix = "spring" uri="http://www.springframework.org/tags"%>
+
 <jsp:useBean type="java.util.List<ar.edu.itba.paw.models.Career>" scope="request" id="careers"/>
 
 <!DOCTYPE html>
@@ -45,7 +47,7 @@
                                             <c:forEach var="CourseList" items="${careerCourses}">
                                                 <div class="card">
                                                     <div class="card-header" role="tab">
-                                                        <h5 class="mb-0"><a data-toggle="collapse" aria-expanded="true" aria-controls="accordion-1 .item-${CourseList.key}" href="#accordion-1 .item-${CourseList.key}">Año <c:out value="${CourseList.key}"/></a></h5>
+                                                        <h5 class="mb-0"><a data-toggle="collapse" aria-expanded="true" aria-controls="accordion-1 .item-${CourseList.key}" href="#accordion-1 .item-${CourseList.key}"><spring:message code="year"/> <c:out value="${CourseList.key}"/></a></h5>
                                                     </div>
                                                     <div class="collapse show item-${CourseList.key}" role="tabpanel" data-parent="#accordion-1">
 
@@ -54,11 +56,11 @@
                                                                 <table class="table">
                                                                     <thead>
                                                                         <tr>
-                                                                            <th>Código</th>
-                                                                            <th>Nombre</th>
-                                                                            <th>Cuatrimestre</th>
-                                                                            <th>Créditos</th>
-                                                                            <th>Link</th>
+                                                                            <th><spring:message code="code"/></th>
+                                                                            <th><spring:message code="name"/></th>
+                                                                            <th><spring:message code="quarters"/></th>
+                                                                            <th><spring:message code="credits"/></th>
+                                                                            <th><spring:message code="form.link"/></th>
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody>
@@ -70,7 +72,7 @@
                                                                                 <td><c:out value="${course.credits}"/></td>
                                                                                 <td><a class="btn btn-link" type="button"
                                                                                        href="<c:url value='/courses/detail?id=${course.id}'/>"
-                                                                                >Abrir</a></td>
+                                                                                ><spring:message code="open"/></a></td>
                                                                             </tr>
                                                                         </c:forEach>
                                                                     </tbody>
@@ -83,7 +85,7 @@
                                         </c:when>
                                         <c:otherwise>
                                             <div class="text-center"><i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
-                                                <p style="margin-top: 16px;">Por favor, elegí una carrera para ver los Cursos</p>
+                                                <p style="margin-top: 16px;"><spring:message code="announcement.chooseCareerPlease"/></p>
                                             </div>
                                         </c:otherwise>
                                     </c:choose>

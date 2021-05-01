@@ -2,6 +2,8 @@
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 
+<%@ taglib prefix = "spring" uri="http://www.springframework.org/tags"%>
+
 <jsp:useBean type="java.util.List<ar.edu.itba.paw.models.ChatGroup>" scope="request" id="chatgroups"/>
 <jsp:useBean type="java.util.List<ar.edu.itba.paw.models.Career>" scope="request" id="careers"/>
 <jsp:useBean type="ar.edu.itba.paw.models.ChatGroup.ChatPlatform[]" scope="request" id="platforms"/>
@@ -12,7 +14,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Grupos de chat</title>
+    <title><spring:message code="chat.groups"/></title>
 
     <jsp:include page="../common/styles.jsp"/>
 
@@ -37,7 +39,7 @@
                             <a href="#popup" data-toggle="modal">
                                 <button class="btn btn-primary btn-sm">
                                     <i class="material-icons pull-left">add</i>
-                                    Agregar grupo
+                                    <spring:message code="chat.add"/>
                                 </button>
                             </a>
                         </div>
@@ -45,7 +47,7 @@
                         <form method="get" id="chatListFilterForm">
                             <select class="custom-select my-1 mr-sm-2" name="careerCode" id="careerCode">
                                 <option ${selectedCareer == null ? 'selected' : ''} value="">
-                                    Elegí una carrera...
+                                    <spring:message code="chooseCareer"/>
                                 </option>
                                 <c:forEach var="career" items="${careers}">
                                     <option ${selectedCareer.code.equals(career.code) ? 'selected' : ''} value="${career.code}">
@@ -60,7 +62,7 @@
                                     <div class="col-xl-2">
                                         <select class="custom-select my-1 mr-sm-2" name="platform">
                                             <option ${selectedPlatform == null ? 'selected' : ''} value="">
-                                                Plataforma
+                                                <spring:message code="chat.platform"/>
                                             </option>
                                             <c:forEach var="platform" items="${platforms}">
                                                 <option ${selectedPlatform == platform ? 'selected' : ''} value="${platform}">
@@ -73,7 +75,7 @@
                                     <div class="col-xl-1">
                                         <select class="custom-select my-1 mr-sm-2" name="year">
                                             <option ${selectedYear == null ? 'selected' : ''} value="">
-                                                Año
+                                                <spring:message code="year"/>
                                             </option>
                                             <c:forEach var="year" items="${years}">
                                                 <option ${selectedYear == year ? 'selected' : ''} value="${year}">
@@ -86,7 +88,7 @@
                                     <div class="col-xl-2">
                                         <select class="custom-select my-1 mr-sm-2" name="quarter">
                                             <option ${selectedQuarter == null ? 'selected' : ''} value="">
-                                                Cuatrimestre
+                                                <spring:message code="quarter"/>
                                             </option>
                                             <c:forEach var="quarter" items="${quarters}">
                                                 <option ${selectedQuarter == quarter ? 'selected' : ''} value="${quarter}">
@@ -97,7 +99,7 @@
                                     </div>
 
                                     <div class="col-xl-2">
-                                        <input type="submit" class="btn btn-primary" value="Filtrar">
+                                        <input type="submit" class="btn btn-primary" value=<spring:message code="filter"/>>
                                     </div>
 
                                 </div>
@@ -111,10 +113,10 @@
                                     <table class="table my-0" id="dataTable">
                                         <thead>
                                             <tr>
-                                                <th>Plataforma</th>
-                                                <th>Año</th>
-                                                <th>Cuatrimestre</th>
-                                                <th>Link</th>
+                                                <th><spring:message code="chat.platform"/></th>
+                                                <th><spring:message code="year"/></th>
+                                                <th><spring:message code="quarter"/></th>
+                                                <th><spring:message code="chat.link"/></th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -124,7 +126,7 @@
                                                     <td>${chatgroup.creationYear}</td>
                                                     <td>${chatgroup.creationQuarter}</td>
                                                     <td>
-                                                        <a class="btn btn-link" href='<c:out value="${chatgroup.link}"/>' target="_blank" rel="noopener noreferrer">Abrir</button>
+                                                        <button><a class="btn btn-link" href='<c:out value="${chatgroup.link}"/>' target="_blank" rel="noopener noreferrer"><spring:message code="open"/></a></button>
                                                     </td>
                                                 </tr>
                                             </c:forEach>
@@ -138,13 +140,13 @@
                             <c:when test="${selectedCareer != null && chatgroups.size() == 0}">
                                 <div class="text-center mt-5">
                                     <i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
-                                    <p style="margin-top: 16px;">Ups, no hay nada por acá</p>
+                                    <p style="margin-top: 16px;"><spring:message code="noContent"/></p>
                                 </div>
                             </c:when>
                             <c:otherwise>
                                 <div class="text-center mt-5">
                                     <i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
-                                    <p style="margin-top: 16px;">Por favor, elegí una carrera para ver los grupos</p>
+                                    <p style="margin-top: 16px;"><spring:message code="chat.chooseCareerPlease"/></p>
                                 </div>
                             </c:otherwise>
                         </c:choose>

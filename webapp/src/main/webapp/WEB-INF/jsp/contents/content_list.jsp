@@ -2,6 +2,8 @@
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 
+<%@ taglib prefix = "spring" uri="http://www.springframework.org/tags"%>
+
 <jsp:useBean type="java.util.List<ar.edu.itba.paw.models.Content>" scope="request" id="contents"/>
 
 
@@ -11,7 +13,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Apuntes</title>
+    <title><spring:message code="contents"/></title>
 
     <jsp:include page="../common/styles.jsp"/>
 
@@ -35,7 +37,7 @@
                             <a href="#popup" data-toggle="modal">
                                 <button class="btn btn-primary btn-sm">
                                     <i class="material-icons pull-left">add</i>
-                                    Agregar contenido
+                                    <spring:message code="content.add"/>
                                 </button>
                             </a>
                         </div>
@@ -44,7 +46,7 @@
 
                             <div style="border: thin solid black">
                                 <select id="courseId" name="courseId" class="selectpicker" data-live-search="true"
-                                        title="Elegí un curso" data-width="100%">
+                                        title=<spring:message code="chooseCourse"/> data-width="100%">
                                     <c:forEach var="course" items="${courses}">
                                         <option ${course.equals(selectedCourse) ? 'selected' : ''}
                                                 value="${course.id}" data-tokens="${course.name}">${course.name}</option>
@@ -57,27 +59,27 @@
                                     <div class="col-xl-2">
                                         <select class="form-control-sm" style="border: thin solid grey"
                                                 name="contentType">
-                                            <option value="">Tipo de material</option>
-                                            <option value="exam">Exámen</option>
-                                            <option value="guide">Guía</option>
-                                            <option value="resume">Resúmen</option>
-                                            <option value="note">Apunte</option>
-                                            <option value="other">Otro</option>
+                                            <option value=""><spring:message code="form.type"/></option>
+                                            <option value="exam"><spring:message code="exam"/></option>
+                                            <option value="guide"><spring:message code="guide"/></option>
+                                            <option value="resume"><spring:message code="resume"/></option>
+                                            <option value="note"><spring:message code="note"/></option>
+                                            <option value="other"><spring:message code="other"/></option>
                                         </select>
                                     </div>
 
                                     <div class="col-xl-3">
-                                        <label>Desde</label>
+                                        <label><spring:message code="since"/></label>
                                         <input class="form-control-sm" style="border: thin solid grey" type="date" name="minDate">
                                     </div>
 
                                     <div class="col-xl-3">
-                                        <label>Hasta</label>
+                                        <label><spring:message code="until"/></label>
                                         <input class="form-control-sm" style="border: thin solid grey" type="date" name="maxDate">
                                     </div>
 
                                     <div class="col">
-                                        <button id="courseSearchBtn" type="submit" class="btn btn-primary ml-3">Filtrar</button>
+                                        <button id="courseSearchBtn" type="submit" class="btn btn-primary ml-3"><spring:message code="filter"/></button>
                                     </div>
                                 </div>
                             </c:if>
@@ -91,11 +93,11 @@
                                     <table class="table my-0" id="dataTable">
                                         <thead>
                                         <tr>
-                                            <th>Descripción</th>
-                                            <th>Tipo</th>
-                                            <th>Fecha</th>
-                                            <th>Autor</th>
-                                            <th>Link</th>
+                                            <th><spring:message code="form.description"/></th>
+                                            <th><spring:message code="form.type"/></th>
+                                            <th><spring:message code="date"/></th>
+                                            <th><spring:message code="author"/></th>
+                                            <th><spring:message code="form.link"/></th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -109,7 +111,7 @@
                                                     <c:url var="profileUrl" value="/profile?id=${content.submitter.id}"/>
                                                     <a href="${profileUrl}"><c:out value="${content.submitter.name}"/></a>
                                                 </td>
-                                                <td><a class="btn btn-link" target="_blank" rel="noopener noreferrer" href="<c:url value='${content.link}'/>" role="button">Link</a></td>
+                                                <td><a class="btn btn-link" target="_blank" rel="noopener noreferrer" href="<c:url value='${content.link}'/>" role="button"><spring:message code="form.link"/></a></td>
                                             </tr>
                                         </c:forEach>
                                         </tbody>
@@ -123,14 +125,14 @@
                             <c:when test="${selectedCourse != null && contents.size() == 0}">
                                 <div class="text-center mt-5">
                                     <i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
-                                    <p style="margin-top: 16px;">Ups, no hay nada por acá</p>
+                                    <p style="margin-top: 16px;"><spring:message code="noContent"/></p>
                                 </div>
                             </c:when>
 
                             <c:otherwise>
                                 <div class="text-center mt-5">
                                     <i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
-                                    <p style="margin-top: 16px;">Por favor, elegí un curso para ver los anuncios</p>
+                                    <p style="margin-top: 16px;"><spring:message code="announcement.chooseCoursePlease"/></p>
                                 </div>
                             </c:otherwise>
                         </c:choose>
