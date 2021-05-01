@@ -29,9 +29,8 @@ public class EmailServiceImpl implements EmailService{
     @Autowired
     private UserDao userDao;
 
-    private String email="noreplyitbahub@gmail.com";
+    private final String email="noreplyitbahub@gmail.com";
 
-    private String BaseURL="http://localhost:8080/webapp";
 
     @Override
     public void sendMessageUsingThymeleafTemplate(String to, String subject, Map<String, Object> templateModel) {
@@ -71,11 +70,11 @@ public class EmailServiceImpl implements EmailService{
     }
 
     @Override
-    public void sendVerificationEmail(String email) {
+    public void sendVerificationEmail(String email,String baseURL) {
 
 
         Map<String,Object> model = new HashMap<>();
-        model.put("buttonLink",BaseURL+"/register/verification?verificationCode="+getVerificationCode(email)+"&email="+email);
+        model.put("buttonLink",baseURL+"/register/verification?verificationCode="+getVerificationCode(email)+"&email="+email);
         model.put("text","Esta cuenta ha sido utilizada para registrar un usuario en ITBAHub, si no fuiste vos ignora este mensaje.");
         String subject="Verificar cuenta";
         sendMessageUsingThymeleafTemplate(email,subject,model);

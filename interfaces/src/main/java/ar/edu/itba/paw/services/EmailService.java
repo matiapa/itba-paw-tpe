@@ -13,5 +13,5 @@ public interface EmailService {
 
     int getVerificationCode(String email);
 
-    void sendVerificationEmail(String email);
+    void sendVerificationEmail(String email,String baseUrl);
 }

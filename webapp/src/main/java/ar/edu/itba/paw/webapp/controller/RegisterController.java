@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.Optional;
 
@@ -53,7 +55,7 @@ public class RegisterController {
 
 
     @RequestMapping(value ="/register", method = POST)
-    public ModelAndView RegisterUser(
+    public ModelAndView RegisterUser( HttpServletRequest request,
             @Valid @ModelAttribute("UserForm") final UserForm form, final BindingResult errors
     ) {
 
@@ -64,10 +66,13 @@ public class RegisterController {
             return getRegister(form);
         }
 
-
+//        System.out.println(ServletUriComponentsBuilder.fromRequestUri(request).replacePath(null).build().toString());
+//        System.out.println();
         userService.registerUser(form.getId(),form.getName(),form.getSurname(),form.getEmail(),new BCryptPasswordEncoder().encode(form.getPassword()),form.getCareerCode(),form.getCourses());
 
-        emailService.sendVerificationEmail(form.getEmail());
+
+
+        emailService.sendVerificationEmail(form.getEmail(),ServletUriComponentsBuilder.fromRequestUri(request).replacePath(null).build().toString()+request.getContextPath());
 
 
         return new ModelAndView("register/pending_email_verification");

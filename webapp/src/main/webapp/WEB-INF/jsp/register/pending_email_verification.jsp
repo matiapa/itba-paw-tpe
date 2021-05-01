@@ -20,7 +20,7 @@
 <div class="container">
     <div class="card shadow-lg o-hidden border-0 my-5">
         <div class="card-body p-0">
-            <h1>El usuario ha sido registrado de forma satisfacoria!</h1>
+            <h1>El usuario ha sido registrado de forma satisfactoria!</h1>
 
             <h3>Antes de poder acceder deberas verificar tu direccion de mail</h3>
             <h3>Sigue las instrucciones en el mail que recibiras en los proximos minutos</h3>
