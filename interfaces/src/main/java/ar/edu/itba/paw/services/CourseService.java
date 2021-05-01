@@ -1,7 +1,9 @@
 package ar.edu.itba.paw.services;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
+import ar.edu.itba.paw.models.CareerCourse;
 import ar.edu.itba.paw.models.Course;
 import ar.edu.itba.paw.models.User;
 
@@ -18,5 +20,7 @@ public interface CourseService {
     List<Course> findByCareer(String careerCode, int limit);
 
     Optional<Course> findById(String id);
+
+    Map<Integer,List<CareerCourse>> findByCareerSemester(String careerCode);
 
 }
