@@ -76,7 +76,7 @@ public class EmailServiceImpl implements EmailService{
 
         Map<String,Object> model = new HashMap<>();
         model.put("buttonLink",BaseURL+"/register/verification?verificationCode="+getVerificationCode(email)+"&email="+email);
-        model.put("name","testvar");
+        model.put("text","Esta cuenta ha sido utilizada para registrar un usuario en ITBAHub, si no fuiste vos ignora este mensaje.");
         String subject="Verificar cuenta";
         sendMessageUsingThymeleafTemplate(email,subject,model);
 
