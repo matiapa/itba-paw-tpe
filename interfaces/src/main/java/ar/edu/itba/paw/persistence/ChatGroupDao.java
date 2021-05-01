@@ -11,6 +11,8 @@ public interface ChatGroupDao {
 
     ChatGroup addGroup(String groupName, String careerCode, String link, int createdBy, Date creationDate, ChatPlatform platform);
 
+    int getSize(String careerCode, ChatPlatform selectedPlatform, Integer selectedYear, Integer selectedQuarter);
+
     List<ChatGroup> findByCareer(String careerCode);
 
     List<ChatGroup> findByCareer(String careerCode, int limit);

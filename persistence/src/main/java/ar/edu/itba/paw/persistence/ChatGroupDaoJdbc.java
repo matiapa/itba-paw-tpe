@@ -51,6 +51,37 @@ public class ChatGroupDaoJdbc implements ChatGroupDao{
     }
 
     @Override
+    public int getSize(String careerCode, ChatPlatform selectedPlatform, Integer selectedYear, Integer selectedQuarter) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(String.format("SELECT COUNT(*) FROM chat_group WHERE career_code='%s'", careerCode));
+
+        if (selectedPlatform != null)
+            stringBuilder.append(String.format(" AND platform='%s'", selectedPlatform.toString().split("\\.")[0]));
+
+        String minDate, maxDate;
+        if(selectedYear != null && selectedQuarter != null){
+            minDate = String.format("%d-%d-01", selectedYear, selectedQuarter == 1 ? 1 : 7);
+            maxDate = String.format("%d-%d-%d", selectedYear, selectedQuarter == 1 ? 6 : 12, selectedQuarter == 1 ? 30 : 31);
+            stringBuilder.append(
+                    String.format(" AND creation_date>='%s' AND creation_date<='%s'", minDate, maxDate)
+            );
+        }else if(selectedYear != null){
+            minDate = String.format("%d-01-01", selectedYear);
+            maxDate = String.format("%d-12-31", selectedYear);
+            stringBuilder.append(
+                    String.format(" AND creation_date>='%s' AND creation_date<='%s'", minDate, maxDate)
+            );
+        }else if(selectedQuarter != null){
+            stringBuilder.append(
+                    String.format(" AND EXTRACT(month FROM creation_date)>='%d' AND EXTRACT(month FROM creation_date)<='%d'",
+                            selectedQuarter == 1 ? 1 : 7, selectedQuarter == 1 ? 6 : 12)
+            );
+        }
+
+        return jdbcTemplate.queryForObject(stringBuilder.toString(), new Object[]{}, Integer.class);
+    }
+
+    @Override
     public List<ChatGroup> findByCareer(String careerCode) {
         return jdbcTemplate.query(
             String.format("SELECT * FROM chat_group WHERE career_code='%s'", careerCode),

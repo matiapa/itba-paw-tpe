@@ -12,6 +12,7 @@ import java.util.stream.IntStream;
 
 import javax.validation.Valid;
 
+import ar.edu.itba.paw.models.ui.Pager;
 import ar.edu.itba.paw.services.UserService;
 import ar.edu.itba.paw.webapp.controller.common.FiltersController;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,7 @@ import ar.edu.itba.paw.webapp.form.ChatGroupForm;
 @Controller
 public class ChatGroupController {
 
+    private static final int LIMIT = 5;
     @Autowired private ChatGroupService chatGroupService;
 
     @Autowired private UserService userService;
@@ -43,6 +45,7 @@ public class ChatGroupController {
         @RequestParam(name = "year", required = false) Integer year,
         @RequestParam(name = "quarter", required = false) Integer quarter,
         @RequestParam(name = "showCreateForm", required = false, defaultValue="false") Boolean showCreateForm,
+        @RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
         @ModelAttribute("createForm") final ChatGroupForm chatGroupForm
     ){
         final ModelAndView mav = new ModelAndView("chats/chats_list");
@@ -89,8 +92,15 @@ public class ChatGroupController {
         // Add filtered chats
 
         List<ChatGroup> chatGroupList = new ArrayList<>();
+        if (page == null){
+            page = 0;
+        }
         if(careerCode != null){
+            Pager pager = new Pager(15,                    //chatGroupService.getSize(careerCode,selectedPlatform,selectedYear,selectedQuarter),
+                    page, page * LIMIT, LIMIT);
+
             chatGroupList = chatGroupService.findByCareer(careerCode, selectedPlatform, selectedYear, selectedQuarter);
+            mav.addObject("pager", pager);
         }
 
         mav.addObject("chatgroups", chatGroupList);
@@ -110,7 +120,7 @@ public class ChatGroupController {
         final BindingResult errors
     ) {
         if(errors.hasErrors()){
-            return get(null, null, null, null, true, chatGroupForm);
+            return get(null, null, null, null, true, 0, chatGroupForm);
         }
 
         chatGroupService.addGroup(
@@ -122,7 +132,7 @@ public class ChatGroupController {
             chatGroupForm.getPlatform()
         );
 
-        return get(chatGroupForm.getCareerCode(), null, null, null, false, chatGroupForm);
+        return get(chatGroupForm.getCareerCode(), null, null, null, false, 0, chatGroupForm);
     }
 
 }

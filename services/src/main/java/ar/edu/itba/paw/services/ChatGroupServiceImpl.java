@@ -21,6 +21,11 @@ public class ChatGroupServiceImpl implements ChatGroupService{
     }
 
     @Override
+    public int getSize(String careerCode, ChatPlatform selectedPlatform, Integer selectedYear, Integer selectedQuarter) {
+        return chatGroupDao.getSize(careerCode, selectedPlatform, selectedYear, selectedQuarter);
+    }
+
+    @Override
     public List<ChatGroup> findByCareer(String careerCode) {
         return chatGroupDao.findByCareer(careerCode);
     }
