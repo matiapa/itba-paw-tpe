@@ -4,7 +4,9 @@ import ar.edu.itba.paw.exceptions.LoginRequiredException;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.persistence.UserDao;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +23,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User registerUser(int id, String name, String surname, String email, String careerCode, List<String> courses) {
-        return userDao.registerUser(id,name,surname,email,careerCode,courses);
+    public User registerUser(int id, String name, String surname, String email,String password_hash, String careerCode, List<String> courses) {
+        return userDao.registerUser(id,name,surname,email,password_hash,careerCode,courses);
     }
 
     @Override
     public User getLoggedUser() {
         return userDao.findById(59714).orElseThrow(RuntimeException::new);
     }
+
+    @Override
+    public boolean verifyEmail(int user_id,int verification_code) {
+        return userDao.verifyEmail(user_id,verification_code);
+    }
+
+
 }
