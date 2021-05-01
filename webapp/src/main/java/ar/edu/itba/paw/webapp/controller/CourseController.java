@@ -72,7 +72,7 @@ public class CourseController {
         // Course announcements
 
         List<Announcement> announcements;
-        announcements = announcementService.findByCourse(courseId);
+        announcements = announcementService.findByCourse(courseId, false);
         mav.addObject("announcements",announcements);
 
         // Course content
