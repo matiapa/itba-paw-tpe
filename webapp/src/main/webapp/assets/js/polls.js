@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
   document.getElementById("courseId").addEventListener('change', (event) => {
     $(this).find('select:not(:has(option:selected[value!=""]))').attr('name', '');
-    document.getElementById("coursesPollFilterForm").submit()
+    document.getElementById("P").submit()
   });
 
   document.getElementById("pollTarget").addEventListener('change', (event) => {

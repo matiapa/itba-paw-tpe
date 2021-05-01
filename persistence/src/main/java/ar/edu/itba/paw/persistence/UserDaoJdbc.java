@@ -19,14 +19,7 @@ public class UserDaoJdbc implements UserDao {
     private final SimpleJdbcInsert jdbcInsertFavCourses;
     private final SimpleJdbcInsert jdbcInsertVerificationCode;
 
-    private static final RowMapper<User> USER_ROW_MAPPER = (rs, rowNum) ->
-        new User(
-            rs.getInt("id"),
-            rs.getString("name"),
-            rs.getString("surname"),
-            rs.getString("email"),
-            rs.getString("career_code")
-        );
+    private final RowMapper<User> USER_ROW_MAPPER;
 
     private static final RowMapper<Integer> VERIFICATION_CODE_MAPPER = (rs, rowNum) ->
             rs.getInt("verification_code");
@@ -39,6 +32,25 @@ public class UserDaoJdbc implements UserDao {
                 .withTableName("users");
         this.jdbcInsertFavCourses= new SimpleJdbcInsert(ds).withTableName("fav_course");
         this.jdbcInsertVerificationCode= new SimpleJdbcInsert(ds).withTableName("user_verification");
+
+        USER_ROW_MAPPER = (rs, rowNum) -> {
+            List<String> permissions = jdbcTemplate.query(
+                String.format("SELECT * FROM permission WHERE user_id=%d", rs.getInt("id")),
+                (rs2, rowNum2) -> rs.getString("entity")+"."+rs.getString("action")
+            );
+
+            return new User(
+                rs.getInt("id"),
+                rs.getString("name"),
+                rs.getString("surname"),
+                rs.getString("email"),
+                rs.getString("password"),
+                rs.getString("profile_picture"),
+                rs.getDate("signup_date"),
+                permissions,
+                rs.getString("career_code")
+            );
+        };
     }
 
     @Override
@@ -95,7 +107,17 @@ public class UserDaoJdbc implements UserDao {
 
         createVerificationCode(id);
 
-        return new User(id,name,surname,email,career_code);
+//        return new User(id,name,surname,email,career_code);
+        return findById(userID.intValue())
+            .orElseThrow(() -> new RuntimeException("Could not register user"));
+    }
+
+    @Override
+    public void setProfilePicture(String pictureDataURI, int userId) {
+        jdbcTemplate.update(
+        "UPDATE users SET profile_picture=? WHERE id=?",
+            pictureDataURI, userId
+        );
     }
 
     @Override

@@ -18,4 +18,6 @@ public interface UserDao {
     int getVerificationCode(String email);
 
 
+    void setProfilePicture(String pictureDataURI, int userId);
+
 }

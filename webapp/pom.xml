@@ -3,8 +3,6 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-
-
   <parent>
     <artifactId>app</artifactId>
     <groupId>ar.edu.itba.paw</groupId>
@@ -87,6 +85,11 @@
     <dependency>
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-fileupload</groupId>
+      <artifactId>commons-fileupload</artifactId>
     </dependency>
 
     <!-- Extras-->

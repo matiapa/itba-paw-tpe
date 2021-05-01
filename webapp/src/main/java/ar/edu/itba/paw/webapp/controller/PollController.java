@@ -155,6 +155,7 @@ public class PollController {
         Optional<Poll> selectedPoll= pollService.findById(pollId);
 
         if (!selectedPoll.isPresent())
+            // TODO: Replace this exception
             throw new RuntimeException();
         mav.addObject("poll",selectedPoll.get());
 
