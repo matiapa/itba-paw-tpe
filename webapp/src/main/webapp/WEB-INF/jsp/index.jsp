@@ -51,7 +51,7 @@
                                                     <h6 class="mb-0"><strong><c:out value="${announcement.title}"/></strong></h6>
                                                     <span><c:out value="${announcement.summary}"/><br></span></div>
                                                 <div class="col-auto">
-                                                    <a href="<c:url value="/announcements/detail?id=${announcement.id}"/>" class="btn btn-icon" type="button">
+                                                    <a href="<c:url value="/announcements/${announcement.id}"/>" class="btn btn-icon" type="button">
                                                         <i class="material-icons">keyboard_arrow_right</i>
                                                     </a>
                                                 </div>

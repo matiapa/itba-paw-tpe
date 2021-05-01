@@ -39,7 +39,7 @@
                                             <span><c:out value="${announcement.summary}"/><br></span>
                                         </div>
                                         <div class="col-auto">
-                                            <a href="<c:url value="/announcements/detail?id=${announcement.id}"/>">
+                                            <a href="<c:url value="/announcements/${announcement.id}"/>">
                                                 <i class="material-icons">keyboard_arrow_right</i>
                                             </a>
                                         </div>
@@ -99,7 +99,7 @@
                                                 <td><c:out value="${content.uploadDate}"/></td>
                                                 <td>
                                                     <img class="rounded-circle mr-2" width="30" height="30"
-                                                         src="<c:url value="/assets/img/avatars/avatar.png"/>">
+                                                         src="<c:url value="/assets/img/avatars/avatar-male.png"/>">
                                                     <c:out value="${content.submitter.name}"/>
                                                  </td>
                                                 <td><a class="btn btn-link" target="_blank" rel="noopener noreferrer" href="<c:url value='${content.link}'/>" role="button">"form.link"</a></td>

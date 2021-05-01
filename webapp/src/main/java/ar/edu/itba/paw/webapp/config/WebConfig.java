@@ -10,10 +10,16 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Properties;
 
 @EnableWebMvc
 @ComponentScan({
@@ -22,14 +28,9 @@ import org.springframework.web.servlet.view.JstlView;
         "ar.edu.itba.paw.persistence"
 })
 @Configuration
-//@PropertySource("classpath:/ar/edu/itba/paw/webapp/config/auth.properties")
 public class WebConfig {
-    private static String DB_PROPERTY_KEY = "itbahub.persistence.db";
-//    private Environment env;
 
-//    public WebConfig(Environment env) {
-//        this.env = env;
-//    }
+    private final static String DB_PROPERTY_KEY = "itbahub.persistence.db";
 
     public WebConfig(){}
 
@@ -45,15 +46,17 @@ public class WebConfig {
     }
 
     @Bean
-    public DataSource dataSource() {
-        final SimpleDriverDataSource ds = new SimpleDriverDataSource();
-//        String url = env.getRequiredProperty(DB_PROPERTY_KEY + ".url");
-//        String user = env.getRequiredProperty(DB_PROPERTY_KEY + ".user");
-//        String password = env.getRequiredProperty(DB_PROPERTY_KEY + ".password");
+    public DataSource dataSource() throws IOException {
+        String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath();
+        String appConfigPath = rootPath + "auth.properties";
 
-        String url = "localhost:5432/paw-2021a-13";
-        String user = "paw-2021a-13";
-        String password = "aPjzv76sH";
+        Properties appProps = new Properties();
+        appProps.load(new FileInputStream(appConfigPath));
+
+        final SimpleDriverDataSource ds = new SimpleDriverDataSource();
+        String url = appProps.getProperty(DB_PROPERTY_KEY + ".url");
+        String user = appProps.getProperty(DB_PROPERTY_KEY + ".user");
+        String password = appProps.getProperty(DB_PROPERTY_KEY + ".password");
 
         ds.setDriverClass(org.postgresql.Driver.class);
         ds.setUrl("jdbc:postgresql://" + url);
@@ -71,4 +74,10 @@ public class WebConfig {
         messageSource.setCacheSeconds(5);
         return messageSource;
     }
+    
+    @Bean(name = "multipartResolver")
+    public CommonsMultipartResolver multipartResolver() {
+        return new CommonsMultipartResolver();
+    }
+
 }

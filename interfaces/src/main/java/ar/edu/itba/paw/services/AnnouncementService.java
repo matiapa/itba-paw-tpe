@@ -8,17 +8,19 @@ import java.util.Optional;
 
 public interface AnnouncementService {
 
-    List<Announcement> findGeneral();
+    List<Announcement> findGeneral(boolean showSeen);
 
-    List<Announcement> findByCourse(String courseId);
+    List<Announcement> findByCourse(String courseId, boolean showSeen);
 
-    List<Announcement> findByCareer(int careerId);
+    List<Announcement> findByCareer(String careerCode, boolean showSeen);
 
     Optional<Announcement> findById(int id);
 
-    void markSeen(int announcementId, User user);
+    void markSeen(int announcementId);
 
-    Announcement create(String title, String summary, String content, Integer careerId,
+    Announcement create(String title, String summary, String content, String careerCode,
        String courseId, Date expiryDate, User author);
+
+    void delete(int id);
 
 }

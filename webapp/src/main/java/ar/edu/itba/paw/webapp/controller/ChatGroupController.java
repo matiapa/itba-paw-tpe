@@ -38,7 +38,7 @@ public class ChatGroupController {
 
     @RequestMapping(value = "/chats", method = GET)
     public ModelAndView get(
-        @RequestParam(name = "careerId", required = false) Integer careerId,
+        @RequestParam(name = "careerCode", required = false) String careerCode,
         @RequestParam(name = "platform", required = false) String platform,
         @RequestParam(name = "year", required = false) Integer year,
         @RequestParam(name = "quarter", required = false) Integer quarter,
@@ -51,7 +51,7 @@ public class ChatGroupController {
 
         // Add filters options
 
-        commonFilters.addCareers(mav, careerId);
+        commonFilters.addCareers(mav, careerCode);
 
         // -- By platform
 
@@ -89,8 +89,8 @@ public class ChatGroupController {
         // Add filtered chats
 
         List<ChatGroup> chatGroupList = new ArrayList<>();
-        if(careerId != null){
-            chatGroupList = chatGroupService.findByCareer(careerId, selectedPlatform, selectedYear, selectedQuarter);
+        if(careerCode != null){
+            chatGroupList = chatGroupService.findByCareer(careerCode, selectedPlatform, selectedYear, selectedQuarter);
         }
 
         mav.addObject("chatgroups", chatGroupList);
@@ -115,14 +115,14 @@ public class ChatGroupController {
 
         chatGroupService.addGroup(
             chatGroupForm.getName(),
-            chatGroupForm.getCareerId(),
+            chatGroupForm.getCareerCode(),
             chatGroupForm.getLink(),
             userService.getLoggedUser().getId(),
             chatGroupForm.getCreationDate(),
             chatGroupForm.getPlatform()
         );
 
-        return get(chatGroupForm.getCareerId(), null, null, null, false, chatGroupForm);
+        return get(chatGroupForm.getCareerCode(), null, null, null, false, chatGroupForm);
     }
 
 }

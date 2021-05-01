@@ -22,7 +22,7 @@ public class ChatGroupDaoJdbc implements ChatGroupDao{
     private static final RowMapper<ChatGroup> CHAT_GROUP_ROW_MAPPER = (rs, rowNum) ->
         new ChatGroup(
             rs.getInt("id"),
-            rs.getInt("career_id"),
+            rs.getString("career_code"),
             rs.getString("name"),
             rs.getString("link"),
             rs.getInt("submitted_by"),
@@ -36,14 +36,14 @@ public class ChatGroupDaoJdbc implements ChatGroupDao{
     }
 
     @Override
-    public ChatGroup addGroup(String groupName, int careerId, String link, int createdBy, Date creationDate, ChatPlatform platform) {
+    public ChatGroup addGroup(String groupName, String careerCode, String link, int createdBy, Date creationDate, ChatPlatform platform) {
         return jdbcTemplate.queryForObject(
             "INSERT INTO " +
-                    "chat_group(career_id, creation_date, name, link, submitted_by, platform)" +
+                    "chat_group(career_code, creation_date, name, link, submitted_by, platform)" +
                 " VALUES " +
                     "(?,?,?,?,?,CAST(? AS chat_platform)) RETURNING *",
             new Object[]{
-                careerId, creationDate, groupName, link, createdBy,
+                careerCode, creationDate, groupName, link, createdBy,
                 platform.toString()
             },
             CHAT_GROUP_ROW_MAPPER
@@ -51,26 +51,26 @@ public class ChatGroupDaoJdbc implements ChatGroupDao{
     }
 
     @Override
-    public List<ChatGroup> findByCareer(int careerId) {
+    public List<ChatGroup> findByCareer(String careerCode) {
         return jdbcTemplate.query(
-            String.format("SELECT * FROM chat_group WHERE career_id='%d'", careerId),
+            String.format("SELECT * FROM chat_group WHERE career_code='%s'", careerCode),
             CHAT_GROUP_ROW_MAPPER
         );
     }
 
     @Override
-    public List<ChatGroup> findByCareer(int careerId, int limit) {
+    public List<ChatGroup> findByCareer(String careerCode, int limit) {
         return jdbcTemplate.query(
-                String.format("SELECT * FROM chat_group WHERE career_id='%d' "+
-                        "ORDER BY id LIMIT %d", careerId, limit),
+                String.format("SELECT * FROM chat_group WHERE career_code='%s' "+
+                        "ORDER BY id LIMIT %d", careerCode, limit),
                 CHAT_GROUP_ROW_MAPPER
         );
     }
 
     @Override
-    public List<ChatGroup> findByCareer(int careerId, ChatPlatform platform, Integer year, Integer quarter) {
+    public List<ChatGroup> findByCareer(String careerCode, ChatPlatform platform, Integer year, Integer quarter) {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(String.format("SELECT * FROM chat_group WHERE career_id='%d'", careerId));
+        stringBuilder.append(String.format("SELECT * FROM chat_group WHERE career_code='%s'", careerCode));
 
         if (platform != null)
             stringBuilder.append(String.format(" AND platform='%s'", platform.toString().split("\\.")[0]));

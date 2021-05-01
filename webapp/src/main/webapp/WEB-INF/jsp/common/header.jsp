@@ -9,14 +9,6 @@
     <div class="container-fluid">
         <button class="btn btn-link d-md-none rounded-circle mr-3" id="sidebarToggleTop-1" type="button"><i class="fas fa-bars"></i></button>
 
-<%--        <form class="form-inline d-none d-sm-inline-block mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">--%>
-<%--            <div class="input-group">--%>
-<%--                <input class="bg-light form-control border-0 small" type="text" placeholder="Buscar en todo el sitio...">--%>
-<%--                <div class="input-group-append">--%>
-<%--                    <button class="btn btn-primary py-0" type="button"><i class="fas fa-search"></i></button>--%>
-<%--                </div>--%>
-<%--            </div>--%>
-<%--        </form>--%>
 
         <ul class="nav navbar-nav flex-nowrap ml-auto">
 
@@ -46,11 +38,15 @@
             <li class="nav-item dropdown no-arrow">
                 <div class="nav-item dropdown no-arrow">
                     <a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false" href="#">
-                        <span class="d-none d-lg-inline mr-2 text-gray-600 small"><c:out value="${user.name}"/></span>
-                        <img class="border rounded-circle img-profile" src="<c:url value="/assets/img/avatars/avatar.png"/>">
+                        <span class="d-none d-lg-inline mr-2 text-gray-600 small">
+                            <c:out value="${user.name}"/>
+                        </span>
+                        <c:url value="/assets/img/avatars/avatar.png" var="defaultImage"/>
+                        <img class="border rounded-circle img-profile"
+                             src="${user.profileImgB64 != null ? user.profileImgB64 : defaultImage}">
                     </a>
                     <div class="dropdown-menu shadow dropdown-menu-right animated--grow-in">
-                        <a class="dropdown-item" href="<c:url value="/profile"/>">
+                        <a class="dropdown-item" href="<c:url value="/profile/own"/>">
                             <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i> <spring:message code="profile"/>
                         </a>
                         <div class="dropdown-divider"></div>

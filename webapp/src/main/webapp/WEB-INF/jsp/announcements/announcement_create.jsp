@@ -18,7 +18,7 @@
             </div>
 
             <div class="modal-body">
-                <c:url value="/announcements/create" var="postUrl"/>
+                <c:url value="/announcements" var="postUrl"/>
                 <form:form id="createAnnouncementForm" modelAttribute="createForm" action="${postUrl}" method="post">
 
                     <div class="form-group">
@@ -31,14 +31,14 @@
                     </div>
 
                     <div hidden id="careerTarget" class="form-group">
-                        <form:label path="careerId"><spring:message code="announcement.targetCareer"/></form:label>
-                        <form:select path="careerId" class="form-control">
+                        <form:label path="careerCode"><spring:message code="announcement.targetCareer"/></form:label>
+                        <form:select path="careerCode" class="form-control">
                             <form:option value=""><spring:message code="chooseCareer"/></form:option>
                             <c:forEach var="career" items="${careers}">
-                                <form:option value="${career.id}"><c:out value="${career.name}"/></form:option>
+                                <form:option value="${career.code}"><c:out value="${career.name}"/></form:option>
                             </c:forEach>
                         </form:select>
-                        <form:errors path="careerId" element="div"/>
+                        <form:errors path="careerCode" element="div"/>
                     </div>
 
                     <div hidden id="courseTarget" class="form-group">

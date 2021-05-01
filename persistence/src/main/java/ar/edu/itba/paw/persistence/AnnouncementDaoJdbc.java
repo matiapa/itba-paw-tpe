@@ -49,28 +49,39 @@ public class AnnouncementDaoJdbc implements AnnouncementDao {
         this.jdbcTemplate = new JdbcTemplate(ds);
     }
 
-    @Override
-    public List<Announcement> findGeneral() {
-        return jdbcTemplate.query(
-            "SELECT * FROM announcement WHERE career_id IS NULL AND course_id IS NULL",
-                announcementRowMapper
-        );
+    private List<Announcement> findAnnouncement(StringBuilder baseQuery, boolean showSeen, int userId){
+        if(!showSeen) {
+            baseQuery.append(String.format(
+                " AND NOT EXISTS (SELECT * FROM announcement_seen WHERE announcement_id=id"
+                + " AND user_id=%d)", userId
+            ));
+        }
+
+        return jdbcTemplate.query(baseQuery.toString(), announcementRowMapper);
     }
 
     @Override
-    public List<Announcement> findByCourse(String courseId) {
-        return jdbcTemplate.query(
-            String.format("SELECT * FROM announcement WHERE course_id='%s'", courseId),
-                announcementRowMapper
-        );
+    public List<Announcement> findGeneral(boolean showSeen, int userId) {
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT * FROM announcement WHERE career_code IS NULL AND course_id IS NULL");
+
+        return findAnnouncement(query, showSeen, userId);
     }
 
     @Override
-    public List<Announcement> findByCareer(int careerId) {
-        return jdbcTemplate.query(
-            String.format("SELECT * FROM announcement WHERE career_id='%d'", careerId),
-                announcementRowMapper
-        );
+    public List<Announcement> findByCourse(String courseId, boolean showSeen, int userId) {
+        StringBuilder query = new StringBuilder();
+        query.append(String.format("SELECT * FROM announcement WHERE course_id='%s'", courseId));
+
+        return findAnnouncement(query, showSeen, userId);
+    }
+
+    @Override
+    public List<Announcement> findByCareer(String careerCode, boolean showSeen, int userId) {
+        StringBuilder query = new StringBuilder();
+        query.append(String.format("SELECT * FROM announcement WHERE career_code='%s'", careerCode));
+
+        return findAnnouncement(query, showSeen, userId);
     }
 
     @Override
@@ -91,13 +102,20 @@ public class AnnouncementDaoJdbc implements AnnouncementDao {
     }
 
     @Override
-    public Announcement create(String title, String summary, String content, Integer careerId,
+    public Announcement create(String title, String summary, String content, String careerCode,
                    String courseId, Date expiryDate, Integer submittedBy) {
         return jdbcTemplate.queryForObject(
-        "INSERT INTO announcement(title, summary, content, career_id, course_id, expiry_date, " +
+        "INSERT INTO announcement(title, summary, content, career_code, course_id, expiry_date, " +
                 "submitted_by) VALUES (?,?,?,?,?,?,?) RETURNING *",
-            new Object[]{title, summary, content, careerId, courseId, expiryDate, submittedBy},
+            new Object[]{title, summary, content, careerCode, courseId, expiryDate, submittedBy},
             announcementRowMapper
+        );
+    }
+
+    @Override
+    public void delete(int id){
+        jdbcTemplate.execute(
+            String.format("DELETE FROM announcement WHERE id=%d", id)
         );
     }
 

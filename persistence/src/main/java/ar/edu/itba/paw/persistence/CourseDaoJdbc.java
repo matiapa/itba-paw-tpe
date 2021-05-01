@@ -55,19 +55,19 @@ public class CourseDaoJdbc implements CourseDao {
     }
 
     @Override
-    public List<Course> findByCareer(int careerId) {
+    public List<Course> findByCareer(String careerCode) {
         return jdbcTemplate.query(
             String.format("SELECT * FROM course JOIN career_course ON id=course_id " +
-                "WHERE career_id='%d'", careerId),
+                "WHERE career_code='%s'", careerCode),
             COURSE_ROW_MAPPER
         );
     }
 
     @Override
-    public List<Course> findByCareer(int careerId, int limit) {
+    public List<Course> findByCareer(String careerCode, int limit) {
         return jdbcTemplate.query(
             String.format("SELECT * FROM course JOIN career_course ON id=course_id " +
-                "WHERE career_id='%d' ORDER BY id LIMIT %d", careerId, limit),
+                "WHERE career_code='%s' ORDER BY id LIMIT %d", careerCode, limit),
             COURSE_ROW_MAPPER
         );
     }

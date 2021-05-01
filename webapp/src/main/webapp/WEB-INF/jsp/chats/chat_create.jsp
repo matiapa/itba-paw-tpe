@@ -27,18 +27,18 @@
                     </div>
 
                     <div class="form-group">
-                        <form:label path="careerId"><spring:message code="chat.career"/></form:label>
+                        <form:label path="careerCode"><spring:message code="chat.career"/></form:label>
 
-                        <form:select path="careerId" class="form-control">
+                        <form:select path="careerCode" class="form-control">
                             <option value=""><spring:message code="chooseCareer"/></option>
                             <c:forEach var="career" items="${careers}">
-                                <form:option value="${career.id}">
+                                <form:option value="${career.code}">
                                     <c:out value="${career.name}"/>
                                 </form:option>
                             </c:forEach>
                         </form:select>
 
-                        <form:errors path="careerId" cssStyle="color: red" element="p"/>
+                        <form:errors path="careerCode" cssStyle="color: red" element="p"/>
                     </div>
 
                     <div class="form-group">

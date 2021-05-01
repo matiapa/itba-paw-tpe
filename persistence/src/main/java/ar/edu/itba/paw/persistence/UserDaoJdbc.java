@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.models.Permission;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -18,14 +19,7 @@ public class UserDaoJdbc implements UserDao {
     private final SimpleJdbcInsert jdbcInsert;
     private final SimpleJdbcInsert jdbcInsertFavCourses;
 
-    private static final RowMapper<User> USER_ROW_MAPPER = (rs, rowNum) ->
-        new User(
-            rs.getInt("id"),
-            rs.getString("name"),
-            rs.getString("surname"),
-            rs.getString("email"),
-            rs.getInt("career_id")
-        );
+    private final RowMapper<User> USER_ROW_MAPPER;
 
     @Autowired
     public UserDaoJdbc(DataSource ds) {
@@ -33,6 +27,29 @@ public class UserDaoJdbc implements UserDao {
         this.jdbcInsert= new SimpleJdbcInsert(ds)
                 .withTableName("users");
         this.jdbcInsertFavCourses= new SimpleJdbcInsert(ds).withTableName("fav_course");
+
+        USER_ROW_MAPPER = (rs, rowNum) -> {
+            List<Permission> permissions = jdbcTemplate.query(
+                String.format("SELECT * FROM permission WHERE user_id=%d", rs.getInt("id")),
+                (rs2, rowNum2) -> {
+                    Permission.Entity entity = Permission.Entity.valueOf(rs2.getString("entity").toUpperCase());
+                    Permission.Action action = Permission.Action.valueOf(rs2.getString("action").toUpperCase());
+                    return new Permission(action, entity);
+                }
+            );
+
+            return new User(
+                rs.getInt("id"),
+                rs.getString("name"),
+                rs.getString("surname"),
+                rs.getString("email"),
+                rs.getString("password"),
+                rs.getString("profile_picture"),
+                rs.getDate("signup_date"),
+                permissions,
+                rs.getString("career_code")
+            );
+        };
     }
 
     @Override
@@ -60,15 +77,14 @@ public class UserDaoJdbc implements UserDao {
     }
 
     @Override
-    public User registerUser(int id, String name, String surname, String email, int career_id, List<String> courses) {
-
-
+    public User registerUser(int id, String name, String surname, String email, String career_code, List<String> courses) {
         final Map<String,Object> args = new HashMap<>();
+
         args.put("id",id);
         args.put("name",name);
         args.put("surname",surname);
         args.put("email",email);
-        args.put("career_id",career_id);
+        args.put("career_code",career_code);
         args.put("signup_date",new Date());
 
         final Number userID = jdbcInsert.execute(args);
@@ -77,7 +93,16 @@ public class UserDaoJdbc implements UserDao {
             addFavouriteCourse(id,course);
         }
 
-        return new User(id,name,surname,email,career_id);
+        return findById(userID.intValue())
+            .orElseThrow(() -> new RuntimeException("Could not register user"));
+    }
+
+    @Override
+    public void setProfilePicture(String pictureDataURI, int userId) {
+        jdbcTemplate.update(
+        "UPDATE users SET profile_picture=? WHERE id=?",
+            pictureDataURI, userId
+        );
     }
 
 }

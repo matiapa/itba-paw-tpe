@@ -15,11 +15,11 @@ CREATE TABLE course(
 );
 
 CREATE TABLE career_course(
-   career_id   int,
+   career_code   int,
    course_id   varchar(100),
 
-   PRIMARY KEY (career_id, course_id),
-   FOREIGN KEY (career_id) REFERENCES career ON DELETE CASCADE,
+   PRIMARY KEY (career_code, course_id),
+   FOREIGN KEY (career_code) REFERENCES career ON DELETE CASCADE,
    FOREIGN KEY (course_id) REFERENCES course ON DELETE CASCADE
 );
 
@@ -28,11 +28,11 @@ CREATE TABLE users(
     name        varchar(100) not null,
     surname     varchar(100) not null,
     email       varchar(100) not null,
-    career_id   int not null,
+    career_code   int not null,
     signup_date date not null default now(),
 
     PRIMARY KEY (id),
-    FOREIGN KEY (career_id) REFERENCES career ON DELETE RESTRICT
+    FOREIGN KEY (career_code) REFERENCES career ON DELETE RESTRICT
 );
 
 CREATE TABLE fav_course(
@@ -49,14 +49,14 @@ CREATE TABLE fav_course(
 
 CREATE TABLE chat_group(                -- Whatsapp/Discord
    id              int,
-   career_id       int not null,
+   career_code       int not null,
    creation_date   date not null,      -- Yr/Qt of the comission
    name            varchar(100) not null,
    link            varchar(100) not null,
    submitted_by    int not null,
 
    PRIMARY KEY (id),
-   FOREIGN KEY (career_id) REFERENCES career ON DELETE CASCADE,
+   FOREIGN KEY (career_code) REFERENCES career ON DELETE CASCADE,
    FOREIGN KEY (submitted_by) REFERENCES users ON DELETE RESTRICT
 );
 
@@ -78,14 +78,14 @@ CREATE TABLE announcement(
     title           varchar(100) not null,
     summary         varchar(100) not null,
     content         varchar(100) not null,
-    career_id       int,
+    career_code       int,
     course_id       varchar(100),
     creation_date   date not null default now(),
     expiry_date     date,
     submitted_by    int not null,
 
     PRIMARY KEY (id),
-    FOREIGN KEY (career_id) REFERENCES career ON DELETE CASCADE,
+    FOREIGN KEY (career_code) REFERENCES career ON DELETE CASCADE,
     FOREIGN KEY (course_id) REFERENCES course ON DELETE CASCADE,
     FOREIGN KEY (submitted_by) REFERENCES users ON DELETE RESTRICT
 );
@@ -95,14 +95,14 @@ CREATE TABLE poll(
     name            varchar(100) not null,
     description     varchar(128),
     --format          ENUM('multiple-choice'),
-    career_id       int,
+    career_code       int,
     course_id       varchar(10),
     creation_date   timestamp without time zone default now not null,
     expiry_date     timestamp without time zone,
     submitted_by    int,
 
     PRIMARY KEY (id),
-    FOREIGN KEY (career_id) REFERENCES career ON DELETE CASCADE,
+    FOREIGN KEY (career_code) REFERENCES career ON DELETE CASCADE,
     FOREIGN KEY (course_id) REFERENCES course ON DELETE CASCADE,
     FOREIGN KEY (submitted_by) REFERENCES users ON DELETE RESTRICT
 );

@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function(event) {
 
-    document.getElementById("careerId").addEventListener('change', (event) => {
+    document.getElementById("careerCode").addEventListener('change', (event) => {
         $(this).find('select:not(:has(option:selected[value!=""]))').attr('name', '');
         document.getElementById("chatListFilterForm").submit()
     });

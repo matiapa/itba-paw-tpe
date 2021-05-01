@@ -19,7 +19,7 @@ public class PollForm {
     @Size(min = 5, max = 50)
     private String title;
 
-    private Integer careerId;
+    private String careerCode;
 
     private String courseId;
 
@@ -43,12 +43,12 @@ public class PollForm {
         this.title = title;
     }
 
-    public Integer getCareerId() {
-        return careerId;
+    public String getCareerCode() {
+        return careerCode;
     }
 
-    public void setCareerId(Integer careerId) {
-        this.careerId = careerId;
+    public void setCareerCode(String careerCode) {
+        this.careerCode = careerCode;
     }
 
     public String getCourseId() {

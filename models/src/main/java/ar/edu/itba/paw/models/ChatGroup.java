@@ -5,15 +5,15 @@ import java.util.Date;
 public class ChatGroup {
 
     private final int id;
-    private final int careerId;
+    private final String careerCode;
     private final String name, link;
     private final Date creationDate;
     private final int submittedBy;
     private final ChatPlatform platform;
 
-    public ChatGroup(int id, int careerId, String name, String link, int user, Date creationDate, ChatPlatform platform){
+    public ChatGroup(int id, String careerCode, String name, String link, int user, Date creationDate, ChatPlatform platform){
         this.id = id;
-        this.careerId = careerId;
+        this.careerCode = careerCode;
         this.name = name;
         this.link = link;
         this.creationDate = creationDate;
@@ -23,8 +23,8 @@ public class ChatGroup {
 
     public int getId() {return id;}
 
-    public int getCareerId() {
-        return careerId;
+    public String getCareerCode() {
+        return careerCode;
     }
 
     public String getLink() {

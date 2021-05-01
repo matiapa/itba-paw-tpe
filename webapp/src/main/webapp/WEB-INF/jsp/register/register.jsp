@@ -34,10 +34,12 @@
 
                                         <div class="row mt-3">
                                             <div class="col-sm-6 mb-3 mb-sm-0">
-                                                <form:input class="form-control form-control-user" type="text" id="exampleFirstName" placeholder="Nombre" path="name" value="${user.name}" disabled="true"/>
+                                                <form:input class="form-control form-control-user" type="text" id="exampleFirstName"
+                                                    placeholder="Nombre" path="name" value="${user.name}" disabled="true"/>
                                             </div>
                                             <div class="col-sm-6">
-                                                <form:input class="form-control form-control-user" type="text" id="exampleLastName" placeholder="Apellido" path="surname" value="${user.surname}" disabled="true"/>
+                                                <form:input class="form-control form-control-user" type="text" id="exampleLastName"
+                                                    placeholder="Apellido" path="surname" value="${user.surname}" disabled="true"/>
                                             </div>
                                         </div>
 

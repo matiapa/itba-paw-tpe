@@ -32,7 +32,7 @@
                             <c:forEach var="career" items="${careers}">
                                 <c:set var="career" value="${career}" scope="request"/>
                                 <li class="nav-item" role="presentation">
-                                    <a class="nav-link" role="tab" href="<c:url value='/courses?careerId=${career.id}'/>">
+                                    <a class="nav-link" role="tab" href="<c:url value='/courses?careerCode=${career.code}'/>">
                                         <c:out value="${career.name}"/>
                                     </a>
                                 </li>

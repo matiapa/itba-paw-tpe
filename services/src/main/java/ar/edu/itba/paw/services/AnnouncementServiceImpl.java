@@ -1,8 +1,10 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.models.Announcement;
+import ar.edu.itba.paw.models.Permission;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.persistence.AnnouncementDao;
+import exceptions.UnauthorizedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,22 +15,24 @@ import java.util.Optional;
 @Service
 public class AnnouncementServiceImpl implements AnnouncementService {
 
-    @Autowired
-    private AnnouncementDao announcementDao;
+    @Autowired private AnnouncementDao announcementDao;
+
+    @Autowired private UserService userService;
+
 
     @Override
-    public List<Announcement> findGeneral() {
-        return announcementDao.findGeneral();
+    public List<Announcement> findGeneral(boolean showSeen) {
+        return announcementDao.findGeneral(showSeen, userService.getLoggedUser().getId());
     }
 
     @Override
-    public List<Announcement> findByCourse(String courseId) {
-        return announcementDao.findByCourse(courseId);
+    public List<Announcement> findByCourse(String courseId, boolean showSeen) {
+        return announcementDao.findByCourse(courseId, showSeen, userService.getLoggedUser().getId());
     }
 
     @Override
-    public List<Announcement> findByCareer(int careerId) {
-        return announcementDao.findByCareer(careerId);
+    public List<Announcement> findByCareer(String careerCode, boolean showSeen) {
+        return announcementDao.findByCareer(careerCode, showSeen, userService.getLoggedUser().getId());
     }
 
     @Override
@@ -37,15 +41,24 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     }
 
     @Override
-    public void markSeen(int announcementId, User user) {
-        announcementDao.markSeen(announcementId, user.getId());
+    public void markSeen(int announcementId) {
+        announcementDao.markSeen(announcementId, userService.getLoggedUser().getId());
     }
 
     @Override
-    public Announcement create(String title, String summary, String content, Integer careerId,
+    public Announcement create(String title, String summary, String content, String careerCode,
        String courseId, Date expiryDate, User author) {
-        return announcementDao.create(title, summary, content, careerId, courseId, expiryDate,
+        return announcementDao.create(title, summary, content, careerCode, courseId, expiryDate,
             author.getId());
+    }
+
+    @Override
+    public void delete(int id) {
+        Permission reqPerm = new Permission(Permission.Action.DELETE, Permission.Entity.ANNOUNCEMENT);
+        if(! userService.getLoggedUser().getPermissions().contains(reqPerm))
+            throw new UnauthorizedException();
+
+        announcementDao.delete(id);
     }
 
 }

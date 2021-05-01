@@ -48,7 +48,7 @@ public class AnnouncementDaoJdbcTest {
 
     @Test
     public void testFindByCarrer() {
-        List<Announcement> announcements = announcementDaoJdbc.findByCareer(1);
+        List<Announcement> announcements = announcementDaoJdbc.findByCareer("S");
 
         Assert.assertEquals(1, announcements.size());
 

@@ -45,12 +45,12 @@
                         </div>
 
                         <form method="get" id="chatListFilterForm">
-                            <select class="custom-select my-1 mr-sm-2" name="careerId" id="careerId">
+                            <select class="custom-select my-1 mr-sm-2" name="careerCode" id="careerCode">
                                 <option ${selectedCareer == null ? 'selected' : ''} value="">
                                     <spring:message code="chooseCareer"/>
                                 </option>
                                 <c:forEach var="career" items="${careers}">
-                                    <option ${selectedCareer.id == career.id ? 'selected' : ''} value="${career.id}">
+                                    <option ${selectedCareer.code.equals(career.code) ? 'selected' : ''} value="${career.code}">
                                             ${career.name}
                                     </option>
                                 </c:forEach>

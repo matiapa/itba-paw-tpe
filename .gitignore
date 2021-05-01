@@ -17,4 +17,4 @@
 .other/
 
 # Credentials
-webapp/src/main/java/ar/edu/itba/paw/webapp/config/auth.properties
+webapp/src/main/resources/auth.properties

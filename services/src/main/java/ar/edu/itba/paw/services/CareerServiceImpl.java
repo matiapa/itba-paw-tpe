@@ -16,18 +16,13 @@ public class CareerServiceImpl implements CareerService{
     private CareerDao careerDao;
 
     @Override
-    public Optional<Career> findById(int id) {
-        return careerDao.findById(id);
-    }
-
-    @Override
     public Optional<Career> findByCode(String code) {
         return careerDao.findByCode(code);
     }
 
     @Override
-    public Map<Integer, List<CareerCourse>> findByCareer(int careerId) {
-        return careerDao.findByCareer(careerId);
+    public Map<Integer, List<CareerCourse>> findByCareer(String careerCode) {
+        return careerDao.findByCareer(careerCode);
     }
 
 

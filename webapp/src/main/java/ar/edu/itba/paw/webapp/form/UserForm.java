@@ -26,7 +26,7 @@ public class UserForm {
     private int id;
 
     @NotNull
-    private int career_id;
+    private String careerCode;
 
     @NotNull
     @NotEmpty
@@ -38,8 +38,8 @@ public class UserForm {
         return name;
     }
 
-    public int getCareer_id() {
-        return career_id;
+    public String getCareerCode() {
+        return careerCode;
     }
 
     public String getSurname() {
@@ -71,8 +71,8 @@ public class UserForm {
         this.id = id;
     }
 
-    public void setCareer_id(int career_id) {
-        this.career_id = career_id;
+    public void setCareerCode(String careerCode) {
+        this.careerCode = careerCode;
     }
 
     public List<String> getCourses() {

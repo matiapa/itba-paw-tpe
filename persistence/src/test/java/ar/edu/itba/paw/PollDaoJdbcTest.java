@@ -33,7 +33,7 @@ public class PollDaoJdbcTest {
     @Test
     public void testfindByCareer()
     {
-        List<Poll> polls = pollDaoJdbc.findByCareer(1);
+        List<Poll> polls = pollDaoJdbc.findByCareer("S");
         Assert.assertEquals(3, polls.size());
     }
 

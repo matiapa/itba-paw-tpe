@@ -39,7 +39,7 @@ public class CourseController {
 
     @RequestMapping(value = "/courses", method = GET)
     public ModelAndView getCourses(
-            @RequestParam(name="careerId", required = false) Integer careerId
+            @RequestParam(name="careerCode", required = false) String careerCode
     ){
         final ModelAndView mav = new ModelAndView("courses/course_list");
 
@@ -48,11 +48,11 @@ public class CourseController {
         List<Career> careers = careerService.findAll();
         mav.addObject("careers", careers);
 
-        if(careerId != null) {
-            courses = careerService.findByCareer(careerId);
+        if(careerCode != null) {
+            courses = careerService.findByCareer(careerCode);
             mav.addObject("careerCourses",courses);
 
-            Career selectedCareer = careers.stream().filter(c -> c.getId() == careerId).findFirst()
+            Career selectedCareer = careers.stream().filter(c -> c.getCode().equals(careerCode)).findFirst()
                     .orElseThrow(RuntimeException::new);
             mav.addObject("selectedCareer", selectedCareer);
         }
@@ -72,7 +72,7 @@ public class CourseController {
         // Course announcements
 
         List<Announcement> announcements;
-        announcements = announcementService.findByCourse(courseId);
+        announcements = announcementService.findByCourse(courseId, false);
         mav.addObject("announcements",announcements);
 
         // Course content

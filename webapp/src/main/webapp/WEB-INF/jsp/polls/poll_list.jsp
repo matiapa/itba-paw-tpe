@@ -133,7 +133,7 @@
                                         </button>
                                         <div class="dropdown-menu">
                                             <c:forEach var="career" items="${careers}">
-                                                <a class="dropdown-item" href="<c:url value="/polls?filterBy=career&careerId=${career.id}"/>">
+                                                <a class="dropdown-item" href="<c:url value="/polls?filterBy=career&careerCode=${career.code}"/>">
                                                     <c:out value="${career.name}"/>
                                                 </a>
                                             </c:forEach>
@@ -143,7 +143,7 @@
                                     <c:if test="${selectedCareer != null}">
                                         <form name="searchForm" method="get" class="mt-3">
                                             <input hidden type="text" name="filterBy" value="career">
-                                            <input hidden type="text" name="careerId" value="${selectedCareer.id}">
+                                            <input hidden type="text" name="careerCode" value="${selectedCareer.code}">
                                             <div class="row align-items-center">
                                                     ${filterFormFields}
                                             </div>

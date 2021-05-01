@@ -32,7 +32,7 @@ public class CourseDaoJdbcTest {
 
     @Test
     public void testFindByCareer() {
-        List<Course> courses = courseDao.findByCareer(1);
+        List<Course> courses = courseDao.findByCareer("S");
 
         Assert.assertEquals(1, courses.size());
         Assert.assertEquals("1.1", courses.get(0).getId());

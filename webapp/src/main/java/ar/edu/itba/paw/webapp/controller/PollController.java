@@ -41,7 +41,7 @@ public class PollController {
     @RequestMapping(value = "/polls", method = GET)
     public ModelAndView getPolls(
         @RequestParam(name = "filterBy", required = false, defaultValue = "general") HolderEntity filterBy,
-        @RequestParam(name = "careerId", required = false) Integer careerId,
+        @RequestParam(name = "careerCode", required = false) String careerCode,
         @RequestParam(name = "courseId", required = false) String courseId,
         @RequestParam(name = "type", required = false) String type,
         @RequestParam(name = "state", required = false) String state,
@@ -55,7 +55,7 @@ public class PollController {
 
         List<Poll> pollList = new ArrayList<>();
 
-        commonFilters.addCareers(mav, careerId);
+        commonFilters.addCareers(mav, careerCode);
 
         commonFilters.addCourses(mav, courseId);
 
@@ -89,8 +89,8 @@ public class PollController {
                     pollList = pollService.findByCourse(courseId, selectedType, selectedState);
                 break;
             case career:
-                if (careerId != null)
-                    pollList = pollService.findByCareer(careerId, selectedType, selectedState);
+                if (careerCode != null)
+                    pollList = pollService.findByCareer(careerCode, selectedType, selectedState);
                 break;
             case general:
             default:
@@ -116,7 +116,7 @@ public class PollController {
     ) {
         if (errors.hasErrors()) {
             return getPolls(
-                HolderEntity.general, pollForm.getCareerId(), pollForm.getCourseId(), null, null,
+                HolderEntity.general, pollForm.getCareerCode(), pollForm.getCourseId(), null, null,
                 true, pollForm
             );
         }
@@ -125,7 +125,7 @@ public class PollController {
             pollForm.getTitle(),
             pollForm.getDescription(),
             PollFormat.text,
-            pollForm.getCareerId(),
+            pollForm.getCareerCode(),
             pollForm.getCourseId(),
             pollForm.getExpiryDate(),
             userService.getLoggedUser(),
@@ -133,16 +133,16 @@ public class PollController {
         );
 
         HolderEntity filterBy;
-        if(pollForm.getCareerId() == null && pollForm.getCourseId() == null)
+        if(pollForm.getCareerCode() == null && pollForm.getCourseId() == null)
             filterBy = HolderEntity.general;
-        else if(pollForm.getCareerId() == null && pollForm.getCourseId() != null)
+        else if(pollForm.getCareerCode() == null && pollForm.getCourseId() != null)
             filterBy = HolderEntity.course;
-        else if(pollForm.getCareerId() != null && pollForm.getCourseId() == null)
+        else if(pollForm.getCareerCode() != null && pollForm.getCourseId() == null)
             filterBy = HolderEntity.career;
         else
             filterBy = HolderEntity.general;
 
-        return getPolls(filterBy, pollForm.getCareerId(), pollForm.getCourseId(), null, null, false, pollForm);
+        return getPolls(filterBy, pollForm.getCareerCode(), pollForm.getCourseId(), null, null, false, pollForm);
     }
 
 
@@ -155,6 +155,7 @@ public class PollController {
         Optional<Poll> selectedPoll= pollService.findById(pollId);
 
         if (!selectedPoll.isPresent())
+            // TODO: Replace this exception
             throw new RuntimeException();
         mav.addObject("poll",selectedPoll.get());
 

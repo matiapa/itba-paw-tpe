@@ -20,7 +20,7 @@ public class AnnouncementForm {
     @Size(min = 5, max = 500)
     private String content;
 
-    private Integer careerId;
+    private String careerCode;
 
     private String courseId;
 
@@ -53,12 +53,12 @@ public class AnnouncementForm {
         this.content = content;
     }
 
-    public Integer getCareerId() {
-        return careerId;
+    public String getCareerCode() {
+        return careerCode;
     }
 
-    public void setCareerId(Integer careerId) {
-        this.careerId = careerId;
+    public void setCareerCode(String careerCode) {
+        this.careerCode = careerCode;
     }
 
     public String getCourseId() {

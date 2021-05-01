@@ -5,6 +5,8 @@
 <%@ taglib prefix = "spring" uri="http://www.springframework.org/tags"%>
 
 <jsp:useBean type="java.util.List<ar.edu.itba.paw.models.Announcement>" scope="request" id="announcements"/>
+<jsp:useBean type="java.util.List<ar.edu.itba.paw.models.Career>" scope="request" id="careers"/>
+<jsp:useBean type="java.util.List<ar.edu.itba.paw.models.Course>" scope="request" id="courses"/>
 <jsp:useBean type="ar.edu.itba.paw.models.HolderEntity" scope="request" id="filterBy"/>
 
 <!DOCTYPE html>
@@ -36,8 +38,8 @@
                         <div class="row align-items-center">
                             <div class="col"></div>
                             <div class="col col-xl-2 custom-control custom-switch">
-                                <input type="checkbox" class="custom-control-input" id="showHiddenSwitch">
-                                <label class="custom-control-label" for="showHiddenSwitch"><spring:message code="announcement.seeHidden"/></label>
+                                <input type="checkbox" class="custom-control-input" id="showSeen" ${showSeen ? 'checked' : ''}>
+                                <label class="custom-control-label" for="showSeen"><spring:message code="announcement.seeHidden"/></label>
                             </div>
                             <div class="col col-xl-2">
                                 <a href="#popup" data-toggle="modal">
@@ -106,7 +108,8 @@
                                         </button>
                                         <div class="dropdown-menu">
                                             <c:forEach var="career" items="${careers}">
-                                                <a class="dropdown-item" href="<c:url value="/announcements?filterBy=career&careerId=${career.id}"/>">
+                                                <c:url var="url" value="/announcements?filterBy=career&careerCode=${career.code}"/>
+                                                <a class="dropdown-item" href="${url}">
                                                     <c:out value="${career.name}"/>
                                                 </a>
                                             </c:forEach>

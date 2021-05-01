@@ -21,12 +21,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User registerUser(int id, String name, String surname, String email, int career_id, List<String> courses) {
-        return userDao.registerUser(id,name,surname,email,career_id,courses);
+    public Optional<User> findById(int id) {
+        return userDao.findById(id);
+    }
+
+    @Override
+    public User registerUser(int id, String name, String surname, String email, String careerCode, List<String> courses) {
+        return userDao.registerUser(id,name,surname,email,careerCode,courses);
     }
 
     @Override
     public User getLoggedUser() {
         return userDao.findById(59714).orElseThrow(RuntimeException::new);
+    }
+
+    @Override
+    public void setProfilePicture(String pictureDataURI) {
+        userDao.setProfilePicture(pictureDataURI, getLoggedUser().getId());
     }
 }
