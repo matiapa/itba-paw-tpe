@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.models.Permission;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -34,9 +35,13 @@ public class UserDaoJdbc implements UserDao {
         this.jdbcInsertVerificationCode= new SimpleJdbcInsert(ds).withTableName("user_verification");
 
         USER_ROW_MAPPER = (rs, rowNum) -> {
-            List<String> permissions = jdbcTemplate.query(
+            List<Permission> permissions = jdbcTemplate.query(
                 String.format("SELECT * FROM permission WHERE user_id=%d", rs.getInt("id")),
-                (rs2, rowNum2) -> rs.getString("entity")+"."+rs.getString("action")
+                (rs2, rowNum2) -> {
+                    Permission.Entity entity = Permission.Entity.valueOf(rs2.getString("entity").toUpperCase());
+                    Permission.Action action = Permission.Action.valueOf(rs2.getString("action").toUpperCase());
+                    return new Permission(action, entity);
+                }
             );
 
             return new User(

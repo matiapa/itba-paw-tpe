@@ -1,55 +1,44 @@
+// ------------------------ Form creation ------------------------
+
+// Display loading overlay when submitting announcement
+
 $("#submitAnnouncement").click(function(){
-    $("div.spanner").addClass("show");
-    $("div.overlay").addClass("show");
+    $("div.spanner")[0].addClass("show");
+    $("div.overlay")[0].addClass("show");
 });
 
-document.addEventListener("DOMContentLoaded", function(event) {
+// Display appropiate form fields when selecting a target
 
-    document.getElementById("courseId").addEventListener('change', (event) => {
-        $(this).find('select:not(:has(option:selected[value!=""]))').attr('name', '');
-        document.getElementById("courseAnnouncementsFilterForm").submit()
-    });
-
-    document.getElementById("announcementTarget").addEventListener('change', (event) => {
-
-        if(event.target.value === "career"){
-            document.getElementById("careerTarget").hidden = false
-            document.getElementById("courseTarget").hidden = true
-            document.getElementById("courseId").value = ""
-        }else if(event.target.value === "course"){
-            document.getElementById("courseTarget").hidden = false
-            document.getElementById("careerTarget").hidden = true
-            document.getElementById("careerCode").value = ""
-        }else{
-            document.getElementById("courseTarget").hidden = true
-            document.getElementById("careerTarget").hidden = true
-            document.getElementById("courseId").value = ""
-            document.getElementById("careerCode").value = ""
-        }
-
-    });
-
-    const showHiddenSwitch = document.getElementById("showHiddenSwitch")
-    showHiddenSwitch.addEventListener('change', (event) => {
-        for(let d of document.getElementsByClassName("card")){
-            console.log(d.children[0].innerText === true)
-            d.hidden = showHiddenSwitch.checked ? false : (d.children[0].innerText === 'true')
-        }
-    });
-
-});
-
-async function hideAnnouncement(id){
-    document.getElementsByName(id).forEach(e => e.hidden = true)
-
-    const res = await fetch(`announcements/markSeen?id=${id}`,{method: 'POST'});
-
-    if(res.status !== 200){
-        document.getElementById(id).hidden = false
-        document.querySelector("#errorToast .toast-body").hidden = false
-        document.querySelector("#errorToast .toast-body").innerHTML =
-            "No se ha podido marcar el anuncio como visualizado";
-        $('#errorToast').toast("show");
+$("#announcementTarget").change((e) => {
+    if(e.target.value === "career"){
+        $("#careerTarget")[0].hidden = false
+        $("#courseTarget")[0].hidden = true
+        $("#courseId")[0].value = ""
+    }else if(e.target.value === "course"){
+        $("#courseTarget")[0].hidden = false
+        $("#careerTarget")[0].hidden = true
+        $("#careerCode")[0].value = ""
+    }else{
+        $("#courseTarget")[0].hidden = true
+        $("#careerTarget")[0].hidden = true
+        $("#courseId")[0].value = ""
+        $("#careerCode")[0].value = ""
     }
+})
 
-}
+// ------------------------ Filtering ------------------------
+
+// Auto-submit filter-form when a course is selected
+
+$("#courseId").change((_) => {
+    $(this).find('select:not(:has(option:selected[value!=""]))').attr('name', '');
+    $("#courseAnnouncementsFilterForm")[0].submit()
+});
+
+// Append showSeen param when show seen switch changes
+
+$("#showSeen").change((e) => {
+    const url = new URL(window.location.href);
+    url.searchParams.set('showSeen', `${e.target.checked}`);
+    window.location.replace(url)
+});
