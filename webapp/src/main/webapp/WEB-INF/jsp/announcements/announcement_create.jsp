@@ -15,7 +15,7 @@
             </div>
 
             <div class="modal-body">
-                <c:url value="/announcements/create" var="postUrl"/>
+                <c:url value="/announcements" var="postUrl"/>
                 <form:form id="createAnnouncementForm" modelAttribute="createForm" action="${postUrl}" method="post">
 
                     <div class="form-group">

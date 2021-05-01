@@ -1,12 +1,10 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import ar.edu.itba.paw.models.*;
@@ -16,12 +14,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import ar.edu.itba.paw.services.AnnouncementService;
 import ar.edu.itba.paw.webapp.form.AnnouncementForm;
+
+import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @Controller
 public class AnnounceController {
@@ -34,12 +35,13 @@ public class AnnounceController {
 
 
     @RequestMapping(value = "/announcements", method = GET)
-    public ModelAndView getAnnouncements(
+    public ModelAndView list(
         @RequestParam(name="filterBy", required = false, defaultValue="general") HolderEntity filterBy,
         @RequestParam(name="careerCode", required = false) String careerCode,
         @RequestParam(name="courseId", required = false) String courseId,
         @RequestParam(name="showCreateForm", required = false, defaultValue="false") Boolean showCreateForm,
-        @ModelAttribute("createForm") final AnnouncementForm form
+        @ModelAttribute("createForm") final AnnouncementForm form,
+        @RequestParam(name="showSeen", required = false, defaultValue="false") Boolean showSeen
     ){
         final ModelAndView mav = new ModelAndView("announcements/announcements_list");
 
@@ -47,7 +49,7 @@ public class AnnounceController {
 
         mav.addObject("filterBy", filterBy);
         commonFilters.addCareers(mav, careerCode);
-        commonFilters.addCourses(mav, careerCode);
+        commonFilters.addCourses(mav, courseId);
 
         // Add filtered announcements
 
@@ -55,15 +57,15 @@ public class AnnounceController {
         switch(filterBy){
             case career:
                 if(careerCode != null)
-                    announcements = announcementService.findByCareer(careerCode);
+                    announcements = announcementService.findByCareer(careerCode, showSeen);
                 break;
             case course:
                 if(courseId != null)
-                    announcements = announcementService.findByCourse(courseId);
+                    announcements = announcementService.findByCourse(courseId, showSeen);
                 break;
             case general:
             default:
-                announcements = announcementService.findGeneral();
+                announcements = announcementService.findGeneral(showSeen);
         }
 
         mav.addObject("announcements", announcements);
@@ -71,21 +73,25 @@ public class AnnounceController {
         // Add other parameters
 
         mav.addObject("showCreateForm", showCreateForm);
-        mav.addObject("user", userService.getLoggedUser());
+        mav.addObject("showSeen", showSeen);
+
+        User loggedUser = userService.getLoggedUser();
+        mav.addObject("user", loggedUser);
+        mav.addObject("canDelete", loggedUser.getPermissions().contains(
+            new Permission(Permission.Action.DELETE, Permission.Entity.ANNOUNCEMENT)
+        ));
 
         return mav;
     }
 
 
-    @RequestMapping(value = "/announcements/create", method = POST)
+    @RequestMapping(value = "/announcements", method = POST)
     public ModelAndView create(
-            @Valid @ModelAttribute("createForm") final AnnouncementForm form,
-            final BindingResult errors
+        @Valid @ModelAttribute("createForm") final AnnouncementForm form,
+        final BindingResult errors
     ){
         if (errors.hasErrors()) {
-            return getAnnouncements(
-                HolderEntity.general, null, null, true, form
-            );
+            return list(HolderEntity.general, null, null, true, form, false);
         }
 
         announcementService.create(
@@ -104,13 +110,13 @@ public class AnnounceController {
         else
             filterBy = HolderEntity.general;
 
-        return getAnnouncements(filterBy, form.getCareerCode(), form.getCourseId(), false, form);
+        return list(filterBy, form.getCareerCode(), form.getCourseId(), false, form, false);
     }
 
 
-    @RequestMapping(value = "/announcements/detail", method = GET)
-    public ModelAndView getAnnouncementDetail(
-        @RequestParam(name="id", required = false) Integer id
+    @RequestMapping(value = "/announcements/{id}", method = GET)
+    public ModelAndView read(
+        @PathVariable(value = "id") Integer id
     ){
         final ModelAndView mav = new ModelAndView("announcements/announcements_detail");
 
@@ -127,16 +133,33 @@ public class AnnounceController {
     }
 
 
-    @RequestMapping(value = "/announcements/markSeen", method = POST)
-    public ModelAndView markSeen(
-        @RequestParam(name = "id") int id
+    @RequestMapping(value = "/announcements/{id}", method = DELETE)
+    public String delete(
+        @PathVariable(value="id") int id, HttpServletRequest request
     ) {
-        final ModelAndView mav = new ModelAndView("simple");
-        mav.addObject("text", "OK");
+        announcementService.delete(id);
 
-        announcementService.markSeen(id, userService.getLoggedUser());
+        String referer = request.getHeader("Referer");
+        return "redirect:"+ referer;
+    }
 
-        return mav;
+    @RequestMapping(value = "/announcements/{id}/delete", method = POST)
+    public String deleteWithPost(
+        @PathVariable(value="id") int id, HttpServletRequest request
+    ) {
+        return delete(id, request);
+    }
+
+
+    @RequestMapping(value = "/announcements/{id}/seen", method = POST)
+    public String markSeen(
+        @PathVariable(value="id") int id,
+        HttpServletRequest request
+    ) {
+        announcementService.markSeen(id);
+
+        String referer = request.getHeader("Referer");
+        return "redirect:"+ referer;
     }
 
 }

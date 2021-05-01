@@ -13,12 +13,12 @@ public class User {
     private final String profileImgB64;
     private final Date signupDate;
 
-    private final List<String> permissions;
+    private final List<Permission> permissions;
 
     private final String careerCode;
 
     public User(int id, String name, String surname, String email, String password, String profileImgB64,
-                Date signupDate, List<String> permissions, String careerCode) {
+                Date signupDate, List<Permission> permissions, String careerCode) {
         this.id = id;
         this.name = name;
         this.surname = surname;
@@ -62,7 +62,7 @@ public class User {
         return signupDate;
     }
 
-    public List<String> getPermissions() {
+    public List<Permission> getPermissions() {
         return permissions;
     }
 }
