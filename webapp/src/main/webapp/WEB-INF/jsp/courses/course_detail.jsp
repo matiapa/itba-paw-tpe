@@ -37,7 +37,7 @@
                                             <span><c:out value="${announcement.summary}"/><br></span>
                                         </div>
                                         <div class="col-auto">
-                                            <a href="<c:url value="/announcements/detail?id=${announcement.id}"/>">
+                                            <a href="<c:url value="/announcements/${announcement.id}"/>">
                                                 <i class="material-icons">keyboard_arrow_right</i>
                                             </a>
                                         </div>
