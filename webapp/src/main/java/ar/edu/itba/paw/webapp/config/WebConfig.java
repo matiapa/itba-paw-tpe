@@ -9,17 +9,23 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
+import org.thymeleaf.spring5.SpringTemplateEngine;
+import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
+import org.thymeleaf.templateresolver.ITemplateResolver;
+
+import java.util.Properties;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Properties;
 
 @EnableWebMvc
 @ComponentScan({
@@ -78,6 +84,49 @@ public class WebConfig {
     @Bean(name = "multipartResolver")
     public CommonsMultipartResolver multipartResolver() {
         return new CommonsMultipartResolver();
+    }
+
+    @Bean
+    public JavaMailSender getJavaMailSender(){
+        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+        mailSender.setHost("smtp.gmail.com");
+        mailSender.setPort(587);
+
+        mailSender.setUsername("noreplyitbahub@gmail.com");
+        mailSender.setPassword("ITBAHUB2021!");
+
+        Properties props = mailSender.getJavaMailProperties();
+        props.put("mail.transport.protocol","smtp");
+        props.put("mail.smtp.auth","true");
+        props.put("mail.smtp.starttls.enable","true");
+        props.put("mail.debug","true");
+
+        return mailSender;
+
+    }
+
+    @Bean
+    public ITemplateResolver thymeleafTemplateResolver(){
+        ClassLoaderTemplateResolver templateResolver= new ClassLoaderTemplateResolver();
+        templateResolver.setPrefix("mail-templates/");
+        templateResolver.setTemplateMode("HTML");
+        templateResolver.setCharacterEncoding("UTF-8");
+        return templateResolver;
+    }
+
+    @Bean
+    public SpringTemplateEngine thymeleafTemplateEngine(ITemplateResolver templateResolver){
+        SpringTemplateEngine templateEngine= new SpringTemplateEngine();
+        templateEngine.setTemplateResolver(templateResolver);
+        templateEngine.setTemplateEngineMessageSource(emailMessageSource());
+        return templateEngine;
+    }
+
+    @Bean
+    public ResourceBundleMessageSource emailMessageSource(){
+        ResourceBundleMessageSource messageSource= new ResourceBundleMessageSource();
+        messageSource.setBasename("mailMessages");
+        return messageSource;
     }
 
 }
