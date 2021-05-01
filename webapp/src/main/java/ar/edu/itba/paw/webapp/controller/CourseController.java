@@ -5,19 +5,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-
-import ar.edu.itba.paw.models.Announcement;
-import ar.edu.itba.paw.models.Career;
-import ar.edu.itba.paw.models.CareerCourse;
-import ar.edu.itba.paw.models.Content;
-import ar.edu.itba.paw.models.Course;
-import ar.edu.itba.paw.models.Poll;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
@@ -57,7 +51,9 @@ public class CourseController {
             mav.addObject("selectedCareer", selectedCareer);
         }
 
-        mav.addObject("user", userService.getLoggedUser());
+        User loggedUser=userService.getLoggedUser();
+        mav.addObject("user", loggedUser);
+
 
         return mav;
     }
@@ -103,7 +99,12 @@ public class CourseController {
             throw new RuntimeException();
         mav.addObject("course", selectedCourse.get());
 
-        mav.addObject("user", userService.getLoggedUser());
+
+        User loggedUser=userService.getLoggedUser();
+        mav.addObject("user", loggedUser);
+        mav.addObject("canDelete", loggedUser.getPermissions().contains(
+                new Permission(Permission.Action.DELETE, Permission.Entity.COURSE_CONTENT)
+        ));
 
         return mav;
     }
