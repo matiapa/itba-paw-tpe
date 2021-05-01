@@ -5,13 +5,19 @@ import javax.sql.DataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.env.Environment;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
+import org.thymeleaf.spring5.SpringTemplateEngine;
+import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
+import org.thymeleaf.templateresolver.ITemplateResolver;
+
+import java.util.Properties;
 
 @EnableWebMvc
 @ComponentScan({
@@ -59,6 +65,50 @@ public class WebConfig {
         ds.setPassword(password);
 
         return ds;
+    }
+
+    @Bean
+    public JavaMailSender getJavaMailSender(){
+        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+        mailSender.setHost("smtp.gmail.com");
+        mailSender.setPort(587);
+
+        mailSender.setUsername("jsackmann@itba.edu.ar");
+        mailSender.setPassword("");
+
+        Properties props = mailSender.getJavaMailProperties();
+        props.put("mail.transport.protocol","smtp");
+        props.put("mail.smtp.auth","true");
+        props.put("mail.smtp.starttls.enable","true");
+        props.put("mail.debug","true");
+
+        return mailSender;
+
+    }
+
+    @Bean
+    public ITemplateResolver thymeleafTemplateResolver(){
+        ClassLoaderTemplateResolver templateResolver= new ClassLoaderTemplateResolver();
+        templateResolver.setPrefix("src/main/mail-templates/");
+        templateResolver.setPrefix(".html");
+        templateResolver.setTemplateMode("HTML");
+        templateResolver.setCharacterEncoding("UTF-8");
+        return templateResolver;
+    }
+
+    @Bean
+    public SpringTemplateEngine thymeleafTemplateEngine(ITemplateResolver templateResolver){
+        SpringTemplateEngine templateEngine= new SpringTemplateEngine();
+        templateEngine.setTemplateResolver(templateResolver);
+        templateEngine.setTemplateEngineMessageSource(emailMessageSource());
+        return templateEngine;
+    }
+
+    @Bean
+    public ResourceBundleMessageSource emailMessageSource(){
+        ResourceBundleMessageSource messageSource= new ResourceBundleMessageSource();
+        messageSource.setBasename("mailMessages");
+        return messageSource;
     }
 
 }

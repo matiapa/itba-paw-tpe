@@ -3,6 +3,8 @@
 
   <modelVersion>4.0.0</modelVersion>
 
+
+
   <parent>
     <artifactId>app</artifactId>
     <groupId>ar.edu.itba.paw</groupId>
@@ -86,6 +88,34 @@
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
     </dependency>
+
+    <!-- Extras-->
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context-support</artifactId>
+
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-mail</artifactId>
+
+    </dependency>
+
+    <dependency>
+      <groupId>org.thymeleaf</groupId>
+      <artifactId>thymeleaf</artifactId>
+
+    </dependency>
+    <dependency>
+      <groupId>org.thymeleaf</groupId>
+      <artifactId>thymeleaf-spring5</artifactId>
+
+    </dependency>
+
+
+
 
   </dependencies>
 
