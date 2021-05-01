@@ -82,7 +82,7 @@ public class UserDaoJdbc implements UserDao {
         args.put("name",name);
         args.put("surname",surname);
         args.put("email",email);
-        args.put("password_hash",password_hash);
+        args.put("password",password_hash);
         args.put("career_code",career_code);
         args.put("signup_date",new Date());
         args.put("verified",false);

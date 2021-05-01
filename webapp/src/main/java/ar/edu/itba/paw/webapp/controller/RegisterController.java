@@ -55,22 +55,20 @@ public class RegisterController {
             @ModelAttribute("UserForm") final UserForm form,final BindingResult errors
     ) {
 
-        final ModelAndView mav = new ModelAndView("register/register");
+
 
 
         if (errors.hasErrors()){
             return new ModelAndView("register/register");
         }
-        new BCryptPasswordEncoder().encode(form.getPassword());
+
+
         userService.registerUser(form.getId(),form.getName(),form.getSurname(),form.getEmail(),new BCryptPasswordEncoder().encode(form.getPassword()),form.getCareerCode(),form.getCourses());
 
         emailService.sendVerificationEmail(form.getEmail());
 
-        mav.addObject("careerList", careerService.findAll());
 
-        mav.addObject("courseList",courseService.findAll());
-
-        return mav;
+        return new ModelAndView("register/pending_email_verification");
     }
 
     @RequestMapping(value ="/register/verification")
