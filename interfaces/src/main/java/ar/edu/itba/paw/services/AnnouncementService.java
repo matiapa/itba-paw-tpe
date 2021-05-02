@@ -8,6 +8,8 @@ import java.util.Optional;
 
 public interface AnnouncementService {
 
+    List<Announcement> findRelevant();
+
     List<Announcement> findGeneral(boolean showSeen);
 
     List<Announcement> findByCourse(String courseId, boolean showSeen);
@@ -16,10 +18,10 @@ public interface AnnouncementService {
 
     Optional<Announcement> findById(int id);
 
-    void markSeen(int announcementId);
-
     Announcement create(String title, String summary, String content, String careerCode,
        String courseId, Date expiryDate, User author);
+
+    void markSeen(int announcementId);
 
     void delete(int id);
 

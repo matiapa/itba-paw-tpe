@@ -12,6 +12,8 @@ import java.util.Optional;
 
 public interface PollService {
 
+    List<Poll> findRelevant();
+
     List<Poll> findGeneral();
 
     List<Poll> findGeneral(PollFormat format, PollState pollState);

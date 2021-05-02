@@ -22,6 +22,11 @@ public class AnnouncementServiceImpl implements AnnouncementService {
 
 
     @Override
+    public List<Announcement> findRelevant() {
+        return announcementDao.findRelevant(userService.getLoggedUser().getId());
+    }
+
+    @Override
     public List<Announcement> findGeneral(boolean showSeen) {
         return announcementDao.findGeneral(showSeen, userService.getLoggedUser().getId());
     }
@@ -42,15 +47,15 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     }
 
     @Override
-    public void markSeen(int announcementId) {
-        announcementDao.markSeen(announcementId, userService.getLoggedUser().getId());
-    }
-
-    @Override
     public Announcement create(String title, String summary, String content, String careerCode,
        String courseId, Date expiryDate, User author) {
         return announcementDao.create(title, summary, content, careerCode, courseId, expiryDate,
             author.getId());
+    }
+
+    @Override
+    public void markSeen(int announcementId) {
+        announcementDao.markSeen(announcementId, userService.getLoggedUser().getId());
     }
 
     @Override

@@ -102,7 +102,19 @@ public class PollDaoJdbc implements PollDao {
 
         return jdbcTemplate.query(stringBuilder.toString(), rowMapper);
     }
-    
+
+
+    @Override
+    public List<Poll> findRelevant(int userId) {
+        String query = "SELECT *, (SELECT count(*) FROM poll_vote_registry WHERE poll_id=id) votes FROM poll\n" +
+        "WHERE (expiry_date IS NULL OR expiry_date>now())\n" +
+        "  AND (course_id IS NULL OR course_id IN (SELECT course_id FROM fav_course WHERE user_id='%d'))\n" +
+        "  AND (career_code IS NULL OR career_code = (SELECT u.career_code FROM users u WHERE u.id='%d'))\n" +
+        "ORDER BY votes DESC LIMIT 5";
+
+        return jdbcTemplate.query(String.format(query, userId, userId), rowMapper);
+    }
+
 
     @Override
     public List<Poll> findGeneral() {

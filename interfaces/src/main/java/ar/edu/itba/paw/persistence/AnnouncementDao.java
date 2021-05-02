@@ -7,6 +7,8 @@ import java.util.Optional;
 
 public interface AnnouncementDao {
 
+    List<Announcement> findRelevant(int userId);
+
     List<Announcement> findGeneral(boolean showSeen, int userId);
 
     List<Announcement> findByCourse(String courseId, boolean showSeen, int userId);
@@ -15,10 +17,10 @@ public interface AnnouncementDao {
 
     Optional<Announcement> findById(int id);
 
-    void markSeen(int announcementId, int userId);
-
     Announcement create(String title, String summary, String content, String careerCode,
         String courseId, Date expiryDate, Integer submittedBy);
+
+    void markSeen(int announcementId, int userId);
 
     void delete(int id);
 

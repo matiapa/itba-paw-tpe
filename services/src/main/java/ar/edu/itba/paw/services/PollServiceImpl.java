@@ -19,8 +19,10 @@ import ar.edu.itba.paw.persistence.PollDao;
 @Service
 public class PollServiceImpl implements PollService {
 
-    @Autowired
-    private PollDao pollDao;
+    @Autowired private PollDao pollDao;
+
+    @Autowired private UserService userService;
+
 
     @Override
     public List<Poll> findByCareer(String careerCode) {
@@ -40,6 +42,11 @@ public class PollServiceImpl implements PollService {
     @Override
     public List<Poll> findByCourse(String courseId, Poll.PollFormat format, Poll.PollState pollState) {
         return pollDao.findByCourse(courseId, format, pollState);
+    }
+
+    @Override
+    public List<Poll> findRelevant() {
+        return pollDao.findRelevant(userService.getLoggedUser().getId());
     }
 
     @Override

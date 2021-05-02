@@ -37,11 +37,11 @@ public class HomeController {
 
         mav.addObject("courses", courseService.findFavourites(userService.getLoggedUser(), 4));
 
-        mav.addObject("announcements", announcementService.findGeneral(false));
+        mav.addObject("announcements", announcementService.findRelevant());
 
         mav.addObject("careers", careerService.findAll());
 
-        mav.addObject("polls", pollService.findGeneral());
+        mav.addObject("polls", pollService.findRelevant());
 
         return mav;
     }

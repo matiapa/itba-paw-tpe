@@ -1,9 +1,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
-<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
-
 <%@ taglib prefix = "spring" uri="http://www.springframework.org/tags"%>
 
+<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 
 <jsp:useBean type="java.util.List<ar.edu.itba.paw.models.Announcement>" scope="request" id="announcements"/>
 <jsp:useBean type="java.util.List<ar.edu.itba.paw.models.Poll>" scope="request" id="polls"/>
@@ -81,11 +80,13 @@
                                                 <div class="col mr-2">
                                                     <h6 class="mb-0"><strong><c:out value="${poll.name}"/></strong></h6>
                                                     <span class="text-xs">
-                                                        <c:if test="${poll.isExpired}">
-                                                            <spring:message code="expiredOn"/>
-                                                        </c:if>
-                                                        <c:if test="${!poll.isExpired}">
-                                                            <spring:message code="expireOn"/>
+                                                        <c:if test="${poll.expiryDate != null}">
+                                                            <c:if test="${poll.isExpired}">
+                                                                <spring:message code="expiredOn"/>
+                                                            </c:if>
+                                                            <c:if test="${!poll.isExpired}">
+                                                                <spring:message code="expireOn"/>
+                                                            </c:if>
                                                         </c:if>
                                                         <fmt:formatDate type="both" dateStyle = "short" timeStyle = "short" value="${poll.expiryDate}"/>
                                                     </span>

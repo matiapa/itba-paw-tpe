@@ -49,6 +49,7 @@ public class AnnouncementDaoJdbc implements AnnouncementDao {
         this.jdbcTemplate = new JdbcTemplate(ds);
     }
 
+
     private List<Announcement> findAnnouncement(StringBuilder baseQuery, boolean showSeen, int userId){
         if(!showSeen) {
             baseQuery.append(String.format(
@@ -60,6 +61,19 @@ public class AnnouncementDaoJdbc implements AnnouncementDao {
         return jdbcTemplate.query(baseQuery.toString(), announcementRowMapper);
     }
 
+
+    @Override
+    public List<Announcement> findRelevant(int userId) {
+        String query = "SELECT * FROM announcement\n" +
+        "WHERE (expiry_date IS NULL OR expiry_date>now())\n" +
+        "AND (course_id IS NULL OR course_id IN (SELECT course_id FROM fav_course WHERE user_id='%d'))\n" +
+        "AND (career_code IS NULL OR career_code = (SELECT u.career_code FROM users u WHERE u.id='%d'))\n" +
+        "ORDER BY creation_date DESC LIMIT 5";
+
+        return jdbcTemplate.query(String.format(query, userId, userId), announcementRowMapper);
+    }
+
+
     @Override
     public List<Announcement> findGeneral(boolean showSeen, int userId) {
         StringBuilder query = new StringBuilder();
@@ -67,6 +81,7 @@ public class AnnouncementDaoJdbc implements AnnouncementDao {
 
         return findAnnouncement(query, showSeen, userId);
     }
+
 
     @Override
     public List<Announcement> findByCourse(String courseId, boolean showSeen, int userId) {
@@ -76,6 +91,7 @@ public class AnnouncementDaoJdbc implements AnnouncementDao {
         return findAnnouncement(query, showSeen, userId);
     }
 
+
     @Override
     public List<Announcement> findByCareer(String careerCode, boolean showSeen, int userId) {
         StringBuilder query = new StringBuilder();
@@ -84,6 +100,7 @@ public class AnnouncementDaoJdbc implements AnnouncementDao {
         return findAnnouncement(query, showSeen, userId);
     }
 
+
     @Override
     public Optional<Announcement> findById(int id) {
         return jdbcTemplate.query(
@@ -91,6 +108,19 @@ public class AnnouncementDaoJdbc implements AnnouncementDao {
                 announcementRowMapper
         ).stream().findFirst();
     }
+
+
+    @Override
+    public Announcement create(String title, String summary, String content, String careerCode,
+                               String courseId, Date expiryDate, Integer submittedBy) {
+        return jdbcTemplate.queryForObject(
+                "INSERT INTO announcement(title, summary, content, career_code, course_id, expiry_date, " +
+                        "submitted_by) VALUES (?,?,?,?,?,?,?) RETURNING *",
+                new Object[]{title, summary, content, careerCode, courseId, expiryDate, submittedBy},
+                announcementRowMapper
+        );
+    }
+
 
     @Override
     public void markSeen(int announcementId, int userId){
@@ -101,16 +131,6 @@ public class AnnouncementDaoJdbc implements AnnouncementDao {
         );
     }
 
-    @Override
-    public Announcement create(String title, String summary, String content, String careerCode,
-                   String courseId, Date expiryDate, Integer submittedBy) {
-        return jdbcTemplate.queryForObject(
-        "INSERT INTO announcement(title, summary, content, career_code, course_id, expiry_date, " +
-                "submitted_by) VALUES (?,?,?,?,?,?,?) RETURNING *",
-            new Object[]{title, summary, content, careerCode, courseId, expiryDate, submittedBy},
-            announcementRowMapper
-        );
-    }
 
     @Override
     public void delete(int id){
