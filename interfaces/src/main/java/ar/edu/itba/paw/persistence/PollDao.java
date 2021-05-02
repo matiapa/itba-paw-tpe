@@ -31,4 +31,6 @@ public interface PollDao {
     void voteChoicePoll(int pollId, int optionId, int userId);
     
     boolean hasVoted(int pollId, int userId);
+
+    void delete(int id);
 }

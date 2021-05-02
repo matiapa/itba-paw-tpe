@@ -16,4 +16,6 @@ public interface ContentService {
 
     boolean createContent(String name, String link, String courseId, String description, String contentType, Date contentDate,User user);
 
+    void delete(int id);
+
 }

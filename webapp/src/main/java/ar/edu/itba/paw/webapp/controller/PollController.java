@@ -3,19 +3,20 @@ package ar.edu.itba.paw.webapp.controller;
 import java.text.DateFormat;
 import java.util.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.webapp.controller.common.FiltersController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import ar.edu.itba.paw.models.HolderEntity;
-import ar.edu.itba.paw.models.Poll;
 import ar.edu.itba.paw.models.Poll.PollFormat;
 import ar.edu.itba.paw.models.Poll.PollOption;
 
@@ -24,8 +25,7 @@ import ar.edu.itba.paw.services.UserService;
 import ar.edu.itba.paw.webapp.form.PollForm;
 import ar.edu.itba.paw.models.Poll.PollState;
 
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 
 @Controller
@@ -103,7 +103,12 @@ public class PollController {
         // Add other parameters
 
         mav.addObject("showCreateForm", showCreateForm);
-        mav.addObject("user", userService.getLoggedUser());
+
+        User loggedUser=userService.getLoggedUser();
+        mav.addObject("user", loggedUser);
+        mav.addObject("canDelete", loggedUser.getPermissions().contains(
+                new Permission(Permission.Action.DELETE, Entity.POLL)
+        ));
         
         return mav;
     }
@@ -182,6 +187,23 @@ public class PollController {
     ) {
         pollService.voteChoicePoll(id, option, userService.getLoggedUser());
         return "redirect:/polls/detail?id="+id;
+    }
+
+    @RequestMapping(value = "/polls/{id}", method = DELETE)
+    public String delete(
+            @PathVariable(value="id") int id, HttpServletRequest request
+    ) {
+        pollService.delete(id);
+
+        String referer = request.getHeader("Referer");
+        return "redirect:"+ referer;
+    }
+
+    @RequestMapping(value = "/polls/{id}/delete", method = POST)
+    public String deleteWithPost(
+            @PathVariable(value="id") int id, HttpServletRequest request
+    ) {
+        return delete(id, request);
     }
 
 }

@@ -5,6 +5,7 @@
 <%@ taglib prefix = "spring" uri="http://www.springframework.org/tags"%>
 
 <jsp:useBean type="ar.edu.itba.paw.models.Course" scope="request" id="course"/>
+<jsp:useBean type="java.lang.Boolean" scope="request" id="canDelete"/>
 
 <!DOCTYPE html>
 <html>
@@ -83,11 +84,23 @@
                                     <table class="table my-0" id="dataTable">
                                         <thead>
                                         <tr>
+<<<<<<< HEAD
                                             <th><spring:message code="form.description"/></th>
                                             <th><spring:message code="form.type"/></th>
                                             <th><spring:message code="date"/></th>
                                             <th><spring:message code="author"/></th>
                                             <th><spring:message code="form.link"/></th>
+=======
+                                            <th>Descripción</th>
+                                            <th>Tipo</th>
+                                            <th>Fecha</th>
+                                            <th>Autor</th>
+                                            <th>Link</th>
+                                            <c:if test="${canDelete}">
+                                                <th>Admin Options</th>
+                                            </c:if>
+
+>>>>>>> adminDeletes
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -102,7 +115,24 @@
                                                          src="<c:url value="/assets/img/avatars/avatar-male.png"/>">
                                                     <c:out value="${content.submitter.name}"/>
                                                  </td>
-                                                <td><a class="btn btn-link" target="_blank" rel="noopener noreferrer" href="<c:url value='${content.link}'/>" role="button"><spring:message code="form.link"/></a></td>
+
+                                                <td>
+                                                    <a class="btn btn-link" target="_blank" rel="noopener noreferrer"
+                                                        href="<c:url value='${content.link}'/>" role="button">
+                                                    <spring:message code="form.link"/>
+                                                    </a>
+                                                </td>
+
+                                                <c:if test="${canDelete}">
+                                                    <td>
+                                                        <c:url var="url" value="/contents/${content.id}/delete"/>
+                                                        <form action="${url}" method="post">
+                                                            <button type="submit" class="btn btn-icon" style="color:red">
+                                                                <i class="material-icons">delete</i>
+                                                            </button>
+                                                        </form>
+                                                    </td>
+                                                </c:if>
                                             </tr>
                                         </c:forEach>
                                         </tbody>

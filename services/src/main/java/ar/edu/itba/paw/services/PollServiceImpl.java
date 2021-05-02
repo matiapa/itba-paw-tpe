@@ -77,4 +77,9 @@ public class PollServiceImpl implements PollService {
         return pollDao.hasVoted(pollId, user.getId());
     }
 
+    @Override
+    public void delete(int id) {
+        pollDao.delete(id);
+    }
+
 }

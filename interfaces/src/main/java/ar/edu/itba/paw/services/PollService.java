@@ -33,4 +33,6 @@ public interface PollService {
     void voteChoicePoll(int pollId, int optionId, User user);
     
     boolean hasVoted(int pollId, User user);
+
+    void delete(int id);
 }

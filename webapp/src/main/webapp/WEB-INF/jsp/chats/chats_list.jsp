@@ -7,6 +7,8 @@
 <jsp:useBean type="java.util.List<ar.edu.itba.paw.models.ChatGroup>" scope="request" id="chatgroups"/>
 <jsp:useBean type="java.util.List<ar.edu.itba.paw.models.Career>" scope="request" id="careers"/>
 <jsp:useBean type="ar.edu.itba.paw.models.ChatGroup.ChatPlatform[]" scope="request" id="platforms"/>
+<jsp:useBean type="java.lang.Boolean" scope="request" id="canDelete"/>
+
 
 <!DOCTYPE html>
 <html>
@@ -117,6 +119,10 @@
                                                 <th><spring:message code="year"/></th>
                                                 <th><spring:message code="quarter"/></th>
                                                 <th><spring:message code="chat.link"/></th>
+
+                                                <c:if test="${canDelete}">
+                                                    <th></th>
+                                                </c:if>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -126,8 +132,22 @@
                                                     <td>${chatgroup.creationYear}</td>
                                                     <td>${chatgroup.creationQuarter}</td>
                                                     <td>
-                                                        <button><a class="btn btn-link" href='<c:out value="${chatgroup.link}"/>' target="_blank" rel="noopener noreferrer"><spring:message code="open"/></a></button>
+                                                        <a class="btn btn-link" href='<c:out value="${chatgroup.link}"/>'
+                                                           target="_blank" rel="noopener noreferrer">
+                                                            <spring:message code="open"/>
+                                                        </a>
                                                     </td>
+                                                    <c:if test="${canDelete}">
+                                                        <td>
+                                                            <c:url var="url" value="/chats/${chatgroup.id}/delete"/>
+                                                            <form action="${url}" method="post">
+                                                                <button type="submit" class="btn btn-icon" style="color:red">
+                                                                    <i class="material-icons">delete</i>
+                                                                </button>
+                                                            </form>
+
+                                                        </td>
+                                                    </c:if>
                                                 </tr>
                                             </c:forEach>
                                         </tbody>

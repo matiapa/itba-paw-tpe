@@ -5,6 +5,7 @@
 <%@ taglib prefix = "spring" uri="http://www.springframework.org/tags"%>
 
 <jsp:useBean type="ar.edu.itba.paw.models.Poll" scope="request" id="poll"/>
+<jsp:useBean type="java.lang.Boolean" scope="request" id="canDelete"/>
 
 <div class="card shadow mb-4" style="margin-top: 32px;">
     <div class="card-header py-3">
@@ -30,7 +31,17 @@
                 </span>
             </div>
             <div class="col-auto">
-                <a href='<c:url value="/polls/detail?id=${poll.id}"/>' class="btn btn-icon" type="button">
+                <c:if test="${canDelete}">
+                    <c:url var="url" value="/polls/${poll.id}/delete"/>
+                    <form action="${url}" method="post">
+                        <button type="submit" class="btn btn-icon" style="color:red">
+                            <i class="material-icons">delete</i>
+                        </button>
+                    </form>
+                </c:if>
+            </div>
+            <div class="col-auto">
+                <a href="<c:url value="/polls/detail?id=${poll.id}"/>" class="btn btn-icon" type="button">
                     <i class="material-icons">keyboard_arrow_right</i>
                 </a>
             </div>

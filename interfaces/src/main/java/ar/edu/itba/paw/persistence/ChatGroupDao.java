@@ -19,4 +19,6 @@ public interface ChatGroupDao {
 
     Optional<ChatGroup> findById(String id);
 
+    void delete(int id);
+
 }
