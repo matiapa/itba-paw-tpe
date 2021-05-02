@@ -27,11 +27,6 @@ public class ChatGroupServiceImpl implements ChatGroupService{
 
 
     @Override
-    public List<ChatGroup> findByCareer(String careerCode, int offset, int limit) {
-        return chatGroupDao.findByCareer(careerCode, offset, limit);
-    }
-
-    @Override
     public List<ChatGroup> findByCareer(String careerCode, ChatGroup.ChatPlatform platform, Integer year, Integer quarter, int offset, int limit) {
         return chatGroupDao.findByCareer(careerCode, platform, year, quarter, offset, limit);
     }

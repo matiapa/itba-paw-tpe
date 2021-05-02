@@ -14,8 +14,6 @@ public interface CourseDao {
 
     List<Course> findFavourites(int userId, int limit);
 
-    List<Course> findByCareer(String careerCode);
-
     List<Course> findByCareer(String careerCode, int limit);
 
     Optional<Course> findById(String id);

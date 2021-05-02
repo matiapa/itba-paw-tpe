@@ -10,7 +10,7 @@ import java.util.Map;
 
 public interface StatisticsService {
 
-    Map<Entity, Integer> newContributions();
+    Map<Entity, Integer> newContributions(User loggedUser);
 
     Map<Career, Integer> contributionsByCareer();
 

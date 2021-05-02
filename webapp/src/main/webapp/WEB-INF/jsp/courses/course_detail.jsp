@@ -4,9 +4,6 @@
 
 <%@ taglib prefix = "spring" uri="http://www.springframework.org/tags"%>
 
-<jsp:useBean type="ar.edu.itba.paw.models.Course" scope="request" id="course"/>
-<jsp:useBean type="java.lang.Boolean" scope="request" id="canDelete"/>
-
 <!DOCTYPE html>
 <html>
 
@@ -64,7 +61,7 @@
                                             <h6 class="mb-0"><strong><c:out value="${poll.name}"/></strong></h6>
                                             <span class="text-xs"><c:out value="${poll.description}"/></span></div>
                                         <div class="col-auto">
-                                            <a href="<c:url value="/polls/detail?id=${poll.id}"/>">
+                                            <a href="<c:url value="/polls/${poll.id}"/>">
                                                 <i class="material-icons">keyboard_arrow_right</i>
                                             </a>
                                         </div>
@@ -96,7 +93,7 @@
                                             <c:set var="content" value="${content}" scope="request"/>
                                             <tr>
                                                 <td><c:out value="${content.name}"/></td>
-                                                <td><c:out value="${contentTypeEnumMap.get(content.contentType)}"/></td>
+                                                <td><spring:message code="enum.contenttype.${content.contentType}"/></td>
                                                 <td><c:out value="${content.uploadDate}"/></td>
                                                 <td>
                                                     <img class="rounded-circle mr-2" width="30" height="30"

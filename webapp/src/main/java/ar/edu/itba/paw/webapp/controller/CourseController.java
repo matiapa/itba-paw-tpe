@@ -8,8 +8,11 @@ import java.util.Optional;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.ui.Pager;
 import ar.edu.itba.paw.services.*;
+import ar.edu.itba.paw.webapp.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -18,7 +21,6 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @Controller
 public class CourseController {
-    static final int LIMIT = 5;
 
     @Autowired private CareerService careerService;
 
@@ -34,8 +36,8 @@ public class CourseController {
 
 
     @RequestMapping(value = "/courses", method = GET)
-    public ModelAndView getCourses(
-            @RequestParam(name="careerCode", required = false) String careerCode
+    public ModelAndView list(
+        @RequestParam(name="careerCode", required = false) String careerCode
     ){
         final ModelAndView mav = new ModelAndView("courses/course_list");
 
@@ -53,63 +55,43 @@ public class CourseController {
             mav.addObject("selectedCareer", selectedCareer);
         }
 
-        User loggedUser=userService.getLoggedUser();
-        mav.addObject("user", loggedUser);
-
-
         return mav;
     }
 
-
-    @RequestMapping(value = "/courses/detail", method = GET)
-    public ModelAndView getCourse(
-        @RequestParam(name="id") String courseId,
-        @RequestParam(name="page", required = false, defaultValue = "0") Integer page
+    @RequestMapping(value = "/courses/{id:.+}", method = GET)
+    public ModelAndView get(
+        @PathVariable(value="id") String courseId,
+        @ModelAttribute("user") User loggedUser
     ){
         final ModelAndView mav = new ModelAndView("courses/course_detail");
-
-        // Course announcements
-
-        Pager pager = new Pager(announcementService.getSize(HolderEntity.course, courseId), page);
-        List<Announcement> announcements;
-
-        announcements = announcementService.findByCourse(courseId, false, pager.getOffset(), pager.getLimit());
-
-        mav.addObject("announcements",announcements);
-        mav.addObject("pager", pager);
-        // Course content
-
-        List<Content> contents;
-        contents = contentService.findByCourse(courseId);
-        mav.addObject("contents",contents);
-
-        mav.addObject("contentTypeEnumMap", new HashMap<Content.ContentType, String>()
-        {{
-            put(Content.ContentType.exam, "Exámen");
-            put(Content.ContentType.guide, "Guía");
-            put(Content.ContentType.note, "Apunte");
-            put(Content.ContentType.resume, "Resúmen");
-            put(Content.ContentType.other, "Otro");
-        }});
-
-        // Course polls
-
-        List<Poll> polls;
-        polls = pollService.findByCourse(courseId, pager.getOffset(), pager.getLimit());
-        mav.addObject("polls",polls);
 
         // Course details
 
         Optional<Course> selectedCourse = courseService.findById(courseId);
         if (!selectedCourse.isPresent())
-            throw new RuntimeException();
+            throw new ResourceNotFoundException();
+
         mav.addObject("course", selectedCourse.get());
 
+        // Course announcements
 
-        User loggedUser=userService.getLoggedUser();
-        mav.addObject("user", loggedUser);
+        List<Announcement> announcements = announcementService.findByCourse(loggedUser, courseId, false, 0, 10);
+        mav.addObject("announcements",announcements);
+
+        // Course content
+
+        List<Content> contents = contentService.findByCourse(courseId, 0, 10);
+        mav.addObject("contents", contents);
+
+        // Course polls
+
+        List<Poll> polls = pollService.findByCourse(courseId, null, null, 0, 10);
+        mav.addObject("polls",polls);
+
+        // Other parameters
+
         mav.addObject("canDelete", loggedUser.getPermissions().contains(
-                new Permission(Permission.Action.DELETE, Entity.COURSE_CONTENT)
+            new Permission(Permission.Action.DELETE, Entity.COURSE_CONTENT)
         ));
 
         return mav;

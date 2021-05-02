@@ -1,11 +1,8 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.models.HolderEntity;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.services.*;
-import ar.edu.itba.paw.webapp.controller.common.FiltersController;
 import ar.edu.itba.paw.webapp.form.UserForm;
-import jdk.nashorn.internal.runtime.options.Option;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -44,7 +41,7 @@ public class RegisterController {
 
         mav.addObject("careerList", careerService.findAll());
 
-        mav.addObject("courseList",courseService.findAll());
+        mav.addObject("courseList", courseService.findAll());
 
         return mav;
     }

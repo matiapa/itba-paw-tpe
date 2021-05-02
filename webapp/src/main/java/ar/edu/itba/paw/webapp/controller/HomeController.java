@@ -6,6 +6,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -26,21 +27,19 @@ public class HomeController {
     @Autowired private UserService userService;
 
     @RequestMapping("/")
-    public ModelAndView getDashboard() {
+    public ModelAndView getDashboard(
+        @ModelAttribute("user") User loggedUser
+    ) {
 
         final ModelAndView mav = new ModelAndView("index");
 
-        SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        mav.addObject("courses", courseService.findFavourites(loggedUser, 5));
 
-        mav.addObject("user", userService.getLoggedUser());
-
-        mav.addObject("courses", courseService.findFavourites(userService.getLoggedUser(), 5));
-
-        mav.addObject("announcements", announcementService.findRelevant(5));
+        mav.addObject("announcements", announcementService.findRelevant(loggedUser,5));
 
         mav.addObject("careers", careerService.findAll());
 
-        mav.addObject("polls", pollService.findRelevant(userService.getLoggedUser().getId()));
+        mav.addObject("polls", pollService.findRelevant(loggedUser.getId()));
 
         return mav;
     }

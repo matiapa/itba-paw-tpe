@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.models.Announcement;
-import ar.edu.itba.paw.models.HolderEntity;
+import ar.edu.itba.paw.models.EntityTarget;
 import ar.edu.itba.paw.models.Entity;
 import ar.edu.itba.paw.models.Permission;
 import ar.edu.itba.paw.models.User;
@@ -19,31 +19,30 @@ public class AnnouncementServiceImpl implements AnnouncementService {
 
     @Autowired private AnnouncementDao announcementDao;
 
-    @Autowired private UserService userService;
 
     @Override
-    public List<Announcement> findRelevant(int limit) {
-        return announcementDao.findRelevant(userService.getLoggedUser().getId(), limit);
+    public List<Announcement> findRelevant(User loggedUser, int limit) {
+        return announcementDao.findRelevant(loggedUser.getId(), limit);
     }
 
     @Override
-    public List<Announcement> findGeneral(boolean showSeen, int offset, int limit) {
-        return announcementDao.findGeneral(showSeen, userService.getLoggedUser().getId(), limit, offset);
+    public List<Announcement> findGeneral(User loggedUser, boolean showSeen, int offset, int limit) {
+        return announcementDao.findGeneral(showSeen, loggedUser.getId(), offset, limit);
     }
 
     @Override
-    public List<Announcement> findByCourse(String courseId, boolean showSeen, int offset, int limit) {
-        return announcementDao.findByCourse(courseId, showSeen, userService.getLoggedUser().getId(), offset, limit);
+    public List<Announcement> findByCourse(User loggedUser, String courseId, boolean showSeen, int offset, int limit) {
+        return announcementDao.findByCourse(courseId, showSeen, loggedUser.getId(), offset, limit);
     }
 
     @Override
-    public List<Announcement> findByCareer(String careerCode, boolean showSeen, int offset, int limit) {
-        return announcementDao.findByCareer(careerCode, showSeen, userService.getLoggedUser().getId(), offset, limit);
+    public List<Announcement> findByCareer(User loggedUser, String careerCode, boolean showSeen, int offset, int limit) {
+        return announcementDao.findByCareer(careerCode, showSeen, loggedUser.getId(), offset, limit);
     }
 
     @Override
-    public int getSize(HolderEntity holderEntity, String code){
-        return announcementDao.getSize(holderEntity, code);
+    public int getSize(EntityTarget target, String code, boolean showSeen, int userId){
+        return announcementDao.getSize(target, code, showSeen, userId);
     }
 
     @Override
@@ -59,14 +58,14 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     }
 
     @Override
-    public void markSeen(int announcementId) {
-        announcementDao.markSeen(announcementId, userService.getLoggedUser().getId());
+    public void markSeen(User loggedUser, int announcementId) {
+        announcementDao.markSeen(announcementId, loggedUser.getId());
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(User loggedUser, int id) {
         Permission reqPerm = new Permission(Permission.Action.DELETE, Entity.ANNOUNCEMENT);
-        if(! userService.getLoggedUser().getPermissions().contains(reqPerm))
+        if(! loggedUser.getPermissions().contains(reqPerm))
             throw new UnauthorizedException();
 
         announcementDao.delete(id);

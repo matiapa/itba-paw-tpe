@@ -12,12 +12,8 @@ public interface UserService {
 
     User registerUser(int id, String name, String surname, String email,String password_hash, String careerCode, List<String> courses);
 
-    User getLoggedUser();
+    void setProfilePicture(User loggedUser, String pictureDataURI);
 
-    void setProfilePicture(String pictureDataURI);
-
-    boolean verifyEmail(int user_id,int verification_code);
-
-
+    boolean verifyEmail(int userId, int verificationCode);
 
 }

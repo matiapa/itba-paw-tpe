@@ -13,8 +13,6 @@ public interface ChatGroupDao {
 
     int getSize(String careerCode, ChatPlatform selectedPlatform, Integer selectedYear, Integer selectedQuarter);
 
-    List<ChatGroup> findByCareer(String careerCode, int offset, int limit);
-
     List<ChatGroup> findByCareer(String careerCode, ChatPlatform platform, Integer year, Integer quarter, int offset, int limit);
 
     Optional<ChatGroup> findById(String id);

@@ -71,7 +71,7 @@
                                                                                 <td><c:out value="${course.semester}"/></td>
                                                                                 <td><c:out value="${course.credits}"/></td>
                                                                                 <td><a class="btn btn-link" type="button"
-                                                                                       href="<c:url value='/courses/detail?id=${course.id}'/>"
+                                                                                       href="<c:url value='/courses/${course.id}'/>"
                                                                                 ><spring:message code="open"/></a></td>
                                                                             </tr>
                                                                         </c:forEach>

@@ -29,11 +29,6 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public List<Course> findByCareer(String careerCode) {
-        return courseDao.findByCareer(careerCode);
-    }
-
-    @Override
     public List<Course> findByCareer(String careerCode, int limit) {
         return courseDao.findByCareer(careerCode, limit);
     }

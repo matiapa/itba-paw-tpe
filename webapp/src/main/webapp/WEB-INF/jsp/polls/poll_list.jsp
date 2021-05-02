@@ -6,7 +6,7 @@
 <%@ taglib prefix = "spring" uri="http://www.springframework.org/tags"%>
 
 <jsp:useBean type="java.util.List<ar.edu.itba.paw.models.Poll>" scope="request" id="polls"/>
-<jsp:useBean type="ar.edu.itba.paw.models.HolderEntity" scope="request" id="filterBy"/>
+<jsp:useBean type="ar.edu.itba.paw.models.EntityTarget" scope="request" id="filterBy"/>
 
 
 <!DOCTYPE html>
@@ -70,7 +70,7 @@
                                         </option>
                                         <c:forEach var="type" items="${types}">
                                             <option ${selectedType == type ? 'selected' : ''} value="${type}">
-                                                    ${typeTranslate.get(type)}
+                                                <spring:message code="enum.polltype.${type}"/>
                                             </option>
                                         </c:forEach>
                                     </select>
@@ -83,7 +83,7 @@
                                         </option>
                                         <c:forEach var="state" items="${states}">
                                             <option ${selectedState == state ? 'selected' : ''} value="${state}">
-                                                    ${stateTranslate.get(state)}
+                                                <spring:message code="enum.pollstate.${state}"/>
                                             </option>
                                         </c:forEach>
                                     </select>

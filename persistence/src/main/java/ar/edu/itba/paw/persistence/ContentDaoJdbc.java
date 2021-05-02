@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.models.Content;
+import ar.edu.itba.paw.models.Content.ContentType;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -45,35 +46,13 @@ public class ContentDaoJdbc implements ContentDao{
         this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate).withTableName("course_content").usingGeneratedKeyColumns("id","creation_date");
     }
 
-    @Override
-    public List<Content> findByCourse(String courseId) {
-        return jdbcTemplate.query(
-            String.format("SELECT * FROM course_content WHERE course_id='%s'", courseId),
-                contentRowMapper
-        );
-    }
-
-    @Override
-    public List<Content> findByCourse(String courseId, int offset, int limit){
-        return jdbcTemplate.query(
-            String.format("SELECT * FROM course_content WHERE course_id='%s' "+
-                "ORDER BY id OFFSET %d LIMIT %d", courseId, offset, limit),
-                contentRowMapper
-        );
-    }
-
-    @Override
-    public List<Content> findByCourseAndType(String courseId, String contentType) {
-        return jdbcTemplate.query(
-                String.format("SELECT * FROM course_content WHERE course_id='%s' AND content_type='%s", courseId,contentType),
-                contentRowMapper
-        );
-    }
-
-    @Override
-    public List<Content> findContent(String courseId, Content.ContentType contentType, Date minDate, Date maxDate) {
+    private String queryBuilder(String courseId, ContentType contentType, Date minDate, Date maxDate, Integer offset, Integer limit){
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(String.format("SELECT * FROM course_content WHERE course_id='%s'",courseId));
+        stringBuilder.append(String.format(
+            "SELECT %s FROM course_content WHERE course_id='%s'",
+            offset!=null ? "*" : "count(*)", courseId
+        ));
+
         if (contentType!= null)
             stringBuilder.append(String.format(" AND content_type='%s'", contentType.toString().replace("_", "-")));
         if (minDate!= null)
@@ -81,13 +60,24 @@ public class ContentDaoJdbc implements ContentDao{
         if (maxDate!= null)
             stringBuilder.append(String.format(" AND creation_date<='%s'", maxDate));
 
+        if(offset != null && limit != null)
+            stringBuilder.append(String.format(" ORDER BY id OFFSET %d LIMIT %d", offset, limit));
 
-        return jdbcTemplate.query(stringBuilder.toString(),contentRowMapper);
+        return stringBuilder.toString();
+    }
+
+    @Override
+    public List<Content> findContent(String courseId, ContentType contentType, Date minDate, Date maxDate, int offset, int limit){
+        return jdbcTemplate.query(
+            queryBuilder(courseId, contentType, minDate, maxDate, offset, limit),
+            contentRowMapper
+        );
     }
 
     @Override
     public boolean createContent(String name, String link, String courseId, String description, String contentType, Date contentDate, User user) {
         final Map<String,Object> args= new HashMap<>();
+
         args.put("name",name);
         args.put("link",link);
         args.put("submitted_by",user.getId());
@@ -97,17 +87,14 @@ public class ContentDaoJdbc implements ContentDao{
         args.put("content_date",contentDate);
 
         return jdbcInsert.execute(args)==1;
-
-
-
-
     }
 
     @Override
-    public int getSize(String courseId) {
-        return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM course_content WHERE course_id= ?",
-                new Object[]{courseId}, Integer.class);
-
+    public int getSize(String courseId, ContentType contentType, Date minDate, Date maxDate) {
+        return jdbcTemplate.queryForObject(
+            queryBuilder(courseId, contentType, minDate, maxDate, null, null),
+            Integer.class
+        );
     }
 
     public Optional<Content> findById(String id) {

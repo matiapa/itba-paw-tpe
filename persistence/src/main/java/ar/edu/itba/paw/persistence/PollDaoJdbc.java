@@ -8,7 +8,7 @@ import java.util.Optional;
 
 import javax.sql.DataSource;
 
-import ar.edu.itba.paw.models.HolderEntity;
+import ar.edu.itba.paw.models.EntityTarget;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -84,7 +84,7 @@ public class PollDaoJdbc implements PollDao {
     }
 
     
-    private List<Poll> find(String baseQuery, PollFormat format, PollState state, int offset, int limit){
+    private String queryBuilder(String baseQuery, PollFormat format, PollState state, Integer offset, Integer limit){
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(baseQuery);
 
@@ -101,9 +101,11 @@ public class PollDaoJdbc implements PollDao {
                 stringBuilder.append(" AND expiry_date<now()");
         }
 
-        stringBuilder.append(String.format(" OFFSET %d LIMIT %d", offset, limit));
+       if(offset != null && limit != null){
+           stringBuilder.append(String.format(" OFFSET %d LIMIT %d", offset, limit));
+       }
 
-        return jdbcTemplate.query(stringBuilder.toString(), rowMapper);
+        return stringBuilder.toString();
     }
 
 
@@ -120,42 +122,54 @@ public class PollDaoJdbc implements PollDao {
 
     @Override
     public List<Poll> findGeneral(PollFormat format, PollState state, int offset, int limit) {
-        return find(
+        String query = queryBuilder(
             "SELECT * FROM poll WHERE career_code IS NULL AND course_id IS NULL",
             format, state, offset, limit
         );
+
+        return jdbcTemplate.query(query, rowMapper);
     }
 
     @Override
     public List<Poll> findByCareer(String careerCode, PollFormat format, PollState state, int offset, int limit) {
-        return find(
+        String query = queryBuilder(
             String.format("SELECT * FROM poll WHERE career_code='%s' AND course_id IS NULL", careerCode),
             format, state, offset, limit
         );
+
+        return jdbcTemplate.query(query, rowMapper);
     }
 
     @Override
     public List<Poll> findByCourse(String courseId, PollFormat format, PollState state, int offset, int limit) {
-        return find(
+        String query = queryBuilder(
             String.format("SELECT * FROM poll WHERE course_id='%s' AND career_code IS NULL", courseId),
             format, state, offset, limit
         );
+
+        return jdbcTemplate.query(query, rowMapper);
     }
 
     @Override
-    public int getSize(HolderEntity filterBy, String code) {
+    public int getSize(EntityTarget filterBy, String code, PollFormat format, PollState pollState) {
+        String baseQuery;
+
         switch (filterBy){
             case career:
-                return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM poll WHERE career_code= ? AND course_id IS NULL",
-                        new Object[]{code}, Integer.class);
+                baseQuery = String.format("SELECT COUNT(*) FROM poll WHERE career_code='%s' AND course_id IS NULL", code);
+                break;
             case course:
-                return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM poll WHERE course_id= ? AND career_code IS NULL",
-                        new Object[]{code}, Integer.class);
+                baseQuery = String.format("SELECT COUNT(*) FROM poll WHERE course_id='%s' AND career_code IS NULL", code);
+                break;
             case general:
             default:
-                return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM poll WHERE career_code IS NULL AND course_id IS NULL",
-                        new Object[]{}, Integer.class);
+                baseQuery = "SELECT COUNT(*) FROM poll WHERE career_code IS NULL AND course_id IS NULL";
         }
+
+        return jdbcTemplate.queryForObject(
+            queryBuilder(baseQuery, format, pollState, null, null),
+            Integer.class
+        );
     }
 
     @Override

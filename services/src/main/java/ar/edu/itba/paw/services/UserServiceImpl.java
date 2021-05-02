@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserServiceImpl implements UserService {
+
     @Autowired
     private UserDao userDao;
 
@@ -33,19 +34,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getLoggedUser() {
-        return userDao.findById(59714).orElseThrow(RuntimeException::new);
+    public boolean verifyEmail(int userId, int verificationCode) {
+        return userDao.verifyEmail(userId, verificationCode);
     }
 
     @Override
-    public boolean verifyEmail(int user_id,int verification_code) {
-        return userDao.verifyEmail(user_id,verification_code);
+    public void setProfilePicture(User loggedUser, String pictureDataURI) {
+        userDao.setProfilePicture(pictureDataURI, loggedUser.getId());
     }
 
-
-
-    @Override
-    public void setProfilePicture(String pictureDataURI) {
-        userDao.setProfilePicture(pictureDataURI, getLoggedUser().getId());
-    }
 }

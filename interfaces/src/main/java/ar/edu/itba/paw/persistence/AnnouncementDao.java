@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.models.Announcement;
-import ar.edu.itba.paw.models.HolderEntity;
+import ar.edu.itba.paw.models.EntityTarget;
 
 import java.util.Date;
 import java.util.List;
@@ -18,7 +18,7 @@ public interface AnnouncementDao {
 
     Optional<Announcement> findById(int id);
 
-    int getSize(HolderEntity holderEntity, String code);
+    int getSize(EntityTarget target, String code, boolean showSeen, int userId);
 
     Announcement create(String title, String summary, String content, String careerCode,
         String courseId, Date expiryDate, Integer submittedBy);

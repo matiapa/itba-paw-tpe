@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.config;
 
+import java.io.FileNotFoundException;
 import java.nio.charset.StandardCharsets;
 
 import javax.sql.DataSource;
@@ -10,7 +11,10 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -28,6 +32,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 @EnableWebMvc
+@EnableTransactionManagement
 @ComponentScan({
         "ar.edu.itba.paw.webapp.controller",
         "ar.edu.itba.paw.services",
@@ -87,13 +92,24 @@ public class WebConfig {
     }
 
     @Bean
-    public JavaMailSender getJavaMailSender(){
+    public PlatformTransactionManager transactionManager(final DataSource ds) {
+        return new DataSourceTransactionManager(ds);
+    }
+
+    @Bean
+    public JavaMailSender getJavaMailSender() throws IOException {
+        String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath();
+        String appConfigPath = rootPath + "auth.properties";
+
+        Properties appProps = new Properties();
+        appProps.load(new FileInputStream(appConfigPath));
+
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         mailSender.setHost("smtp.gmail.com");
         mailSender.setPort(587);
 
-        mailSender.setUsername("noreplyitbahub@gmail.com");
-        mailSender.setPassword("ITBAHUB2021!");
+        mailSender.setUsername(appProps.getProperty("itbahub.mailer.email"));
+        mailSender.setPassword(appProps.getProperty("itbahub.mailer.password"));
 
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.transport.protocol","smtp");
@@ -102,7 +118,6 @@ public class WebConfig {
         props.put("mail.debug","true");
 
         return mailSender;
-
     }
 
     @Bean

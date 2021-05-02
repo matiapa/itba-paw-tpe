@@ -161,7 +161,7 @@
                                     </span>
                                 </div>
                                 <div class="col-auto">
-                                    <c:url var="url" value="/profile?id=${contribution.key.id}"/>
+                                    <c:url var="url" value="/profile/${contribution.key.id}"/>
                                     <a href="${url}" class="btn btn-icon" type="button">
                                         <i class="material-icons">keyboard_arrow_right</i>
                                     </a>
@@ -191,7 +191,7 @@
                                     </span>
                                 </div>
                                 <div class="col-auto">
-                                    <c:url var="url" value="/courses/detail?id=${contribution.key.id}"/>
+                                    <c:url var="url" value="/courses/${contribution.key.id}"/>
                                     <a href="${url}" class="btn btn-icon" type="button">
                                         <i class="material-icons">keyboard_arrow_right</i>
                                     </a>
