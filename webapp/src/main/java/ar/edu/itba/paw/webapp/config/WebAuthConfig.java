@@ -46,7 +46,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
         appProps.load(new FileInputStream(appConfigPath));
 
         http.sessionManagement()
-//            .invalidSessionUrl("/login")
+           .invalidSessionUrl("/login")
 
         .and().authorizeRequests()
             .antMatchers("/register", "/login").anonymous()
@@ -66,7 +66,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
             .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(30))
 
         .and().logout()
-            .logoutUrl("/logout")
+            .logoutUrl("/signout")
             .logoutSuccessUrl("/login")
 
         .and().exceptionHandling()
