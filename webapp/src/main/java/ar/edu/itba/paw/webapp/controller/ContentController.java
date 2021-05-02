@@ -65,7 +65,6 @@ public class ContentController {
 
         //Add pager
         if (page == null) page = 0;
-        System.out.println( contentService.getSize(courseId));
         Pager pager = new Pager( contentService.getSize(courseId), page);
         mav.addObject("pager", pager);
 
