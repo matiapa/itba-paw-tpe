@@ -1,4 +1,4 @@
-// ------------------------ Form creation ------------------------
+// ------------------------ Form of creation ------------------------
 
 // Display loading overlay when submitting announcement
 
