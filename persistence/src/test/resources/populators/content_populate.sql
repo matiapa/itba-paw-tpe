@@ -1,15 +1,17 @@
--- noinspection SyntaxErrorForFile
 
 TRUNCATE SCHEMA PUBLIC RESTART IDENTITY AND COMMIT NO CHECK;
 
-INSERT INTO career(id,name) VALUES (1, 'Career 1');
-INSERT INTO career(id,name) VALUES (2, 'Career 2');
 
-INSERT INTO course(id,name) VALUES ('1.1', 'Course 1');
-INSERT INTO course(id,name) VALUES ('1.2', 'Course 2');
 
-INSERT INTO users(id,name,surname,email,career_code,signup_date) VALUES (1, 'User 1', 'Surname', 'usr1@test.com', 1, default);
-INSERT INTO users(id,name,surname,email,career_code,signup_date) VALUES (2, 'User 2', 'Surname', 'usr2@test.com', 1, default);
+INSERT INTO career(name,code) VALUES ('Ingeniería en Informática','S');
 
-INSERT INTO course_content(id,name,description,link,submitted_by,course_id) VALUES (1, 'Content 1', '', 'http://test.com', 1, '1.1');
-INSERT INTO course_content(id,name,description,link,submitted_by,course_id) VALUES (2, 'Content 2', '', 'http://test.com', 1, '1.2');
+
+
+INSERT INTO course(id,name,credits) VALUES ('93.43','Física III',null);
+
+
+INSERT INTO users(id,name,surname,email,career_code,signup_date,verified,password) VALUES (1, 'User 1', 'Surname', 'usr1@test.com', 1, default,true,'dummypass');
+
+
+INSERT INTO course_content(id,name,description,link,submitted_by,course_id,creation_date,content_type,content_date) VALUES (1, 'Content 1', 'desc', 'http://test.com', 1, '93.45',default,'other',2020-10-14);
+INSERT INTO course_content(id,name,description,link,submitted_by,course_id,creation_date,content_type,content_date) VALUES (2, 'Content 2', 'desc', 'http://test.com', 1, '93.45',default,'other',2020-10-14);
