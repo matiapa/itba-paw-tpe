@@ -24,11 +24,9 @@ public class AnnouncementDaoJdbcTest {
     @Autowired
     private AnnouncementDaoJdbc announcementDaoJdbc;
 
-
-
     @Test
     public void testFindGeneral() {
-        List<Announcement> announcements = announcementDaoJdbc.findGeneral();
+        List<Announcement> announcements = announcementDaoJdbc.findGeneral(false,0, 10, 0);
 
         Assert.assertEquals(1, announcements.size());
 
@@ -48,7 +46,7 @@ public class AnnouncementDaoJdbcTest {
 
     @Test
     public void testFindByCarrer() {
-        List<Announcement> announcements = announcementDaoJdbc.findByCareer("S");
+        List<Announcement> announcements = announcementDaoJdbc.findByCareer("S", 0, 10);
 
         Assert.assertEquals(1, announcements.size());
 
@@ -67,7 +65,7 @@ public class AnnouncementDaoJdbcTest {
 
     @Test
     public void testFindByCourse() {
-        List<Announcement> announcements = announcementDaoJdbc.findByCourse("1.1");
+        List<Announcement> announcements = announcementDaoJdbc.findByCourse("1.1", 0, 10);
 
         Assert.assertEquals(1, announcements.size());
 

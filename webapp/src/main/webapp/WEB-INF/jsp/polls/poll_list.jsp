@@ -218,9 +218,9 @@
 
                         </div>
                     </div>
-                </div>
 
-                <div id="content-1"></div>
+                    <jsp:include page="../common/paginator.jsp"/>
+                </div>
             </div>
         </div>
 
@@ -235,9 +235,6 @@
     </c:if>
 
     <script src="<c:url value="/assets/js/polls.js"/>"></script>
-
-    <script src="<c:url value="/assets/js/popper.min.js"/>" ></script>
-    <script src="<c:url value="/assets/bootstrap/js/bootstrap-select.min.js"/>"></script>
 
 </body>
 

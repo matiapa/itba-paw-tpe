@@ -1,6 +1,9 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import java.util.ArrayList;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -8,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import ar.edu.itba.paw.models.*;
+import ar.edu.itba.paw.models.ui.Pager;
 import ar.edu.itba.paw.services.UserService;
 import ar.edu.itba.paw.webapp.controller.common.FiltersController;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +31,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 @Controller
 public class AnnounceController {
 
+    static final int LIMIT = 5;
     @Autowired private AnnouncementService announcementService;
 
     @Autowired private UserService userService;
@@ -41,7 +46,8 @@ public class AnnounceController {
         @RequestParam(name="courseId", required = false) String courseId,
         @RequestParam(name="showCreateForm", required = false, defaultValue="false") Boolean showCreateForm,
         @ModelAttribute("createForm") final AnnouncementForm form,
-        @RequestParam(name="showSeen", required = false, defaultValue="false") Boolean showSeen
+        @RequestParam(name="showSeen", required = false, defaultValue="false") Boolean showSeen,
+        @RequestParam(name="page", required = false, defaultValue = "0") Integer page
     ){
         final ModelAndView mav = new ModelAndView("announcements/announcements_list");
 
@@ -52,22 +58,26 @@ public class AnnounceController {
         commonFilters.addCourses(mav, courseId);
 
         // Add filtered announcements
+        List<Announcement> announcements;
+        if (page == null) page = 0;
+        Pager pager = new Pager(announcementService.getSize(filterBy, ""), page);
 
-        List<Announcement> announcements = new ArrayList<>();
         switch(filterBy){
             case career:
                 if(careerCode != null)
-                    announcements = announcementService.findByCareer(careerCode, showSeen);
+                    pager = new Pager(announcementService.getSize(filterBy, careerCode), page);
+                    announcements = announcementService.findByCareer(careerCode, showSeen, pager.getOffset(), pager.getLimit());
                 break;
             case course:
                 if(courseId != null)
-                    announcements = announcementService.findByCourse(courseId, showSeen);
+                    pager = new Pager(announcementService.getSize(filterBy, courseId), page);
+                    announcements = announcementService.findByCourse(courseId, showSeen, pager.getOffset(), pager.getLimit());
                 break;
             case general:
             default:
-                announcements = announcementService.findGeneral(showSeen);
+                announcements = announcementService.findGeneral(showSeen, pager.getOffset(), pager.getLimit());
         }
-
+        mav.addObject("pager", pager);
         mav.addObject("announcements", announcements);
 
         // Add other parameters
@@ -91,7 +101,9 @@ public class AnnounceController {
         final BindingResult errors
     ){
         if (errors.hasErrors()) {
-            return list(HolderEntity.general, null, null, true, form, false);
+            return list(
+                HolderEntity.general, null, null, true, form, false, 0
+            );
         }
 
         announcementService.create(
@@ -110,7 +122,9 @@ public class AnnounceController {
         else
             filterBy = HolderEntity.general;
 
-        return list(filterBy, form.getCareerCode(), form.getCourseId(), false, form, false);
+        return list(
+            filterBy, form.getCareerCode(), form.getCourseId(), false, form, false, 0
+        );
     }
 
 

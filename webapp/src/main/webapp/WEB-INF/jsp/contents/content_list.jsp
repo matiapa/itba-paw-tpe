@@ -19,10 +19,11 @@
     <jsp:include page="../common/styles.jsp"/>
 
     <link rel="stylesheet" href="<c:url value="/assets/bootstrap/css/bootstrap-select.min.css"/>">
-    <link rel="stylesheet" href="<c:url value="/assets/css/overlay.css"/>"></head>
+    <link rel="stylesheet" href="<c:url value="/assets/css/overlay.css"/>">
 </head>
 
 <body id="page-top">
+
     <div id="wrapper">
 
         <jsp:include page="../common/navbar.jsp"/>
@@ -161,12 +162,14 @@
                         </c:choose>
 
                         </div>
+
+                    <jsp:include page="../common/paginator.jsp"/>
+
                     </div>
                 </div>
 
             </div>
         </div>
-    </div>
 
     <jsp:include page="content_create.jsp"/>
 
@@ -178,8 +181,5 @@
 
     <script src="<c:url value="/assets/js/content.js"/>"></script>
 
-    <script src="<c:url value="/assets/js/popper.min.js"/>" ></script>
-    <script src="<c:url value="/assets/bootstrap/js/bootstrap-select.min.js"/>"></script>
 </body>
-
 </html>

@@ -26,7 +26,7 @@ public class PollDaoJdbcTest {
     @Test
     public void testFindGeneral()
     {
-        List<Poll> general = pollDaoJdbc.findGeneral();
+        List<Poll> general = pollDaoJdbc.findGeneral(0, 10);
         Assert.assertEquals(4, general.size());
     }
 

@@ -11,11 +11,11 @@ public interface ChatGroupService {
 
     ChatGroup addGroup(String groupName, String careerCode, String link, int createdBy, Date creationDate, ChatPlatform platform);
 
-    List<ChatGroup> findByCareer(String careerCode);
+    int getSize(String careerCode, ChatPlatform selectedPlatform, Integer selectedYear, Integer selectedQuarter);
 
-    List<ChatGroup> findByCareer(String careerCode, int limit);
+    List<ChatGroup> findByCareer(String careerCode, int offset, int limit);
 
-    List<ChatGroup> findByCareer(String careerCode, ChatPlatform platform, Integer year, Integer quarter);
+    List<ChatGroup> findByCareer(String careerCode, ChatPlatform platform, Integer year, Integer quarter, int offset, int limit);
 
     void delete(int id);
 

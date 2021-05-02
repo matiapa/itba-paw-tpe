@@ -24,11 +24,6 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public List<Course> findFavourites(User user) {
-        return courseDao.findFavourites(user.getId());
-    }
-
-    @Override
     public List<Course> findFavourites(User user, int limit) {
         return courseDao.findFavourites(user.getId(), limit);
     }

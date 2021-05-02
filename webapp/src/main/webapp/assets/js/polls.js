@@ -36,3 +36,11 @@ $("#courseId").change((event) => {
   $(this).find('select:not(:has(option:selected[value!=""]))').attr('name', '');
   $("#coursesPollFilterForm")[0].submit()
 });
+
+// Append page param when a page is chosen
+
+$(".page-link").click((e) => {
+  const url = new URL(window.location.href);
+  url.searchParams.set('page', `${e.target.id}`);
+  window.location.replace(url)
+});

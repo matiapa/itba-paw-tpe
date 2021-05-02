@@ -12,6 +12,7 @@ import java.util.stream.IntStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import ar.edu.itba.paw.models.ui.Pager;
 import ar.edu.itba.paw.models.Entity;
 import ar.edu.itba.paw.models.Permission;
 import ar.edu.itba.paw.models.User;
@@ -33,6 +34,7 @@ import ar.edu.itba.paw.webapp.form.ChatGroupForm;
 @Controller
 public class ChatGroupController {
 
+    private static final int LIMIT = 5;
     @Autowired private ChatGroupService chatGroupService;
 
     @Autowired private UserService userService;
@@ -47,6 +49,7 @@ public class ChatGroupController {
         @RequestParam(name = "year", required = false) Integer year,
         @RequestParam(name = "quarter", required = false) Integer quarter,
         @RequestParam(name = "showCreateForm", required = false, defaultValue="false") Boolean showCreateForm,
+        @RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
         @ModelAttribute("createForm") final ChatGroupForm chatGroupForm
     ){
         final ModelAndView mav = new ModelAndView("chats/chats_list");
@@ -91,16 +94,22 @@ public class ChatGroupController {
         mav.addObject("selectedQuarter", selectedQuarter);
 
         // Add filtered chats
-
         List<ChatGroup> chatGroupList = new ArrayList<>();
+        if (page == null) page = 0;
+        Pager pager = new Pager(chatGroupService.getSize("",selectedPlatform,selectedYear,selectedQuarter), page);
+
         if(careerCode != null){
-            chatGroupList = chatGroupService.findByCareer(careerCode, selectedPlatform, selectedYear, selectedQuarter);
+            mav.addObject("careerCode", careerCode);
+            pager = new Pager(chatGroupService.getSize(careerCode,selectedPlatform,selectedYear,selectedQuarter), page);
+            chatGroupList = chatGroupService.findByCareer(careerCode, pager.getOffset(), pager.getLimit());
+            //chatGroupList = chatGroupService.findByCareer(careerCode, selectedPlatform, selectedYear, selectedQuarter, pager.getOffset(), pager.getLimit());
         }
 
         mav.addObject("chatgroups", chatGroupList);
 
         // Add other parameters
 
+        mav.addObject("pager", pager);
         mav.addObject("showCreateForm", showCreateForm);
 
 
@@ -120,7 +129,7 @@ public class ChatGroupController {
         final BindingResult errors
     ) {
         if(errors.hasErrors()){
-            return get(null, null, null, null, true, chatGroupForm);
+            return get(null, null, null, null, true, 0, chatGroupForm);
         }
 
         chatGroupService.addGroup(
@@ -132,7 +141,7 @@ public class ChatGroupController {
             chatGroupForm.getPlatform()
         );
 
-        return get(chatGroupForm.getCareerCode(), null, null, null, false, chatGroupForm);
+        return get(chatGroupForm.getCareerCode(), null, null, null, false, 0, chatGroupForm);
     }
 
     @RequestMapping(value = "/chats/{id}", method = DELETE)

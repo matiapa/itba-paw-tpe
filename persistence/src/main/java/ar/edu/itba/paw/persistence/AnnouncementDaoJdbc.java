@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.models.Announcement;
+import ar.edu.itba.paw.models.HolderEntity;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -50,7 +51,9 @@ public class AnnouncementDaoJdbc implements AnnouncementDao {
     }
 
 
-    private List<Announcement> findAnnouncement(StringBuilder baseQuery, boolean showSeen, int userId){
+    private List<Announcement> findAnnouncement(
+        StringBuilder baseQuery, boolean showSeen, int userId, int offset, int limit
+    ){
         if(!showSeen) {
             baseQuery.append(String.format(
                 " AND NOT EXISTS (SELECT * FROM announcement_seen WHERE announcement_id=id"
@@ -58,54 +61,71 @@ public class AnnouncementDaoJdbc implements AnnouncementDao {
             ));
         }
 
+        baseQuery.append(String.format(" OFFSET %d LIMIT %d", offset, limit));
+
+        System.out.println(baseQuery.toString());
+
         return jdbcTemplate.query(baseQuery.toString(), announcementRowMapper);
     }
 
-
     @Override
-    public List<Announcement> findRelevant(int userId) {
+    public List<Announcement> findRelevant(int userId, int limit) {
         String query = "SELECT * FROM announcement\n" +
         "WHERE (expiry_date IS NULL OR expiry_date>now())\n" +
         "AND (course_id IS NULL OR course_id IN (SELECT course_id FROM fav_course WHERE user_id='%d'))\n" +
         "AND (career_code IS NULL OR career_code = (SELECT u.career_code FROM users u WHERE u.id='%d'))\n" +
-        "ORDER BY creation_date DESC LIMIT 5";
+        "ORDER BY creation_date DESC LIMIT %d";
 
-        return jdbcTemplate.query(String.format(query, userId, userId), announcementRowMapper);
+        return jdbcTemplate.query(
+            String.format(query, userId, userId, limit),
+            announcementRowMapper
+        );
     }
 
-
     @Override
-    public List<Announcement> findGeneral(boolean showSeen, int userId) {
+    public List<Announcement> findGeneral(boolean showSeen, int userId, int offset, int limit) {
         StringBuilder query = new StringBuilder();
         query.append("SELECT * FROM announcement WHERE career_code IS NULL AND course_id IS NULL");
-
-        return findAnnouncement(query, showSeen, userId);
+        return findAnnouncement(query, showSeen, userId, offset, limit);
     }
 
-
     @Override
-    public List<Announcement> findByCourse(String courseId, boolean showSeen, int userId) {
+    public List<Announcement> findByCourse(String courseId, boolean showSeen, int userId, int offset, int limit) {
         StringBuilder query = new StringBuilder();
         query.append(String.format("SELECT * FROM announcement WHERE course_id='%s'", courseId));
-
-        return findAnnouncement(query, showSeen, userId);
+        return findAnnouncement(query, showSeen, userId, offset, limit);
     }
-
 
     @Override
-    public List<Announcement> findByCareer(String careerCode, boolean showSeen, int userId) {
+    public List<Announcement> findByCareer(String careerCode, boolean showSeen, int userId, int offset, int limit) {
         StringBuilder query = new StringBuilder();
         query.append(String.format("SELECT * FROM announcement WHERE career_code='%s'", careerCode));
-
-        return findAnnouncement(query, showSeen, userId);
+        return findAnnouncement(query, showSeen, userId, offset, limit);
     }
 
+    @Override
+    public int getSize(HolderEntity holderEntity, String code){
+        switch (holderEntity){
+            case career:
+                return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM announcement WHERE career_code= ?",
+                        new Object[] {code}, Integer.class);
+            case course:
+                return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM announcement WHERE course_id= ?",
+                        new Object[] {code}, Integer.class);
+            case general:
+            default:
+                return jdbcTemplate.queryForObject("SELECT COUNT(*) " +
+                                "FROM announcement WHERE career_code IS NULL AND course_id IS NULL ",
+                        new Object[] {}, Integer.class);
+        }
+
+    }
 
     @Override
     public Optional<Announcement> findById(int id) {
         return jdbcTemplate.query(
             String.format("SELECT * FROM announcement WHERE id='%d'", id),
-                announcementRowMapper
+            announcementRowMapper
         ).stream().findFirst();
     }
 
@@ -121,7 +141,6 @@ public class AnnouncementDaoJdbc implements AnnouncementDao {
         );
     }
 
-
     @Override
     public void markSeen(int announcementId, int userId){
         jdbcTemplate.update(
@@ -130,7 +149,6 @@ public class AnnouncementDaoJdbc implements AnnouncementDao {
             announcementId, userId
         );
     }
-
 
     @Override
     public void delete(int id){

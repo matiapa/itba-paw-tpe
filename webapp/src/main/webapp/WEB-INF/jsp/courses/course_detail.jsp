@@ -84,23 +84,11 @@
                                     <table class="table my-0" id="dataTable">
                                         <thead>
                                         <tr>
-<<<<<<< HEAD
                                             <th><spring:message code="form.description"/></th>
                                             <th><spring:message code="form.type"/></th>
                                             <th><spring:message code="date"/></th>
                                             <th><spring:message code="author"/></th>
                                             <th><spring:message code="form.link"/></th>
-=======
-                                            <th>Descripción</th>
-                                            <th>Tipo</th>
-                                            <th>Fecha</th>
-                                            <th>Autor</th>
-                                            <th>Link</th>
-                                            <c:if test="${canDelete}">
-                                                <th>Admin Options</th>
-                                            </c:if>
-
->>>>>>> adminDeletes
                                         </tr>
                                         </thead>
                                         <tbody>

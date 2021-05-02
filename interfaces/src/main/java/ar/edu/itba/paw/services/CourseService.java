@@ -11,8 +11,6 @@ public interface CourseService {
 
     List<Course> findAll();
 
-    List<Course> findFavourites(User user);
-
     List<Course> findFavourites(User user, int limit);
 
     List<Course> findByCareer(String careerCode);

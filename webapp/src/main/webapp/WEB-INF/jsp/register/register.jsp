@@ -122,9 +122,6 @@
 
         <jsp:include page="../common/scripts.jsp"/>
 
-        <script src="<c:url value="/assets/js/popper.min.js"/>" ></script>
-        <script src="<c:url value="/assets/bootstrap/js/bootstrap-select.min.js"/>"></script>
-
 </body>
 
 </html>

@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import ar.edu.itba.paw.models.*;
+import ar.edu.itba.paw.models.ui.Pager;
 import ar.edu.itba.paw.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,6 +18,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @Controller
 public class CourseController {
+    static final int LIMIT = 5;
 
     @Autowired private CareerService careerService;
 
@@ -61,16 +63,20 @@ public class CourseController {
 
     @RequestMapping(value = "/courses/detail", method = GET)
     public ModelAndView getCourse(
-        @RequestParam(name="id") String courseId
+        @RequestParam(name="id") String courseId,
+        @RequestParam(name="page", required = false, defaultValue = "0") Integer page
     ){
         final ModelAndView mav = new ModelAndView("courses/course_detail");
 
         // Course announcements
 
+        Pager pager = new Pager(announcementService.getSize(HolderEntity.course, courseId), page);
         List<Announcement> announcements;
-        announcements = announcementService.findByCourse(courseId, false);
-        mav.addObject("announcements",announcements);
 
+        announcements = announcementService.findByCourse(courseId, false, pager.getOffset(), pager.getLimit());
+
+        mav.addObject("announcements",announcements);
+        mav.addObject("pager", pager);
         // Course content
 
         List<Content> contents;
@@ -89,7 +95,7 @@ public class CourseController {
         // Course polls
 
         List<Poll> polls;
-        polls = pollService.findByCourse(courseId);
+        polls = pollService.findByCourse(courseId, pager.getOffset(), pager.getLimit());
         mav.addObject("polls",polls);
 
         // Course details

@@ -114,55 +114,53 @@
                                      aria-describedby="dataTable_info" style="margin-top: 32px;background: #ffffff;">
                                     <table class="table my-0" id="dataTable">
                                         <thead>
-                                            <tr>
-                                                <th><spring:message code="chat.platform"/></th>
-                                                <th><spring:message code="year"/></th>
-                                                <th><spring:message code="quarter"/></th>
-                                                <th><spring:message code="chat.link"/></th>
-
-                                                <c:if test="${canDelete}">
-                                                    <th></th>
-                                                </c:if>
-                                            </tr>
+                                        <tr>
+                                            <th>Plataforma</th>
+                                            <th>Año</th>
+                                            <th>Cuatrimestre</th>
+                                            <th>Link</th>
+                                            <c:if test="${canDelete}">
+                                                <th>Admin Options</th>
+                                            </c:if>
+                                        </tr>
                                         </thead>
                                         <tbody>
-                                            <c:forEach var="chatgroup" items="${chatgroups}">
-                                                <tr>
-                                                    <td>${chatgroup.name}</td>
-                                                    <td>${chatgroup.creationYear}</td>
-                                                    <td>${chatgroup.creationQuarter}</td>
+                                        <c:forEach var="chatgroup" items="${chatgroups}">
+                                            <tr>
+                                                <td>${chatgroup.name}</td>
+                                                <td>${chatgroup.creationYear}</td>
+                                                <td>${chatgroup.creationQuarter}</td>
+                                                <td>
+                                                    <a class="btn btn-link" href='<c:out value="${chatgroup.link}"/>' target="_blank" rel="noopener noreferrer">Abrir</a>
+                                                </td>
+                                                <c:if test="${canDelete}">
                                                     <td>
-                                                        <a class="btn btn-link" href='<c:out value="${chatgroup.link}"/>'
-                                                           target="_blank" rel="noopener noreferrer">
-                                                            <spring:message code="open"/>
-                                                        </a>
-                                                    </td>
-                                                    <c:if test="${canDelete}">
-                                                        <td>
-                                                            <c:url var="url" value="/chats/${chatgroup.id}/delete"/>
-                                                            <form action="${url}" method="post">
-                                                                <button type="submit" class="btn btn-icon" style="color:red">
-                                                                    <i class="material-icons">delete</i>
-                                                                </button>
-                                                            </form>
+                                                        <c:url var="url" value="/chats/${chatgroup.id}/delete"/>
+                                                        <form action="${url}" method="post">
+                                                            <button type="submit" class="btn btn-icon" style="color:red">
+                                                                <i class="material-icons">delete</i>
+                                                            </button>
+                                                        </form>
 
-                                                        </td>
-                                                    </c:if>
-                                                </tr>
-                                            </c:forEach>
+                                                    </td>
+                                                </c:if>
+                                            </tr>
+                                        </c:forEach>
                                         </tbody>
                                         <tfoot>
-                                            <tr></tr>
+                                        <tr></tr>
                                         </tfoot>
                                     </table>
                                 </div>
                             </c:when>
+
                             <c:when test="${selectedCareer != null && chatgroups.size() == 0}">
                                 <div class="text-center mt-5">
                                     <i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
                                     <p style="margin-top: 16px;"><spring:message code="noContent"/></p>
                                 </div>
                             </c:when>
+
                             <c:otherwise>
                                 <div class="text-center mt-5">
                                     <i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
@@ -172,6 +170,8 @@
                         </c:choose>
 
                     </div>
+
+                    <jsp:include page="../common/paginator.jsp"/>
                 </div>
             </div>
 

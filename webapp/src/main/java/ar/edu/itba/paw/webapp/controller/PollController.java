@@ -6,6 +6,7 @@ import java.util.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import ar.edu.itba.paw.models.ui.Pager;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.webapp.controller.common.FiltersController;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,21 +47,18 @@ public class PollController {
         @RequestParam(name = "type", required = false) String type,
         @RequestParam(name = "state", required = false) String state,
         @RequestParam(name = "showCreateForm", required = false, defaultValue="false") Boolean showCreateForm,
+        @RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
         @ModelAttribute("createForm") final PollForm pollForm
     ) {
         final ModelAndView mav = new ModelAndView("polls/poll_list");
         mav.addObject("filterBy", filterBy);
 
         // Add filters options
-
         List<Poll> pollList = new ArrayList<>();
-
         commonFilters.addCareers(mav, careerCode);
-
         commonFilters.addCourses(mav, courseId);
 
         // -- Type
-
         mav.addObject("types", PollFormat.values());
         mav.addObject("typeTranslate", new HashMap<PollFormat, String>() {{
             put(PollFormat.text, "Texto libre");
@@ -71,7 +69,6 @@ public class PollController {
         mav.addObject("selectedType", selectedType);
 
         // -- State
-
         mav.addObject("states", PollState.values());
         mav.addObject("stateTranslate", new HashMap<PollState, String>() {{
             put(PollState.open, "Abiertas");
@@ -81,27 +78,35 @@ public class PollController {
         PollState selectedState = state != null ? PollState.valueOf(state) : null;
         mav.addObject("selectedState", selectedState);
 
+        if (page == null) page = 0;
+        Pager pager = new Pager(pollService.getSize(filterBy, ""), page);
         // Add filtered polls
-
         switch (filterBy) {
             case course:
-                if (courseId != null)
-                    pollList = pollService.findByCourse(courseId, selectedType, selectedState);
+                if (courseId != null){
+                    pager = new Pager(pollService.getSize(filterBy, courseId), page);
+                    pollList = pollService.findByCourse(courseId, selectedType, selectedState,
+                            pager.getOffset(), pager.getLimit());
+                }
                 break;
             case career:
-                if (careerCode != null)
-                    pollList = pollService.findByCareer(careerCode, selectedType, selectedState);
+                if (careerCode != null){
+                    pager = new Pager(pollService.getSize(filterBy, careerCode), page);
+                    pollList = pollService.findByCareer(careerCode, selectedType, selectedState,
+                            pager.getOffset(), pager.getLimit());
+                }
                 break;
             case general:
             default:
-                pollList = pollService.findGeneral(selectedType, selectedState);
+                pollList = pollService.findGeneral(pager.getOffset(), pager.getLimit());
+                //pollList = pollService.findGeneral(selectedType, selectedState);
                 break;
         }
 
+        mav.addObject("pager", pager);
         mav.addObject("polls", pollList);
 
         // Add other parameters
-
         mav.addObject("showCreateForm", showCreateForm);
 
         User loggedUser=userService.getLoggedUser();
@@ -122,7 +127,7 @@ public class PollController {
         if (errors.hasErrors()) {
             return getPolls(
                 HolderEntity.general, pollForm.getCareerCode(), pollForm.getCourseId(), null, null,
-                true, pollForm
+                true, 0, pollForm
             );
         }
 
@@ -147,7 +152,7 @@ public class PollController {
         else
             filterBy = HolderEntity.general;
 
-        return getPolls(filterBy, pollForm.getCareerCode(), pollForm.getCourseId(), null, null, false, pollForm);
+        return getPolls(filterBy, pollForm.getCareerCode(), pollForm.getCourseId(), null, null, false, 0, pollForm);
     }
 
 

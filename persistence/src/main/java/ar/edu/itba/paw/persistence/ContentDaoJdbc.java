@@ -54,10 +54,10 @@ public class ContentDaoJdbc implements ContentDao{
     }
 
     @Override
-    public List<Content> findByCourse(String courseId, int limit){
+    public List<Content> findByCourse(String courseId, int offset, int limit){
         return jdbcTemplate.query(
             String.format("SELECT * FROM course_content WHERE course_id='%s' "+
-                "ORDER BY id LIMIT %d", courseId, limit),
+                "ORDER BY id OFFSET %d LIMIT %d", courseId, offset, limit),
                 contentRowMapper
         );
     }
@@ -100,6 +100,13 @@ public class ContentDaoJdbc implements ContentDao{
 
 
 
+
+    }
+
+    @Override
+    public int getSize(String courseId) {
+        return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM course_content WHERE course_id= ?",
+                new Object[]{courseId}, Integer.class);
 
     }
 

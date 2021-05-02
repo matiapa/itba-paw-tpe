@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.models.Content;
+import ar.edu.itba.paw.models.ui.Pager;
 import ar.edu.itba.paw.models.Entity;
 import ar.edu.itba.paw.models.Permission;
 import ar.edu.itba.paw.models.User;
@@ -44,18 +45,16 @@ public class ContentController {
         @RequestParam(name = "minDate",required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date minDate,
         @RequestParam(name = "maxDate",required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date maxDate,
         @RequestParam(name = "showCreateForm", required = false, defaultValue="false") Boolean showCreateForm,
+        @RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
         @ModelAttribute("createForm") final ContentForm contentForm
     ) {
         final ModelAndView mav = new ModelAndView("contents/content_list");
 
         // Add filters options
-
         List<Content> contents;
-
         commonFilters.addCourses(mav, courseId);
 
         // -- Type
-
         mav.addObject("contentTypeEnumMap", new HashMap<Content.ContentType, String>()
         {{
             put(Content.ContentType.exam, "Exámen");
@@ -68,13 +67,20 @@ public class ContentController {
         Content.ContentType selectedType = contentType != null ? Content.ContentType.valueOf(contentType) : null;
         mav.addObject("selectedType", selectedType);
 
-        // Add filtered content
+        //Add pager
+        if (page == null) page = 0;
+        Pager pager = new Pager( contentService.getSize(courseId), page);
+        mav.addObject("pager", pager);
 
-        contents = contentService.findByCourse(courseId, selectedType, minDate, maxDate);
+        // Add filtered content
+        contents = contentService.findByCourse(courseId, pager.getOffset(), pager.getLimit());
         mav.addObject("contents", contents);
+        mav.addObject("courseId", courseId);
 
         // Add other parameters
+
         User loggedUser = userService.getLoggedUser();
+
         mav.addObject("showCreateForm", showCreateForm);
         mav.addObject("user", loggedUser);
 
@@ -92,7 +98,7 @@ public class ContentController {
             final BindingResult errors
     ){
         if(errors.hasErrors()){
-            return getContents(null, null, null, null, true, form);
+            return getContents(null, null, null, null, true, 0, form);
         }
 
          contentService.createContent(
@@ -100,7 +106,7 @@ public class ContentController {
              form.getContentDate(), userService.getLoggedUser()
          );
 
-        return getContents(form.getCourseId(), null, null, null, false, form);
+        return getContents(form.getCourseId(), null, null, null, false, 0, form );
     }
 
     @RequestMapping(value = "/contents/{id}", method = DELETE)
@@ -119,5 +125,4 @@ public class ContentController {
     ) {
         return delete(id, request);
     }
-
 }

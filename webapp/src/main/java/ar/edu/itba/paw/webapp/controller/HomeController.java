@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.webapp.controller;
 
-
 import ar.edu.itba.paw.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -35,13 +34,13 @@ public class HomeController {
 
         mav.addObject("user", userService.getLoggedUser());
 
-        mav.addObject("courses", courseService.findFavourites(userService.getLoggedUser(), 4));
+        mav.addObject("courses", courseService.findFavourites(userService.getLoggedUser(), 5));
 
-        mav.addObject("announcements", announcementService.findRelevant());
+        mav.addObject("announcements", announcementService.findRelevant(5));
 
         mav.addObject("careers", careerService.findAll());
 
-        mav.addObject("polls", pollService.findRelevant());
+        mav.addObject("polls", pollService.findRelevant(userService.getLoggedUser().getId()));
 
         return mav;
     }

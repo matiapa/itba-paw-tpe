@@ -42,3 +42,11 @@ $("#showSeen").change((e) => {
     url.searchParams.set('showSeen', `${e.target.checked}`);
     window.location.replace(url)
 });
+
+// Append page param when a page is chosen
+
+$(".page-link").click((e) => {
+    const url = new URL(window.location.href);
+    url.searchParams.set('page', `${e.target.id}`);
+    window.location.replace(url)
+});

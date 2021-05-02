@@ -26,190 +26,165 @@
 <body id="page-top">
     <div id="wrapper">
 
-        <jsp:include page="../common/navbar.jsp"/>
+    <jsp:include page="../common/navbar.jsp"/>
 
-        <div class="d-flex flex-column" id="content-wrapper">
-            <div id="content">
+    <div class="d-flex flex-column" id="content-wrapper">
+    <div id="content">
 
-                <jsp:include page="../common/header.jsp"/>
+        <jsp:include page="../common/header.jsp"/>
 
-                <div class="container-fluid">
-                    <div>
-                        <div class="row align-items-center">
-                            <div class="col"></div>
-                            <div class="col col-xl-2 custom-control custom-switch">
-                                <input type="checkbox" class="custom-control-input" id="showSeen" ${showSeen ? 'checked' : ''}>
-                                <label class="custom-control-label" for="showSeen"><spring:message code="announcement.seeHidden"/></label>
-                            </div>
-                            <div class="col col-xl-2">
-                                <a href="#popup" data-toggle="modal">
-                                    <button class="btn btn-primary btn-sm">
-                                        <i class="material-icons pull-left">add</i>
-                                        <spring:message code="announcement.add"/>
-                                    </button>
-                                </a>
-                            </div>
-                        </div>
+        <div class="container-fluid">
+            <div>
+                <div class="row align-items-center">
+                    <div class="col"></div>
+                    <div class="col col-xl-2 custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input" id="showHiddenSwitch">
+                        <label class="custom-control-label" for="showHiddenSwitch">Ver anuncios ocultos</label>
+                    </div>
+                    <div class="col col-xl-2">
+                        <a href="#popup" data-toggle="modal">
+                            <button class="btn btn-primary btn-sm">
+                                <i class="material-icons pull-left">add</i>
+                                Agregar anuncio
+                            </button>
+                        </a>
+                    </div>
+                </div>
 
-                        <ul class="nav nav-tabs" role="tablist">
-                            <li class="nav-item" role="presentation">
-                                <a class="nav-link ${filterBy == "general" ? 'active' : ''}" role="tab"
-                                   href="<c:url value="/announcements?filterBy=general"/>"><spring:message code="generals"/></a>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <a class="nav-link ${filterBy == "career" ? 'active' : ''}" role="tab"
-                                   href="<c:url value="/announcements?filterBy=career"/>"><spring:message code="byCareer"/></a>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <a class="nav-link ${filterBy == "course" ? 'active' : ''}" role="tab"
-                                   href="<c:url value="/announcements?filterBy=course"/>"><spring:message code="byCourse"/></a>
-                            </li>
-                        </ul>
+                <ul class="nav nav-tabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link ${filterBy == "general" ? 'active' : ''}" role="tab"
+                           href="<c:url value="/announcements?filterBy=general"/>">Generales</a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link ${filterBy == "career" ? 'active' : ''}" role="tab"
+                           href="<c:url value="/announcements?filterBy=career"/>">Por carrera</a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link ${filterBy == "course" ? 'active' : ''}" role="tab"
+                           href="<c:url value="/announcements?filterBy=course"/>">Por curso</a>
+                    </li>
+                </ul>
 
-                        <div class="tab-content">
+                <div class="tab-content" style="margin-bottom: 10%">
 
-                            <%-- General announcements --%>
+                    <%-- General announcements --%>
 
-                            <div class="tab-pane ${filterBy == "general" ? 'active' : ''}" role="tabpanel" id="tab-1">
-                                <div class="col">
-                                    <c:choose>
-                                        <c:when test="${announcements.size() > 0}">
-                                            <c:forEach var="announcement" items="${announcements}">
-                                                <c:set var="announcement" value="${announcement}" scope="request"/>
-                                                <jsp:include page="announcement_card.jsp"/>
-                                            </c:forEach>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <div class="text-center mt-5">
-                                                <i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
-                                                <p style="margin-top: 16px;"><spring:message code="noContent"/></p>
-                                            </div>
-                                        </c:otherwise>
-                                    </c:choose>
-                                </div>
-                            </div>
-
-                            <%-- Career announcements --%>
-
-                            <div class="tab-pane ${filterBy == "career" ? 'active' : ''}" role="tabpanel" id="tab-2">
-                                <div class="col-lg-6 col-xl-12 mb-4">
-
-                                    <div class="dropdown">
-                                        <button class="btn btn-block dropdown-toggle text-left text-dark bg-white" data-toggle="dropdown"
-                                          aria-expanded="false" type="button" style="margin-top: 32px;">
-                                            <c:choose>
-                                                <c:when test="${selectedCareer!=null}">
-                                                    ${selectedCareer.name}
-                                                </c:when>
-                                                <c:otherwise>
-                                                    <spring:message code="chooseCareer"/>
-                                                </c:otherwise>
-                                            </c:choose>
-                                        </button>
-                                        <div class="dropdown-menu">
-                                            <c:forEach var="career" items="${careers}">
-                                                <c:url var="url" value="/announcements?filterBy=career&careerCode=${career.code}"/>
-                                                <a class="dropdown-item" href="${url}">
-                                                    <c:out value="${career.name}"/>
-                                                </a>
-                                            </c:forEach>
-                                        </div>
+                    <div class="tab-pane ${filterBy == "general" ? 'active' : ''}" role="tabpanel" id="tab-1">
+                        <div class="col">
+                            <c:choose>
+                                <c:when test="${announcements.size() > 0}">
+                                    <c:forEach var="announcement" items="${announcements}">
+                                        <c:set var="announcement" value="${announcement}" scope="request"/>
+                                        <jsp:include page="announcement_card.jsp"/>
+                                    </c:forEach>
+                                </c:when>
+                                <c:otherwise>
+                                    <div class="text-center mt-5">
+                                        <i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
+                                        <p style="margin-top: 16px;">Ups, no hay nada por acá</p>
                                     </div>
+                                </c:otherwise>
+                            </c:choose>
+                        </div>
+                    </div>
 
-                                    <c:choose>
-                                        <c:when test="${selectedCareer != null}">
-                                            <c:forEach var="announcement" items="${announcements}">
-                                                <c:set var="announcement" value="${announcement}" scope="request"/>
-                                                <jsp:include page="announcement_card.jsp"/>
-                                            </c:forEach>
-                                        </c:when>
-                                        <c:when test="${selectedCareer != null && announcements.size() == 0}">
-                                            <div class="text-center mt-5">
-                                                <i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
-                                                <p style="margin-top: 16px;"><spring:message code="noContent"/></p>
-                                            </div>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <div class="text-center mt-5">
-                                                <i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
-                                                <p style="margin-top: 16px;"><spring:message code="announcement.chooseCareerPlease"/></p>
-                                            </div>
-                                        </c:otherwise>
-                                    </c:choose>
+                    <%-- Career announcements --%>
 
+                    <div class="tab-pane ${filterBy == "career" ? 'active' : ''}" role="tabpanel" id="tab-2">
+                        <div class="col-lg-6 col-xl-12 mb-4">
+
+                            <div class="dropdown">
+                                <button class="btn btn-block dropdown-toggle text-left text-dark bg-white" data-toggle="dropdown"
+                                        aria-expanded="false" type="button" style="margin-top: 32px;">
+                                    ${selectedCareer!=null ? selectedCareer.name : 'Elegí una carrera'}
+                                </button>
+                                <div class="dropdown-menu">
+                                    <c:forEach var="career" items="${careers}">
+                                        <a class="dropdown-item" href="<c:url value="/announcements?filterBy=career&careerCode=${career.code}"/>">
+                                            <c:out value="${career.name}"/>
+                                        </a>
+                                    </c:forEach>
                                 </div>
                             </div>
 
-                            <%-- Course announcements --%>
-
-                            <div class="tab-pane ${filterBy == "course" ? 'active' : ''}" role="tabpanel" id="tab-3">
-                                <div class="col-lg-6 col-xl-12 mb-4 mt-4">
-
-                                    <form id="courseAnnouncementsFilterForm" action="<c:url value="/announcements"/>" method="get">
-                                        <input type="text" name="filterBy" value="course" hidden>
-
-                                        <div style="border: thin solid black">
-                                            <select required id="courseId" name="courseId" class="selectpicker" data-live-search="true"
-                                                    data-width="100%" title="announcement.chooseCourse">
-                                                <c:forEach var="course" items="${courses}">
-                                                    <option ${course.equals(selectedCourse) ? 'selected' : ''}
-                                                        value="${course.id}" data-tokens="${course.name}">${course.name}</option>
-                                                </c:forEach>
-                                            </select>
-                                        </div>
-                                    </form>
-
-                                    <c:choose>
-                                        <c:when test="${selectedCourse != null && announcements.size() > 0}">
-                                            <c:forEach var="announcement" items="${announcements}">
-                                                <c:set var="announcement" value="${announcement}" scope="request"/>
-                                                <jsp:include page="announcement_card.jsp"/>
-                                            </c:forEach>
-                                        </c:when>
-                                        <c:when test="${selectedCourse != null && announcements.size() == 0}">
-                                            <div class="text-center mt-5">
-                                                <i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
-                                                <p style="margin-top: 16px;">"noContent"</p>
-                                            </div>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <div class="text-center mt-5">
-                                                <i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
-                                                <p style="margin-top: 16px;"><spring:message code="announcement.chooseCoursePlease"/></p>
-                                            </div>
-                                        </c:otherwise>
-                                    </c:choose>
-                                </div>
-                            </div>
+                            <c:choose>
+                                <c:when test="${selectedCareer != null}">
+                                    <c:forEach var="announcement" items="${announcements}">
+                                        <c:set var="announcement" value="${announcement}" scope="request"/>
+                                        <jsp:include page="announcement_card.jsp"/>
+                                    </c:forEach>
+                                </c:when>
+                                <c:when test="${selectedCareer != null && announcements.size() == 0}">
+                                    <div class="text-center mt-5">
+                                        <i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
+                                        <p style="margin-top: 16px;">Ups, no hay nada por acá</p>
+                                    </div>
+                                </c:when>
+                                <c:otherwise>
+                                    <div class="text-center mt-5">
+                                        <i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
+                                        <p style="margin-top: 16px;">Por favor, elegí una carrera para ver los anuncios</p>
+                                    </div>
+                                </c:otherwise>
+                            </c:choose>
 
                         </div>
                     </div>
 
+                    <%-- Course announcements --%>
+
+                    <div class="tab-pane ${filterBy == "course" ? 'active' : ''}" role="tabpanel" id="tab-3">
+                        <div class="col-lg-6 col-xl-12 mb-4 mt-4">
+
+                            <form id="courseAnnouncementsFilterForm" action="<c:url value="/announcements"/>" method="get">
+                                <input type="text" name="filterBy" value="course" hidden>
+
+                                <div style="border: thin solid black">
+                                    <select required id="courseId" name="courseId" class="selectpicker" data-live-search="true"
+                                            data-width="100%" title="Elegí un curso">
+                                        <c:forEach var="course" items="${courses}">
+                                            <option ${course.equals(selectedCourse) ? 'selected' : ''}
+                                                    value="${course.id}" data-tokens="${course.name}">${course.name}</option>
+                                        </c:forEach>
+                                    </select>
+                                </div>
+                            </form>
+
+                            <c:choose>
+                                <c:when test="${selectedCourse != null && announcements.size() > 0}">
+                                    <c:forEach var="announcement" items="${announcements}">
+                                        <c:set var="announcement" value="${announcement}" scope="request"/>
+                                        <jsp:include page="announcement_card.jsp"/>
+                                    </c:forEach>
+                                </c:when>
+                                <c:when test="${selectedCourse != null && announcements.size() == 0}">
+                                    <div class="text-center mt-5">
+                                        <i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
+                                        <p style="margin-top: 16px;">Ups, no hay nada por acá</p>
+                                    </div>
+                                </c:when>
+                                <c:otherwise>
+                                    <div class="text-center mt-5">
+                                        <i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
+                                        <p style="margin-top: 16px;">Por favor, elegí un curso para ver los anuncios</p>
+                                    </div>
+                                </c:otherwise>
+                            </c:choose>
+                        </div>
+                    </div>
+
+                    <jsp:include page="../common/paginator.jsp"/>
+
                 </div>
-
             </div>
+
         </div>
 
     </div>
-
-    <div hidden id="errorToast" class="toast" data-autohide="false"
-         style="position: fixed; top: 0; right: 0; background-color: orange; color: white">
-        <div class="toast-header">
-            <strong class="mr-auto"><spring:message code="ups"/></strong>
-            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        <div class="toast-body">
-            <spring:message code="errorMessage"/>
-        </div>
     </div>
 
-<%--    <div class="fab">--%>
-<%--        <a href="#popup" data-toggle="modal">--%>
-<%--            <i class="material-icons" style="font-size: 32px;color: rgb(255,255,255);">add</i>--%>
-<%--        </a>--%>
-<%--    </div>--%>
+    </div>
 
     <jsp:include page="announcement_create.jsp"/>
 
@@ -220,9 +195,6 @@
     </c:if>
 
     <script src="<c:url value="/assets/js/announcements.js"/>"></script>
-
-    <script src="<c:url value="/assets/js/popper.min.js"/>" ></script>
-    <script src="<c:url value="/assets/bootstrap/js/bootstrap-select.min.js"/>"></script>
 
 </body>
 

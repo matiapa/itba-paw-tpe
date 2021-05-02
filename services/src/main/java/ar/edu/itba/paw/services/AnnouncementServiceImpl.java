@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.models.Announcement;
+import ar.edu.itba.paw.models.HolderEntity;
 import ar.edu.itba.paw.models.Entity;
 import ar.edu.itba.paw.models.Permission;
 import ar.edu.itba.paw.models.User;
@@ -20,25 +21,29 @@ public class AnnouncementServiceImpl implements AnnouncementService {
 
     @Autowired private UserService userService;
 
-
     @Override
-    public List<Announcement> findRelevant() {
-        return announcementDao.findRelevant(userService.getLoggedUser().getId());
+    public List<Announcement> findRelevant(int limit) {
+        return announcementDao.findRelevant(userService.getLoggedUser().getId(), limit);
     }
 
     @Override
-    public List<Announcement> findGeneral(boolean showSeen) {
-        return announcementDao.findGeneral(showSeen, userService.getLoggedUser().getId());
+    public List<Announcement> findGeneral(boolean showSeen, int offset, int limit) {
+        return announcementDao.findGeneral(showSeen, userService.getLoggedUser().getId(), limit, offset);
     }
 
     @Override
-    public List<Announcement> findByCourse(String courseId, boolean showSeen) {
-        return announcementDao.findByCourse(courseId, showSeen, userService.getLoggedUser().getId());
+    public List<Announcement> findByCourse(String courseId, boolean showSeen, int offset, int limit) {
+        return announcementDao.findByCourse(courseId, showSeen, userService.getLoggedUser().getId(), offset, limit);
     }
 
     @Override
-    public List<Announcement> findByCareer(String careerCode, boolean showSeen) {
-        return announcementDao.findByCareer(careerCode, showSeen, userService.getLoggedUser().getId());
+    public List<Announcement> findByCareer(String careerCode, boolean showSeen, int offset, int limit) {
+        return announcementDao.findByCareer(careerCode, showSeen, userService.getLoggedUser().getId(), offset, limit);
+    }
+
+    @Override
+    public int getSize(HolderEntity holderEntity, String code){
+        return announcementDao.getSize(holderEntity, code);
     }
 
     @Override
