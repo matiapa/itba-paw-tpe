@@ -13,19 +13,19 @@ import java.util.Optional;
 
 public interface PollService {
 
+    List<Poll> findRelevant(int userId);
+
+    List<Poll> findGeneral(PollFormat format, PollState pollState, int offset, int limit);
+
+    List<Poll> findByCareer(String careerCode, PollFormat format, PollState pollState, int offset, int limit);
+
+    List<Poll> findByCourse(String courseId, PollFormat format, PollState pollState, int offset, int limit);
+
     List<Poll> findGeneral(int offset, int limit);
 
-    List<Poll> findGeneral(PollFormat format, PollState pollState);
+    List<Poll> findByCareer(String careerCode, int offset, int limit);
 
-    List<Poll> findByCareer(String careerCode);
-
-    List<Poll> findByCareer(String careerCode, PollFormat format, PollState pollState,
-                            int offset, int limit);
-
-    List<Poll> findByCourse(String courseId);
-
-    List<Poll> findByCourse(String courseId, PollFormat format, PollState pollState,
-                            int offset, int limit);
+    List<Poll> findByCourse(String courseId, int offset, int limit);
 
     int getSize(HolderEntity filterBy, String code);
 
@@ -38,4 +38,6 @@ public interface PollService {
     void voteChoicePoll(int pollId, int optionId, User user);
     
     boolean hasVoted(int pollId, User user);
+
+    void delete(int id);
 }

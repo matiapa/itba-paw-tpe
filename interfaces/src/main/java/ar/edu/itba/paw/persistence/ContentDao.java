@@ -19,4 +19,7 @@ public interface ContentDao {
     boolean createContent(String name, String link, String courseId, String description, String contentType, Date contentDate,User user);
 
     int getSize(String courseId);
+
+    void delete(int id);
+
 }

@@ -11,7 +11,12 @@ public interface UserDao {
 
     Optional<User> findByEmail(String email);
     
-    User registerUser(int id, String name, String surname, String email, String careerCode, List<String>courses);
+    User registerUser(int id, String name, String surname, String email,String password_hash, String careerCode, List<String>courses);
+
+    boolean verifyEmail(int user_id,int verification_code);
+
+    int getVerificationCode(String email);
+
 
     void setProfilePicture(String pictureDataURI, int userId);
 

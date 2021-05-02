@@ -1,5 +1,7 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
+
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix = "spring" uri="http://www.springframework.org/tags"%>
 
 <jsp:useBean type="ar.edu.itba.paw.models.User" scope="request" id="user"/>
 
@@ -45,16 +47,15 @@
                     </a>
                     <div class="dropdown-menu shadow dropdown-menu-right animated--grow-in">
                         <a class="dropdown-item" href="<c:url value="/profile/own"/>">
-                            <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i> Perfil
+                            <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i> <spring:message code="profile"/>
                         </a>
                         <div class="dropdown-divider"></div>
                         <form action='<c:url value="/signout"/>' method="POST">
                             <label class="dropdown-item">
-                                <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i> Salir
+                                <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i> <spring:message code="exit"/>
                                 <input type="submit" hidden>
                             </label>
                         </form>
-                        </a>
                     </div>
                 </div>
             </li>

@@ -26,7 +26,6 @@ public class PollDaoJdbc implements PollDao {
     @Autowired
     private UserDao userDao;
 
-    private final SimpleJdbcInsert simpleJdbcInsertPoll;
     private final SimpleJdbcInsert simpleJdbcInsertPollOption;
     private final SimpleJdbcInsert simpleJdbcInsertPollChoiceVote;
     private final SimpleJdbcInsert simpleJdbcInsertPollRegisterVote;
@@ -67,7 +66,7 @@ public class PollDaoJdbc implements PollDao {
     public PollDaoJdbc(DataSource ds) {
         this.jdbcTemplate = new JdbcTemplate(ds);
 
-        this.simpleJdbcInsertPoll = new SimpleJdbcInsert(this.jdbcTemplate)
+        SimpleJdbcInsert simpleJdbcInsertPoll = new SimpleJdbcInsert(this.jdbcTemplate)
                 .withTableName("poll")
                 .usingGeneratedKeyColumns("id");
                 
@@ -85,14 +84,15 @@ public class PollDaoJdbc implements PollDao {
     }
 
     
-    private List<Poll> find(String baseQuery, PollFormat format, PollState state){
+    private List<Poll> find(String baseQuery, PollFormat format, PollState state, int offset, int limit){
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(baseQuery);
 
-        if (format != null)
+        if (format != null) {
             stringBuilder.append(
                 String.format(" AND format='%s'", format.toString().replace("_", "-"))
             );
+        }
 
         if (state != null){
             if(state == PollState.open)
@@ -101,34 +101,28 @@ public class PollDaoJdbc implements PollDao {
                 stringBuilder.append(" AND expiry_date<now()");
         }
 
+        stringBuilder.append(String.format(" OFFSET %d LIMIT %d", offset, limit));
+
         return jdbcTemplate.query(stringBuilder.toString(), rowMapper);
     }
-    
+
 
     @Override
-    public List<Poll> findGeneral(int offset, int limit) {
-        return jdbcTemplate.query(
-                String.format("SELECT * FROM poll WHERE career_code IS NULL AND course_id IS NULL " +
-                        "OFFSET %d LIMIT %d", offset, limit),
-            rowMapper
-        );
+    public List<Poll> findRelevant(int userId) {
+        String query = "SELECT *, (SELECT count(*) FROM poll_vote_registry WHERE poll_id=id) votes FROM poll\n" +
+        "WHERE (expiry_date IS NULL OR expiry_date>now())\n" +
+        "  AND (course_id IS NULL OR course_id IN (SELECT course_id FROM fav_course WHERE user_id='%d'))\n" +
+        "  AND (career_code IS NULL OR career_code = (SELECT u.career_code FROM users u WHERE u.id='%d'))\n" +
+        "ORDER BY votes DESC LIMIT 5";
+
+        return jdbcTemplate.query(String.format(query, userId, userId), rowMapper);
     }
 
-
     @Override
-    public List<Poll> findGeneral(PollFormat format, PollState state) {
+    public List<Poll> findGeneral(PollFormat format, PollState state, int offset, int limit) {
         return find(
             "SELECT * FROM poll WHERE career_code IS NULL AND course_id IS NULL",
-            format, state
-        );
-    }
-    
-
-    @Override
-    public List<Poll> findByCareer(String careerCode) {
-        return jdbcTemplate.query(
-            String.format("SELECT * FROM poll WHERE career_code='%s' AND course_id IS NULL", careerCode),
-            rowMapper
+            format, state, offset, limit
         );
     }
 
@@ -136,16 +130,7 @@ public class PollDaoJdbc implements PollDao {
     public List<Poll> findByCareer(String careerCode, PollFormat format, PollState state, int offset, int limit) {
         return find(
             String.format("SELECT * FROM poll WHERE career_code='%s' AND course_id IS NULL", careerCode),
-            format, state
-        );
-    }
-
-    
-    @Override
-    public List<Poll> findByCourse(String courseId) {
-        return jdbcTemplate.query(
-            String.format("SELECT * FROM poll WHERE course_id='%s' AND career_code IS NULL", courseId),
-            rowMapper
+            format, state, offset, limit
         );
     }
 
@@ -153,7 +138,7 @@ public class PollDaoJdbc implements PollDao {
     public List<Poll> findByCourse(String courseId, PollFormat format, PollState state, int offset, int limit) {
         return find(
             String.format("SELECT * FROM poll WHERE course_id='%s' AND career_code IS NULL", courseId),
-            format, state
+            format, state, offset, limit
         );
     }
 
@@ -181,25 +166,7 @@ public class PollDaoJdbc implements PollDao {
         ));
     }
 
-    @Override
-    public Map<PollOption,Integer> getVotes(int id) {
-
-        List<PollVoteOption> list =
-
-        jdbcTemplate.query(
-                String.format(
-                "SELECT count(poll_option.option_id) AS votes , poll_option.option_value, poll_option.option_id FROM\n" +
-                "              poll  JOIN poll_option  on poll.id = poll_option.poll_id\n" +
-                "                  JOIN poll_submission on poll.id = poll_submission.poll_id and poll_option.option_id= poll_submission.option_id\n" +
-                "WHERE poll_option.poll_id='%d'\n" +
-                "GROUP BY poll_option.option_id,poll_option.option_value",id),voteMapper);
-        Map<PollOption,Integer> map= new HashMap<>();
-        for (PollVoteOption pair:list) {
-            map.put(new PollOption(pair.getId(), pair.getValue()), pair.getVote());
-        }
-        return map;
-
-        }
+    // -------------------- CREATE / DELETE --------------------
 
     @Override
     public void addPoll(String name, String description, PollFormat format, String careerCode, String courseId, Date expiryDate, int userId, List<String> pollOptions) {
@@ -223,6 +190,34 @@ public class PollDaoJdbc implements PollDao {
         }
     }
 
+    @Override
+    public void delete(int id){
+        jdbcTemplate.execute(
+                String.format("DELETE FROM poll WHERE id=%d", id)
+        );
+    }
+
+    // -------------------- VOTING --------------------
+
+    @Override
+    public Map<PollOption,Integer> getVotes(int id) {
+
+        List<PollVoteOption> list =
+
+                jdbcTemplate.query(
+                        String.format(
+                                "SELECT count(poll_option.option_id) AS votes , poll_option.option_value, poll_option.option_id FROM\n" +
+                                        "              poll  JOIN poll_option  on poll.id = poll_option.poll_id\n" +
+                                        "                  JOIN poll_submission on poll.id = poll_submission.poll_id and poll_option.option_id= poll_submission.option_id\n" +
+                                        "WHERE poll_option.poll_id='%d'\n" +
+                                        "GROUP BY poll_option.option_id,poll_option.option_value",id),voteMapper);
+        Map<PollOption,Integer> map= new HashMap<>();
+        for (PollVoteOption pair:list) {
+            map.put(new PollOption(pair.getId(), pair.getValue()), pair.getVote());
+        }
+        return map;
+
+    }
 
     private void addPollOption(Integer id, String value) {
         final Map<String, Object> args = new HashMap<>();
@@ -230,15 +225,13 @@ public class PollDaoJdbc implements PollDao {
         args.put("option_value", value);
         final Number id_po = simpleJdbcInsertPollOption.executeAndReturnKey(args);
     }
-    
 
     private List<PollOption> getOptions(int pollId) {
         return jdbcTemplate.query(
-            String.format("SELECT * FROM poll_option WHERE poll_id='%d'", pollId),
-            optionMapper
+                String.format("SELECT * FROM poll_option WHERE poll_id='%d'", pollId),
+                optionMapper
         );
     }
-
     
     @Override
     public void voteChoicePoll(int pollId, int optionId, int userId) {
@@ -265,6 +258,7 @@ public class PollDaoJdbc implements PollDao {
             "SELECT * FROM poll_vote_registry WHERE poll_id=? AND user_id=?", pollId, userId
         ).size() > 0;
     }
+
 
     private static class PollVoteOption {
         private final int id;

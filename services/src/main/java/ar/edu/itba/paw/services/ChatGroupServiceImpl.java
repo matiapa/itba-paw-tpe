@@ -36,4 +36,9 @@ public class ChatGroupServiceImpl implements ChatGroupService{
         return chatGroupDao.findByCareer(careerCode, platform, year, quarter, offset, limit);
     }
 
+    @Override
+    public void delete(int id) {
+            chatGroupDao.delete(id);
+    }
+
 }

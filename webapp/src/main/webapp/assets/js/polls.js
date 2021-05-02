@@ -1,32 +1,46 @@
+// ------------------------ Form of creation ------------------------
+
+// Display loading overlay when submitting a poll
+
 $("#submitPoll").click(function(){
   $("div.spanner").addClass("show");
   $("div.overlay").addClass("show");
 });
 
-document.addEventListener("DOMContentLoaded", function(event) {
+// Display appropiate form fields when selecting a target
 
-  document.getElementById("courseId").addEventListener('change', (event) => {
-    $(this).find('select:not(:has(option:selected[value!=""]))').attr('name', '');
-    document.getElementById("P").submit()
-  });
+$("#pollTarget").change((event) => {
 
-  document.getElementById("pollTarget").addEventListener('change', (event) => {
+  if(event.target.value === "career"){
+    $("#careerTarget")[0].hidden = false
+    $("#courseTarget")[0].hidden = true
+    $("#courseId")[0].value = ""
+  }else if(event.target.value === "course"){
+    $("#courseTarget")[0].hidden = false
+    $("#careerTarget")[0].hidden = true
+    $("#careerCode")[0].value = ""
+  }else{
+    $("#courseTarget")[0].hidden = true
+    $("#careerTarget")[0].hidden = true
+    $("#courseId")[0].value = ""
+    $("#careerCode")[0].value = ""
+  }
 
-    if(event.target.value === "career"){
-      document.getElementById("careerTarget").hidden = false
-      document.getElementById("courseTarget").hidden = true
-      document.getElementById("courseId").value = ""
-    }else if(event.target.value === "course"){
-      document.getElementById("courseTarget").hidden = false
-      document.getElementById("careerTarget").hidden = true
-      document.getElementById("careerCode").value = ""
-    }else{
-      document.getElementById("courseTarget").hidden = true
-      document.getElementById("careerTarget").hidden = true
-      document.getElementById("courseId").value = ""
-      document.getElementById("careerCode").value = ""
-    }
+});
 
-  });
+// ------------------------ Filtering ------------------------
 
+// Auto-submit filter-form when a course is selected
+
+$("#courseId").change((event) => {
+  $(this).find('select:not(:has(option:selected[value!=""]))').attr('name', '');
+  $("#coursesPollFilterForm")[0].submit()
+});
+
+// Append page param when a page is chosen
+
+$(".page-link").click((e) => {
+  const url = new URL(window.location.href);
+  url.searchParams.set('page', `${e.target.id}`);
+  window.location.replace(url)
 });

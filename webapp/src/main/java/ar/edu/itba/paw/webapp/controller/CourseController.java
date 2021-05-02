@@ -45,7 +45,7 @@ public class CourseController {
         mav.addObject("careers", careers);
 
         if(careerCode != null) {
-            courses = careerService.findByCareer(careerCode);
+            courses = courseService.findByCareerSemester(careerCode);
             mav.addObject("careerCourses",courses);
 
             Career selectedCareer = careers.stream().filter(c -> c.getCode().equals(careerCode)).findFirst()
@@ -53,7 +53,9 @@ public class CourseController {
             mav.addObject("selectedCareer", selectedCareer);
         }
 
-        mav.addObject("user", userService.getLoggedUser());
+        User loggedUser=userService.getLoggedUser();
+        mav.addObject("user", loggedUser);
+
 
         return mav;
     }
@@ -70,7 +72,9 @@ public class CourseController {
 
         Pager pager = new Pager(announcementService.getSize(HolderEntity.course, courseId), page);
         List<Announcement> announcements;
-        announcements = announcementService.findByCourse(courseId, pager.getOffset(), pager.getLimit());
+
+        announcements = announcementService.findByCourse(courseId, false, pager.getOffset(), pager.getLimit());
+
         mav.addObject("announcements",announcements);
         mav.addObject("pager", pager);
         // Course content
@@ -91,7 +95,7 @@ public class CourseController {
         // Course polls
 
         List<Poll> polls;
-        polls = pollService.findByCourse(courseId);
+        polls = pollService.findByCourse(courseId, pager.getOffset(), pager.getLimit());
         mav.addObject("polls",polls);
 
         // Course details
@@ -101,7 +105,12 @@ public class CourseController {
             throw new RuntimeException();
         mav.addObject("course", selectedCourse.get());
 
-        mav.addObject("user", userService.getLoggedUser());
+
+        User loggedUser=userService.getLoggedUser();
+        mav.addObject("user", loggedUser);
+        mav.addObject("canDelete", loggedUser.getPermissions().contains(
+                new Permission(Permission.Action.DELETE, Entity.COURSE_CONTENT)
+        ));
 
         return mav;
     }

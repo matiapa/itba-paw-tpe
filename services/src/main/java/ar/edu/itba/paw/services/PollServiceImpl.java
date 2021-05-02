@@ -14,48 +14,53 @@ import org.springframework.stereotype.Service;
 import ar.edu.itba.paw.models.Poll;
 import ar.edu.itba.paw.models.Poll.PollFormat;
 import ar.edu.itba.paw.models.Poll.PollOption;
+import ar.edu.itba.paw.models.Poll.PollState;
 import ar.edu.itba.paw.persistence.PollDao;
 
 
 @Service
 public class PollServiceImpl implements PollService {
 
-    @Autowired
-    private PollDao pollDao;
+    @Autowired private PollDao pollDao;
 
     @Override
-    public List<Poll> findByCareer(String careerCode) {
-        return pollDao.findByCareer(careerCode);
+    public List<Poll> findRelevant(int userId){
+        return pollDao.findRelevant(userId);
     }
 
     @Override
-    public List<Poll> findByCareer(String careerCode, Poll.PollFormat format, Poll.PollState pollState, int offset, int limit) {
+    public List<Poll> findGeneral(PollFormat format, PollState pollState, int offset, int limit){
+        return pollDao.findGeneral(format, pollState, offset, limit);
+    }
+
+    @Override
+    public List<Poll> findByCareer(String careerCode, PollFormat format, PollState pollState, int offset, int limit){
         return pollDao.findByCareer(careerCode, format, pollState, offset, limit);
     }
 
     @Override
-    public List<Poll> findByCourse(String courseId) {
-        return pollDao.findByCourse(courseId);
-    }
-
-    @Override
-    public List<Poll> findByCourse(String courseId, Poll.PollFormat format, Poll.PollState pollState, int offset, int limit) {
+    public List<Poll> findByCourse(String courseId, PollFormat format, Poll.PollState pollState, int offset, int limit){
         return pollDao.findByCourse(courseId, format, pollState, offset, limit);
     }
 
     @Override
-    public int getSize(HolderEntity filterBy, String code) {
+    public List<Poll> findGeneral(int offset, int limit){
+        return findGeneral(null, null, offset, limit);
+    }
+
+    @Override
+    public List<Poll> findByCareer(String careerCode, int offset, int limit){
+        return findByCareer(careerCode, null, null, offset, limit);
+    }
+
+    @Override
+    public List<Poll> findByCourse(String courseId, int offset, int limit){
+        return findByCourse(courseId, null, null, offset, limit);
+    }
+
+    @Override
+    public int getSize(HolderEntity filterBy, String code){
         return pollDao.getSize(filterBy, code);
-    }
-
-    @Override
-    public List<Poll> findGeneral(int offset, int limit) {
-        return pollDao.findGeneral(offset, limit);
-    }
-
-    @Override
-    public List<Poll> findGeneral(Poll.PollFormat format, Poll.PollState pollState) {
-        return pollDao.findGeneral(format, pollState);
     }
 
     @Override
@@ -81,6 +86,11 @@ public class PollServiceImpl implements PollService {
     @Override
     public boolean hasVoted(int pollId, User user) {
         return pollDao.hasVoted(pollId, user.getId());
+    }
+
+    @Override
+    public void delete(int id) {
+        pollDao.delete(id);
     }
 
 }

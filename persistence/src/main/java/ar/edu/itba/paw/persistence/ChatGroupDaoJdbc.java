@@ -130,4 +130,11 @@ public class ChatGroupDaoJdbc implements ChatGroupDao{
         ).stream().findFirst();
     }
 
+    @Override
+    public void delete(int id){
+        jdbcTemplate.execute(
+                String.format("DELETE FROM chat_group WHERE id=%d", id)
+        );
+    }
+
 }

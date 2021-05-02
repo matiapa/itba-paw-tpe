@@ -2,7 +2,10 @@
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 
+<%@ taglib prefix = "spring" uri="http://www.springframework.org/tags"%>
+
 <jsp:useBean type="ar.edu.itba.paw.models.Course" scope="request" id="course"/>
+<jsp:useBean type="java.lang.Boolean" scope="request" id="canDelete"/>
 
 <!DOCTYPE html>
 <html>
@@ -26,7 +29,7 @@
                 <div class="col-lg-6 mb-4">
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h6 class="font-weight-bold m-0">Anuncios recientes</h6>
+                            <h6 class="font-weight-bold m-0"><spring:message code="course.recentAnnouncements"/></h6>
                         </div>
                         <ul class="list-group list-group-flush">
                             <c:forEach var="announcement" items="${announcements}">
@@ -37,7 +40,7 @@
                                             <span><c:out value="${announcement.summary}"/><br></span>
                                         </div>
                                         <div class="col-auto">
-                                            <a href="<c:url value="/announcements/detail?id=${announcement.id}"/>">
+                                            <a href="<c:url value="/announcements/${announcement.id}"/>">
                                                 <i class="material-icons">keyboard_arrow_right</i>
                                             </a>
                                         </div>
@@ -51,7 +54,7 @@
                 <div class="col">
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h6 class="font-weight-bold m-0">Encuestas</h6>
+                            <h6 class="font-weight-bold m-0"><spring:message code="polls"/></h6>
                         </div>
                         <c:forEach var="poll" items="${polls}">
                             <ul class="list-group list-group-flush">
@@ -81,11 +84,11 @@
                                     <table class="table my-0" id="dataTable">
                                         <thead>
                                         <tr>
-                                            <th>Descripción</th>
-                                            <th>Tipo</th>
-                                            <th>Fecha</th>
-                                            <th>Autor</th>
-                                            <th>Link</th>
+                                            <th><spring:message code="form.description"/></th>
+                                            <th><spring:message code="form.type"/></th>
+                                            <th><spring:message code="date"/></th>
+                                            <th><spring:message code="author"/></th>
+                                            <th><spring:message code="form.link"/></th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -100,7 +103,24 @@
                                                          src="<c:url value="/assets/img/avatars/avatar-male.png"/>">
                                                     <c:out value="${content.submitter.name}"/>
                                                  </td>
-                                                <td><a class="btn btn-link" target="_blank" rel="noopener noreferrer" href="<c:url value='${content.link}'/>" role="button">Link</a></td>
+
+                                                <td>
+                                                    <a class="btn btn-link" target="_blank" rel="noopener noreferrer"
+                                                        href="<c:url value='${content.link}'/>" role="button">
+                                                    <spring:message code="form.link"/>
+                                                    </a>
+                                                </td>
+
+                                                <c:if test="${canDelete}">
+                                                    <td>
+                                                        <c:url var="url" value="/contents/${content.id}/delete"/>
+                                                        <form action="${url}" method="post">
+                                                            <button type="submit" class="btn btn-icon" style="color:red">
+                                                                <i class="material-icons">delete</i>
+                                                            </button>
+                                                        </form>
+                                                    </td>
+                                                </c:if>
                                             </tr>
                                         </c:forEach>
                                         </tbody>

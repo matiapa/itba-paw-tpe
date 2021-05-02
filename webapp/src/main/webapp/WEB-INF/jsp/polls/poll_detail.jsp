@@ -2,6 +2,8 @@
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 
+<%@ taglib prefix = "spring" uri="http://www.springframework.org/tags"%>
+
 <jsp:useBean type="ar.edu.itba.paw.models.Poll" scope="request" id="poll"/>
 
 
@@ -34,7 +36,7 @@
                                 <h6 class="font-weight-bold m-0"><c:out value="${poll.name}"/></h6>
                             </div>
 
-                            <form action="<c:url value="/polls/vote"/>" method="POST">
+                            <form action='<c:url value="/polls/vote"/>'' method="POST">
 
                                 <input type="hidden" id="pollId" name="id" value="${poll.id}">
 
@@ -57,15 +59,15 @@
 
                                 <div class="row align-items-end" style="margin: 10px 10px 10px;">
                                     <c:if test="${!hasVoted}">
-                                        <div class="col"><input class="btn btn-primary" type="submit" value="Votar"></div>
+                                        <div class="col"><input class="btn btn-primary" type="submit" value="vote"></div>
                                     </c:if>
                                     <c:if test="${hasVoted}">
-                                        <div class="col"><input class="btn btn-primary" type="submit" value="Ya voté" disabled></div>
+                                        <div class="col"><input class="btn btn-primary" type="submit" value="voted" disabled></div>
                                     </c:if>
                                     <div class="col text-right">
                                     <span class="text-xs">
                                         <c:if test="${poll.submittedBy != null}">
-                                            <c:out value="Publicado por ${poll.submittedBy.name} el ${creationFormat.format(poll.creationDate)}."/>
+                                            <spring:message code="publishedBy" arguments="${poll.submittedBy.name}, ${creationFormat.format(poll.creationDate)}"/>
                                         </c:if>
                                         <c:if test="${poll.submittedBy == null}">
                                             <c:out value="Creado el ${creationFormat.format(poll.creationDate)}."/>
@@ -87,7 +89,7 @@
                         <div class="card shadow mb-4" style="margin-top: 32px;">
 
                             <div class="card-header py-3">
-                                <h6 class="font-weight-bold m-0">Resultados</h6>
+                                <h6 class="font-weight-bold m-0"><spring:message code="results"/></h6>
                             </div>
 
                             <div class="col mr-2" style="padding-top: 16px;padding-right: 24px;padding-left: 24px;padding-bottom: 16px;">
@@ -97,14 +99,21 @@
                                             <div class="col">
                                                 <div class="row">
                                                     <div class="col">
-                                                        <span><c:out value="${vote.value}"/> Votos : <c:out value="${vote.key.value}"/> </span>
+                                                        <span><c:out value="${vote.value}"/> <spring:message code="votes"/> : <c:out value="${vote.key.value}"/> </span>
                                                     </div>
                                                 </div>
                                             </div>
                                         </c:forEach>
                                     </c:when>
                                     <c:otherwise>
-                                        ${poll.isExpired ? 'No se han registrado votos y la encuesta ha expirado' : 'No se han registrado votos aún'}
+                                        <c:choose>
+                                            <c:when test="${poll.isExpired}">
+                                                <spring:message code="poll.noVotesAndExpired"/>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <spring:message code="poll.noVotes"/>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </c:otherwise>
                                 </c:choose>
 

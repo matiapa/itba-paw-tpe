@@ -20,21 +20,13 @@ public class CareerDaoJdbc implements CareerDao{
 
     private final JdbcTemplate jdbcTemplate;
 
-    private static final RowMapper<Career> CAREER_ROW_MAPPER = (rs, rowNum) ->
+    static final RowMapper<Career> CAREER_ROW_MAPPER = (rs, rowNum) ->
         new Career(
             rs.getString("name"),
             rs.getString("code")
         );
 
 
-    private static final RowMapper<CareerCourse> CAREER_COURSE_ROW_MAPPER = (rs, rowNum) ->
-            new CareerCourse(
-                    rs.getString("id"),
-                    rs.getString("name"),
-                    rs.getInt("credits"),
-                    rs.getInt("semester")
-
-            );
 
 
     @Autowired
@@ -42,21 +34,7 @@ public class CareerDaoJdbc implements CareerDao{
         this.jdbcTemplate = new JdbcTemplate(ds);
     }
 
-    @Override
-    public Map<Integer, List<CareerCourse>> findByCareer(String careerCode) {
-        List<CareerCourse> list = jdbcTemplate.query(
-                String.format("SELECT * FROM career_course  JOIN course  on career_course.course_id = course.id WHERE career_code='%s'", careerCode),
-                CAREER_COURSE_ROW_MAPPER
-        );
-        Map<Integer, List<CareerCourse>> result = new HashMap<>();
-        for (CareerCourse careerCourse : list) {
-            if (!result.containsKey(careerCourse.getYear())) {
-                result.put(careerCourse.getYear(), new ArrayList<>());
-            }
-            result.get((careerCourse.getYear())).add(careerCourse);
-        }
-        return result;
-    }
+
 
     @Override
     public Optional<Career> findByCode(String code) {

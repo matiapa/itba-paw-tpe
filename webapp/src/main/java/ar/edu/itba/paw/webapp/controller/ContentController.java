@@ -2,6 +2,9 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.models.Content;
 import ar.edu.itba.paw.models.ui.Pager;
+import ar.edu.itba.paw.models.Entity;
+import ar.edu.itba.paw.models.Permission;
+import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.services.ContentService;
 import ar.edu.itba.paw.services.UserService;
 import ar.edu.itba.paw.webapp.controller.common.FiltersController;
@@ -11,17 +14,18 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 
 @Controller
@@ -74,8 +78,15 @@ public class ContentController {
         mav.addObject("courseId", courseId);
 
         // Add other parameters
+
+        User loggedUser = userService.getLoggedUser();
+
         mav.addObject("showCreateForm", showCreateForm);
-        mav.addObject("user", userService.getLoggedUser());
+        mav.addObject("user", loggedUser);
+
+        mav.addObject("canDelete", loggedUser.getPermissions().contains(
+                new Permission(Permission.Action.DELETE, Entity.COURSE_CONTENT)
+        ));
 
         return mav;
     }
@@ -96,6 +107,23 @@ public class ContentController {
          );
 
         return getContents(form.getCourseId(), null, null, null, false, 0, form );
+    }
+
+    @RequestMapping(value = "/contents/{id}", method = DELETE)
+    public String delete(
+            @PathVariable(value="id") int id, HttpServletRequest request
+    ) {
+        contentService.delete(id);
+
+        String referer = request.getHeader("Referer");
+        return "redirect:"+ referer;
+    }
+
+    @RequestMapping(value = "/contents/{id}/delete", method = POST)
+    public String deleteWithPost(
+            @PathVariable(value="id") int id, HttpServletRequest request
+    ) {
+        return delete(id, request);
     }
 
 }

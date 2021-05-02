@@ -8,19 +8,23 @@ import java.util.Optional;
 
 public interface AnnouncementDao {
 
-    List<Announcement> findGeneral(int offset, int limit);
+    List<Announcement> findRelevant(int userId, int limit);
 
-    List<Announcement> findByCourse(String courseId, int offset, int limit);
+    List<Announcement> findGeneral(boolean showSeen, int userId, int offset, int limit);
 
-    List<Announcement> findByCareer(String careerCode, int offset, int limit);
+    List<Announcement> findByCourse(String courseId, boolean showSeen, int userId, int offset, int limit);
 
-    int getSize(HolderEntity holderEntity, String code);
+    List<Announcement> findByCareer(String careerCode, boolean showSeen, int userId, int offset, int limit);
 
     Optional<Announcement> findById(int id);
 
-    void markSeen(int announcementId, int userId);
+    int getSize(HolderEntity holderEntity, String code);
 
     Announcement create(String title, String summary, String content, String careerCode,
         String courseId, Date expiryDate, Integer submittedBy);
+
+    void markSeen(int announcementId, int userId);
+
+    void delete(int id);
 
 }

@@ -24,11 +24,9 @@ public class AnnouncementDaoJdbcTest {
     @Autowired
     private AnnouncementDaoJdbc announcementDaoJdbc;
 
-
-
     @Test
     public void testFindGeneral() {
-        List<Announcement> announcements = announcementDaoJdbc.findGeneral(0,0);
+        List<Announcement> announcements = announcementDaoJdbc.findGeneral(false,0, 10, 0);
 
         Assert.assertEquals(1, announcements.size());
 
