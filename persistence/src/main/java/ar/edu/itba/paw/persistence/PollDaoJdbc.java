@@ -8,6 +8,7 @@ import java.util.Optional;
 
 import javax.sql.DataSource;
 
+import ar.edu.itba.paw.models.HolderEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -105,9 +106,10 @@ public class PollDaoJdbc implements PollDao {
     
 
     @Override
-    public List<Poll> findGeneral() {
+    public List<Poll> findGeneral(int offset, int limit) {
         return jdbcTemplate.query(
-            "SELECT * FROM poll WHERE career_code IS NULL AND course_id IS NULL",
+                String.format("SELECT * FROM poll WHERE career_code IS NULL AND course_id IS NULL " +
+                        "OFFSET %d LIMIT %d", offset, limit),
             rowMapper
         );
     }
@@ -153,6 +155,22 @@ public class PollDaoJdbc implements PollDao {
             String.format("SELECT * FROM poll WHERE course_id='%s' AND career_code IS NULL", courseId),
             format, state
         );
+    }
+
+    @Override
+    public int getSize(HolderEntity filterBy, String code) {
+        switch (filterBy){
+            case career:
+                return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM poll WHERE career_code= ? AND course_id IS NULL",
+                        new Object[]{code}, Integer.class);
+            case course:
+                return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM poll WHERE course_id= ? AND career_code IS NULL",
+                        new Object[]{code}, Integer.class);
+            case general:
+            default:
+                return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM poll WHERE career_code IS NULL AND course_id IS NULL",
+                        new Object[]{}, Integer.class);
+        }
     }
 
     @Override

@@ -1,4 +1,5 @@
 package ar.edu.itba.paw.services;
+import ar.edu.itba.paw.models.HolderEntity;
 import ar.edu.itba.paw.models.Poll;
 import ar.edu.itba.paw.models.Poll.PollFormat;
 import ar.edu.itba.paw.models.Poll.PollOption;
@@ -12,7 +13,7 @@ import java.util.Optional;
 
 public interface PollService {
 
-    List<Poll> findGeneral();
+    List<Poll> findGeneral(int offset, int limit);
 
     List<Poll> findGeneral(PollFormat format, PollState pollState);
 
@@ -23,6 +24,8 @@ public interface PollService {
     List<Poll> findByCourse(String courseId);
 
     List<Poll> findByCourse(String courseId, PollFormat format, PollState pollState);
+
+    int getSize(HolderEntity filterBy, String code);
 
     Optional<Poll> findById(int id);
 

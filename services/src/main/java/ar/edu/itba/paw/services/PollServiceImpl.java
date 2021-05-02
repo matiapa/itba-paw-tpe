@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import ar.edu.itba.paw.models.HolderEntity;
 import ar.edu.itba.paw.models.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,8 +44,13 @@ public class PollServiceImpl implements PollService {
     }
 
     @Override
-    public List<Poll> findGeneral() {
-        return pollDao.findGeneral();
+    public int getSize(HolderEntity filterBy, String code) {
+        return pollDao.getSize(filterBy, code);
+    }
+
+    @Override
+    public List<Poll> findGeneral(int offset, int limit) {
+        return pollDao.findGeneral(offset, limit);
     }
 
     @Override

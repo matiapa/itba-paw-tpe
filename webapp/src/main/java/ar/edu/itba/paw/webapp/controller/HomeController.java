@@ -37,7 +37,7 @@ public class HomeController {
 
         mav.addObject("careers", careerService.findAll());
 
-        mav.addObject("polls", pollService.findGeneral());
+        mav.addObject("polls", pollService.findGeneral(0, 10));
 
         return mav;
     }
