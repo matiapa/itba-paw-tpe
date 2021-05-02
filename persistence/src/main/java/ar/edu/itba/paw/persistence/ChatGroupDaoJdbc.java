@@ -1,14 +1,13 @@
 package ar.edu.itba.paw.persistence;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import ar.edu.itba.paw.models.ChatGroup;
@@ -19,6 +18,7 @@ public class ChatGroupDaoJdbc implements ChatGroupDao{
 
     private final JdbcTemplate jdbcTemplate;
 
+    private final SimpleJdbcInsert simpleJdbcInsert;
     private static final RowMapper<ChatGroup> CHAT_GROUP_ROW_MAPPER = (rs, rowNum) ->
         new ChatGroup(
             rs.getInt("id"),
@@ -33,6 +33,9 @@ public class ChatGroupDaoJdbc implements ChatGroupDao{
     @Autowired
     public ChatGroupDaoJdbc(DataSource ds){
         this.jdbcTemplate = new JdbcTemplate(ds);
+        this.simpleJdbcInsert = new SimpleJdbcInsert(this.jdbcTemplate)
+                .withTableName("chat_group")
+                .usingGeneratedKeyColumns("id");
     }
 
 
@@ -99,6 +102,20 @@ public class ChatGroupDaoJdbc implements ChatGroupDao{
 
     @Override
     public ChatGroup addGroup(String groupName, String careerCode, String link, int createdBy, Date creationDate, ChatPlatform platform) {
+        final Map<String, Object> args = new HashMap<>();
+        args.put("name", groupName);
+        args.put("career_code", careerCode);
+        args.put("link", link);
+        args.put("submitted_by", createdBy);
+        args.put("creation_date", creationDate);
+        if (platform == null){
+            platform = ChatPlatform.whatsapp;
+        }
+        args.put("platform", platform);
+
+        final Number id = simpleJdbcInsert.executeAndReturnKey(args);
+        return new ChatGroup(id.intValue(), careerCode, groupName, link, 0, creationDate, platform);
+        /*
         return jdbcTemplate.queryForObject(
             "INSERT INTO " +
                     "chat_group(career_code, creation_date, name, link, submitted_by, platform)" +
@@ -110,6 +127,8 @@ public class ChatGroupDaoJdbc implements ChatGroupDao{
             },
             CHAT_GROUP_ROW_MAPPER
         );
+
+         */
     }
 
     @Override
