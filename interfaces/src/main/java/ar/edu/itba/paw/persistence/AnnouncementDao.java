@@ -10,9 +10,9 @@ public interface AnnouncementDao {
 
     List<Announcement> findGeneral(int offset, int limit);
 
-    List<Announcement> findByCourse(String courseId);
+    List<Announcement> findByCourse(String courseId, int offset, int limit);
 
-    List<Announcement> findByCareer(String careerCode);
+    List<Announcement> findByCareer(String careerCode, int offset, int limit);
 
     int getSize(HolderEntity holderEntity, String code);
 

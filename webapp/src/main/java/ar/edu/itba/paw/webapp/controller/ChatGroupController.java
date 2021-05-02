@@ -90,16 +90,14 @@ public class ChatGroupController {
         mav.addObject("selectedQuarter", selectedQuarter);
 
         // Add filtered chats
-
         List<ChatGroup> chatGroupList = new ArrayList<>();
-        if (page == null){
-            page = 0;
-        }
+        if (page == null) page = 0;
         if(careerCode != null){
-            Pager pager = new Pager(15,                    //chatGroupService.getSize(careerCode,selectedPlatform,selectedYear,selectedQuarter),
-                    page, page * LIMIT, LIMIT);
-
-            chatGroupList = chatGroupService.findByCareer(careerCode, selectedPlatform, selectedYear, selectedQuarter);
+            mav.addObject("careerCode", careerCode);
+            Pager pager = new Pager(chatGroupService.getSize(careerCode,selectedPlatform,selectedYear,selectedQuarter),
+                    page);
+            chatGroupList = chatGroupService.findByCareer(careerCode, pager.getOffset(), pager.getLimit());
+            //chatGroupList = chatGroupService.findByCareer(careerCode, selectedPlatform, selectedYear, selectedQuarter, pager.getOffset(), pager.getLimit());
             mav.addObject("pager", pager);
         }
 

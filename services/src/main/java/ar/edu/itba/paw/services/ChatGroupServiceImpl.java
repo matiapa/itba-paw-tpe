@@ -25,19 +25,15 @@ public class ChatGroupServiceImpl implements ChatGroupService{
         return chatGroupDao.getSize(careerCode, selectedPlatform, selectedYear, selectedQuarter);
     }
 
+
     @Override
-    public List<ChatGroup> findByCareer(String careerCode) {
-        return chatGroupDao.findByCareer(careerCode);
+    public List<ChatGroup> findByCareer(String careerCode, int offset, int limit) {
+        return chatGroupDao.findByCareer(careerCode, offset, limit);
     }
 
     @Override
-    public List<ChatGroup> findByCareer(String careerCode, int limit) {
-        return chatGroupDao.findByCareer(careerCode, limit);
-    }
-
-    @Override
-    public List<ChatGroup> findByCareer(String careerCode, ChatGroup.ChatPlatform platform, Integer year, Integer quarter) {
-        return chatGroupDao.findByCareer(careerCode, platform, year, quarter);
+    public List<ChatGroup> findByCareer(String careerCode, ChatGroup.ChatPlatform platform, Integer year, Integer quarter, int offset, int limit) {
+        return chatGroupDao.findByCareer(careerCode, platform, year, quarter, offset, limit);
     }
 
 }

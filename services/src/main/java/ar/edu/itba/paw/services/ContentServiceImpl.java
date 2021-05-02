@@ -21,14 +21,20 @@ public class ContentServiceImpl implements ContentService{
     }
 
     @Override
-    public List<Content> findByCourse(String courseId, int limit) {
-        return contentDao.findByCourse(courseId, limit);
+    public List<Content> findByCourse(String courseId, int offset, int limit) {
+        return contentDao.findByCourse(courseId, offset, limit);
+    }
+
+    @Override
+    public int getSize(String courseId) {
+        return contentDao.getSize(courseId);
     }
 
     @Override
     public List<Content> findByCourse(String courseId, Content.ContentType contentType, Date minDate, Date maxDate) {
         return contentDao.findContent(courseId, contentType, minDate, maxDate);
     }
+
 
     @Override
     public boolean createContent(String name, String link, String courseId, String description, String contentType, Date contentDate,User user ) {

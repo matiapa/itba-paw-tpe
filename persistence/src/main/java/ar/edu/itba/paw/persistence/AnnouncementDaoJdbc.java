@@ -60,17 +60,17 @@ public class AnnouncementDaoJdbc implements AnnouncementDao {
     }
 
     @Override
-    public List<Announcement> findByCourse(String courseId) {
+    public List<Announcement> findByCourse(String courseId, int offset, int limit) {
         return jdbcTemplate.query(
-            String.format("SELECT * FROM announcement WHERE course_id='%s'", courseId),
+            String.format("SELECT * FROM announcement WHERE course_id='%s' OFFSET %d LIMIT %d", courseId, offset, limit),
                 announcementRowMapper
         );
     }
 
     @Override
-    public List<Announcement> findByCareer(String careerCode) {
+    public List<Announcement> findByCareer(String careerCode, int offset, int limit) {
         return jdbcTemplate.query(
-            String.format("SELECT * FROM announcement WHERE career_code='%s'", careerCode),
+            String.format("SELECT * FROM announcement WHERE career_code='%s' OFFSET %d LIMIT %d", careerCode, offset, limit),
                 announcementRowMapper
         );
     }
@@ -86,7 +86,8 @@ public class AnnouncementDaoJdbc implements AnnouncementDao {
                         new Object[] {code}, Integer.class);
             case general:
             default:
-                return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM announcement",
+                return jdbcTemplate.queryForObject("SELECT COUNT(*) " +
+                                "FROM announcement WHERE career_code IS NULL AND course_id IS NULL ",
                         new Object[] {}, Integer.class);
         }
 

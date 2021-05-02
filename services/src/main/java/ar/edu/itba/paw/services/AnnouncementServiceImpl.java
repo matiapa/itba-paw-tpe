@@ -23,13 +23,13 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     }
 
     @Override
-    public List<Announcement> findByCourse(String courseId) {
-        return announcementDao.findByCourse(courseId);
+    public List<Announcement> findByCourse(String courseId, int offset, int limit) {
+        return announcementDao.findByCourse(courseId, offset, limit);
     }
 
     @Override
-    public List<Announcement> findByCareer(String careerCode) {
-        return announcementDao.findByCareer(careerCode);
+    public List<Announcement> findByCareer(String careerCode, int offset, int limit) {
+        return announcementDao.findByCareer(careerCode, offset, limit);
     }
 
     @Override

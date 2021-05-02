@@ -42,7 +42,7 @@ public class AnnounceController {
             @RequestParam(name="careerCode", required = false) String careerCode,
             @RequestParam(name="courseId", required = false) String courseId,
             @RequestParam(name="showCreateForm", required = false, defaultValue="false") Boolean showCreateForm,
-            @RequestParam(name="page", required = false, defaultValue = "0") int page,
+            @RequestParam(name="page", required = false, defaultValue = "0") Integer page,
             @ModelAttribute("createForm") final AnnouncementForm form
     ){
         final ModelAndView mav = new ModelAndView("announcements/announcements_list");
@@ -55,21 +55,22 @@ public class AnnounceController {
 
         // Add filtered announcements
         List<Announcement> announcements = new ArrayList<>();
-        Pager pager = new Pager(announcementService.getSize(HolderEntity.general, ""), page, page * LIMIT , LIMIT);
+        if (page == null) page = 0;
+        Pager pager = new Pager(announcementService.getSize(filterBy, ""), page);
         switch(filterBy){
             case career:
                 if(careerCode != null)
-                    pager = new Pager(announcementService.getSize(filterBy, careerCode), page, page * LIMIT, LIMIT);
-                    announcements = announcementService.findByCareer(careerCode);
+                    pager = new Pager(announcementService.getSize(filterBy, careerCode), page);
+                    announcements = announcementService.findByCareer(careerCode, pager.getOffset(), pager.getLimit());
                 break;
             case course:
                 if(courseId != null)
-                    pager = new Pager(announcementService.getSize(filterBy, courseId), page, page * LIMIT, LIMIT);
-                    announcements = announcementService.findByCourse(courseId);
+                    pager = new Pager(announcementService.getSize(filterBy, courseId), page);
+                    announcements = announcementService.findByCourse(courseId, pager.getOffset(), pager.getLimit());
                 break;
             case general:
             default:
-                announcements = announcementService.findGeneral(page * LIMIT, LIMIT);
+                announcements = announcementService.findGeneral(pager.getOffset(), pager.getLimit());
         }
         mav.addObject("pager", pager);
         mav.addObject("announcements", announcements);

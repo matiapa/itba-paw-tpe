@@ -82,26 +82,18 @@ public class ChatGroupDaoJdbc implements ChatGroupDao{
     }
 
     @Override
-    public List<ChatGroup> findByCareer(String careerCode) {
-        return jdbcTemplate.query(
-            String.format("SELECT * FROM chat_group WHERE career_code='%s'", careerCode),
-            CHAT_GROUP_ROW_MAPPER
-        );
-    }
-
-    @Override
-    public List<ChatGroup> findByCareer(String careerCode, int limit) {
+    public List<ChatGroup> findByCareer(String careerCode, int offset, int limit) {
         return jdbcTemplate.query(
                 String.format("SELECT * FROM chat_group WHERE career_code='%s' "+
-                        "ORDER BY id LIMIT %d", careerCode, limit),
+                        "ORDER BY id OFFSET %d LIMIT %d", careerCode, offset, limit),
                 CHAT_GROUP_ROW_MAPPER
         );
     }
 
     @Override
-    public List<ChatGroup> findByCareer(String careerCode, ChatPlatform platform, Integer year, Integer quarter) {
+    public List<ChatGroup> findByCareer(String careerCode, ChatPlatform platform, Integer year, Integer quarter, int offset, int limit) {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(String.format("SELECT * FROM chat_group WHERE career_code='%s'", careerCode));
+        stringBuilder.append(String.format("SELECT * FROM chat_group WHERE career_code='%s'", careerCode, offset, limit));
 
         if (platform != null)
             stringBuilder.append(String.format(" AND platform='%s'", platform.toString().split("\\.")[0]));
@@ -125,6 +117,7 @@ public class ChatGroupDaoJdbc implements ChatGroupDao{
                     quarter == 1 ? 1 : 7, quarter == 1 ? 6 : 12)
             );
         }
+        stringBuilder.append(" OFFSET %d LIMIT %d");
 
         return jdbcTemplate.query(stringBuilder.toString(), CHAT_GROUP_ROW_MAPPER);
     }

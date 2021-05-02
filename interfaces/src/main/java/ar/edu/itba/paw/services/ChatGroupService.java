@@ -13,10 +13,8 @@ public interface ChatGroupService {
 
     int getSize(String careerCode, ChatPlatform selectedPlatform, Integer selectedYear, Integer selectedQuarter);
 
-    List<ChatGroup> findByCareer(String careerCode);
+    List<ChatGroup> findByCareer(String careerCode, int offset, int limit);
 
-    List<ChatGroup> findByCareer(String careerCode, int limit);
-
-    List<ChatGroup> findByCareer(String careerCode, ChatPlatform platform, Integer year, Integer quarter);
+    List<ChatGroup> findByCareer(String careerCode, ChatPlatform platform, Integer year, Integer quarter, int offset, int limit);
 
 }

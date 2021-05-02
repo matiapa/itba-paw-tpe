@@ -24,12 +24,12 @@ public class ChatGroupDaoJdbcTest {
 
     @Test
     public void testFindByCareer(){
-        List<ChatGroup> chatGroups = chatGroupDaoJdbc.findByCareer("S");
+        List<ChatGroup> chatGroups = chatGroupDaoJdbc.findByCareer("S", 0, 10);
 
         Assert.assertEquals(3, chatGroups.size());
         Assert.assertEquals("1", chatGroups.get(0).getId());
 
-        chatGroups = chatGroupDaoJdbc.findByCareer("S", 2);
+        chatGroups = chatGroupDaoJdbc.findByCareer("S", 0, 10);
 
         Assert.assertTrue(chatGroups.size() <= 2);
     }

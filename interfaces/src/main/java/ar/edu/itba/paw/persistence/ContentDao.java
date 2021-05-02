@@ -10,7 +10,7 @@ public interface ContentDao {
 
     List<Content> findByCourse(String courseId);
 
-    List<Content> findByCourse(String courseId, int limit);
+    List<Content> findByCourse(String courseId, int offset, int limit);
 
     List<Content> findByCourseAndType(String courseId, String contentType);
 
@@ -18,4 +18,5 @@ public interface ContentDao {
 
     boolean createContent(String name, String link, String courseId, String description, String contentType, Date contentDate,User user);
 
+    int getSize(String courseId);
 }

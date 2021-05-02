@@ -136,6 +136,40 @@
                         </c:choose>
 
                         </div>
+                    <!--        PAGER       -->
+                    <div style=" position: absolute; bottom: 0; width: 100%;">
+                        <nav aria-label="navigation" style="margin: auto">
+                            <ul class="pagination justify-content-center">
+                                <c:choose>
+                                    <c:when test="${pager.page != 0}">
+                                        <li class="page-item">
+                                            <a class="page-link" href="/contents?courseId=${courseId}&page=${pager.page - 1}">Previous</a>
+                                        </li>
+                                    </c:when>
+                                </c:choose>
+                                <c:choose>
+                                    <c:when test="${courseId != null}">
+                                        <c:forEach begin="1" step="1" end="${pager.size / pager.limit + 1}" var="num">
+                                            <li class="page-item">
+                                                <a class="page-link" href="<c:url value="/contents?courseId=${courseId}&page=${num - 1}"/>">
+                                                    <c:out value="${num}"/>
+                                                </a>
+                                            </li>
+                                        </c:forEach>
+                                    </c:when>
+                                </c:choose>
+
+                                <c:choose>
+                                    <c:when test="${pager.page + 1 < (pager.size / pager.limit)}">
+                                        <li class="page-item">
+                                            <a class="page-link" href="/contents?courseId=${courseId}&page=${pager.page + 1}">Next</a>
+                                        </li>
+                                    </c:when>
+                                </c:choose>
+                            </ul>
+                        </nav>
+                    </div>
+
                     </div>
                 </div>
 

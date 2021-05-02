@@ -124,7 +124,7 @@
                                                     <td>${chatgroup.creationYear}</td>
                                                     <td>${chatgroup.creationQuarter}</td>
                                                     <td>
-                                                        <a class="btn btn-link" href='<c:out value="${chatgroup.link}"/>' target="_blank" rel="noopener noreferrer">Abrir</button>
+                                                        <a class="btn btn-link" href='<c:out value="${chatgroup.link}"/>' target="_blank" rel="noopener noreferrer">Abrir</a>
                                                     </td>
                                                 </tr>
                                             </c:forEach>
@@ -155,19 +155,19 @@
                             <ul class="pagination justify-content-center">
                                 <c:choose>
                                     <c:when test="${pager.page > 0}">
-                                        <li class="page-item"><a class="page-link" href="/chats?page=${pager.page - 1}">Previous</a></li>
+                                        <li class="page-item"><a class="page-link" href="/chats?careerCode=${careerCode}&page=${pager.page - 1}">Previous</a></li>
                                     </c:when>
                                 </c:choose>
                                 <c:forEach begin="1" step="1" end="${pager.size / pager.limit}" var="num">
                                     <li class="page-item">
-                                        <a class="page-link" href="<c:url value="/chats?page=${num - 1}"/>">
+                                        <a class="page-link" href="<c:url value="/chats?careerCode=${careerCode}&page=${num - 1}"/>">
                                             <c:out value="${num}"/>
                                         </a>
                                     </li>
                                 </c:forEach>
                                 <c:choose>
                                     <c:when test="${pager.page + 1 < (pager.size / pager.limit)}">
-                                        <li class="page-item"><a class="page-link" href="?page=${pager.page + 1}">Next</a></li>
+                                        <li class="page-item"><a class="page-link" href="/chats?careerCode=${careerCode}&page=${pager.page + 1}">Next</a></li>
                                     </c:when>
                                 </c:choose>
                             </ul>

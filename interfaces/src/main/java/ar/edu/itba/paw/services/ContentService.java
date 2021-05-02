@@ -10,7 +10,9 @@ public interface ContentService {
 
     List<Content> findByCourse(String courseId);
 
-    List<Content> findByCourse(String courseId, int limit);
+    List<Content> findByCourse(String courseId, int offset, int limit);
+
+    int getSize(String courseId);
 
     List<Content> findByCourse(String courseId, Content.ContentType contentType, Date minDate, Date maxDate);
 
