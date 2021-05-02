@@ -43,7 +43,7 @@ public class CourseController {
         mav.addObject("careers", careers);
 
         if(careerCode != null) {
-            courses = careerService.findByCareer(careerCode);
+            courses = courseService.findByCareerSemester(careerCode);
             mav.addObject("careerCourses",courses);
 
             Career selectedCareer = careers.stream().filter(c -> c.getCode().equals(careerCode)).findFirst()

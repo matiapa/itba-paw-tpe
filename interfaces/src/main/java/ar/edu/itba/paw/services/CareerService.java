@@ -12,6 +12,6 @@ public interface CareerService {
 
     Optional<Career> findByCode(String code);
 
-    Map<Integer,List<CareerCourse>> findByCareer(String careerCode);
+
 
 }

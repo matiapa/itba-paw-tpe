@@ -13,6 +13,6 @@ public interface CareerDao {
 
     Optional<Career> findByCode(String code);
 
-    Map<Integer, List<CareerCourse>> findByCareer(String careerCode);
+
 
 }
