@@ -19,11 +19,13 @@ public interface PollService {
 
     List<Poll> findByCareer(String careerCode);
 
-    List<Poll> findByCareer(String careerCode, PollFormat format, PollState pollState);
+    List<Poll> findByCareer(String careerCode, PollFormat format, PollState pollState,
+                            int offset, int limit);
 
     List<Poll> findByCourse(String courseId);
 
-    List<Poll> findByCourse(String courseId, PollFormat format, PollState pollState);
+    List<Poll> findByCourse(String courseId, PollFormat format, PollState pollState,
+                            int offset, int limit);
 
     int getSize(HolderEntity filterBy, String code);
 

@@ -29,8 +29,8 @@ public class PollServiceImpl implements PollService {
     }
 
     @Override
-    public List<Poll> findByCareer(String careerCode, Poll.PollFormat format, Poll.PollState pollState) {
-        return pollDao.findByCareer(careerCode, format, pollState);
+    public List<Poll> findByCareer(String careerCode, Poll.PollFormat format, Poll.PollState pollState, int offset, int limit) {
+        return pollDao.findByCareer(careerCode, format, pollState, offset, limit);
     }
 
     @Override
@@ -39,8 +39,8 @@ public class PollServiceImpl implements PollService {
     }
 
     @Override
-    public List<Poll> findByCourse(String courseId, Poll.PollFormat format, Poll.PollState pollState) {
-        return pollDao.findByCourse(courseId, format, pollState);
+    public List<Poll> findByCourse(String courseId, Poll.PollFormat format, Poll.PollState pollState, int offset, int limit) {
+        return pollDao.findByCourse(courseId, format, pollState, offset, limit);
     }
 
     @Override

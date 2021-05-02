@@ -17,11 +17,13 @@ public interface PollDao {
 
     List<Poll> findByCareer(String careerCode);
 
-    List<Poll> findByCareer(String careerCode, Poll.PollFormat format, Poll.PollState pollState);
+    List<Poll> findByCareer(String careerCode, Poll.PollFormat format, Poll.PollState pollState,
+                            int offset, int limit);
 
     List<Poll> findByCourse(String courseId);
 
-    List<Poll> findByCourse(String courseId, Poll.PollFormat format, Poll.PollState pollState);
+    List<Poll> findByCourse(String courseId, Poll.PollFormat format, Poll.PollState pollState,
+                            int offset, int limit);
 
     int getSize(HolderEntity filterBy, String code);
 

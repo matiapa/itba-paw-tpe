@@ -133,7 +133,7 @@ public class PollDaoJdbc implements PollDao {
     }
 
     @Override
-    public List<Poll> findByCareer(String careerCode, PollFormat format, PollState state) {
+    public List<Poll> findByCareer(String careerCode, PollFormat format, PollState state, int offset, int limit) {
         return find(
             String.format("SELECT * FROM poll WHERE career_code='%s' AND course_id IS NULL", careerCode),
             format, state
@@ -150,7 +150,7 @@ public class PollDaoJdbc implements PollDao {
     }
 
     @Override
-    public List<Poll> findByCourse(String courseId, PollFormat format, PollState state) {
+    public List<Poll> findByCourse(String courseId, PollFormat format, PollState state, int offset, int limit) {
         return find(
             String.format("SELECT * FROM poll WHERE course_id='%s' AND career_code IS NULL", courseId),
             format, state

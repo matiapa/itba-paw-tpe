@@ -85,13 +85,15 @@ public class PollController {
             case course:
                 if (courseId != null){
                     pager = new Pager(pollService.getSize(filterBy, courseId), page);
-                    pollList = pollService.findByCourse(courseId, selectedType, selectedState);
+                    pollList = pollService.findByCourse(courseId, selectedType, selectedState,
+                            pager.getOffset(), pager.getLimit());
                 }
                 break;
             case career:
                 if (careerCode != null){
                     pager = new Pager(pollService.getSize(filterBy, careerCode), page);
-                    pollList = pollService.findByCareer(careerCode, selectedType, selectedState);
+                    pollList = pollService.findByCareer(careerCode, selectedType, selectedState,
+                            pager.getOffset(), pager.getLimit());
                 }
                 break;
             case general:
