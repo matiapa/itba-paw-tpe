@@ -9,7 +9,7 @@ public class User {
     private final String name;
     private final String surname;
     private final String email;
-    private final String password;
+    protected String password;
     private final String profileImgB64;
     private final Date signupDate;
 
