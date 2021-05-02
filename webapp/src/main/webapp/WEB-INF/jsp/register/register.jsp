@@ -2,6 +2,8 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 
+<%@ taglib prefix = "spring" uri="http://www.springframework.org/tags"%>
+
 <!DOCTYPE html>
 <html>
 
@@ -30,7 +32,7 @@
 
                                     <div class="p-5">
                                         <div class="text-center">
-                                            <h4 class="text-dark mb-4">Tu información</h4>
+                                            <h4 class="text-dark mb-4"><spring:message code="yourInfo"/></h4>
                                         </div>
 
                                         <div class="row mt-3">
@@ -68,7 +70,7 @@
                                         <div class="row mt-3">
                                             <div class="col-sm-12">
 
-                                                <form:label path="careerCode"  name="career">Nombre Carrera: </form:label>
+                                                <form:label path="careerCode"  name="career"><spring:message code="careerName"/></form:label>
                                                 <form:select path= "careerCode" class="selectpicker" data-live-search="true" title="Elegí una Carrera">
                                                     <c:forEach var="career" items="${careerList}">
                                                         <option ${career.equals(selectedCareer) ? 'selected' : ''}
@@ -88,7 +90,7 @@
                                 <div class="col-lg-7">
                                     <div class="p-5" style="border-left: 1px solid rgb(232,233,240) ;">
                                         <div class="text-center">
-                                            <h4 class="text-dark mb-4">Materias que cursás</h4>
+                                            <h4 class="text-dark mb-4"><spring:message code="studySubjects"/></h4>
                                         </div>
 
                                         <c:forEach var ="i" begin="0" end ="4">

@@ -3,6 +3,8 @@
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 
+<%@ taglib prefix = "spring" uri="http://www.springframework.org/tags"%>
+
 <!DOCTYPE html>
 <html>
 
@@ -42,20 +44,20 @@
                 <div class="col-lg-8">
                     <div class="card shadow mb-3">
                         <div class="card-header py-3">
-                            <p class="text-white m-0 font-weight-bold">Datos personales</p>
+                            <p class="text-white m-0 font-weight-bold"><spring:message code="personalInfo"/></p>
                         </div>
                         <div class="card-body">
                             <form>
                                 <div class="form-row">
                                     <div class="col">
                                         <div class="form-group">
-                                            <label><strong>Legajo</strong></label>
+                                            <label><strong><spring:message code="userId"/></strong></label>
                                             <p><c:out value="${user.id}"/></p>
                                         </div>
                                     </div>
                                     <div class="col">
                                         <div class="form-group">
-                                            <label><strong>Email</strong></label>
+                                            <label><strong><spring:message code="email"/></strong></label>
                                             <p><c:out value="${user.email}"/></p>
                                         </div>
                                     </div>
@@ -63,13 +65,13 @@
                                 <div class="form-row">
                                     <div class="col">
                                         <div class="form-group">
-                                            <label><strong>Carrera</strong></label>
+                                            <label><strong><spring:message code="career"/></strong></label>
                                             <p><c:out value="${user.name}"/></p>
                                         </div>
                                     </div>
                                     <div class="col">
                                         <div class="form-group">
-                                            <label><strong>Se unió el</strong></label>
+                                            <label><strong><spring:message code="joinedOn"/></strong></label>
                                             <p><fmt:formatDate type="date" dateStyle="short" value="${user.signupDate}"/></p>
                                         </div>
                                     </div>
