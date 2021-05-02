@@ -20,6 +20,7 @@ import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.Poll.PollState;
 import ar.edu.itba.paw.models.Poll.PollFormat;
 import ar.edu.itba.paw.models.Poll.PollOption;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public class PollDaoJdbc implements PollDao {
@@ -182,6 +183,7 @@ public class PollDaoJdbc implements PollDao {
 
     // -------------------- CREATE / DELETE --------------------
 
+    @Transactional
     @Override
     public void addPoll(String name, String description, PollFormat format, String careerCode, String courseId, Date expiryDate, int userId, List<String> pollOptions) {
 
@@ -207,7 +209,7 @@ public class PollDaoJdbc implements PollDao {
     @Override
     public void delete(int id){
         jdbcTemplate.execute(
-                String.format("DELETE FROM poll WHERE id=%d", id)
+            String.format("DELETE FROM poll WHERE id=%d", id)
         );
     }
 
@@ -216,21 +218,23 @@ public class PollDaoJdbc implements PollDao {
     @Override
     public Map<PollOption,Integer> getVotes(int id) {
 
-        List<PollVoteOption> list =
+        List<PollVoteOption> list = jdbcTemplate.query(
+            String.format(
+                "SELECT count(poll_option.option_id) AS votes , poll_option.option_value, poll_option.option_id FROM\n" +
+                "              poll  JOIN poll_option  on poll.id = poll_option.poll_id\n" +
+                "                  JOIN poll_submission on poll.id = poll_submission.poll_id and poll_option.option_id= poll_submission.option_id\n" +
+                "WHERE poll_option.poll_id='%d'\n" +
+                "GROUP BY poll_option.option_id,poll_option.option_value",id
+            ),
+            voteMapper
+        );
 
-                jdbcTemplate.query(
-                        String.format(
-                                "SELECT count(poll_option.option_id) AS votes , poll_option.option_value, poll_option.option_id FROM\n" +
-                                        "              poll  JOIN poll_option  on poll.id = poll_option.poll_id\n" +
-                                        "                  JOIN poll_submission on poll.id = poll_submission.poll_id and poll_option.option_id= poll_submission.option_id\n" +
-                                        "WHERE poll_option.poll_id='%d'\n" +
-                                        "GROUP BY poll_option.option_id,poll_option.option_value",id),voteMapper);
         Map<PollOption,Integer> map= new HashMap<>();
         for (PollVoteOption pair:list) {
             map.put(new PollOption(pair.getId(), pair.getValue()), pair.getVote());
         }
-        return map;
 
+        return map;
     }
 
     private void addPollOption(Integer id, String value) {
@@ -246,7 +250,8 @@ public class PollDaoJdbc implements PollDao {
                 optionMapper
         );
     }
-    
+
+    @Transactional
     @Override
     public void voteChoicePoll(int pollId, int optionId, int userId) {
         boolean validOption = jdbcTemplate.queryForList(
@@ -273,7 +278,6 @@ public class PollDaoJdbc implements PollDao {
         ).size() > 0;
     }
 
-
     private static class PollVoteOption {
         private final int id;
         private final String value;
@@ -295,4 +299,5 @@ public class PollDaoJdbc implements PollDao {
 
         public int getVote(){return vote;}
     }
+
 }

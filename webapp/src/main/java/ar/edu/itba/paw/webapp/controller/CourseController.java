@@ -80,7 +80,7 @@ public class CourseController {
 
         // Course content
 
-        List<Content> contents = contentService.findByCourse(courseId, 0, 10);
+        List<Content> contents = contentService.findByCourse(courseId, null, null, null, 0, 10);
         mav.addObject("contents", contents);
 
         // Course polls

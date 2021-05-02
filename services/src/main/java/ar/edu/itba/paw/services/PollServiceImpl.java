@@ -23,9 +23,6 @@ public class PollServiceImpl implements PollService {
 
     @Autowired private PollDao pollDao;
 
-    @Autowired private UserService userService;
-
-
     @Override
     public List<Poll> findRelevant(int userId){
         return pollDao.findRelevant(userId);

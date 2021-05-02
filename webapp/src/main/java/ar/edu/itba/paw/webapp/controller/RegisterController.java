@@ -15,6 +15,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.Optional;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -50,20 +51,17 @@ public class RegisterController {
     @RequestMapping(value ="/register", method = POST)
     public ModelAndView RegisterUser( HttpServletRequest request,
         @Valid @ModelAttribute("UserForm") final UserForm form, final BindingResult errors
-    ) {
-        if (errors.hasErrors()){
+    ) throws IOException {
+        if (errors.hasErrors())
             return getRegister(form);
-        }
+
+        String websiteUrl = ServletUriComponentsBuilder.fromRequestUri(request).replacePath(null).build()
+            .toString() + request.getContextPath();
 
         userService.registerUser(
             form.getId(), form.getName(), form.getSurname(), form.getEmail(),
             new BCryptPasswordEncoder().encode(form.getPassword()), form.getCareerCode(),
-            form.getCourses()
-        );
-
-        emailService.sendVerificationEmail(
-            form.getEmail(), ServletUriComponentsBuilder.fromRequestUri(request).replacePath(null).build()
-                .toString() + request.getContextPath()
+            form.getCourses(), websiteUrl
         );
 
         return new ModelAndView("register/pending_email_verification");

@@ -1,17 +1,10 @@
 package ar.edu.itba.paw.services;
 
-
-
-
+import java.io.IOException;
 import java.util.Map;
 
 public interface EmailService {
 
-    void sendMessageUsingThymeleafTemplate(String to, String subject, Map<String, Object> templateModel);
+    void sendVerificationEmail(String email,String baseUrl) throws IOException;
 
-    void sendHTMLMessage(String to, String subject, String text);
-
-    int getVerificationCode(String email);
-
-    void sendVerificationEmail(String email,String baseUrl);
 }

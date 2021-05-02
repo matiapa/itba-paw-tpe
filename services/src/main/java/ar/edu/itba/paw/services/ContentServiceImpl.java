@@ -22,11 +22,6 @@ public class ContentServiceImpl implements ContentService{
     }
 
     @Override
-    public List<Content> findByCourse(String courseId, int offset, int limit) {
-        return findByCourse(courseId, null, null, null, offset, limit);
-    }
-
-    @Override
     public int getSize(String courseId, ContentType contentType, Date minDate, Date maxDate) {
         return contentDao.getSize(courseId, contentType, minDate, maxDate);
     }
