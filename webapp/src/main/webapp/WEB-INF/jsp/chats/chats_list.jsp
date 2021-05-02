@@ -158,7 +158,7 @@
                                         <li class="page-item"><a class="page-link" href="/chats?careerCode=${careerCode}&page=${pager.page - 1}">Previous</a></li>
                                     </c:when>
                                 </c:choose>
-                                <c:forEach begin="1" step="1" end="${pager.size / pager.limit}" var="num">
+                                <c:forEach begin="1" step="1" end="${pager.size / pager.limit + 1}" var="num">
                                     <li class="page-item">
                                         <a class="page-link" href="<c:url value="/chats?careerCode=${careerCode}&page=${num - 1}"/>">
                                             <c:out value="${num}"/>
