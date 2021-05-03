@@ -110,12 +110,12 @@
                                     <table class="table my-0" id="dataTable">
                                         <thead>
                                         <tr>
-                                            <th>Plataforma</th>
-                                            <th>Año</th>
-                                            <th>Cuatrimestre</th>
-                                            <th>Link</th>
+                                            <th><spring:message code="chat.platform"/></th>
+                                            <th><spring:message code="year"/></th>
+                                            <th><spring:message code="quarter"/></th>
+                                            <th><spring:message code="chat.link"/></th>
                                             <c:if test="${canDelete}">
-                                                <th>Admin Options</th>
+                                                <th><spring:message code="chat.AdminOptions"/></th>
                                             </c:if>
                                         </tr>
                                         </thead>
