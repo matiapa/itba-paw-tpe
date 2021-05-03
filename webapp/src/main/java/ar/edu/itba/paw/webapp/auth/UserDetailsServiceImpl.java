@@ -11,7 +11,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -33,8 +32,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         final Collection<? extends GrantedAuthority> authorities = user.getPermissions().stream()
             .map(Permission::toString).map(SimpleGrantedAuthority::new).collect(Collectors.toList());
 
-        return new org.springframework.security.core.userdetails.User(
-            user.getName(), user.getPassword(), authorities
-        );
+        return new UserPrincipal(user, authorities);
     }
 }

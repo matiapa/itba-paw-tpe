@@ -1,15 +1,16 @@
 package ar.edu.itba.paw.models;
 
 import java.util.List;
+import java.io.Serializable;
 import java.util.Date;
 
-public class User {
+public class User implements Serializable {
 
     private final int id;
     private final String name;
     private final String surname;
     private final String email;
-    private final String password;
+    protected String password;
     private final String profileImgB64;
     private final Date signupDate;
 
