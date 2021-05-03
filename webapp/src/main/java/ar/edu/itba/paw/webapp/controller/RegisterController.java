@@ -35,7 +35,8 @@ public class RegisterController {
 
     @RequestMapping(value ="/register", method = GET)
     public ModelAndView getRegister(
-        @ModelAttribute("UserForm") final UserForm form
+        @ModelAttribute("UserForm") final UserForm form,
+        @RequestParam(name="emailTaken" ,required = false) boolean emailTaken
     ) {
 
         final ModelAndView mav = new ModelAndView("register/register");
@@ -43,6 +44,9 @@ public class RegisterController {
         mav.addObject("careerList", careerService.findAll());
 
         mav.addObject("courseList", courseService.findAll());
+
+        mav.addObject("emailTaken",emailTaken);
+
 
         return mav;
     }
@@ -52,8 +56,14 @@ public class RegisterController {
     public ModelAndView RegisterUser( HttpServletRequest request,
         @Valid @ModelAttribute("UserForm") final UserForm form, final BindingResult errors
     ) throws IOException {
-        if (errors.hasErrors())
-            return getRegister(form);
+
+        boolean emailTaken=userService.findByEmail(form.getEmail()).isPresent();
+        if (errors.hasErrors()||emailTaken){
+            System.out.println(emailTaken);
+            return getRegister(form,emailTaken);
+        }
+
+
 
         String websiteUrl = ServletUriComponentsBuilder.fromRequestUri(request).replacePath(null).build()
             .toString() + request.getContextPath();
