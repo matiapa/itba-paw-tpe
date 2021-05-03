@@ -36,7 +36,7 @@ public class StatisticsDaoJdbc implements StatisticsDao {
         Map<Entity, Integer> map = new HashMap<>();
         jdbcTemplate.query(query, (rs, rn) ->
             map.put(
-                Entity.valueOf(rs.getString("entity").toUpperCase().trim()),
+                Entity.valueOf(rs.getString("entity").trim()),
                 rs.getInt("contribs")
             )
         );

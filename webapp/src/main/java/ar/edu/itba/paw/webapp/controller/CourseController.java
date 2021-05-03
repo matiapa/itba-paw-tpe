@@ -1,12 +1,10 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import ar.edu.itba.paw.models.*;
-import ar.edu.itba.paw.models.ui.Pager;
 import ar.edu.itba.paw.services.*;
 import ar.edu.itba.paw.webapp.exceptions.ResourceNotFoundException;
 import org.slf4j.Logger;
@@ -98,7 +96,7 @@ public class CourseController {
         // Other parameters
 
         mav.addObject("canDelete", loggedUser.getPermissions().contains(
-            new Permission(Permission.Action.DELETE, Entity.COURSE_CONTENT)
+            new Permission(Permission.Action.delete, Entity.course_content)
         ));
 
         return mav;

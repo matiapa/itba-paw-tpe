@@ -4,7 +4,7 @@ import java.util.Objects;
 
 public class Permission {
 
-    public enum Action { CREATE, READ, UPDATE, DELETE }
+    public enum Action {create, read, update, delete}
 
     private final Action action;
     private final Entity entity;
@@ -29,7 +29,7 @@ public class Permission {
 
     @Override
     public String toString() {
-        return entity+"."+ action;
+        return (entity+"."+ action).toUpperCase();
     }
 
 }

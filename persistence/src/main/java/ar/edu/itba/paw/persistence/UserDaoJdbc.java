@@ -54,10 +54,10 @@ public class UserDaoJdbc implements UserDao {
                 String.format("SELECT * FROM permission WHERE user_id=%d", rs.getInt("id")),
                 (rs2, rowNum2) -> {
                     Entity entity = Entity.valueOf(
-                        rs2.getString("entity").toUpperCase().trim()
+                        rs2.getString("entity").trim()
                     );
                     Permission.Action action = Permission.Action.valueOf(
-                        rs2.getString("action").toUpperCase().trim()
+                        rs2.getString("action").trim()
                     );
                     return new Permission(action, entity);
                 }

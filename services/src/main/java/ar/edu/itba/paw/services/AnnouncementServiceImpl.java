@@ -64,7 +64,7 @@ public class AnnouncementServiceImpl implements AnnouncementService {
 
     @Override
     public void delete(User loggedUser, int id) {
-        Permission reqPerm = new Permission(Permission.Action.DELETE, Entity.ANNOUNCEMENT);
+        Permission reqPerm = new Permission(Permission.Action.delete, Entity.announcement);
         if(! loggedUser.getPermissions().contains(reqPerm))
             throw new UnauthorizedException();
 

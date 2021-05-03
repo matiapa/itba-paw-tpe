@@ -14,7 +14,6 @@ import ar.edu.itba.paw.models.ui.Pager;
 import ar.edu.itba.paw.models.Entity;
 import ar.edu.itba.paw.models.Permission;
 import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.services.UserService;
 import ar.edu.itba.paw.webapp.controller.common.CommonFilters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -101,7 +100,7 @@ public class ChatGroupController {
 
         mav.addObject("showCreateForm", showCreateForm);
         mav.addObject("canDelete", loggedUser.getPermissions().contains(
-            new Permission(Permission.Action.DELETE, Entity.CHAT_GROUP)
+            new Permission(Permission.Action.delete, Entity.chat_group)
         ));
 
         return mav;

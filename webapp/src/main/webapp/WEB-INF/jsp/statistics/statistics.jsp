@@ -51,7 +51,7 @@
                                     <span>NUEVAS ENCUESTAS</span>
                                 </div>
                                 <div class="text-dark font-weight-bold h5 mb-0">
-                                    <span><%= newContributions.get(Entity.POLL) %></span>
+                                    <span><%= newContributions.get(Entity.poll) %></span>
                                 </div>
                             </div>
                         </div>
@@ -68,7 +68,7 @@
                                     <span>NUEVOS ANUNCIOS</span>
                                 </div>
                                 <div class="text-dark font-weight-bold h5 mb-0">
-                                    <span><%= newContributions.get(Entity.ANNOUNCEMENT) %></span>
+                                    <span><%= newContributions.get(Entity.announcement) %></span>
                                 </div>
                             </div>
                         </div>
@@ -87,7 +87,7 @@
                                 <div class="row no-gutters align-items-center">
                                     <div class="col-auto">
                                         <div class="text-dark font-weight-bold h5 mb-0 mr-3">
-                                            <span><%= newContributions.get(Entity.CHAT_GROUP) %></span>
+                                            <span><%= newContributions.get(Entity.chat_group) %></span>
                                         </div>
                                     </div>
                                 </div>
@@ -106,7 +106,7 @@
                                     <span>NUEVOS APUNTES</span>
                                 </div>
                                 <div class="text-dark font-weight-bold h5 mb-0">
-                                    <span><%= newContributions.get(Entity.COURSE_CONTENT) %></span>
+                                    <span><%= newContributions.get(Entity.course_content) %></span>
                                 </div>
                             </div>
                         </div>

@@ -56,7 +56,7 @@ public class ChatGroup {
     }
 
     public enum ChatPlatform {
-        WHATSAPP, DISCORD
+        whatsapp, discord
     }
 
 }

@@ -72,19 +72,19 @@ public class AnnounceController {
         int userId = loggedUser.getId();
 
         switch(filterBy){
-            case CAREER:
+            case career:
                 if(careerCode != null){
                     pager = new Pager(announcementService.getSize(filterBy, careerCode, showSeen, userId), page);
                     announcements = announcementService.findByCareer(loggedUser, careerCode, showSeen, pager.getOffset(), pager.getLimit());
                 }
                 break;
-            case COURSE:
+            case course:
                 if(courseId != null){
                     pager = new Pager(announcementService.getSize(filterBy, courseId, showSeen, userId), page);
                     announcements = announcementService.findByCourse(loggedUser, courseId, showSeen, pager.getOffset(), pager.getLimit());
                 }
                 break;
-            case GENERAL:
+            case general:
             default:
                 pager = new Pager(announcementService.getSize(filterBy, courseId, showSeen, userId), page);
                 announcements = announcementService.findGeneral(loggedUser, showSeen, pager.getOffset(), pager.getLimit());
@@ -98,8 +98,12 @@ public class AnnounceController {
         mav.addObject("showCreateForm", showCreateForm);
         mav.addObject("showSeen", showSeen);
 
+        mav.addObject("canCreate", loggedUser.getPermissions().contains(
+                new Permission(Permission.Action.create, Entity.announcement)
+        ));
+
         mav.addObject("canDelete", loggedUser.getPermissions().contains(
-            new Permission(Permission.Action.DELETE, Entity.ANNOUNCEMENT)
+            new Permission(Permission.Action.delete, Entity.announcement)
         ));
 
         return mav;
@@ -113,7 +117,7 @@ public class AnnounceController {
         final BindingResult errors
     ){
         if (errors.hasErrors()) {
-            return list(EntityTarget.GENERAL, null, null, true, false,
+            return list(EntityTarget.general, null, null, true, false,
             0, form, loggedUser);
         }
 
