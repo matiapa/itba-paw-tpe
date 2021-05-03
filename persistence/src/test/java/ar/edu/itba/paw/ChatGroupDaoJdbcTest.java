@@ -50,26 +50,26 @@ public class ChatGroupDaoJdbcTest {
 
     @Test
     public void testGetSize() throws ParseException {
-        /*
+
         Date creationDate = new SimpleDateFormat("dd-MM-yyyy").parse("11-05-2018");
         for (int i = 0; i < 10; i++){
             ChatGroup chatGroup = chatGroupDaoJdbc.addGroup("ChatGroup test", "S",
                     "https://test.com", 0, creationDate, ChatGroup.ChatPlatform.whatsapp);
         }
-        */
+
         int size = chatGroupDaoJdbc.getSize("S", ChatGroup.ChatPlatform.whatsapp, 2018, 1);
         Assert.assertEquals(10, size);
     }
 
     @Test
     public void testFindByCareer() throws ParseException {
-        /*
+
         Date creationDate = new SimpleDateFormat("dd-MM-yyyy").parse("11-05-2018");
         for (int i = 0; i < 10; i++){
             ChatGroup chatGroup = chatGroupDaoJdbc.addGroup("ChatGroup test", "S",
                     "https://test.com", 0, creationDate, ChatGroup.ChatPlatform.whatsapp);
         }
-         */
+
         List<ChatGroup> chatGroups = chatGroupDaoJdbc.findByCareer("S", ChatGroup.ChatPlatform.whatsapp, 2018, 1, 0, 5);
 
         Assert.assertEquals(5, chatGroups.size());
@@ -80,11 +80,11 @@ public class ChatGroupDaoJdbcTest {
 
     @Test
     public void testFindById() throws ParseException {
-        /*
+
         Date creationDate = new SimpleDateFormat("dd-MM-yyyy").parse("11-05-2018");
         ChatGroup chatGroup = chatGroupDaoJdbc.addGroup("ChatGroup test", "S",
                 "https://test.com", 0, creationDate, ChatGroup.ChatPlatform.whatsapp);
-*/
+
         Optional<ChatGroup> chatGroupOptional = chatGroupDaoJdbc.findById("1");
 
         Assert.assertTrue(chatGroupOptional.isPresent());
