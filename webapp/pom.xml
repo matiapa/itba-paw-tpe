@@ -18,6 +18,8 @@
 
   <dependencies>
 
+    <!-- Project -->
+
     <dependency>
       <groupId>ar.edu.itba.paw</groupId>
       <artifactId>interfaces</artifactId>
@@ -30,6 +32,8 @@
       <version>${project.parent.version}</version>
       <scope>runtime</scope>
     </dependency>
+
+    <!-- Spring -->
 
     <dependency>
       <groupId>org.springframework</groupId>
@@ -47,10 +51,14 @@
       <scope>provided</scope>
     </dependency>
 
+    <!-- JSTL -->
+
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>jstl</artifactId>
     </dependency>
+
+    <!-- Form validation -->
 
     <dependency>
       <groupId>javax.validation</groupId>
@@ -61,6 +69,8 @@
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-validator</artifactId>
     </dependency>
+
+    <!-- Sessions -->
 
     <dependency>
       <groupId>org.springframework.security</groupId>
@@ -77,6 +87,8 @@
       <artifactId>spring-security-config</artifactId>
     </dependency>
 
+    <!-- Database -->
+
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-jdbc</artifactId>
@@ -87,33 +99,7 @@
       <artifactId>postgresql</artifactId>
     </dependency>
 
-    <dependency>
-      <groupId>commons-fileupload</groupId>
-      <artifactId>commons-fileupload</artifactId>
-    </dependency>
-
-    <!-- Extras-->
-
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-context-support</artifactId>
-
-    </dependency>
-
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-mail</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.thymeleaf</groupId>
-      <artifactId>thymeleaf</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.thymeleaf</groupId>
-      <artifactId>thymeleaf-spring5</artifactId>
-    </dependency>
+    <!-- Logging -->
 
     <dependency>
       <groupId>org.slf4j</groupId>
@@ -133,12 +119,40 @@
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
-
     </dependency>
 
     <dependency>
       <groupId>org.logback-extensions</groupId>
       <artifactId>logback-ext-spring</artifactId>
+    </dependency>
+
+    <!-- Mailing -->
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context-support</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-mail</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.thymeleaf</groupId>
+      <artifactId>thymeleaf</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.thymeleaf</groupId>
+      <artifactId>thymeleaf-spring5</artifactId>
+    </dependency>
+
+    <!-- File uploading -->
+
+    <dependency>
+      <groupId>commons-fileupload</groupId>
+      <artifactId>commons-fileupload</artifactId>
     </dependency>
 
   </dependencies>
