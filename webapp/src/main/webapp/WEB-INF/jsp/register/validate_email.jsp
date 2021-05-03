@@ -2,13 +2,15 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 
+<%@ taglib prefix = "spring" uri="http://www.springframework.org/tags"%>
+
 <!DOCTYPE html>
 <html>
 
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-  <title>Verificar Email</title>
+  <title><spring:message code="register.validate_email.PageTitle"/></title>
 
   <jsp:include page="../common/styles.jsp"/>
 
@@ -23,15 +25,15 @@
 
       <c:choose>
         <c:when test="${worked}">
-          <h3>¡Email verificado!</h3>
-          <h5 class="mt-3">Ya podés empezar a usar tu cuenta</h5>
+          <h3><spring:message code="register.validate_email.SuccessTitle"/></h3>
+          <h5 class="mt-3"><spring:message code="register.validate_email.SuccessMessage"/></h5>
           <a class="mt-3" href="<c:url value="/login"/>">
-            <h5>Ir al login</h5>
+            <h5><spring:message code="register.validate_email.GoToLoginButton"/></h5>
           </a>
         </c:when>
         <c:otherwise>
-          <h3>¡Ups! Algo salió mal</h3>
-          <h5 class="mt-3">Por favor, volvé a intentarlo más tarde o enviá un mail a soporte</h5>
+          <h3><spring:message code="register.validate_email.FailureTitle"/></h3>
+          <h5 class="mt-3"><spring:message code="register.validate_email.FailureMessage"/></h5>
         </c:otherwise>
       </c:choose>
       <h3></h3>

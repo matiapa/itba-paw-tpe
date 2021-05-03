@@ -73,6 +73,9 @@
                                             <div class="col-sm-12">
                                                 <form:input class="form-control form-control-user" type="text" id="exampleLegajo" placeholder="Legajo" path="id" value="${user.id}" />
                                                 <form:errors path="id" cssStyle="color: red" element="p"/>
+                                                <c:if test="${idTaken}">
+                                                    <h6 Style="color: red" ><spring:message code="idTaken"/></h6>
+                                                </c:if>
                                             </div>
                                         </div>
 
