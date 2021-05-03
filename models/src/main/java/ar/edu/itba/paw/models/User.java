@@ -1,9 +1,10 @@
 package ar.edu.itba.paw.models;
 
 import java.util.List;
+import java.io.Serializable;
 import java.util.Date;
 
-public class User {
+public class User implements Serializable {
 
     private final int id;
     private final String name;

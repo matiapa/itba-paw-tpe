@@ -59,4 +59,17 @@ public class UserPrincipal extends User implements UserDetails, CredentialsConta
     public boolean isEnabled() {
         return true;
     }
+
+    @Override
+	public boolean equals(Object rhs) {
+		if (rhs instanceof User) {
+			return getEmail().equals(((User) rhs).getEmail());
+		}
+		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		return getEmail().hashCode();
+	}
 }
