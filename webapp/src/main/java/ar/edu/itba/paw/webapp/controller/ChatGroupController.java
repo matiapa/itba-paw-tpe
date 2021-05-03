@@ -14,7 +14,10 @@ import ar.edu.itba.paw.models.ui.Pager;
 import ar.edu.itba.paw.models.Entity;
 import ar.edu.itba.paw.models.Permission;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.services.UserService;
 import ar.edu.itba.paw.webapp.controller.common.CommonFilters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -34,6 +37,10 @@ public class ChatGroupController {
     @Autowired private ChatGroupService chatGroupService;
 
     @Autowired private CommonFilters commonFilters;
+
+
+
+    private static final Logger LOGGER= LoggerFactory.getLogger(ChatGroupController.class);
 
 
     @RequestMapping(value = "/chats", method = GET)
@@ -108,11 +115,13 @@ public class ChatGroupController {
         final BindingResult errors
     ) {
         if(errors.hasErrors()){
+
+            LOGGER.debug("User {} tried and failed to create a chatgroup with form {} and error {}",loggedUser,chatGroupForm,errors);
             return list(null, null, null, null, 0, true,
                 chatGroupForm, loggedUser);
         }
 
-        chatGroupService.addGroup(
+        ChatGroup chatGroup=chatGroupService.addGroup(
             chatGroupForm.getName(),
             chatGroupForm.getCareerCode(),
             chatGroupForm.getLink(),
@@ -120,6 +129,7 @@ public class ChatGroupController {
             chatGroupForm.getCreationDate(),
             chatGroupForm.getPlatform()
         );
+        LOGGER.debug("user {} created chatgroup {} with form {}",loggedUser,chatGroup,chatGroupForm);
 
         return list(chatGroupForm.getCareerCode(), null, null, null, 0, false,
             chatGroupForm, loggedUser);
@@ -127,9 +137,11 @@ public class ChatGroupController {
 
     @RequestMapping(value = "/chats/{id}", method = DELETE)
     public String delete(
-            @PathVariable(value="id") int id, HttpServletRequest request
+            @PathVariable(value="id") int id, HttpServletRequest request,
+            @ModelAttribute("user") final User loggedUser
     ) {
         chatGroupService.delete(id);
+        LOGGER.debug("user {} deleted chatgroup with id {}",loggedUser,id);
 
         String referer = request.getHeader("Referer");
         return "redirect:"+ referer;
@@ -137,9 +149,10 @@ public class ChatGroupController {
 
     @RequestMapping(value = "/chats/{id}/delete", method = POST)
     public String deleteWithPost(
-            @PathVariable(value="id") int id, HttpServletRequest request
+            @PathVariable(value="id") int id, HttpServletRequest request,
+            @ModelAttribute("user") final User loggedUser
     ) {
-        return delete(id, request);
+        return delete(id, request,loggedUser);
     }
 
 }

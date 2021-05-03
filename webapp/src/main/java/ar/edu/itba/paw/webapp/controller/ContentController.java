@@ -9,6 +9,8 @@ import ar.edu.itba.paw.services.ContentService;
 import ar.edu.itba.paw.services.UserService;
 import ar.edu.itba.paw.webapp.controller.common.CommonFilters;
 import ar.edu.itba.paw.webapp.form.ContentForm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
@@ -24,6 +26,7 @@ import javax.validation.Valid;
 import java.util.Date;
 import java.util.List;
 
+
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 
@@ -35,6 +38,8 @@ public class ContentController {
     @Autowired private UserService userService;
 
     @Autowired private CommonFilters commonFilters;
+
+    private static final Logger LOGGER= LoggerFactory.getLogger(ContentController.class);
 
 
     @RequestMapping(value = "/contents", method = GET)
@@ -89,6 +94,8 @@ public class ContentController {
         final BindingResult errors
     ){
         if(errors.hasErrors()){
+
+            LOGGER.debug("User failed to create content with form {}  and errors {}",form,errors);
             return list(null, null, null, null, 0,
                 true, form, loggedUser);
         }
@@ -97,6 +104,7 @@ public class ContentController {
              form.getName(),form.getLink(), form.getCourseId(), form.getDescription(), form.getContentType(),
              form.getContentDate(), loggedUser
          );
+        LOGGER.debug("User created content with form {} ",form);
 
         return list(form.getCourseId(), null, null, null, 0,
             false, form, loggedUser);
@@ -107,7 +115,7 @@ public class ContentController {
             @PathVariable(value="id") int id, HttpServletRequest request
     ) {
         contentService.delete(id);
-
+        LOGGER.debug("User deleted content with id {}",id);
         String referer = request.getHeader("Referer");
         return "redirect:"+ referer;
     }

@@ -118,13 +118,13 @@ public class AnnouncementDaoJdbc implements AnnouncementDao {
         String baseQuery;
 
         switch (target){
-            case career:
+            case CAREER:
                 baseQuery = String.format("SELECT COUNT(*) FROM announcement WHERE career_code='%s'", code);
                 break;
-            case course:
+            case COURSE:
                 baseQuery = String.format("SELECT COUNT(*) FROM announcement WHERE course_id='%s'", code);
                 break;
-            case general:
+            case GENERAL:
             default:
                 baseQuery = "SELECT COUNT(*) FROM announcement WHERE career_code IS NULL AND course_id IS NULL";
         }

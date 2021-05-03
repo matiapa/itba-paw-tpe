@@ -62,7 +62,7 @@ public class AnnouncementDaoJdbcTest {
 
     @Test
     public void testPagination() {
-        int totalElements = announcementDaoJdbc.getSize(EntityTarget.general, null, false, 1);
+        int totalElements = announcementDaoJdbc.getSize(EntityTarget.GENERAL, null, false, 1);
         Assert.assertEquals(3, totalElements);
 
         List<Announcement> announcements = announcementDaoJdbc.findGeneral(false,1, 0, 2);

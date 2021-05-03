@@ -5,6 +5,8 @@ import ar.edu.itba.paw.models.Course;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.services.StatisticsService;
 import ar.edu.itba.paw.services.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -26,11 +28,15 @@ public class AdminController {
 
     @Autowired StatisticsService statisticsService;
 
+    private static final Logger LOGGER= LoggerFactory.getLogger(AdminController.class);
+
 
     @RequestMapping(value = "/admin/statistics", method = GET)
     public ModelAndView statistics(
         @ModelAttribute("user") User loggedUser
     ){
+        LOGGER.debug("user {}  accessed admin controller",loggedUser);
+
         ModelAndView mav = new ModelAndView("statistics/statistics");
 
         mav.addObject("newContributions", statisticsService.newContributions(loggedUser));

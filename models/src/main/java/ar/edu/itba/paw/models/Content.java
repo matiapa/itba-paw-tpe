@@ -56,7 +56,7 @@ public class Content {
     }
 
     public enum ContentType{
-        exam, guide, resume, note, other
+        EXAM, GUIDE, RESUME, NOTE, OTHER
     }
 
 }
