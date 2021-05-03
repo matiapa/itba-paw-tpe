@@ -18,8 +18,8 @@ public class StatisticsServiceImpl implements StatisticsService {
     @Autowired UserService userService;
 
     @Override
-    public Map<Entity, Integer> newContributions() {
-        return statisticsDao.newContributions(userService.getLoggedUser());
+    public Map<Entity, Integer> newContributions(User loggedUser) {
+        return statisticsDao.newContributions(loggedUser);
     }
 
     @Override

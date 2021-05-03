@@ -4,11 +4,6 @@
 
 <%@ taglib prefix = "spring" uri="http://www.springframework.org/tags"%>
 
-<jsp:useBean type="java.util.List<ar.edu.itba.paw.models.ChatGroup>" scope="request" id="chatgroups"/>
-<jsp:useBean type="java.util.List<ar.edu.itba.paw.models.Career>" scope="request" id="careers"/>
-<jsp:useBean type="ar.edu.itba.paw.models.ChatGroup.ChatPlatform[]" scope="request" id="platforms"/>
-<jsp:useBean type="java.lang.Boolean" scope="request" id="canDelete"/>
-
 
 <!DOCTYPE html>
 <html>
@@ -68,7 +63,7 @@
                                             </option>
                                             <c:forEach var="platform" items="${platforms}">
                                                 <option ${selectedPlatform == platform ? 'selected' : ''} value="${platform}">
-                                                        ${platformsTranslate.get(platform)}
+                                                    <spring:message code="enum.platform.${platform.name()}"/>
                                                 </option>
                                             </c:forEach>
                                         </select>
@@ -94,7 +89,7 @@
                                             </option>
                                             <c:forEach var="quarter" items="${quarters}">
                                                 <option ${selectedQuarter == quarter ? 'selected' : ''} value="${quarter}">
-                                                        ${quartersTranslate.get(quarter)}
+                                                    <spring:message code="enum.quarter.${quarter}"/>
                                                 </option>
                                             </c:forEach>
                                         </select>

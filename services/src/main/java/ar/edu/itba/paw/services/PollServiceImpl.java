@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import ar.edu.itba.paw.models.HolderEntity;
+import ar.edu.itba.paw.models.EntityTarget;
 import ar.edu.itba.paw.models.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +22,6 @@ import ar.edu.itba.paw.persistence.PollDao;
 public class PollServiceImpl implements PollService {
 
     @Autowired private PollDao pollDao;
-
-    @Autowired private UserService userService;
-
 
     @Override
     public List<Poll> findRelevant(int userId){
@@ -47,23 +44,8 @@ public class PollServiceImpl implements PollService {
     }
 
     @Override
-    public List<Poll> findGeneral(int offset, int limit){
-        return findGeneral(null, null, offset, limit);
-    }
-
-    @Override
-    public List<Poll> findByCareer(String careerCode, int offset, int limit){
-        return findByCareer(careerCode, null, null, offset, limit);
-    }
-
-    @Override
-    public List<Poll> findByCourse(String courseId, int offset, int limit){
-        return findByCourse(courseId, null, null, offset, limit);
-    }
-
-    @Override
-    public int getSize(HolderEntity filterBy, String code){
-        return pollDao.getSize(filterBy, code);
+    public int getSize(EntityTarget filterBy, String code, PollFormat format, PollState pollState){
+        return pollDao.getSize(filterBy, code, format, pollState);
     }
 
     @Override

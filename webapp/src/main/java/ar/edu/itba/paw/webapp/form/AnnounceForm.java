@@ -6,7 +6,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Date;
 
-public class AnnouncementForm {
+public class AnnounceForm {
 
     @NotNull
     @Size(min = 5, max = 50)

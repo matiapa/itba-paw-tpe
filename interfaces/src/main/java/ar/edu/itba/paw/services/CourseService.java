@@ -13,8 +13,6 @@ public interface CourseService {
 
     List<Course> findFavourites(User user, int limit);
 
-    List<Course> findByCareer(String careerCode);
-
     List<Course> findByCareer(String careerCode, int limit);
 
     Optional<Course> findById(String id);

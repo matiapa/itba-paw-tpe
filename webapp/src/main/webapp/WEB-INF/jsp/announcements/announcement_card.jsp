@@ -18,7 +18,7 @@
                 <p style="padding-top: 0;"><c:out value="${announcement.content}"/></p>
                 <span class="text-xs">
                     <fmt:formatDate type="both" dateStyle = "short" timeStyle = "short" value="${announcement.uploadDate}" var="uploadDateFormatted"/>
-                    <c:url var="profileUrl" value="/profile?id=${announcement.uploader.id}"/>
+                    <c:url var="profileUrl" value="/profile/${announcement.uploader.id}"/>
                     <spring:message code="publishedBy" htmlEscape="false" arguments=
                         '<a href="${profileUrl}">${fn:escapeXml(announcement.uploader.name)}</a>,
                         ${uploadDateFormatted}'

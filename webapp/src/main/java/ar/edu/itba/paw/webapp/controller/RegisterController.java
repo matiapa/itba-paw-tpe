@@ -1,11 +1,8 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.models.HolderEntity;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.services.*;
-import ar.edu.itba.paw.webapp.controller.common.FiltersController;
 import ar.edu.itba.paw.webapp.form.UserForm;
-import jdk.nashorn.internal.runtime.options.Option;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -18,6 +15,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.Optional;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -37,14 +35,18 @@ public class RegisterController {
 
     @RequestMapping(value ="/register", method = GET)
     public ModelAndView getRegister(
-        @ModelAttribute("UserForm") final UserForm form
+        @ModelAttribute("UserForm") final UserForm form,
+        @RequestParam(name="emailTaken" ,required = false) boolean emailTaken
     ) {
 
         final ModelAndView mav = new ModelAndView("register/register");
 
         mav.addObject("careerList", careerService.findAll());
 
-        mav.addObject("courseList",courseService.findAll());
+        mav.addObject("courseList", courseService.findAll());
+
+        mav.addObject("emailTaken",emailTaken);
+
 
         return mav;
     }
@@ -53,20 +55,23 @@ public class RegisterController {
     @RequestMapping(value ="/register", method = POST)
     public ModelAndView RegisterUser( HttpServletRequest request,
         @Valid @ModelAttribute("UserForm") final UserForm form, final BindingResult errors
-    ) {
-        if (errors.hasErrors()){
-            return getRegister(form);
+    ) throws IOException {
+
+        boolean emailTaken=userService.findByEmail(form.getEmail()).isPresent();
+        if (errors.hasErrors()||emailTaken){
+            System.out.println(emailTaken);
+            return getRegister(form,emailTaken);
         }
+
+
+
+        String websiteUrl = ServletUriComponentsBuilder.fromRequestUri(request).replacePath(null).build()
+            .toString() + request.getContextPath();
 
         userService.registerUser(
             form.getId(), form.getName(), form.getSurname(), form.getEmail(),
             new BCryptPasswordEncoder().encode(form.getPassword()), form.getCareerCode(),
-            form.getCourses()
-        );
-
-        emailService.sendVerificationEmail(
-            form.getEmail(), ServletUriComponentsBuilder.fromRequestUri(request).replacePath(null).build()
-                .toString() + request.getContextPath()
+            form.getCourses(), websiteUrl
         );
 
         return new ModelAndView("register/pending_email_verification");

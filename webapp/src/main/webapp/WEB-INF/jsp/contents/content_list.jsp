@@ -4,10 +4,6 @@
 
 <%@ taglib prefix = "spring" uri="http://www.springframework.org/tags"%>
 
-<jsp:useBean type="java.util.List<ar.edu.itba.paw.models.Content>" scope="request" id="contents"/>
-<jsp:useBean type="java.lang.Boolean" scope="request" id="canDelete"/>
-
-
 <!DOCTYPE html>
 <html>
 
@@ -111,10 +107,10 @@
                                             <c:set var="content" value="${content}" scope="request"/>
                                             <tr>
                                                 <td><c:out value="${content.name}"/></td>
-                                                <td><c:out value="${contentTypeEnumMap.get(content.contentType)}"/></td>
+                                                <td><spring:message code="enum.contenttype.${content.contentType}"/></td>
                                                 <td><c:out value="${content.uploadDate}"/></td>
                                                 <td>
-                                                    <c:url var="profileUrl" value="/profile?id=${content.submitter.id}"/>
+                                                    <c:url var="profileUrl" value="/profile/${content.submitter.id}"/>
                                                     <a href="${profileUrl}"><c:out value="${content.submitter.name}"/></a>
                                                 </td>
 

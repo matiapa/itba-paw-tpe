@@ -41,7 +41,7 @@
                 </c:if>
             </div>
             <div class="col-auto">
-                <a href="<c:url value="/polls/detail?id=${poll.id}"/>" class="btn btn-icon" type="button">
+                <a href="<c:url value="/polls/${poll.id}"/>" class="btn btn-icon" type="button">
                     <i class="material-icons">keyboard_arrow_right</i>
                 </a>
             </div>

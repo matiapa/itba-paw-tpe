@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 import java.util.*;
@@ -52,8 +53,12 @@ public class UserDaoJdbc implements UserDao {
             List<Permission> permissions = jdbcTemplate.query(
                 String.format("SELECT * FROM permission WHERE user_id=%d", rs.getInt("id")),
                 (rs2, rowNum2) -> {
-                    Entity entity = Entity.valueOf(rs2.getString("entity").toUpperCase());
-                    Permission.Action action = Permission.Action.valueOf(rs2.getString("action").toUpperCase());
+                    Entity entity = Entity.valueOf(
+                        rs2.getString("entity").toUpperCase().trim()
+                    );
+                    Permission.Action action = Permission.Action.valueOf(
+                        rs2.getString("action").toUpperCase().trim()
+                    );
                     return new Permission(action, entity);
                 }
             );
@@ -90,24 +95,27 @@ public class UserDaoJdbc implements UserDao {
 
     private void addFavouriteCourse(int id,String courseId){
         final Map<String,Object> args = new HashMap<>();
+
         args.put("course_id",courseId);
         args.put("user_id",id);
+
         jdbcInsertFavCourses.execute(args);
-
     }
-    private void createVerificationCode(int id) {
 
+    private void createVerificationCode(int id) {
         final Map<String, Object> args = new HashMap<>();
         Random random = new Random();
         int code=random.nextInt(1000000);
+
         args.put("verification_code",code );
         args.put("user_id", id);
+
         jdbcInsertVerificationCode.execute(args);
     }
+
+    @Transactional
     @Override
     public User registerUser(int id, String name, String surname, String email,String password_hash, String career_code, List<String> courses) {
-
-
         final Map<String,Object> args = new HashMap<>();
         args.put("id",id);
         args.put("name",name);
@@ -126,7 +134,6 @@ public class UserDaoJdbc implements UserDao {
 
         createVerificationCode(id);
 
-//        return new User(id,name,surname,email,career_code);
         return findById(userID.intValue())
             .orElseThrow(() -> new RuntimeException("Could not register user"));
     }
@@ -139,50 +146,41 @@ public class UserDaoJdbc implements UserDao {
         );
     }
 
+    @Transactional
     @Override
-    public boolean verifyEmail(int user_id,int verification_code) {
-
+    public boolean verifyEmail(int userId, int verificationCode) {
         Optional<Integer> db_verification_code=
-                jdbcTemplate.query(
-                String.format("Select * FROM user_verification WHERE user_id=%d",user_id),
-                VERIFICATION_CODE_MAPPER
+            jdbcTemplate.query(
+            String.format("Select * FROM user_verification WHERE user_id=%d", userId),
+            VERIFICATION_CODE_MAPPER
         ).stream().findFirst();
 
-
-        if (!db_verification_code.isPresent()){
-
-            return false;
-        }
-
-        if (db_verification_code.get()!=verification_code){
-
+        if (!db_verification_code.isPresent())
             return false;
 
-        }
+        if (db_verification_code.get() != verificationCode)
+            return false;
 
-        jdbcTemplate.execute(String.format("DELETE FROM user_verification WHERE user_id=%d",user_id));
+        jdbcTemplate.execute(String.format("DELETE FROM user_verification WHERE user_id=%d", userId));
 
-        jdbcTemplate.execute(String.format("UPDATE users SET verified='true' WHERE id=%d",user_id));
+        jdbcTemplate.execute(String.format("UPDATE users SET verified='true' WHERE id=%d", userId));
 
         return true;
     }
 
     @Override
     public int getVerificationCode(String email) {
-        Optional<User>userOptional=findByEmail(email);
+        Optional<User>userOptional = findByEmail(email);
         if (!userOptional.isPresent())
-            return -1;
+            throw new RuntimeException("Email not found");
 
         Optional<Integer> db_verification_code=
-                jdbcTemplate.query(
-                        String.format("Select * FROM user_verification WHERE user_id=%s",userOptional.get().getId()),
-                        VERIFICATION_CODE_MAPPER
-                ).stream().findFirst();
+            jdbcTemplate.query(
+                String.format("SELECT * FROM user_verification WHERE user_id=%s", userOptional.get().getId()),
+                VERIFICATION_CODE_MAPPER
+            ).stream().findFirst();
 
-        return db_verification_code.orElse(-1);
-
+        return db_verification_code.orElseThrow(() -> new RuntimeException("Verification code not found"));
     }
-
-
 
 }

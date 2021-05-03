@@ -1,5 +1,5 @@
 package ar.edu.itba.paw.persistence;
-import ar.edu.itba.paw.models.HolderEntity;
+import ar.edu.itba.paw.models.EntityTarget;
 import ar.edu.itba.paw.models.Poll;
 import ar.edu.itba.paw.models.Poll.PollFormat;
 import ar.edu.itba.paw.models.Poll.PollOption;
@@ -20,7 +20,7 @@ public interface PollDao {
 
     List<Poll> findByCourse(String courseId, PollFormat format, PollState pollState, int offset, int limit);
 
-    int getSize(HolderEntity filterBy, String code);
+    int getSize(EntityTarget filterBy, String code, PollFormat format, PollState pollState);
 
     Optional<Poll> findById(int id);
 

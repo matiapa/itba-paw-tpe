@@ -1,13 +1,15 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 
+<%@ taglib prefix = "spring" uri="http://www.springframework.org/tags"%>
+
 <!DOCTYPE html>
 <html>
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Inicio</title>
+    <title><spring:message code="home"/></title>
 
     <jsp:include page="common/styles.jsp"/>
 </head>
@@ -31,7 +33,7 @@
 
                     <div class="row justify-content-center mt-3">
                         <c:url var="url" value="/"/>
-                        <h6><a href="${url}">Volver al inicio</a></h6>
+                        <h6><a href="${url}"><spring:message code="backHome"/></a></h6>
                     </div>
                 </div>
             </div>

@@ -7,6 +7,7 @@ import ar.edu.itba.paw.services.StatisticsService;
 import ar.edu.itba.paw.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -27,10 +28,12 @@ public class AdminController {
 
 
     @RequestMapping(value = "/admin/statistics", method = GET)
-    public ModelAndView statistics(){
+    public ModelAndView statistics(
+        @ModelAttribute("user") User loggedUser
+    ){
         ModelAndView mav = new ModelAndView("statistics/statistics");
 
-        mav.addObject("newContributions", statisticsService.newContributions());
+        mav.addObject("newContributions", statisticsService.newContributions(loggedUser));
 
         Map<String, Integer> map = statisticsService.contributionsByCareer().entrySet().stream()
             .collect(Collectors.toMap(e -> "'"+e.getKey().getName()+"'", Map.Entry::getValue));
@@ -48,8 +51,6 @@ public class AdminController {
             .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder())).collect(Collectors.toList());
 
         mav.addObject("topCoursesByContributions", topCoursesList);
-
-        mav.addObject("user", userService.getLoggedUser());
 
         return mav;
     }

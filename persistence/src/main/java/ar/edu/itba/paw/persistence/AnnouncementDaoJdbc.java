@@ -1,18 +1,16 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.models.Announcement;
-import ar.edu.itba.paw.models.HolderEntity;
+import ar.edu.itba.paw.models.EntityTarget;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.util.Date;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 
 @Repository
@@ -28,9 +26,9 @@ public class AnnouncementDaoJdbc implements AnnouncementDao {
             throw new NoSuchElementException();
 
         Boolean seen = jdbcTemplate.queryForObject(
-            "SELECT count(*) FROM announcement_seen WHERE announcement_id=?",
+            "SELECT count(*)>0 AS seen FROM announcement_seen WHERE announcement_id=?",
             new Object[] { rs.getInt("id") },
-            (rs2, rowNum2) -> rs2.getInt("count") > 0
+            (rs2, rowNum2) -> rs2.getBoolean("seen")
         );
 
         return new Announcement(
@@ -51,21 +49,24 @@ public class AnnouncementDaoJdbc implements AnnouncementDao {
     }
 
 
-    private List<Announcement> findAnnouncement(
-        StringBuilder baseQuery, boolean showSeen, int userId, int offset, int limit
+    private String queryBuilder(
+        String baseQuery, boolean showSeen, int userId, Integer offset, Integer limit
     ){
+        StringBuilder query = new StringBuilder();
+        query.append(baseQuery);
+
         if(!showSeen) {
-            baseQuery.append(String.format(
+            query.append(String.format(
                 " AND NOT EXISTS (SELECT * FROM announcement_seen WHERE announcement_id=id"
                 + " AND user_id=%d)", userId
             ));
         }
 
-        baseQuery.append(String.format(" OFFSET %d LIMIT %d", offset, limit));
+        if(offset != null && limit != null){
+            query.append(String.format(" OFFSET %d LIMIT %d", offset, limit));
+        }
 
-        System.out.println(baseQuery.toString());
-
-        return jdbcTemplate.query(baseQuery.toString(), announcementRowMapper);
+        return query.toString();
     }
 
     @Override
@@ -84,41 +85,54 @@ public class AnnouncementDaoJdbc implements AnnouncementDao {
 
     @Override
     public List<Announcement> findGeneral(boolean showSeen, int userId, int offset, int limit) {
-        StringBuilder query = new StringBuilder();
-        query.append("SELECT * FROM announcement WHERE career_code IS NULL AND course_id IS NULL");
-        return findAnnouncement(query, showSeen, userId, offset, limit);
+        String query = queryBuilder(
+            "SELECT * FROM announcement WHERE career_code IS NULL AND course_id IS NULL",
+            showSeen, userId, offset, limit
+        );
+
+        return jdbcTemplate.query(query, announcementRowMapper);
     }
 
     @Override
     public List<Announcement> findByCourse(String courseId, boolean showSeen, int userId, int offset, int limit) {
-        StringBuilder query = new StringBuilder();
-        query.append(String.format("SELECT * FROM announcement WHERE course_id='%s'", courseId));
-        return findAnnouncement(query, showSeen, userId, offset, limit);
+        String query = queryBuilder(
+            String.format("SELECT * FROM announcement WHERE course_id='%s'", courseId),
+            showSeen, userId, offset, limit
+        );
+
+        return jdbcTemplate.query(query, announcementRowMapper);
     }
 
     @Override
     public List<Announcement> findByCareer(String careerCode, boolean showSeen, int userId, int offset, int limit) {
-        StringBuilder query = new StringBuilder();
-        query.append(String.format("SELECT * FROM announcement WHERE career_code='%s'", careerCode));
-        return findAnnouncement(query, showSeen, userId, offset, limit);
+        String query = queryBuilder(
+            String.format("SELECT * FROM announcement WHERE career_code='%s'", careerCode),
+            showSeen, userId, offset, limit
+        );
+
+        return jdbcTemplate.query(query, announcementRowMapper);
     }
 
     @Override
-    public int getSize(HolderEntity holderEntity, String code){
-        switch (holderEntity){
+    public int getSize(EntityTarget target, String code, boolean showSeen, int userId){
+        String baseQuery;
+
+        switch (target){
             case career:
-                return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM announcement WHERE career_code= ?",
-                        new Object[] {code}, Integer.class);
+                baseQuery = String.format("SELECT COUNT(*) FROM announcement WHERE career_code='%s'", code);
+                break;
             case course:
-                return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM announcement WHERE course_id= ?",
-                        new Object[] {code}, Integer.class);
+                baseQuery = String.format("SELECT COUNT(*) FROM announcement WHERE course_id='%s'", code);
+                break;
             case general:
             default:
-                return jdbcTemplate.queryForObject("SELECT COUNT(*) " +
-                                "FROM announcement WHERE career_code IS NULL AND course_id IS NULL ",
-                        new Object[] {}, Integer.class);
+                baseQuery = "SELECT COUNT(*) FROM announcement WHERE career_code IS NULL AND course_id IS NULL";
         }
 
+        return jdbcTemplate.queryForObject(
+            queryBuilder(baseQuery, showSeen, userId, null, null),
+            Integer.class
+        );
     }
 
     @Override
@@ -132,12 +146,18 @@ public class AnnouncementDaoJdbc implements AnnouncementDao {
 
     @Override
     public Announcement create(String title, String summary, String content, String careerCode,
-                               String courseId, Date expiryDate, Integer submittedBy) {
+            String courseId, Date expiryDate, Integer submittedBy) {
+        int id = (new SimpleJdbcInsert(jdbcTemplate))
+            .withTableName("announcement").usingGeneratedKeyColumns("id")
+            .executeAndReturnKey(new HashMap<String, Object>(){{
+                put("title", title); put("summary", summary); put("content", content); put("career_code", careerCode);
+                put("course_id", courseId); put("expiry_date", expiryDate); put("submitted_by", submittedBy);
+                put("creation_date", null);
+            }}).intValue();
+
         return jdbcTemplate.queryForObject(
-                "INSERT INTO announcement(title, summary, content, career_code, course_id, expiry_date, " +
-                        "submitted_by) VALUES (?,?,?,?,?,?,?) RETURNING *",
-                new Object[]{title, summary, content, careerCode, courseId, expiryDate, submittedBy},
-                announcementRowMapper
+            "SELECT * FROM announcement WHERE id=?",
+            new Object[]{id}, announcementRowMapper
         );
     }
 
@@ -152,9 +172,7 @@ public class AnnouncementDaoJdbc implements AnnouncementDao {
 
     @Override
     public void delete(int id){
-        jdbcTemplate.execute(
-            String.format("DELETE FROM announcement WHERE id=%d", id)
-        );
+        jdbcTemplate.update("DELETE FROM announcement WHERE id=?", id);
     }
 
 }

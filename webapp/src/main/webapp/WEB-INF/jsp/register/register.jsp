@@ -2,6 +2,13 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 
+<%@ taglib prefix = "spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="formm" uri="http://www.springframework.org/tags/form" %>
+
+<jsp:useBean type="java.lang.Boolean" scope="request" id="emailTaken"/>
+
+
+
 <!DOCTYPE html>
 <html>
 
@@ -30,7 +37,7 @@
 
                                     <div class="p-5">
                                         <div class="text-center">
-                                            <h4 class="text-dark mb-4">Tu información</h4>
+                                            <h4 class="text-dark mb-4"><spring:message code="yourInfo"/></h4>
                                         </div>
 
                                         <div class="row mt-3">
@@ -48,6 +55,10 @@
                                             <div class="col-sm-12">
                                                 <form:input class="form-control form-control-user" type="email" id="exampleInputEmail"  placeholder="Email" path="email" value="${user.email}" />
                                                 <form:errors path="email" cssStyle="color: red" element="p"/>
+                                                <c:if test="${emailTaken}">
+                                                    <h6 Style="color: red" ><spring:message code="emailTaken"/></h6>
+                                                </c:if>
+
                                             </div>
                                         </div>
 
@@ -68,7 +79,7 @@
                                         <div class="row mt-3">
                                             <div class="col-sm-12">
 
-                                                <form:label path="careerCode"  name="career">Nombre Carrera: </form:label>
+                                                <form:label path="careerCode"  name="career"><spring:message code="careerName"/></form:label>
                                                 <form:select path= "careerCode" class="selectpicker" data-live-search="true" title="Elegí una Carrera">
                                                     <c:forEach var="career" items="${careerList}">
                                                         <option ${career.equals(selectedCareer) ? 'selected' : ''}
@@ -88,13 +99,13 @@
                                 <div class="col-lg-7">
                                     <div class="p-5" style="border-left: 1px solid rgb(232,233,240) ;">
                                         <div class="text-center">
-                                            <h4 class="text-dark mb-4">Materias que cursás</h4>
+                                            <h4 class="text-dark mb-4"><spring:message code="studySubjects"/></h4>
                                         </div>
 
                                         <c:forEach var ="i" begin="0" end ="4">
                                             <div class="row">
                                                 <div class="form-group">
-                                                    <form:label path="courses[${i}]"  name="courses[${i}]">Nombre Materia: </form:label>
+                                                    <form:label path="courses[${i}]"  name="courses[${i}]"><spring:message code="Courses"/></form:label>
                                                     <form:select path= "courses[${i}]" class="selectpicker" data-live-search="true" title="Elegí un curso">
                                                         <c:forEach var="course" items="${courseList}">
                                                             <option ${course.equals(selectedCourse) ? 'selected' : ''}
@@ -112,7 +123,7 @@
                             </div>
 
                             <div class="row mt-5 mb-3 pl-5 pr-5">
-                                <input class="btn btn-primary btn-block" type="submit" value="Registrarse">
+                                <input class="btn btn-primary btn-block" type="submit" value="<spring:message code="register"/>">
                             </div>
                         </div>
                     </form:form>

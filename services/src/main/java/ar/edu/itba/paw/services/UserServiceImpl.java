@@ -4,6 +4,7 @@ import ar.edu.itba.paw.exceptions.LoginRequiredException;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.persistence.UserDao;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,11 +12,14 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserServiceImpl implements UserService {
-    @Autowired
-    private UserDao userDao;
+
+    @Autowired private UserDao userDao;
+
+    @Autowired private EmailService emailService;
 
     @Override
     public Optional<User> findByEmail(String email) {
@@ -27,25 +31,25 @@ public class UserServiceImpl implements UserService {
         return userDao.findById(id);
     }
 
+    @Transactional
     @Override
-    public User registerUser(int id, String name, String surname, String email,String password_hash, String careerCode, List<String> courses) {
-        return userDao.registerUser(id,name,surname,email,password_hash,careerCode,courses);
+    public User registerUser(int id, String name, String surname, String email, String passwordHash,
+             String careerCode, List<String> courses, String websiteUrl) throws IOException {
+        User user = userDao.registerUser(id, name, surname, email, passwordHash, careerCode, courses);
+
+        emailService.sendVerificationEmail(email, websiteUrl);
+
+        return user;
     }
 
     @Override
-    public User getLoggedUser() {
-        return userDao.findById(59714).orElseThrow(RuntimeException::new);
+    public boolean verifyEmail(int userId, int verificationCode) {
+        return userDao.verifyEmail(userId, verificationCode);
     }
 
     @Override
-    public boolean verifyEmail(int user_id,int verification_code) {
-        return userDao.verifyEmail(user_id,verification_code);
+    public void setProfilePicture(User loggedUser, String pictureDataURI) {
+        userDao.setProfilePicture(pictureDataURI, loggedUser.getId());
     }
 
-
-
-    @Override
-    public void setProfilePicture(String pictureDataURI) {
-        userDao.setProfilePicture(pictureDataURI, getLoggedUser().getId());
-    }
 }

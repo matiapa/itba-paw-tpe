@@ -1,5 +1,5 @@
 package ar.edu.itba.paw.models;
 
-public enum HolderEntity {
+public enum EntityTarget {
     general, career, course
 }

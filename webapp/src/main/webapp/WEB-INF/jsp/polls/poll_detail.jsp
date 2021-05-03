@@ -36,9 +36,7 @@
                                 <h6 class="font-weight-bold m-0"><c:out value="${poll.name}"/></h6>
                             </div>
 
-                            <form action='<c:url value="/polls/vote"/>'' method="POST">
-
-                                <input type="hidden" id="pollId" name="id" value="${poll.id}">
+                            <form action='<c:url value="/polls/${poll.id}/vote"/>' method="POST">
 
                                 <div class="col mr-2" style="padding-top: 16px;padding-right: 24px;padding-left: 24px;padding-bottom: 16px;">
                                     <p style="padding-top: 0px;"><c:out value="${poll.description}"/></p>
@@ -62,7 +60,10 @@
                                         <div class="col"><input class="btn btn-primary" type="submit" value="vote"></div>
                                     </c:if>
                                     <c:if test="${hasVoted}">
-                                        <div class="col"><input class="btn btn-primary" type="submit" value="voted" disabled></div>
+                                        <div class="col">
+                                            <input class="btn btn-primary" type="submit"
+                                                   value="<spring:message code="voted"/>" disabled>
+                                        </div>
                                     </c:if>
                                     <div class="col text-right">
                                     <span class="text-xs">

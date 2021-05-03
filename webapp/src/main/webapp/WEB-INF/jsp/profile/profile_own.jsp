@@ -2,6 +2,8 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 
+<%@ taglib prefix = "spring" uri="http://www.springframework.org/tags"%>
+
 <!DOCTYPE html>
 <html>
 
@@ -24,7 +26,7 @@
         <jsp:include page="../common/header.jsp"/>
 
         <div class="container-fluid">
-            <h3 class="text-dark mb-4">Tu Perfil</h3>
+            <h3 class="text-dark mb-4"><spring:message code="yourProfile"/></h3>
 
             <div class="row mb-3">
 
@@ -39,14 +41,14 @@
                                 <div class="custom-file">
                                     <input type="file" class="custom-file-input" accept="image/*"
                                            name="newPicture" id="newPicture">
-                                    <label class="custom-file-label" for="newPicture">Elegir nueva foto</label>
+                                    <label class="custom-file-label" for="newPicture"><spring:message code="chooseNewPicture"/></label>
                                 </div>
                                 <div class="row justify-content-center mt-3">
                                     <div id="submitNewPicture" hidden>
-                                        <button class="btn btn-success btn-sm" type="submit">Confirmar</button>
+                                        <button class="btn btn-success btn-sm" type="submit"><spring:message code="confirm"/></button>
                                     </div>
                                     <div id="cancelNewPicture" hidden class="ml-3">
-                                        <button class="btn btn-danger btn-sm" type="button">Cancelar</button>
+                                        <button class="btn btn-danger btn-sm" type="button"><spring:message code="cancel"/></button>
                                     </div>
                                 </div>
                             </form:form>
@@ -57,21 +59,21 @@
                 <div class="col-lg-8">
                     <div class="card shadow mb-3">
                         <div class="card-header py-3">
-                            <p class="text-white m-0 font-weight-bold">Tus datos personales</p>
+                            <p class="text-white m-0 font-weight-bold"><spring:message code="personalInfo"/></p>
                         </div>
                         <div class="card-body">
                             <form>
                                 <div class="form-row">
                                     <div class="col">
                                         <div class="form-group">
-                                            <label><strong>Legajo</strong></label>
+                                            <label><strong><spring:message code="userId"/></strong></label>
                                             <input class="form-control" type="text"
                                                value="<c:out value="${user.id}"/>" disabled="true">
                                         </div>
                                     </div>
                                     <div class="col">
                                         <div class="form-group">
-                                            <label><strong>Email</strong></label>
+                                            <label><strong><spring:message code="email"/></strong></label>
                                             <input class="form-control" type="email"
                                                value="<c:out value="${user.email}"/>" disabled="true">
                                         </div>
@@ -80,14 +82,14 @@
                                 <div class="form-row">
                                     <div class="col">
                                         <div class="form-group">
-                                            <label><strong>Nombre</strong></label>
+                                            <label><strong><spring:message code="name"/></strong></label>
                                             <input class="form-control" type="text"
                                                value="<c:out value="${user.name}"/>" disabled="true">
                                         </div>
                                     </div>
                                     <div class="col">
                                         <div class="form-group">
-                                            <label><strong>Apellido</strong></label>
+                                            <label><strong><spring:message code="lastname"/></strong></label>
                                             <input class="form-control" type="text"
                                                value="<c:out value="${user.surname}"/>" disabled="true">
                                         </div>
@@ -95,7 +97,7 @@
                                 </div>
                                 <div class="form-group">
                                     <span><i class="material-icons" style="vertical-align: middle;">help</i></span>
-                                    Si estos datos son erroneos, por favor envia un mail a soporte
+                                    <spring:message code="mailSupport"/>
                                 </div>
                             </form>
                         </div>

@@ -4,11 +4,6 @@
 
 <%@ taglib prefix = "spring" uri="http://www.springframework.org/tags"%>
 
-<jsp:useBean type="java.util.List<ar.edu.itba.paw.models.Announcement>" scope="request" id="announcements"/>
-<jsp:useBean type="java.util.List<ar.edu.itba.paw.models.Career>" scope="request" id="careers"/>
-<jsp:useBean type="java.util.List<ar.edu.itba.paw.models.Course>" scope="request" id="courses"/>
-<jsp:useBean type="ar.edu.itba.paw.models.HolderEntity" scope="request" id="filterBy"/>
-
 <!DOCTYPE html>
 <html>
 

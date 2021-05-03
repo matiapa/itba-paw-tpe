@@ -12,6 +12,4 @@ public interface CareerService {
 
     Optional<Career> findByCode(String code);
 
-
-
 }
