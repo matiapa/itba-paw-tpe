@@ -27,7 +27,7 @@ public class ChatGroupDaoJdbc implements ChatGroupDao{
             rs.getString("link"),
             rs.getInt("submitted_by"),
             rs.getDate("creation_date"),
-            ChatPlatform.valueOf(rs.getString("platform"))
+            ChatPlatform.valueOf(rs.getString("platform").toUpperCase().trim())
         );
 
     @Autowired
@@ -115,20 +115,6 @@ public class ChatGroupDaoJdbc implements ChatGroupDao{
 
         final Number id = simpleJdbcInsert.executeAndReturnKey(args);
         return new ChatGroup(id.intValue(), careerCode, groupName, link, 0, creationDate, platform);
-        /*
-        return jdbcTemplate.queryForObject(
-            "INSERT INTO " +
-                    "chat_group(career_code, creation_date, name, link, submitted_by, platform)" +
-                    " VALUES " +
-                    "(?,?,?,?,?,CAST(? AS chat_platform)) RETURNING *",
-            new Object[]{
-                    careerCode, creationDate, groupName, link, createdBy,
-                    platform.toString()
-            },
-            CHAT_GROUP_ROW_MAPPER
-        );
-
-         */
     }
 
     @Override

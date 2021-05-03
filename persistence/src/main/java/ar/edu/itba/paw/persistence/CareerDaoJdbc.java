@@ -26,14 +26,10 @@ public class CareerDaoJdbc implements CareerDao{
             rs.getString("code")
         );
 
-
-
-
     @Autowired
     public CareerDaoJdbc(DataSource ds){
         this.jdbcTemplate = new JdbcTemplate(ds);
     }
-
 
 
     @Override

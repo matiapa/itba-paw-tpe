@@ -4,6 +4,7 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 
 <jsp:useBean type="ar.edu.itba.paw.models.User" scope="request" id="user"/>
+
 <%@ taglib prefix = "spring" uri="http://www.springframework.org/tags"%>
 
 <nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion sidebar-toggled sidebar-dark p-0 toggled" style="background: rgb(2,86,138);">

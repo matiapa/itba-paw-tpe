@@ -24,13 +24,12 @@ public class CourseDaoJdbc implements CourseDao {
         );
 
     private static final RowMapper<CareerCourse> CAREER_COURSE_ROW_MAPPER = (rs, rowNum) ->
-            new CareerCourse(
-                    rs.getString("id"),
-                    rs.getString("name"),
-                    rs.getInt("credits"),
-                    rs.getInt("semester")
-
-            );
+        new CareerCourse(
+                rs.getString("id"),
+                rs.getString("name"),
+                rs.getInt("credits"),
+                rs.getInt("semester")
+        );
 
 
     @Autowired

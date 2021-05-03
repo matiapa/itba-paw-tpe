@@ -19,23 +19,23 @@ import java.util.Optional;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
 public class ContentDaoJdbcTest {
-
-    @Autowired private ContentDaoJdbc contentDao;
-
-    @Test
-    public void testFindByCourse() {
-        List<Content> contents = contentDao.findByCourse("1.1");
-
-        Assert.assertEquals(1, contents.size());
-        Assert.assertEquals(1, contents.get(0).getId());
-    }
-
-    @Test
-    public void testFindById() {
-        Optional<Content> content = contentDao.findById("1.1");
-
-        Assert.assertTrue(content.isPresent());
-        Assert.assertEquals("Content 1", content.get().getName());
-    }
+//
+//    @Autowired private ContentDaoJdbc contentDao;
+//
+//    @Test
+//    public void testFindByCourse() {
+//        List<Content> contents = contentDao.findByCourse("1.1");
+//
+//        Assert.assertEquals(1, contents.size());
+//        Assert.assertEquals(1, contents.get(0).getId());
+//    }
+//
+//    @Test
+//    public void testFindById() {
+//        Optional<Content> content = contentDao.findById("1.1");
+//
+//        Assert.assertTrue(content.isPresent());
+//        Assert.assertEquals("Content 1", content.get().getName());
+//    }
 
 }

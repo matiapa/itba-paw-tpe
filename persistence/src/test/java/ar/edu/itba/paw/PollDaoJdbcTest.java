@@ -26,21 +26,21 @@ public class PollDaoJdbcTest {
     @Test
     public void testFindGeneral()
     {
-        List<Poll> general = pollDaoJdbc.findGeneral(0, 10);
+        List<Poll> general = pollDaoJdbc.findGeneral(null, null, 0, 0);
         Assert.assertEquals(4, general.size());
     }
 
     @Test
     public void testfindByCareer()
     {
-        List<Poll> polls = pollDaoJdbc.findByCareer("S");
+        List<Poll> polls = pollDaoJdbc.findByCareer("S", null, null, 0, 0);
         Assert.assertEquals(3, polls.size());
     }
 
     @Test
     public void testFindByCourse()
     {
-        List<Poll> polls = pollDaoJdbc.findByCourse("1.1");
+        List<Poll> polls = pollDaoJdbc.findByCourse("1.1", null, null, 0, 0);
         Assert.assertEquals(2, polls.size());
     }
 

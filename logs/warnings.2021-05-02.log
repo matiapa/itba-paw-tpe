@@ -111,3 +111,4 @@ java.lang.IllegalStateException: Neither BindingResult nor plain target object f
 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624) [na:1.8.0_281]
 	at java.lang.Thread.run(Thread.java:748) [na:1.8.0_281]
 19:36:13.496 [http-bio-8080-exec-1] WARN  o.s.web.servlet.PageNotFound - No mapping found for HTTP request with URI [/webapp/courses/72.38] in DispatcherServlet with name 'dispatcher'
+20:52:30.287 [http-bio-8080-exec-8] WARN  o.s.web.servlet.PageNotFound - No mapping found for HTTP request with URI [/webapp/oauth2/authorization/google] in DispatcherServlet with name 'dispatcher'

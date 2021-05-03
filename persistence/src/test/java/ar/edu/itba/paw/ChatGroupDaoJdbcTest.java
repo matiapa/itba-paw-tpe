@@ -1,22 +1,15 @@
 package ar.edu.itba.paw;
 
 import ar.edu.itba.paw.models.ChatGroup;
-import ar.edu.itba.paw.persistence.ChatGroupDao;
 import ar.edu.itba.paw.persistence.ChatGroupDaoJdbc;
-import ar.edu.itba.paw.services.ChatGroupService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;

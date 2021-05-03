@@ -40,7 +40,8 @@ public class PollDaoJdbc implements PollDao {
             id,
             rs.getString("name"),
             rs.getString("description"),
-            PollFormat.valueOf(rs.getString("format").replace("-", "_")),
+            PollFormat.valueOf(rs.getString("format")
+                    .replace("-", "_").toUpperCase().trim()),
             rs.getString("career_code"),
             rs.getString("course_id"),
             rs.getTimestamp("creation_date"),
@@ -66,10 +67,6 @@ public class PollDaoJdbc implements PollDao {
     @Autowired
     public PollDaoJdbc(DataSource ds) {
         this.jdbcTemplate = new JdbcTemplate(ds);
-
-        SimpleJdbcInsert simpleJdbcInsertPoll = new SimpleJdbcInsert(this.jdbcTemplate)
-                .withTableName("poll")
-                .usingGeneratedKeyColumns("id");
                 
         this.simpleJdbcInsertPollOption = new SimpleJdbcInsert(this.jdbcTemplate)
                 .withTableName("poll_option")

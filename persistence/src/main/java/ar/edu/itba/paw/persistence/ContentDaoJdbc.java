@@ -25,8 +25,6 @@ public class ContentDaoJdbc implements ContentDao{
         if(!userOpt.isPresent())
             throw new NoSuchElementException();
 
-        String contentType = rs.getString("content_type");
-
         return new Content(
             rs.getInt("id"),
             rs.getString("name"),
@@ -35,15 +33,15 @@ public class ContentDaoJdbc implements ContentDao{
             userOpt.get(),
             rs.getDate("creation_date"),
             rs.getDate("content_date"),
-            Arrays.stream(Content.ContentType.values()).filter( t -> t.name().equals(contentType))
-                    .findFirst().orElseThrow(() -> new IllegalStateException("Invalid content type found"))
+            ContentType.valueOf(rs.getString("content_type").toUpperCase().trim())
         );
     };
 
     @Autowired
     public ContentDaoJdbc(DataSource ds){
         this.jdbcTemplate = new JdbcTemplate(ds);
-        this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate).withTableName("course_content").usingGeneratedKeyColumns("id","creation_date");
+        this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+            .withTableName("course_content").usingGeneratedKeyColumns("id","creation_date");
     }
 
     private String queryBuilder(String courseId, ContentType contentType, Date minDate, Date maxDate, Integer offset, Integer limit){

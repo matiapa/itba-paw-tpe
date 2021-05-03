@@ -33,12 +33,13 @@ public class CareerDaoJdbcTest {
         Assert.assertTrue(careerOptional.isPresent());
         Assert.assertEquals("Career 1", careerOptional.get().getName());
     }
+
     @Test
     public void testFindAll() {
         List<Career> careers = careerDao.findAll();
 
-        Assert.assertEquals(1,careers.size());
+        Assert.assertEquals(4, careers.size());
         Assert.assertEquals("Career 1", careers.get(0).getName());
-        //TODO: assert code
     }
+
 }
