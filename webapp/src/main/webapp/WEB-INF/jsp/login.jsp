@@ -18,15 +18,15 @@
 <body class="bg-gradient-primary" style="background: rgb(2,86,138);">
     <div class="container" style="width: 512px;">
         <div class="card shadow-lg o-hidden border-0 my-5">
-            <div class="card-body p-0">
-                <div class="col-lg-6 col-xl-12" style="text-align: center;"><img style="margin-top: 20px;width: 200px;" src="<c:url value="/assets/img/logo-tran-blue.png"/>">
-                    <div class="p-5">
+            <div class="card-body p-0" style="text-align: center;"><img style="margin-top: 20px;width: 200px;" src="assets/img/logo-tran-blue.png">
+                <div class="p-5">
+                    <form method="POST" action='<c:url value="/login" />'>
                         <h4 class="text-dark mb-4"><spring:message code="welcome"/></h4>
-                        <p class="text-center"><spring:message code="continueWithAccount"/></p>
-                        <form action="<c:url value="/oauth2/authorization/google"/>">
-                            <input class="btn btn-primary" type="submit" value="Login"></button>
-                        </form>
-                    </div>
+                        <div class="form-group"><input class="form-control" type="email" name="username" placeholder='<spring:message code="login.email"/>'></div>
+                        <div class="form-group"><input class="form-control" type="password" name="password" placeholder='<spring:message code="login.password"/>'></div>
+                        <div class="form-check form-group"><input class="form-check-input" type="checkbox" id="rememberMe" name="rememberme"><label class="form-check-label" for="rememberMe"><spring:message code="login.rememberme"/></label></div>
+                        <div class="form-group"><button class="btn btn-primary btn-block" type="submit"><spring:message code="login.login"/></button></div>
+                    </form>
                 </div>
             </div>
         </div>

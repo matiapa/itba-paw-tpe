@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +14,8 @@ import ar.edu.itba.paw.models.ui.Pager;
 import ar.edu.itba.paw.services.UserService;
 import ar.edu.itba.paw.webapp.controller.common.CommonFilters;
 import ar.edu.itba.paw.webapp.exceptions.ResourceNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -27,7 +28,9 @@ import org.springframework.web.servlet.ModelAndView;
 import ar.edu.itba.paw.services.AnnouncementService;
 import ar.edu.itba.paw.webapp.form.AnnounceForm;
 
-import static org.springframework.web.bind.annotation.RequestMethod.*;
+import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
 public class AnnounceController {
@@ -37,6 +40,9 @@ public class AnnounceController {
     @Autowired private UserService userService;
 
     @Autowired private CommonFilters commonFilters;
+
+
+    private static final Logger LOGGER= LoggerFactory.getLogger(AnnounceController.class);
 
 
     @RequestMapping(value = "/announcements", method = GET)
@@ -66,19 +72,19 @@ public class AnnounceController {
         int userId = loggedUser.getId();
 
         switch(filterBy){
-            case career:
+            case CAREER:
                 if(careerCode != null){
                     pager = new Pager(announcementService.getSize(filterBy, careerCode, showSeen, userId), page);
                     announcements = announcementService.findByCareer(loggedUser, careerCode, showSeen, pager.getOffset(), pager.getLimit());
                 }
                 break;
-            case course:
+            case COURSE:
                 if(courseId != null){
                     pager = new Pager(announcementService.getSize(filterBy, courseId, showSeen, userId), page);
                     announcements = announcementService.findByCourse(loggedUser, courseId, showSeen, pager.getOffset(), pager.getLimit());
                 }
                 break;
-            case general:
+            case GENERAL:
             default:
                 pager = new Pager(announcementService.getSize(filterBy, courseId, showSeen, userId), page);
                 announcements = announcementService.findGeneral(loggedUser, showSeen, pager.getOffset(), pager.getLimit());
@@ -107,7 +113,7 @@ public class AnnounceController {
         final BindingResult errors
     ){
         if (errors.hasErrors()) {
-            return list(EntityTarget.general, null, null, true, false,
+            return list(EntityTarget.GENERAL, null, null, true, false,
             0, form, loggedUser);
         }
 
@@ -126,12 +132,14 @@ public class AnnounceController {
 
     @RequestMapping(value = "/announcements/{id}", method = GET)
     public ModelAndView get(
-        @PathVariable(value = "id") Integer id
+        @PathVariable(value = "id") Integer id,
+        @ModelAttribute("user") User loggedUser
     ){
         final ModelAndView mav = new ModelAndView("announcements/announcements_detail");
 
         Optional<Announcement> optionalAnnouncement = announcementService.findById(id);
         if (! optionalAnnouncement.isPresent()){
+            LOGGER.debug("user {} tried accessing announcement with id {} but didnt exist",loggedUser,id);
             throw new ResourceNotFoundException();
         }
 
@@ -146,7 +154,10 @@ public class AnnounceController {
         @PathVariable(value="id") int id, HttpServletRequest request,
         @ModelAttribute("user") User loggedUser
     ) {
+
+        LOGGER.debug("user {} is attempting to delete announcement with id {}",loggedUser,id);
         announcementService.delete(loggedUser, id);
+        LOGGER.debug("user {} deleted announcement with id {}",loggedUser,id);
 
         String referer = request.getHeader("Referer");
         return "redirect:"+ referer;
@@ -166,7 +177,12 @@ public class AnnounceController {
         @PathVariable(value="id") int id, HttpServletRequest request,
         @ModelAttribute("user") User loggedUser
     ) {
+
+        LOGGER.debug("user {} is trying to mark announcement with id {} as seen",loggedUser,id);
+
         announcementService.markSeen(loggedUser, id);
+
+        LOGGER.debug("user {} marked announcement with id {} as seen",loggedUser,id);
 
         String referer = request.getHeader("Referer");
         return "redirect:"+ referer;

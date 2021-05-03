@@ -36,11 +36,11 @@ public class ChatGroupServiceImplTest {
                         Mockito.eq(LINK),
                         Mockito.eq(USER),
                         Mockito.eq(DATE),
-                        ChatGroup.ChatPlatform.whatsapp))
-        .thenReturn(new ChatGroup(1, CAREER_CODE, GROUP_NAME, LINK, USER, DATE, ChatGroup.ChatPlatform.whatsapp));
+                        ChatGroup.ChatPlatform.WHATSAPP))
+        .thenReturn(new ChatGroup(1, CAREER_CODE, GROUP_NAME, LINK, USER, DATE, ChatGroup.ChatPlatform.WHATSAPP));
 
         ChatGroup chatGroup = chatGroupService.addGroup(
-                GROUP_NAME, CAREER_CODE, LINK, USER, DATE, ChatGroup.ChatPlatform.whatsapp);
+                GROUP_NAME, CAREER_CODE, LINK, USER, DATE, ChatGroup.ChatPlatform.WHATSAPP);
 
         Assert.assertNotNull(chatGroup);
         Assert.assertEquals(GROUP_NAME, chatGroup.getName());

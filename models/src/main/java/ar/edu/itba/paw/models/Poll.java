@@ -97,11 +97,11 @@ public class Poll {
     }
 
     public enum PollState {
-        open, closed
+        OPEN, CLOSED
     }
 
     public enum PollFormat {
-        multiple_choice, text
+        MULTIPLE_CHOICE, TEXT
     }
     
 }

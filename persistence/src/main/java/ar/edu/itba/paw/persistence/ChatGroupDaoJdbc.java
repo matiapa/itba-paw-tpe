@@ -109,7 +109,7 @@ public class ChatGroupDaoJdbc implements ChatGroupDao{
         args.put("submitted_by", createdBy);
         args.put("creation_date", creationDate);
         if (platform == null){
-            platform = ChatPlatform.whatsapp;
+            platform = ChatPlatform.WHATSAPP;
         }
         args.put("platform", platform);
 

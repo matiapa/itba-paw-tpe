@@ -10,6 +10,8 @@ import ar.edu.itba.paw.models.ui.Pager;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.webapp.controller.common.CommonFilters;
 import ar.edu.itba.paw.webapp.exceptions.ResourceNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -38,6 +40,10 @@ public class PollController {
     @Autowired private PollService pollService;
 
     @Autowired private CommonFilters commonFilters;
+
+
+    private static final Logger LOGGER= LoggerFactory.getLogger(PollController.class);
+
 
 
     @RequestMapping(value = "/polls", method = GET)
@@ -82,21 +88,21 @@ public class PollController {
         Pager pager = null;
 
         switch (filterBy) {
-            case course:
+            case COURSE:
                 if (courseId != null){
                     pager = new Pager(pollService.getSize(filterBy, courseId, selectedType, selectedState), page);
                     pollList = pollService.findByCourse(courseId, selectedType, selectedState,
                             pager.getOffset(), pager.getLimit());
                 }
                 break;
-            case career:
+            case CAREER:
                 if (careerCode != null){
                     pager = new Pager(pollService.getSize(filterBy, careerCode, selectedType, selectedState), page);
                     pollList = pollService.findByCareer(careerCode, selectedType, selectedState,
                             pager.getOffset(), pager.getLimit());
                 }
                 break;
-            case general:
+            case GENERAL:
             default:
                 pager = new Pager(pollService.getSize(filterBy, null, selectedType, selectedState), page);
                 pollList = pollService.findGeneral(selectedType, selectedState, pager.getOffset(), pager.getLimit());
@@ -124,20 +130,25 @@ public class PollController {
         final BindingResult errors
     ) {
         if (errors.hasErrors()) {
-            return list(EntityTarget.general, pollForm.getCareerCode(), pollForm.getCourseId(),
+
+            LOGGER.debug("user {} tried to create a poll but form {} had problems errors:{}",loggedUser,pollForm,errors);
+            return list(EntityTarget.GENERAL, pollForm.getCareerCode(), pollForm.getCourseId(),
                 null, null,0, true, pollForm, loggedUser);
         }
 
+        LOGGER.debug("user {} is tryng to create a poll with  form {} ",loggedUser,pollForm);
         pollService.addPoll(
             pollForm.getTitle(),
             pollForm.getDescription(),
-            PollFormat.text,
+            PollFormat.TEXT,
             pollForm.getCareerCode(),
             pollForm.getCourseId(),
             pollForm.getExpiryDate(),
             loggedUser,
             pollForm.getOptions()
         );
+
+        LOGGER.debug("user {} created a poll with  form {} ",loggedUser,pollForm);
 
         EntityTarget filterBy = commonFilters.getTarget(pollForm.getCareerCode(), pollForm.getCourseId());
 
@@ -155,8 +166,11 @@ public class PollController {
 
         Optional<Poll> selectedPoll= pollService.findById(pollId);
 
-        if (!selectedPoll.isPresent())
+        if (!selectedPoll.isPresent()){
+            LOGGER.debug("user {} tried to find a poll with id  {} that wasnt found",loggedUser,pollId);
             throw new ResourceNotFoundException();
+        }
+
 
         mav.addObject("poll",selectedPoll.get());
 
@@ -177,9 +191,12 @@ public class PollController {
 
     @RequestMapping(value = "/polls/{id}", method = DELETE)
     public String delete(
-        @PathVariable(value="id") int id, HttpServletRequest request
+        @PathVariable(value="id") int id, HttpServletRequest request,
+        @ModelAttribute("user") User loggedUser
     ) {
+        LOGGER.debug("user {} is attempting to delete in poll with id {}",loggedUser,id);
         pollService.delete(id);
+        LOGGER.debug("user {} deleted poll with id {}",loggedUser,id);
 
         String referer = request.getHeader("Referer");
         return "redirect:"+ referer;
@@ -187,9 +204,10 @@ public class PollController {
 
     @RequestMapping(value = "/polls/{id}/delete", method = POST)
     public String deleteWithPost(
-        @PathVariable(value="id") int id, HttpServletRequest request
+        @PathVariable(value="id") int id, HttpServletRequest request,
+        @ModelAttribute("user") User loggedUser
     ) {
-        return delete(id, request);
+        return delete(id, request,loggedUser);
     }
 
 
@@ -199,7 +217,10 @@ public class PollController {
             @RequestParam int option,
             @ModelAttribute("user") User loggedUser
     ) {
+        LOGGER.debug("user {} is attempting to vote in poll with id {} with option {}",loggedUser,id,option);
         pollService.voteChoicePoll(id, option, loggedUser);
+
+        LOGGER.debug("user {} voted in poll with id {} with option {}",loggedUser,id,option);
         return "redirect:/polls/"+id;
     }
 
