@@ -3,6 +3,11 @@
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 
 <%@ taglib prefix = "spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="formm" uri="http://www.springframework.org/tags/form" %>
+
+<jsp:useBean type="java.lang.Boolean" scope="request" id="emailTaken"/>
+
+
 
 <!DOCTYPE html>
 <html>
@@ -50,6 +55,10 @@
                                             <div class="col-sm-12">
                                                 <form:input class="form-control form-control-user" type="email" id="exampleInputEmail"  placeholder="Email" path="email" value="${user.email}" />
                                                 <form:errors path="email" cssStyle="color: red" element="p"/>
+                                                <c:if test="${emailTaken}">
+                                                    <h6 Style="color: red" ><spring:message code="emailTaken"/></h6>
+                                                </c:if>
+
                                             </div>
                                         </div>
 
@@ -96,7 +105,7 @@
                                         <c:forEach var ="i" begin="0" end ="4">
                                             <div class="row">
                                                 <div class="form-group">
-                                                    <form:label path="courses[${i}]"  name="courses[${i}]">Nombre Materia: </form:label>
+                                                    <form:label path="courses[${i}]"  name="courses[${i}]"><spring:message code="Courses"/></form:label>
                                                     <form:select path= "courses[${i}]" class="selectpicker" data-live-search="true" title="Elegí un curso">
                                                         <c:forEach var="course" items="${courseList}">
                                                             <option ${course.equals(selectedCourse) ? 'selected' : ''}
@@ -114,7 +123,7 @@
                             </div>
 
                             <div class="row mt-5 mb-3 pl-5 pr-5">
-                                <input class="btn btn-primary btn-block" type="submit" value="Registrarse">
+                                <input class="btn btn-primary btn-block" type="submit" value="<spring:message code="register"/>">
                             </div>
                         </div>
                     </form:form>
