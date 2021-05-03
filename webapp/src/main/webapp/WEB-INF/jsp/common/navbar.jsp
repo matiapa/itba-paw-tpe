@@ -64,7 +64,7 @@
                     <hr class="sidebar-divider">
                     <a class="nav-link" href="<c:url value="/admin/statistics"/>">
                         <i class="fas fa-chart-bar"></i>
-                        <span>Estadísticas</span>
+                        <span><spring:message code="statistics"/></span>
                     </a>
                 </li>
             </c:if>
