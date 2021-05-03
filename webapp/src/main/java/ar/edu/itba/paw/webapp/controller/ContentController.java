@@ -62,7 +62,8 @@ public class ContentController {
 
         // -- By type
 
-        Content.ContentType selectedType = contentType != null ? Content.ContentType.valueOf(contentType) : null;
+        Content.ContentType selectedType = contentType != null
+                ? Content.ContentType.valueOf(contentType) : null;
         mav.addObject("selectedType", selectedType);
 
         // Add filtered content
@@ -81,7 +82,7 @@ public class ContentController {
 
         mav.addObject("showCreateForm", showCreateForm);
         mav.addObject("canDelete", loggedUser.getPermissions().contains(
-                new Permission(Permission.Action.DELETE, Entity.COURSE_CONTENT)
+                new Permission(Permission.Action.delete, Entity.course_content)
         ));
 
         return mav;

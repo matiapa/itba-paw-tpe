@@ -33,7 +33,7 @@ public class ContentDaoJdbc implements ContentDao{
             userOpt.get(),
             rs.getDate("creation_date"),
             rs.getDate("content_date"),
-            ContentType.valueOf(rs.getString("content_type").toUpperCase().trim())
+            ContentType.valueOf(rs.getString("content_type").trim())
         );
     };
 

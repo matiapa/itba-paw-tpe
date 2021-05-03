@@ -41,7 +41,7 @@ public class PollDaoJdbc implements PollDao {
             rs.getString("name"),
             rs.getString("description"),
             PollFormat.valueOf(rs.getString("format")
-                    .replace("-", "_").toUpperCase().trim()),
+                    .replace("-", "_").trim()),
             rs.getString("career_code"),
             rs.getString("course_id"),
             rs.getTimestamp("creation_date"),
@@ -93,7 +93,7 @@ public class PollDaoJdbc implements PollDao {
         }
 
         if (state != null){
-            if(state == PollState.OPEN)
+            if(state == PollState.open)
                 stringBuilder.append(" AND expiry_date>=now() OR expiry_date IS NULL");
             else
                 stringBuilder.append(" AND expiry_date<now()");
@@ -153,13 +153,13 @@ public class PollDaoJdbc implements PollDao {
         String baseQuery;
 
         switch (filterBy){
-            case CAREER:
+            case career:
                 baseQuery = String.format("SELECT COUNT(*) FROM poll WHERE career_code='%s' AND course_id IS NULL", code);
                 break;
-            case COURSE:
+            case course:
                 baseQuery = String.format("SELECT COUNT(*) FROM poll WHERE course_id='%s' AND career_code IS NULL", code);
                 break;
-            case GENERAL:
+            case general:
             default:
                 baseQuery = "SELECT COUNT(*) FROM poll WHERE career_code IS NULL AND course_id IS NULL";
         }

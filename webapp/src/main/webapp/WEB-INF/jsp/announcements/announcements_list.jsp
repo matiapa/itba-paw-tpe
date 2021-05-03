@@ -38,10 +38,12 @@
                     </div>
                     <div class="col col-xl-2">
                         <a href="#popup" data-toggle="modal">
-                            <button class="btn btn-primary btn-sm">
-                                <i class="material-icons pull-left">add</i>
-                                <spring:message code="announcement.add"/>
-                            </button>
+                            <c:if test="canCreate">
+                                <button class="btn btn-primary btn-sm">
+                                    <i class="material-icons pull-left">add</i>
+                                    <spring:message code="announcement.add"/>
+                                </button>
+                            </c:if>
                         </a>
                     </div>
                 </div>

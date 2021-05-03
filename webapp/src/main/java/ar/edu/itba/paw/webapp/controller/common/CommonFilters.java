@@ -45,13 +45,13 @@ public class CommonFilters {
     
     public EntityTarget getTarget(String careerCode, String courseId){
         if(careerCode == null && courseId == null)
-            return EntityTarget.GENERAL;
+            return EntityTarget.general;
         else if(careerCode == null && courseId != null)
-            return EntityTarget.COURSE;
+            return EntityTarget.course;
         else if(courseId == null)
-            return EntityTarget.CAREER;
+            return EntityTarget.career;
 
-        return EntityTarget.GENERAL;
+        return EntityTarget.general;
     }
 
 }

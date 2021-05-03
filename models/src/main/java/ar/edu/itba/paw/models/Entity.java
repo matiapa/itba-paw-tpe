@@ -1,3 +1,3 @@
 package ar.edu.itba.paw.models;
 
-public enum Entity {ANNOUNCEMENT, POLL, COURSE_CONTENT, CHAT_GROUP, CAREER, COURSE, PERMISSION, USER, STATISTIC}
+public enum Entity {announcement, poll, course_content, chat_group, career, course, permission, user, statistic}

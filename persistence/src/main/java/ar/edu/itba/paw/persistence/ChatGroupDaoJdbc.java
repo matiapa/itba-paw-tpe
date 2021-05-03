@@ -27,7 +27,7 @@ public class ChatGroupDaoJdbc implements ChatGroupDao{
             rs.getString("link"),
             rs.getInt("submitted_by"),
             rs.getDate("creation_date"),
-            ChatPlatform.valueOf(rs.getString("platform").toUpperCase().trim())
+            ChatPlatform.valueOf(rs.getString("platform").trim())
         );
 
     @Autowired
@@ -109,7 +109,7 @@ public class ChatGroupDaoJdbc implements ChatGroupDao{
         args.put("submitted_by", createdBy);
         args.put("creation_date", creationDate);
         if (platform == null){
-            platform = ChatPlatform.WHATSAPP;
+            platform = ChatPlatform.whatsapp;
         }
         args.put("platform", platform);
 

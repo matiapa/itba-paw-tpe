@@ -88,21 +88,21 @@ public class PollController {
         Pager pager = null;
 
         switch (filterBy) {
-            case COURSE:
+            case course:
                 if (courseId != null){
                     pager = new Pager(pollService.getSize(filterBy, courseId, selectedType, selectedState), page);
                     pollList = pollService.findByCourse(courseId, selectedType, selectedState,
                             pager.getOffset(), pager.getLimit());
                 }
                 break;
-            case CAREER:
+            case career:
                 if (careerCode != null){
                     pager = new Pager(pollService.getSize(filterBy, careerCode, selectedType, selectedState), page);
                     pollList = pollService.findByCareer(careerCode, selectedType, selectedState,
                             pager.getOffset(), pager.getLimit());
                 }
                 break;
-            case GENERAL:
+            case general:
             default:
                 pager = new Pager(pollService.getSize(filterBy, null, selectedType, selectedState), page);
                 pollList = pollService.findGeneral(selectedType, selectedState, pager.getOffset(), pager.getLimit());
@@ -116,7 +116,7 @@ public class PollController {
 
         mav.addObject("showCreateForm", showCreateForm);
         mav.addObject("canDelete", loggedUser.getPermissions().contains(
-                new Permission(Permission.Action.DELETE, Entity.POLL)
+                new Permission(Permission.Action.delete, Entity.poll)
         ));
         
         return mav;
@@ -132,7 +132,7 @@ public class PollController {
         if (errors.hasErrors()) {
 
             LOGGER.debug("user {} tried to create a poll but form {} had problems errors:{}",loggedUser,pollForm,errors);
-            return list(EntityTarget.GENERAL, pollForm.getCareerCode(), pollForm.getCourseId(),
+            return list(EntityTarget.general, pollForm.getCareerCode(), pollForm.getCourseId(),
                 null, null,0, true, pollForm, loggedUser);
         }
 
@@ -140,7 +140,7 @@ public class PollController {
         pollService.addPoll(
             pollForm.getTitle(),
             pollForm.getDescription(),
-            PollFormat.TEXT,
+            PollFormat.text,
             pollForm.getCareerCode(),
             pollForm.getCourseId(),
             pollForm.getExpiryDate(),

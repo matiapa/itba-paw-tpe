@@ -50,10 +50,10 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
         .and().authorizeRequests()
             .antMatchers("/register", "/login").anonymous()
-//            .antMatchers("/admin/**").hasRole("ADMIN")
-//            .antMatchers("/**").authenticated()
+            .antMatchers("/**").authenticated()
+            .antMatchers("/admin/statistics").hasRole("STATISTIC.READ")
 
-        .and().formLogin()
+                .and().formLogin()
             .usernameParameter("username")
             .passwordParameter("password")
             .defaultSuccessUrl("/", false)

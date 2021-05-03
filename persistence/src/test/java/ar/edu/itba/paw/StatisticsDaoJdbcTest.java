@@ -6,11 +6,9 @@ import ar.edu.itba.paw.models.Entity;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.persistence.StatisticsDaoJdbc;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
@@ -18,8 +16,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.*;
 
-import javax.sql.DataSource;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 @Rollback
@@ -39,8 +35,8 @@ public class StatisticsDaoJdbcTest {
         Map<Entity, Integer> newContribs = statisticsDaoJdbc.newContributions(LOGGED_USER);
 
         Map<Entity, Integer> expectedNewContribs = new HashMap<Entity, Integer>(){{
-            put(Entity.ANNOUNCEMENT, 2); put(Entity.CHAT_GROUP, 2);
-            put(Entity.COURSE_CONTENT, 2); put(Entity.POLL, 3);
+            put(Entity.announcement, 2); put(Entity.chat_group, 2);
+            put(Entity.course_content, 2); put(Entity.poll, 3);
         }};
 
         newContribs.forEach((k,v) -> Assert.assertEquals(expectedNewContribs.get(k), v));
