@@ -12,10 +12,10 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.util.Calendar;
+
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
+
 
 @Rollback
 @Sql("classpath:populators/content_populate.sql")
@@ -27,62 +27,37 @@ public class ContentDaoJdbcTest {
 
 
 
+//
+
+//   TODO
+//    int getSize(String courseId, Content.ContentType contentType, Date minDate, Date maxDate);
+//
+
+
+
     @Test
-    public void findByCourseTest() {
-        List<Content> contentList = contentDao.findByCourse("93.45");
+    public void findContentTest() {
+        List<Content> contentList = contentDao.findContent("1.1", Content.ContentType.OTHER,null,null,0,1000);
         Assert.assertEquals(2,contentList.size());
         Assert.assertEquals(1,contentList.get(0).getId());
         Assert.assertEquals(2,contentList.get(1).getId());
 
     }
 
-    @Test
-    public void findByCoursePaginationTest(){
-        List<Content> contentList= contentDao.findByCourse("93.45",1,1);
-
-        Assert.assertEquals(1,contentList.size());
-        Assert.assertEquals(2,contentList.get(0).getId());
 
 
-    }
 
-    @Test
-    public void findByCourseAndType(){
-        List<Content> contentList = contentDao.findByCourseAndType("93.45","other");
-        Assert.assertEquals(2,contentList.size());
-        Assert.assertEquals(1,contentList.get(0).getId());
-        Assert.assertEquals(2,contentList.get(1).getId());
-
-        contentList = contentDao.findByCourseAndType("93.45","resume");
-        Assert.assertEquals(0,contentList.size());
-
-    }
-
-//    @Test
-//    public void findContentTest(){
-//        List<Content> contentList= contentDao.findContent("93.45", Content.ContentType.other,new Date(0),new Date());
-//
-//
-//
-//        Assert.assertEquals(2,contentList.size());
-//        Assert.assertEquals(1,contentList.get(0).getId());
-//        Assert.assertEquals(2,contentList.get(1).getId());
-//
-//
-//        contentList= contentDao.findContent("93.45", Content.ContentType.other,new Date(0),new Date());
-//
-//    }
 
     @Test
     public void deleteTest(){
-        List<Content> contentList = contentDao.findByCourse("93.45");
+        List<Content> contentList = contentDao.findContent("1.1", Content.ContentType.OTHER,null,null,0,10);
         Assert.assertEquals(2,contentList.size());
         Assert.assertEquals(1,contentList.get(0).getId());
         Assert.assertEquals(2,contentList.get(1).getId());
 
         contentDao.delete(1);
 
-        contentList = contentDao.findByCourse("93.45");
+        contentList = contentDao.findContent("1.1",Content.ContentType.OTHER,null,null,0,10);
         Assert.assertEquals(1,contentList.size());
         Assert.assertEquals(2,contentList.get(0).getId());
     }
@@ -90,13 +65,13 @@ public class ContentDaoJdbcTest {
     @Test
     public void createContentTest(){
 
-        List<Content> contentList = contentDao.findByCourse("93.45");
+        List<Content> contentList = contentDao.findContent("1.1",Content.ContentType.OTHER,null,null,0,10);
         Assert.assertEquals(2,contentList.size());
 
-        Assert.assertTrue(contentDao.createContent("name", "www.test.com", "93.45", "test description", "other", null,
+        Assert.assertTrue(contentDao.createContent("name", "www.test.com", "1.1", "test description", "other", null,
                 new User(1, "test", "test surname", "testEmail@gmail.com", "password", null, new Date(), null, "S")));
 
-        contentList = contentDao.findByCourse("93.45");
+        contentList = contentDao.findContent("1.1", Content.ContentType.OTHER,null,null,0,10);
         Assert.assertEquals(3,contentList.size());
 
 
