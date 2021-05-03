@@ -9,6 +9,8 @@ import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.ui.Pager;
 import ar.edu.itba.paw.services.*;
 import ar.edu.itba.paw.webapp.exceptions.ResourceNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -33,6 +35,8 @@ public class CourseController {
     @Autowired private PollService pollService;
 
     @Autowired private UserService userService;
+
+    private static final Logger LOGGER= LoggerFactory.getLogger(CourseController.class);
 
 
     @RequestMapping(value = "/courses", method = GET)
@@ -68,8 +72,11 @@ public class CourseController {
         // Course details
 
         Optional<Course> selectedCourse = courseService.findById(courseId);
-        if (!selectedCourse.isPresent())
+        if (!selectedCourse.isPresent()){
+            LOGGER.debug("user {} cound not find course with id {}",loggedUser,courseId);
             throw new ResourceNotFoundException();
+        }
+
 
         mav.addObject("course", selectedCourse.get());
 
