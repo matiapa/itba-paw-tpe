@@ -37,7 +37,7 @@ public class ContentDaoJdbcTest {
 
     @Test
     public void findContentTest() {
-        List<Content> contentList = contentDao.findContent("1.1", Content.ContentType.OTHER,null,null,0,1000);
+        List<Content> contentList = contentDao.findContent("1.1", Content.ContentType.other,null,null,0,1000);
         Assert.assertEquals(2,contentList.size());
         Assert.assertEquals(1,contentList.get(0).getId());
         Assert.assertEquals(2,contentList.get(1).getId());
@@ -50,14 +50,14 @@ public class ContentDaoJdbcTest {
 
     @Test
     public void deleteTest(){
-        List<Content> contentList = contentDao.findContent("1.1", Content.ContentType.OTHER,null,null,0,10);
+        List<Content> contentList = contentDao.findContent("1.1", Content.ContentType.other,null,null,0,10);
         Assert.assertEquals(2,contentList.size());
         Assert.assertEquals(1,contentList.get(0).getId());
         Assert.assertEquals(2,contentList.get(1).getId());
 
         contentDao.delete(1);
 
-        contentList = contentDao.findContent("1.1",Content.ContentType.OTHER,null,null,0,10);
+        contentList = contentDao.findContent("1.1",Content.ContentType.other,null,null,0,10);
         Assert.assertEquals(1,contentList.size());
         Assert.assertEquals(2,contentList.get(0).getId());
     }
@@ -65,13 +65,13 @@ public class ContentDaoJdbcTest {
     @Test
     public void createContentTest(){
 
-        List<Content> contentList = contentDao.findContent("1.1",Content.ContentType.OTHER,null,null,0,10);
+        List<Content> contentList = contentDao.findContent("1.1",Content.ContentType.other,null,null,0,10);
         Assert.assertEquals(2,contentList.size());
 
         Assert.assertTrue(contentDao.createContent("name", "www.test.com", "1.1", "test description", "other", null,
                 new User(1, "test", "test surname", "testEmail@gmail.com", "password", null, new Date(), null, "S")));
 
-        contentList = contentDao.findContent("1.1", Content.ContentType.OTHER,null,null,0,10);
+        contentList = contentDao.findContent("1.1", Content.ContentType.other,null,null,0,10);
         Assert.assertEquals(3,contentList.size());
 
 
