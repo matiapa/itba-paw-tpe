@@ -17,6 +17,7 @@ import ar.edu.itba.paw.webapp.exceptions.ResourceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -72,19 +73,19 @@ public class AnnounceController {
         int userId = loggedUser.getId();
 
         switch(filterBy){
-            case CAREER:
+            case career:
                 if(careerCode != null){
                     pager = new Pager(announcementService.getSize(filterBy, careerCode, showSeen, userId), page);
                     announcements = announcementService.findByCareer(loggedUser, careerCode, showSeen, pager.getOffset(), pager.getLimit());
                 }
                 break;
-            case COURSE:
+            case course:
                 if(courseId != null){
                     pager = new Pager(announcementService.getSize(filterBy, courseId, showSeen, userId), page);
                     announcements = announcementService.findByCourse(loggedUser, courseId, showSeen, pager.getOffset(), pager.getLimit());
                 }
                 break;
-            case GENERAL:
+            case general:
             default:
                 pager = new Pager(announcementService.getSize(filterBy, courseId, showSeen, userId), page);
                 announcements = announcementService.findGeneral(loggedUser, showSeen, pager.getOffset(), pager.getLimit());
@@ -98,35 +99,30 @@ public class AnnounceController {
         mav.addObject("showCreateForm", showCreateForm);
         mav.addObject("showSeen", showSeen);
 
-        mav.addObject("canDelete", loggedUser.getPermissions().contains(
-            new Permission(Permission.Action.DELETE, Entity.ANNOUNCEMENT)
-        ));
-
         return mav;
     }
 
 
     @RequestMapping(value = "/announcements", method = POST)
-    public ModelAndView create(
+    public String create(
         @Valid @ModelAttribute("createForm") final AnnounceForm form,
-        @ModelAttribute("user") User loggedUser,
         final BindingResult errors
     ){
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
         if (errors.hasErrors()) {
-            return list(EntityTarget.GENERAL, null, null, true, false,
-            0, form, loggedUser);
+            return "redirect:/announcements?showCreateForm=true";
         }
 
         announcementService.create(
             form.getTitle(), form.getSummary(), form.getContent(),
             form.getCareerCode(), form.getCourseId(), form.getExpiryDate(),
-            loggedUser
+            user
         );
 
-        EntityTarget filterBy = commonFilters.getTarget(form.getCareerCode(), form.getCourseId());
+        String targetFilter = commonFilters.getTargetFilter(form.getCareerCode(), form.getCourseId());
 
-        return list(filterBy, form.getCareerCode(), form.getCourseId(), false, false,
-            0, form, loggedUser);
+        return String.format("redirect:/announcements?%s&page=0", targetFilter);
     }
 
 
@@ -159,8 +155,7 @@ public class AnnounceController {
         announcementService.delete(loggedUser, id);
         LOGGER.debug("user {} deleted announcement with id {}",loggedUser,id);
 
-        String referer = request.getHeader("Referer");
-        return "redirect:"+ referer;
+        return "redirect:"+ request.getHeader("Referer");
     }
 
     @RequestMapping(value = "/announcements/{id}/delete", method = POST)
@@ -184,8 +179,7 @@ public class AnnounceController {
 
         LOGGER.debug("user {} marked announcement with id {} as seen",loggedUser,id);
 
-        String referer = request.getHeader("Referer");
-        return "redirect:"+ referer;
+        return "redirect:"+ request.getHeader("Referer");
     }
 
 }

@@ -70,6 +70,12 @@
                         <form:errors path="content" cssStyle="color: red" element="p"/>
                     </div>
 
+                    <div class="form-group">
+                        <form:label path="expiryDate"><spring:message code="expiryDate"/></form:label>
+                        <form:input type="date" path="expiryDate" class="form-control"/>
+                        <form:errors path="expiryDate" cssStyle="color: red" element="p"/>
+                    </div>
+
                     <div>
                         <button id="submitAnnouncement" type="submit" class="btn btn-primary">
                             <spring:message code="form.sendButton"/>

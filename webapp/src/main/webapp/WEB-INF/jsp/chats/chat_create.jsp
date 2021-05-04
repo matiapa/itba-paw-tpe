@@ -17,7 +17,7 @@
             </div>
 
             <div class="modal-body">
-                <c:url value="/chats/create" var="postUrl"/>
+                <c:url value="/chats" var="postUrl"/>
                 <form:form modelAttribute="createForm" action="${postUrl}" method="post">
 
                     <div class="form-group">

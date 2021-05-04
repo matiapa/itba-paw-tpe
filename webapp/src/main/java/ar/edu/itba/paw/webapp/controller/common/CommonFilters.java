@@ -43,15 +43,15 @@ public class CommonFilters {
         mav.addObject("selectedCourse", selectedCourse);
     }
     
-    public EntityTarget getTarget(String careerCode, String courseId){
+    public String getTargetFilter(String careerCode, String courseId){
         if(careerCode == null && courseId == null)
-            return EntityTarget.GENERAL;
+            return "filterBy=general";
         else if(careerCode == null && courseId != null)
-            return EntityTarget.COURSE;
+            return "filterBy=course&courseId="+courseId;
         else if(courseId == null)
-            return EntityTarget.CAREER;
+            return "filterBy=career&careerCode="+careerCode;
 
-        return EntityTarget.GENERAL;
+        return "filterBy=general";
     }
 
 }

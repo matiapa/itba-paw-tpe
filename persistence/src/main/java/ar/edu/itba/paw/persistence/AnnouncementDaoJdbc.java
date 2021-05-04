@@ -63,7 +63,7 @@ public class AnnouncementDaoJdbc implements AnnouncementDao {
         }
 
         if(offset != null && limit != null){
-            query.append(String.format(" OFFSET %d LIMIT %d", offset, limit));
+            query.append(String.format(" ORDER BY creation_date DESC OFFSET %d LIMIT %d", offset, limit));
         }
 
         return query.toString();
@@ -118,13 +118,13 @@ public class AnnouncementDaoJdbc implements AnnouncementDao {
         String baseQuery;
 
         switch (target){
-            case CAREER:
+            case career:
                 baseQuery = String.format("SELECT COUNT(*) FROM announcement WHERE career_code='%s'", code);
                 break;
-            case COURSE:
+            case course:
                 baseQuery = String.format("SELECT COUNT(*) FROM announcement WHERE course_id='%s'", code);
                 break;
-            case GENERAL:
+            case general:
             default:
                 baseQuery = "SELECT COUNT(*) FROM announcement WHERE career_code IS NULL AND course_id IS NULL";
         }
@@ -148,11 +148,12 @@ public class AnnouncementDaoJdbc implements AnnouncementDao {
     public Announcement create(String title, String summary, String content, String careerCode,
             String courseId, Date expiryDate, Integer submittedBy) {
         int id = (new SimpleJdbcInsert(jdbcTemplate))
-            .withTableName("announcement").usingGeneratedKeyColumns("id")
+            .withTableName("announcement")
+            .usingColumns("title","summary","content","career_code","course_id","expiry_date","submitted_by")
+            .usingGeneratedKeyColumns("id")
             .executeAndReturnKey(new HashMap<String, Object>(){{
                 put("title", title); put("summary", summary); put("content", content); put("career_code", careerCode);
                 put("course_id", courseId); put("expiry_date", expiryDate); put("submitted_by", submittedBy);
-                put("creation_date", null);
             }}).intValue();
 
         return jdbcTemplate.queryForObject(

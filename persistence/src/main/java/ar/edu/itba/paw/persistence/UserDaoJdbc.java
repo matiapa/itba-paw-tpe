@@ -45,7 +45,8 @@ public class UserDaoJdbc implements UserDao {
     public UserDaoJdbc(DataSource ds) {
         this.jdbcTemplate = new JdbcTemplate(ds);
         this.jdbcInsert= new SimpleJdbcInsert(ds)
-                .withTableName("users");
+            .usingColumns("id","name","surname","email","password","career_code","verified");
+
         this.jdbcInsertFavCourses= new SimpleJdbcInsert(ds).withTableName("fav_course");
         this.jdbcInsertVerificationCode= new SimpleJdbcInsert(ds).withTableName("user_verification");
 
@@ -54,10 +55,10 @@ public class UserDaoJdbc implements UserDao {
                 String.format("SELECT * FROM permission WHERE user_id=%d", rs.getInt("id")),
                 (rs2, rowNum2) -> {
                     Entity entity = Entity.valueOf(
-                        rs2.getString("entity").toUpperCase().trim()
+                        rs2.getString("entity").trim()
                     );
                     Permission.Action action = Permission.Action.valueOf(
-                        rs2.getString("action").toUpperCase().trim()
+                        rs2.getString("action").trim()
                     );
                     return new Permission(action, entity);
                 }
@@ -123,7 +124,6 @@ public class UserDaoJdbc implements UserDao {
         args.put("email",email);
         args.put("password",password_hash);
         args.put("career_code",career_code);
-        args.put("signup_date",new Date());
         args.put("verified",false);
 
         final Number userID = jdbcInsert.execute(args);
@@ -140,6 +140,9 @@ public class UserDaoJdbc implements UserDao {
 
     @Override
     public void setProfilePicture(String pictureDataURI, int userId) {
+        System.out.println(pictureDataURI);
+        System.out.println(userId);
+
         jdbcTemplate.update(
         "UPDATE users SET profile_picture=? WHERE id=?",
             pictureDataURI, userId

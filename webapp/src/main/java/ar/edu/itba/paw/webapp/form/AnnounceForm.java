@@ -24,7 +24,6 @@ public class AnnounceForm {
 
     private String courseId;
 
-    @NotNull
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private Date expiryDate;
 

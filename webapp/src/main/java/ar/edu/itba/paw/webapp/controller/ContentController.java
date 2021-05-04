@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -23,7 +24,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.net.URISyntaxException;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.List;
 
 
@@ -62,7 +65,8 @@ public class ContentController {
 
         // -- By type
 
-        Content.ContentType selectedType = contentType != null ? Content.ContentType.valueOf(contentType) : null;
+        Content.ContentType selectedType = contentType != null
+                ? Content.ContentType.valueOf(contentType) : null;
         mav.addObject("selectedType", selectedType);
 
         // Add filtered content
@@ -80,34 +84,29 @@ public class ContentController {
         // Add other parameters
 
         mav.addObject("showCreateForm", showCreateForm);
-        mav.addObject("canDelete", loggedUser.getPermissions().contains(
-                new Permission(Permission.Action.DELETE, Entity.COURSE_CONTENT)
-        ));
 
         return mav;
     }
 
-    @RequestMapping(value = "/contents/create", method = POST)
-    public ModelAndView create(
+    @RequestMapping(value = "/contents", method = POST)
+    public String create(
         @Valid @ModelAttribute("createForm") final ContentForm form,
-        @ModelAttribute("user") final User loggedUser,
         final BindingResult errors
-    ){
-        if(errors.hasErrors()){
+    ) throws URISyntaxException {
+        User loggedUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
+        if(errors.hasErrors()){
             LOGGER.debug("User failed to create content with form {}  and errors {}",form,errors);
-            return list(null, null, null, null, 0,
-                true, form, loggedUser);
+            return "redirect:/contents?showCreateForm=true";
         }
 
-         contentService.createContent(
-             form.getName(),form.getLink(), form.getCourseId(), form.getDescription(), form.getContentType(),
-             form.getContentDate(), loggedUser
-         );
+        contentService.createContent(
+            form.getName(),form.getLink(), form.getCourseId(), form.getDescription(), form.getContentType(),
+            form.getContentDate(), loggedUser
+        );
         LOGGER.debug("User created content with form {} ",form);
 
-        return list(form.getCourseId(), null, null, null, 0,
-            false, form, loggedUser);
+        return String.format("redirect:/contents?courseId=%s&page=0", form.getCourseId());
     }
 
     @RequestMapping(value = "/contents/{id}", method = DELETE)
@@ -116,8 +115,8 @@ public class ContentController {
     ) {
         contentService.delete(id);
         LOGGER.debug("User deleted content with id {}",id);
-        String referer = request.getHeader("Referer");
-        return "redirect:"+ referer;
+
+        return "redirect:"+request.getHeader("Referer");
     }
 
     @RequestMapping(value = "/contents/{id}/delete", method = POST)

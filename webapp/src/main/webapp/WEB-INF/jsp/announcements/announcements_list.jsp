@@ -1,8 +1,12 @@
+<%@ page import="ar.edu.itba.paw.models.Permission" %>
+<%@ page import="ar.edu.itba.paw.models.Entity" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 
 <%@ taglib prefix = "spring" uri="http://www.springframework.org/tags"%>
+
+<jsp:useBean id="user" type="ar.edu.itba.paw.models.User" scope="request"/>
 
 <!DOCTYPE html>
 <html>
@@ -10,7 +14,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Anuncios</title>
+    <title><spring:message code="announcement.title"/></title>
 
     <jsp:include page="../common/styles.jsp"/>
 
@@ -33,15 +37,17 @@
                 <div class="row align-items-center">
                     <div class="col"></div>
                     <div class="col col-xl-2 custom-control custom-switch">
-                        <input type="checkbox" class="custom-control-input" id="showHiddenSwitch">
-                        <label class="custom-control-label" for="showHiddenSwitch">Ver anuncios ocultos</label>
+                        <input type="checkbox" class="custom-control-input" id="showHiddenSwitch" ${showSeen ? 'checked' : ''}>
+                        <label class="custom-control-label" for="showHiddenSwitch"><spring:message code="announcement.seeHidden"/></label>
                     </div>
                     <div class="col col-xl-2">
                         <a href="#popup" data-toggle="modal">
-                            <button class="btn btn-primary btn-sm">
-                                <i class="material-icons pull-left">add</i>
-                                Agregar anuncio
-                            </button>
+                            <c:if test="<%= user.can(Permission.Action.create, Entity.announcement) %>">
+                                <button class="btn btn-primary btn-sm">
+                                    <i class="material-icons pull-left">add</i>
+                                    <spring:message code="announcement.add"/>
+                                </button>
+                            </c:if>
                         </a>
                     </div>
                 </div>
@@ -49,15 +55,15 @@
                 <ul class="nav nav-tabs" role="tablist">
                     <li class="nav-item" role="presentation">
                         <a class="nav-link ${filterBy == "general" ? 'active' : ''}" role="tab"
-                           href="<c:url value="/announcements?filterBy=general"/>">Generales</a>
+                           href="<c:url value="/announcements?filterBy=general"/>"><spring:message code="generals"/></a>
                     </li>
                     <li class="nav-item" role="presentation">
                         <a class="nav-link ${filterBy == "career" ? 'active' : ''}" role="tab"
-                           href="<c:url value="/announcements?filterBy=career"/>">Por carrera</a>
+                           href="<c:url value="/announcements?filterBy=career"/>"><spring:message code="byCareer"/></a>
                     </li>
                     <li class="nav-item" role="presentation">
                         <a class="nav-link ${filterBy == "course" ? 'active' : ''}" role="tab"
-                           href="<c:url value="/announcements?filterBy=course"/>">Por curso</a>
+                           href="<c:url value="/announcements?filterBy=course"/>"><spring:message code="byCourse"/></a>
                     </li>
                 </ul>
 
@@ -77,7 +83,7 @@
                                 <c:otherwise>
                                     <div class="text-center mt-5">
                                         <i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
-                                        <p style="margin-top: 16px;">Ups, no hay nada por acá</p>
+                                        <p style="margin-top: 16px;"><spring:message code="noContent"/></p>
                                     </div>
                                 </c:otherwise>
                             </c:choose>
@@ -93,6 +99,7 @@
                                 <button class="btn btn-block dropdown-toggle text-left text-dark bg-white" data-toggle="dropdown"
                                         aria-expanded="false" type="button" style="margin-top: 32px;">
                                     ${selectedCareer!=null ? selectedCareer.name : 'Elegí una carrera'}
+
                                 </button>
                                 <div class="dropdown-menu">
                                     <c:forEach var="career" items="${careers}">
@@ -113,13 +120,13 @@
                                 <c:when test="${selectedCareer != null && announcements.size() == 0}">
                                     <div class="text-center mt-5">
                                         <i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
-                                        <p style="margin-top: 16px;">Ups, no hay nada por acá</p>
+                                        <p style="margin-top: 16px;"><spring:message code="noContent"/></p>
                                     </div>
                                 </c:when>
                                 <c:otherwise>
                                     <div class="text-center mt-5">
                                         <i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
-                                        <p style="margin-top: 16px;">Por favor, elegí una carrera para ver los anuncios</p>
+                                        <p style="margin-top: 16px;"><spring:message code="announcement.chooseCareerPlease"/></p>
                                     </div>
                                 </c:otherwise>
                             </c:choose>
@@ -136,8 +143,8 @@
                                 <input type="text" name="filterBy" value="course" hidden>
 
                                 <div style="border: thin solid black">
-                                    <select required id="courseId" name="courseId" class="selectpicker" data-live-search="true"
-                                            data-width="100%" title="Elegí un curso">
+                                    <select id="courseIdFilter" name="courseId" class="selectpicker" data-live-search="true"
+                                            data-width="100%" title="<spring:message code="chooseCourse"/>">
                                         <c:forEach var="course" items="${courses}">
                                             <option ${course.equals(selectedCourse) ? 'selected' : ''}
                                                     value="${course.id}" data-tokens="${course.name}">${course.name}</option>
@@ -156,13 +163,13 @@
                                 <c:when test="${selectedCourse != null && announcements.size() == 0}">
                                     <div class="text-center mt-5">
                                         <i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
-                                        <p style="margin-top: 16px;">Ups, no hay nada por acá</p>
+                                        <p style="margin-top: 16px;"><spring:message code="noContent"/></p>
                                     </div>
                                 </c:when>
                                 <c:otherwise>
                                     <div class="text-center mt-5">
                                         <i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
-                                        <p style="margin-top: 16px;">Por favor, elegí un curso para ver los anuncios</p>
+                                        <p style="margin-top: 16px;"><spring:message code="announcement.chooseCoursePlease"/></p>
                                     </div>
                                 </c:otherwise>
                             </c:choose>

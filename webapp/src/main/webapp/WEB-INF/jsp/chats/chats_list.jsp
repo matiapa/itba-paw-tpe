@@ -1,8 +1,11 @@
+<%@ page import="ar.edu.itba.paw.models.Permission" %>
+<%@ page import="ar.edu.itba.paw.models.Entity" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 
 <%@ taglib prefix = "spring" uri="http://www.springframework.org/tags"%>
+<jsp:useBean type="ar.edu.itba.paw.models.User" scope="request" id="user"/>
 
 
 <!DOCTYPE html>
@@ -110,12 +113,12 @@
                                     <table class="table my-0" id="dataTable">
                                         <thead>
                                         <tr>
-                                            <th>Plataforma</th>
-                                            <th>Año</th>
-                                            <th>Cuatrimestre</th>
-                                            <th>Link</th>
-                                            <c:if test="${canDelete}">
-                                                <th>Admin Options</th>
+                                            <th><spring:message code="chat.platform"/></th>
+                                            <th><spring:message code="year"/></th>
+                                            <th><spring:message code="quarter"/></th>
+                                            <th><spring:message code="chat.link"/></th>
+                                            <c:if test="">
+                                                <th><spring:message code="chat.AdminOptions"/></th>
                                             </c:if>
                                         </tr>
                                         </thead>
@@ -126,9 +129,11 @@
                                                 <td>${chatgroup.creationYear}</td>
                                                 <td>${chatgroup.creationQuarter}</td>
                                                 <td>
-                                                    <a class="btn btn-link" href='<c:out value="${chatgroup.link}"/>' target="_blank" rel="noopener noreferrer">Abrir</a>
+                                                    <a class="btn btn-link" href='<c:out value="${chatgroup.link}"/>' target="_blank" rel="noopener noreferrer">
+                                                        <spring:message code="open"/>
+                                                    </a>
                                                 </td>
-                                                <c:if test="${canDelete}">
+                                                <c:if test="<%= user.can(Permission.Action.delete, Entity.chat_group) %>">
                                                     <td>
                                                         <c:url var="url" value="/chats/${chatgroup.id}/delete"/>
                                                         <form action="${url}" method="post">

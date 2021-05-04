@@ -1,25 +1,30 @@
 package ar.edu.itba.paw.models.ui;
 
 public class Pager {
-    private static final int LIMIT = 5;
-    private final int size;
+    private static final int PAGE_SIZE = 5;
+
+    private final int collectionSize;
     private final int page;
     private final int offset;
     private final int limit;
 
-    public Pager(int size, int page){
-        this.size = size;
-        this.page = page;
-        this.offset = page * LIMIT;
-        this.limit = LIMIT;
+    public Pager(int collectionSize, int currentPage){
+        this.collectionSize = collectionSize;
+        this.page = currentPage >= 0 ? currentPage : getLastPage() - (currentPage+1);
+        this.offset = this.page * PAGE_SIZE;
+        this.limit = PAGE_SIZE;
     }
 
-    public int getSize() {
-        return size;
+    public int getCollectionSize() {
+        return collectionSize;
     }
 
-    public int getPage() {
+    public int getCurrPage() {
         return page;
+    }
+
+    public int getLastPage() {
+        return ((int) Math.ceil(((double) collectionSize) / PAGE_SIZE) ) - 1;
     }
 
     public int getOffset() {
@@ -29,4 +34,5 @@ public class Pager {
     public int getLimit() {
         return limit;
     }
+
 }

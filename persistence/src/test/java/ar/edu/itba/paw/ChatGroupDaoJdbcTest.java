@@ -29,15 +29,15 @@ public class ChatGroupDaoJdbcTest {
 
         Date creationDate = new SimpleDateFormat("dd-MM-yyyy").parse("11-05-2018");
         ChatGroup chatGroup = chatGroupDaoJdbc.addGroup("ChatGroup test", "S",
-                "https://test.com", 0, creationDate, ChatGroup.ChatPlatform.WHATSAPP);
+                "https://test.com", 0, creationDate, ChatGroup.ChatPlatform.whatsapp);
 
         Assert.assertEquals("ChatGroup test", chatGroup.getName());
         Assert.assertEquals("S", chatGroup.getCareerCode());
         Assert.assertEquals("https://test.com", chatGroup.getLink());
 
-        Assert.assertEquals("ChatGroup test", chatGroupDaoJdbc.findByCareer("S", ChatGroup.ChatPlatform.WHATSAPP, null, null, 0, 10).get(0).getName());
-        Assert.assertEquals("S", chatGroupDaoJdbc.findByCareer("S", ChatGroup.ChatPlatform.WHATSAPP, null, null, 0, 10).get(0).getCareerCode());
-        Assert.assertEquals("https://test.com", chatGroupDaoJdbc.findByCareer("S", ChatGroup.ChatPlatform.WHATSAPP, null, null, 0, 10).get(0).getLink());
+        Assert.assertEquals("ChatGroup test", chatGroupDaoJdbc.findByCareer("S", ChatGroup.ChatPlatform.whatsapp, null, null, 0, 10).get(0).getName());
+        Assert.assertEquals("S", chatGroupDaoJdbc.findByCareer("S", ChatGroup.ChatPlatform.whatsapp, null, null, 0, 10).get(0).getCareerCode());
+        Assert.assertEquals("https://test.com", chatGroupDaoJdbc.findByCareer("S", ChatGroup.ChatPlatform.whatsapp, null, null, 0, 10).get(0).getLink());
 
     }
 
@@ -50,7 +50,7 @@ public class ChatGroupDaoJdbcTest {
                     "https://test.com", 0, creationDate, ChatGroup.ChatPlatform.whatsapp);
         }
         */
-        int size = chatGroupDaoJdbc.getSize("S", ChatGroup.ChatPlatform.WHATSAPP, 2018, 1);
+        int size = chatGroupDaoJdbc.getSize("S", ChatGroup.ChatPlatform.whatsapp, 2018, 1);
         Assert.assertEquals(10, size);
     }
 
@@ -63,7 +63,7 @@ public class ChatGroupDaoJdbcTest {
                     "https://test.com", 0, creationDate, ChatGroup.ChatPlatform.whatsapp);
         }
          */
-        List<ChatGroup> chatGroups = chatGroupDaoJdbc.findByCareer("S", ChatGroup.ChatPlatform.WHATSAPP, 2018, 1, 0, 5);
+        List<ChatGroup> chatGroups = chatGroupDaoJdbc.findByCareer("S", ChatGroup.ChatPlatform.whatsapp, 2018, 1, 0, 5);
 
         Assert.assertEquals(5, chatGroups.size());
         Assert.assertEquals(1, chatGroups.get(0).getId());

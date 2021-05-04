@@ -30,14 +30,14 @@ $("#announcementTarget").change((e) => {
 
 // Auto-submit filter-form when a course is selected
 
-$("#courseId").change((_) => {
+$("#courseIdFilter").change((_) => {
     $(this).find('select:not(:has(option:selected[value!=""]))').attr('name', '');
     $("#courseAnnouncementsFilterForm")[0].submit()
 });
 
 // Append showSeen param when show seen switch changes
 
-$("#showSeen").change((e) => {
+$("#showHiddenSwitch").change((e) => {
     const url = new URL(window.location.href);
     url.searchParams.set('showSeen', `${e.target.checked}`);
     window.location.replace(url)

@@ -33,7 +33,7 @@ public class ContentDaoJdbc implements ContentDao{
             userOpt.get(),
             rs.getDate("creation_date"),
             rs.getDate("content_date"),
-            ContentType.valueOf(rs.getString("content_type").toUpperCase().trim())
+            ContentType.valueOf(rs.getString("content_type").trim())
         );
     };
 
@@ -59,7 +59,7 @@ public class ContentDaoJdbc implements ContentDao{
             stringBuilder.append(String.format(" AND creation_date<='%s'", maxDate));
 
         if(offset != null && limit != null)
-            stringBuilder.append(String.format(" ORDER BY id OFFSET %d LIMIT %d", offset, limit));
+            stringBuilder.append(String.format(" ORDER BY creation_date DESC OFFSET %d LIMIT %d", offset, limit));
 
         return stringBuilder.toString();
     }

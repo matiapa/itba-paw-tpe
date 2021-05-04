@@ -36,7 +36,7 @@ public class StatisticsDaoJdbc implements StatisticsDao {
         Map<Entity, Integer> map = new HashMap<>();
         jdbcTemplate.query(query, (rs, rn) ->
             map.put(
-                Entity.valueOf(rs.getString("entity").toUpperCase().trim()),
+                Entity.valueOf(rs.getString("entity").trim()),
                 rs.getInt("contribs")
             )
         );
@@ -70,7 +70,7 @@ public class StatisticsDaoJdbc implements StatisticsDao {
         " UNION SELECT 'p', id, creation_date FROM poll\n" +
         " UNION SELECT 'g', id, creation_date FROM chat_group\n" +
         " UNION SELECT 'c', id, creation_date FROM course_content\n" +
-        ") contributions GROUP BY creation_date";
+        ") contributions GROUP BY creation_date ORDER BY creation_date";
 
         Map<Date, Integer> map = new HashMap<>();
         jdbcTemplate.query(query, (rs, rn) -> map.put(

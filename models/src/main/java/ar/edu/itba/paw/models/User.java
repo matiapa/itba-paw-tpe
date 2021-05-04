@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.models;
 
+import java.security.Permissions;
 import java.util.List;
 import java.io.Serializable;
 import java.util.Date;
@@ -65,5 +66,17 @@ public class User implements Serializable {
 
     public List<Permission> getPermissions() {
         return permissions;
+    }
+
+    public boolean can(String action, String entity){
+        return getPermissions().contains(new Permission(
+            Permission.Action.valueOf(action), Entity.valueOf(entity)
+        ));
+    }
+
+    public boolean can(Permission.Action action, Entity entity){
+        return getPermissions().contains(new Permission(
+            action, entity
+        ));
     }
 }

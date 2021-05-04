@@ -5,6 +5,8 @@
 <%@ taglib prefix = "spring" uri="http://www.springframework.org/tags"%>
 
 <jsp:useBean type="java.util.List<ar.edu.itba.paw.models.Career>" scope="request" id="careers"/>
+<jsp:useBean id="user" scope="request" type="ar.edu.itba.paw.models.User"/>
+
 
 <!DOCTYPE html>
 <html>
