@@ -55,8 +55,9 @@ public class Content {
         return contentType;
     }
 
+
     public enum ContentType{
-        exam, guide, resume, note, other
+        exam, guide, exercise, project, theory, summary, bibliography, solution, code, miscellaneous
     }
 
 }

@@ -204,7 +204,7 @@ create table course_content
     course_id     text            not null,
     description   text            not null,
     creation_date date default now() not null,
-    content_type  text            check (content_type in ('exam', 'guide', 'resume', 'note', 'other')),
+    content_type  text            check (content_type in ('exam', 'guide', 'exercise', 'project', 'theory', 'summary', 'bibliography', 'solution', 'code', 'miscellaneous')),
     content_date  date,
     id            serial             not null,
     constraint content_source_fk1

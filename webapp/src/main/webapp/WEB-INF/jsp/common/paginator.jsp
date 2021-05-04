@@ -4,8 +4,8 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
 <c:if test="${pager != null}">
-    <div style="text-align: center;">
-        <div style="position: absolute; bottom: 0; display: inline-block;">
+    <div style="position: absolute; bottom: 0; text-align: center; width: 90%">
+        <div style="display: inline-block;">
             <nav aria-label="navigation" style="margin: auto">
                 <ul class="pagination justify-content-center">
 
@@ -17,7 +17,7 @@
                         </li>
                     </c:if>
 
-                    <c:forEach begin="0" step="1" end="${pager.lastPage}" var="num">
+                    <c:forEach begin="${10*(pager.currPage/10)}" step="1" end="${10*(pager.currPage/10+1)-1}" var="num">
                         <li class="page-item ${num==pager.currPage ? 'active' : ''}">
                             <button class="page-link" id="${num}">
                                 <c:out value="${num + 1}"/>

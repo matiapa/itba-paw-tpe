@@ -23,3 +23,7 @@ $(".page-link").click((e) => {
     url.searchParams.set('page', `${e.target.id}`);
     window.location.replace(url)
 });
+
+$("#courseSearchBtn").click((e) => {
+    $(this).find('select:not(:has(option:selected[value!=""]))').attr('name', '');
+})

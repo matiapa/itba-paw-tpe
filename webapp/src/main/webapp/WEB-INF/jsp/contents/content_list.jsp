@@ -62,11 +62,16 @@
                                         <select class="form-control-sm" style="border: thin solid grey"
                                                 name="contentType">
                                             <option value=""><spring:message code="form.type"/></option>
-                                            <option value="exam"><spring:message code="exam"/></option>
-                                            <option value="guide"><spring:message code="guide"/></option>
-                                            <option value="resume"><spring:message code="resume"/></option>
-                                            <option value="note"><spring:message code="note"/></option>
-                                            <option value="other"><spring:message code="other"/></option>
+                                            <option value="exam"><spring:message code="enum.contenttype.exam"/></option>
+                                            <option value="guide"><spring:message code="enum.contenttype.guide"/></option>
+                                            <option value="exercise"><spring:message code="enum.contenttype.exercise"/></option>
+                                            <option value="project"><spring:message code="enum.contenttype.project"/></option>
+                                            <option value="theory"><spring:message code="enum.contenttype.theory"/></option>
+                                            <option value="summary"><spring:message code="enum.contenttype.summary"/></option>
+                                            <option value="bibliography"><spring:message code="enum.contenttype.bibliography"/></option>
+                                            <option value="solution"><spring:message code="enum.contenttype.solution"/></option>
+                                            <option value="code"><spring:message code="enum.contenttype.code"/></option>
+                                            <option value="miscellaneous"><spring:message code="enum.contenttype.miscellaneous"/></option>
                                         </select>
                                     </div>
 
@@ -90,7 +95,6 @@
 
                         <c:choose>
                             <c:when test="${selectedCourse != null && contents.size() > 0}">
-                                <hr class="mb-5 mt-5"/>
                                 <div class="table-responsive table mt-2" id="dataTable-1" role="grid" aria-describedby="dataTable_info" style="margin-top: 32px;background: #ffffff;">
                                     <table class="table my-0" id="dataTable">
                                         <thead>
