@@ -18,4 +18,6 @@ public interface UserService {
 
     boolean verifyEmail(int userId, int verificationCode);
 
+    void registerLogin(User loggedUser);
+
 }

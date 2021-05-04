@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.config;
 
+import ar.edu.itba.paw.webapp.auth.SuccessHandler;
 import ar.edu.itba.paw.webapp.auth.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -26,6 +27,8 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     private final static String AUTH_PROPERTY_KEY = "itbahub.auth";
 
     @Autowired private UserDetailsServiceImpl userDetailsService;
+
+    @Autowired private SuccessHandler successHandler;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -58,6 +61,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
             .passwordParameter("password")
             .defaultSuccessUrl("/", false)
             .loginPage("/login")
+            .successHandler(successHandler)
 
         .and().rememberMe()
             .rememberMeParameter("rememberme")
