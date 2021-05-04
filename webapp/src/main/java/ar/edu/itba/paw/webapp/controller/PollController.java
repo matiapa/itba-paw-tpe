@@ -172,6 +172,13 @@ public class PollController {
 
         Map<PollOption,Integer> votes = pollService.getVotes(pollId);
         mav.addObject("votes",votes);
+        Map<String,Integer> votesMap = new HashMap<>();
+        for (PollOption p: votes.keySet()
+             ) {
+            votesMap.put("'"+p.getValue()+"'",votes.get(p));
+        }
+        mav.addObject("votesMap",votesMap);
+
         mav.addObject("hasVoted", pollService.hasVoted(pollId, loggedUser));
 
         Locale loc = new Locale("es", "AR");
