@@ -60,7 +60,7 @@
                 </a>
             </li>
 
-            <c:if test="<%= user.getPermissions().contains(new Permission(Permission.Action.read, Entity.statistic)) %>">
+            <c:if test="${canReadStats}">
                 <li class="nav-item">
                     <hr class="sidebar-divider">
                     <a class="nav-link" href="<c:url value="/admin/statistics"/>">

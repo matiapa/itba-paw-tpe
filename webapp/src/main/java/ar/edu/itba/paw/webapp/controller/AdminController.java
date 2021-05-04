@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.AbstractMap;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
@@ -46,7 +46,18 @@ public class AdminController {
 
         mav.addObject("contributionsByCareer", map);
 
-        mav.addObject("contributionsByDate", statisticsService.contributionsByDate());
+        SimpleDateFormat df = new SimpleDateFormat("MM-dd");
+
+        List<Map.Entry<Date, Integer>> contributionsByDates = statisticsService.contributionsByDate().entrySet().stream()
+            .sorted(Map.Entry.comparingByKey()).collect(Collectors.toList());;
+
+        mav.addObject("contributionsByDateDates", contributionsByDates.stream().map(Map.Entry::getKey)
+                .map(df::format).map(s -> String.format("'%s'", s)).collect(Collectors.toList()));
+        mav.addObject("contributionsByDateContribs", contributionsByDates.stream().map(Map.Entry::getValue)
+                .collect(Collectors.toList()));
+
+        System.out.println(contributionsByDates.stream().map(Map.Entry::getKey)
+                .map(df::format).map(s -> String.format("'%s'", s)).collect(Collectors.toList()));
 
         List<Map.Entry<User, Integer>> topUsersList = statisticsService.topUsersByContributions().entrySet().stream()
             .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder())).collect(Collectors.toList());
