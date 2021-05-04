@@ -59,7 +59,7 @@ public class ContentDaoJdbc implements ContentDao{
             stringBuilder.append(String.format(" AND creation_date<='%s'", maxDate));
 
         if(offset != null && limit != null)
-            stringBuilder.append(String.format(" ORDER BY creation_date DESC ORDER BY id OFFSET %d LIMIT %d", offset, limit));
+            stringBuilder.append(String.format(" ORDER BY creation_date DESC OFFSET %d LIMIT %d", offset, limit));
 
         return stringBuilder.toString();
     }

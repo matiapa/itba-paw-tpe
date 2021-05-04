@@ -129,7 +129,9 @@
                                                 <td>${chatgroup.creationYear}</td>
                                                 <td>${chatgroup.creationQuarter}</td>
                                                 <td>
-                                                    <a class="btn btn-link" href='<c:out value="${chatgroup.link}"/>' target="_blank" rel="noopener noreferrer">Abrir</a>
+                                                    <a class="btn btn-link" href='<c:out value="${chatgroup.link}"/>' target="_blank" rel="noopener noreferrer">
+                                                        <spring:message code="open"/>
+                                                    </a>
                                                 </td>
                                                 <c:if test="<%= user.can(Permission.Action.delete, Entity.chat_group) %>">
                                                     <td>
