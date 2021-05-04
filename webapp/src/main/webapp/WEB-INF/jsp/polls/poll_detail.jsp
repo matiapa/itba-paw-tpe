@@ -5,6 +5,7 @@
 <%@ taglib prefix = "spring" uri="http://www.springframework.org/tags"%>
 
 <jsp:useBean type="ar.edu.itba.paw.models.Poll" scope="request" id="poll"/>
+<jsp:useBean type="java.util.Map<java.lang.String, java.lang.Integer>" scope="request" id="votesMap"/>
 
 
 <!DOCTYPE html>
@@ -52,6 +53,7 @@
                                                 </div>
                                             </div>
                                         </c:forEach>
+
                                     </div>
                                 </div>
 
@@ -73,7 +75,6 @@
                                         <c:if test="${poll.submittedBy == null}">
                                             <c:out value="Creado el ${creationFormat.format(poll.creationDate)}."/>
                                         </c:if>
-                                        <!-- <c:if test="${poll.expiryDate != null}">Finaliza ${expiryFormat.format(poll.expiryDate)}</c:if> -->
                                     </span>
                                     </div>
                                 </div>
@@ -85,48 +86,65 @@
 
                 <div id="content-1"></div>
 
-                <div class="container-fluid">
-                    <div class="col-lg-9 col-xl-12 mb-4">
-                        <div class="card shadow mb-4" style="margin-top: 32px;">
+                <div class="row justify-content-md-center">
+
+                    <div class="col-lg-6 col-xl-6">
+                        <div class="card shadow mb-4">
 
                             <div class="card-header py-3">
-                                <h6 class="font-weight-bold m-0"><spring:message code="results"/></h6>
+                                <h6 class="font-weight-bold m-0"><spring:message code="poll.detail.ResultListTitle"/></h6>
                             </div>
-
-                            <div class="col mr-2" style="padding-top: 16px;padding-right: 24px;padding-left: 24px;padding-bottom: 16px;">
-                                <c:choose>
-                                    <c:when test="${votes.size() > 0}">
-                                        <c:forEach var="vote" items="${votes}">
-                                            <div class="col">
-                                                <div class="row">
-                                                    <div class="col">
-                                                        <span><c:out value="${vote.value}"/> <spring:message code="votes"/> : <c:out value="${vote.key.value}"/> </span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </c:forEach>
-                                    </c:when>
-                                    <c:otherwise>
+                            <div class="row align-items-start" style="margin-top: 32px;">
+                                <div class="col text-left">
+                                    <div class="col mr-2" style="padding-top: 16px;padding-right: 24px;padding-left: 24px;padding-bottom: 16px;">
                                         <c:choose>
-                                            <c:when test="${poll.isExpired}">
-                                                <spring:message code="poll.noVotesAndExpired"/>
+                                            <c:when test="${votes.size() > 0}">
+                                                <c:forEach var="vote" items="${votes}">
+                                                    <div class="col justify-content-start">
+                                                        <div class="row justify-content-start">
+                                                            <div class="col justify-content-start">
+                                                                <c:choose>
+                                                                    <c:when test="${vote.value==1}">
+                                                                        <h6><c:out value="${vote.value}"/> <spring:message code="vote"/> : <c:out value="${vote.key.value}"/> </h6>
+                                                                    </c:when>
+                                                                    <c:otherwise>
+                                                                        <h6><c:out value="${vote.value}"/> <spring:message code="votes"/> : <c:out value="${vote.key.value}"/> </h6>
+                                                                    </c:otherwise>
+                                                                </c:choose>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </c:forEach>
+
                                             </c:when>
                                             <c:otherwise>
-                                                <spring:message code="poll.noVotes"/>
+                                                <c:choose>
+                                                    <c:when test="${poll.isExpired}">
+                                                        <spring:message code="poll.noVotesAndExpired"/>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <spring:message code="poll.noVotes"/>
+                                                    </c:otherwise>
+                                                </c:choose>
                                             </c:otherwise>
                                         </c:choose>
-                                    </c:otherwise>
-                                </c:choose>
-
-                                <div class="row align-items-end" style="margin-top: 32px;">
-                                    <div class="col text-right">
-                                        <span class="text-xs"></span>
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                     </div>
+                    <c:if test="${votes.size()>0}">
+                        <div class="col-lg-5 col-xl-4">
+                            <div class="card shadow mb-4">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h6 class="text-white font-weight-bold m-0"><spring:message code="poll.detail.ResultGraphTitle"/></h6>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="voteResultsChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </c:if>
                 </div>
 
             </div>
@@ -135,6 +153,29 @@
     </div>
 
     <script src="<c:url value="/assets/js/polls.js"/>"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.2.1/dist/chart.min.js"></script>
+
+    <script>
+
+        new Chart(
+            document.getElementById('voteResultsChart'),
+            {
+                type: 'pie',
+                data: {
+                    labels: <%= votesMap.keySet() %>,
+                    datasets: [{
+                        label: '<spring:message code="poll.detail.ResultGraphTitle"/>',
+                        data: <%= votesMap.values() %>,
+                        backgroundColor: [
+                            'rgb(75,192,192)', 'rgb(54,162,235)', 'rgb(255,99,132)', 'rgb(255,159,64)', 'rgb(255,205,86)'
+                        ]
+
+                    }]
+                }
+            }
+        );
+    </script>
+
 
 </body>
 
