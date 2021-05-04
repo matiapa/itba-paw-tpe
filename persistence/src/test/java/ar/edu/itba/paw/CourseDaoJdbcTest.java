@@ -19,31 +19,31 @@ import java.util.Optional;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
 public class CourseDaoJdbcTest {
-//
-//    @Autowired private CourseDaoJdbc courseDao;
-//
-//    @Test
-//    public void testFindFavourites() {
-//        List<Course> courses = courseDao.findFavourites(1);
-//
-//        Assert.assertEquals(1, courses.size());
-//        Assert.assertEquals("1.1", courses.get(0).getId());
-//    }
-//
-//    @Test
-//    public void testFindByCareer() {
-//        List<Course> courses = courseDao.findByCareer("S");
-//
-//        Assert.assertEquals(1, courses.size());
-//        Assert.assertEquals("1.1", courses.get(0).getId());
-//    }
-//
-//    @Test
-//    public void testFindById() {
-//        Optional<Course> course = courseDao.findById("1.1");
-//
-//        Assert.assertTrue(course.isPresent());
-//        Assert.assertEquals("Course 1", course.get().getName());
-//    }
+
+    @Autowired private CourseDaoJdbc courseDao;
+
+    @Test
+    public void testFindFavourites() {
+        List<Course> courses = courseDao.findFavourites(1);
+
+        Assert.assertEquals(1, courses.size());
+        Assert.assertEquals("1.1", courses.get(0).getId());
+    }
+
+    @Test
+    public void testFindByCareer() {
+        List<Course> courses = courseDao.findByCareer("S");
+
+        Assert.assertEquals(1, courses.size());
+        Assert.assertEquals("1.1", courses.get(0).getId());
+    }
+
+    @Test
+    public void testFindById() {
+        Optional<Course> course = courseDao.findById("1.1");
+
+        Assert.assertTrue(course.isPresent());
+        Assert.assertEquals("Course 1", course.get().getName());
+    }
 
 }
