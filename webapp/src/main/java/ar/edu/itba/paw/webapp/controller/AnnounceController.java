@@ -99,7 +99,7 @@ public class AnnounceController {
         mav.addObject("showSeen", showSeen);
 
         mav.addObject("canCreate", loggedUser.getPermissions().contains(
-                new Permission(Permission.Action.create, Entity.announcement)
+            new Permission(Permission.Action.create, Entity.announcement)
         ));
 
         mav.addObject("canDelete", loggedUser.getPermissions().contains(

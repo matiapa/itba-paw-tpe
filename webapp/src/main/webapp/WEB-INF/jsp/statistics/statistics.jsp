@@ -233,8 +233,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.2.1/dist/chart.min.js"></script>
 
-<%--    <script src="assets/js/chart.min.js"></script>--%>
-
     <script>
         console.log(<%= contributionsByDateDates.toString() %>)
 

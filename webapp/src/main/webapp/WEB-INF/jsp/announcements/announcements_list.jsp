@@ -38,7 +38,7 @@
                     </div>
                     <div class="col col-xl-2">
                         <a href="#popup" data-toggle="modal">
-                            <c:if test="canCreate">
+                            <c:if test="${canCreate}">
                                 <button class="btn btn-primary btn-sm">
                                     <i class="material-icons pull-left">add</i>
                                     <spring:message code="announcement.add"/>
@@ -139,7 +139,7 @@
                                 <input type="text" name="filterBy" value="course" hidden>
 
                                 <div style="border: thin solid black">
-                                    <select required id="courseId" name="courseId" class="selectpicker" data-live-search="true"
+                                    <select id="courseIdFilter" name="courseId" class="selectpicker" data-live-search="true"
                                             data-width="100%" title="<spring:message code="chooseCourse"/>">
                                         <c:forEach var="course" items="${courses}">
                                             <option ${course.equals(selectedCourse) ? 'selected' : ''}

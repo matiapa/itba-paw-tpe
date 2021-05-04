@@ -32,6 +32,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         final Collection<? extends GrantedAuthority> authorities = user.getPermissions().stream()
             .map(Permission::toString).map(SimpleGrantedAuthority::new).collect(Collectors.toList());
 
+        System.out.println(authorities);
+
         return new UserPrincipal(user, authorities);
     }
 }
