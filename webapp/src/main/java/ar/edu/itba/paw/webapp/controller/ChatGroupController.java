@@ -18,6 +18,7 @@ import ar.edu.itba.paw.webapp.controller.common.CommonFilters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -99,25 +100,21 @@ public class ChatGroupController {
         // Add other parameters
 
         mav.addObject("showCreateForm", showCreateForm);
-        mav.addObject("canDelete", loggedUser.getPermissions().contains(
-            new Permission(Permission.Action.delete, Entity.chat_group)
-        ));
 
         return mav;
     }
 
 
-    @RequestMapping(value = "/chats/create", method = POST)
-    public ModelAndView create(
+    @RequestMapping(value = "/chats", method = POST)
+    public String create(
         @Valid @ModelAttribute("createForm") final ChatGroupForm chatGroupForm,
-        @ModelAttribute("user") final User loggedUser,
         final BindingResult errors
     ) {
-        if(errors.hasErrors()){
+        User loggedUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
+        if(errors.hasErrors()){
             LOGGER.debug("User {} tried and failed to create a chatgroup with form {} and error {}",loggedUser,chatGroupForm,errors);
-            return list(null, null, null, null, 0, true,
-                chatGroupForm, loggedUser);
+            return "redirect:/chats?showCreateForm=true";
         }
 
         ChatGroup chatGroup=chatGroupService.addGroup(
@@ -130,8 +127,7 @@ public class ChatGroupController {
         );
         LOGGER.debug("user {} created chatgroup {} with form {}",loggedUser,chatGroup,chatGroupForm);
 
-        return list(chatGroupForm.getCareerCode(), null, null, null, 0, false,
-            chatGroupForm, loggedUser);
+        return String.format("redirect:/chats?careerCode=%s&page=0", chatGroupForm.getCareerCode());
     }
 
     @RequestMapping(value = "/chats/{id}", method = DELETE)
@@ -142,8 +138,7 @@ public class ChatGroupController {
         chatGroupService.delete(id);
         LOGGER.debug("user {} deleted chatgroup with id {}",loggedUser,id);
 
-        String referer = request.getHeader("Referer");
-        return "redirect:"+ referer;
+        return "redirect:"+request.getHeader("Referer");
     }
 
     @RequestMapping(value = "/chats/{id}/delete", method = POST)

@@ -57,12 +57,17 @@
 
                                 <div class="row align-items-end" style="margin: 10px 10px 10px;">
                                     <c:if test="${!hasVoted}">
-                                        <div class="col"><input class="btn btn-primary" type="submit" value="vote"></div>
+                                        <div class="col">
+                                            <button class="btn btn-primary" type="submit">
+                                                <spring:message code="vote"/>
+                                            </button>
+                                        </div>
                                     </c:if>
                                     <c:if test="${hasVoted}">
                                         <div class="col">
-                                            <input class="btn btn-primary" type="submit"
-                                                   value="<spring:message code="voted"/>" disabled>
+                                            <button class="btn btn-primary" type="submit" disabled>
+                                                <spring:message code="voted"/>
+                                            </button>
                                         </div>
                                     </c:if>
                                     <div class="col text-right">
@@ -100,7 +105,11 @@
                                             <div class="col">
                                                 <div class="row">
                                                     <div class="col">
-                                                        <span><c:out value="${vote.value}"/> <spring:message code="votes"/> : <c:out value="${vote.key.value}"/> </span>
+                                                        <span>
+                                                            <c:out value="${vote.value}"/>
+                                                            <spring:message code="votes"/> :
+                                                            <c:out value="${vote.key.value}"/>
+                                                        </span>
                                                     </div>
                                                 </div>
                                             </div>

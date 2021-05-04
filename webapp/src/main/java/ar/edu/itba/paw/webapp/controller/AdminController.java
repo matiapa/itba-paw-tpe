@@ -56,9 +56,6 @@ public class AdminController {
         mav.addObject("contributionsByDateContribs", contributionsByDates.stream().map(Map.Entry::getValue)
                 .collect(Collectors.toList()));
 
-        System.out.println(contributionsByDates.stream().map(Map.Entry::getKey)
-                .map(df::format).map(s -> String.format("'%s'", s)).collect(Collectors.toList()));
-
         List<Map.Entry<User, Integer>> topUsersList = statisticsService.topUsersByContributions().entrySet().stream()
             .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder())).collect(Collectors.toList());
 

@@ -1,11 +1,14 @@
+<%@ page import="ar.edu.itba.paw.models.Permission" %>
+<%@ page import="ar.edu.itba.paw.models.Entity" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix = "spring" uri="http://www.springframework.org/tags"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 
-<jsp:useBean type="java.lang.Boolean" scope="request" id="canDelete"/>
 <jsp:useBean type="ar.edu.itba.paw.models.Announcement" scope="request" id="announcement"/>
+<jsp:useBean type="ar.edu.itba.paw.models.User" scope="request" id="user"/>
+
 
 <div id="announce${announcement.id}" class="card shadow mb-4" style="margin-top: 32px;">
     <div class="card-header py-3">
@@ -26,7 +29,7 @@
                 </span>
             </div>
             <div class="col-auto">
-                <c:if test="${canDelete}">
+                <c:if test="<%= user.can(Permission.Action.delete, Entity.announcement) %>">
                     <c:url var="url" value="/announcements/${announcement.id}/delete"/>
                     <form action="${url}" method="post">
                        <button type="submit" class="btn btn-icon" style="color:red">

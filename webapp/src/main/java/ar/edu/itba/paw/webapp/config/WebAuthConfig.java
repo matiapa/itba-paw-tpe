@@ -53,7 +53,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
             .antMatchers("/**").authenticated()
             .antMatchers("/admin/statistics").hasRole("STATISTIC.READ")
 
-                .and().formLogin()
+        .and().formLogin()
             .usernameParameter("username")
             .passwordParameter("password")
             .defaultSuccessUrl("/", false)

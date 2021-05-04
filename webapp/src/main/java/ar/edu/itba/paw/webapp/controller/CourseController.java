@@ -93,12 +93,6 @@ public class CourseController {
         List<Poll> polls = pollService.findByCourse(courseId, null, null, 0, 10);
         mav.addObject("polls",polls);
 
-        // Other parameters
-
-        mav.addObject("canDelete", loggedUser.getPermissions().contains(
-            new Permission(Permission.Action.delete, Entity.course_content)
-        ));
-
         return mav;
     }
 

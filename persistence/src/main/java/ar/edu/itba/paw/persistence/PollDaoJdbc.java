@@ -100,7 +100,7 @@ public class PollDaoJdbc implements PollDao {
         }
 
        if(offset != null && limit != null){
-           stringBuilder.append(String.format(" OFFSET %d LIMIT %d", offset, limit));
+           stringBuilder.append(String.format(" ORDER BY creation_date DESC OFFSET %d LIMIT %d", offset, limit));
        }
 
         return stringBuilder.toString();

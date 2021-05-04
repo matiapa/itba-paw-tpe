@@ -1,8 +1,12 @@
+<%@ page import="ar.edu.itba.paw.models.Permission" %>
+<%@ page import="ar.edu.itba.paw.models.Entity" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 
 <%@ taglib prefix = "spring" uri="http://www.springframework.org/tags"%>
+<jsp:useBean id="user" scope="request" type="ar.edu.itba.paw.models.User"/>
+
 
 <!DOCTYPE html>
 <html>
@@ -97,7 +101,7 @@
                                             <th><spring:message code="author"/></th>
                                             <th><spring:message code="form.link"/></th>
 
-                                            <c:if test="${canDelete}">
+                                            <c:if test="<%= user.can(Permission.Action.delete, Entity.course_content) %>">
                                                 <th></th>
                                             </c:if>
                                         </tr>
@@ -121,7 +125,7 @@
                                                     </a>
                                                 </td>
 
-                                                <c:if test="${canDelete}">
+                                                <c:if test="<%= user.can(Permission.Action.delete, Entity.course_content) %>">
                                                     <td>
                                                         <c:url var="url" value="/contents/${content.id}/delete"/>
                                                         <form action="${url}" method="post">

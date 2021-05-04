@@ -13,6 +13,7 @@ import ar.edu.itba.paw.webapp.exceptions.ResourceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -115,25 +116,21 @@ public class PollController {
         // Add other parameters
 
         mav.addObject("showCreateForm", showCreateForm);
-        mav.addObject("canDelete", loggedUser.getPermissions().contains(
-                new Permission(Permission.Action.delete, Entity.poll)
-        ));
         
         return mav;
     }
 
 
-    @RequestMapping(value = "/polls/create", method = POST)
-    public ModelAndView create(
+    @RequestMapping(value = "/polls", method = POST)
+    public String create(
         @Valid @ModelAttribute("createForm") final PollForm pollForm,
-        @ModelAttribute("user") final User loggedUser,
         final BindingResult errors
     ) {
-        if (errors.hasErrors()) {
+        User loggedUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
+        if (errors.hasErrors()) {
             LOGGER.debug("user {} tried to create a poll but form {} had problems errors:{}",loggedUser,pollForm,errors);
-            return list(EntityTarget.general, pollForm.getCareerCode(), pollForm.getCourseId(),
-                null, null,0, true, pollForm, loggedUser);
+            return "redirect:/polls?showCreateForm=true";
         }
 
         LOGGER.debug("user {} is tryng to create a poll with  form {} ",loggedUser,pollForm);
@@ -150,10 +147,9 @@ public class PollController {
 
         LOGGER.debug("user {} created a poll with  form {} ",loggedUser,pollForm);
 
-        EntityTarget filterBy = commonFilters.getTarget(pollForm.getCareerCode(), pollForm.getCourseId());
+        String targetFilter = commonFilters.getTargetFilter(pollForm.getCareerCode(), pollForm.getCourseId());
 
-        return list(filterBy, pollForm.getCareerCode(), pollForm.getCourseId(), null, null,
-            0, false, pollForm, loggedUser);
+        return String.format("redirect:/polls?%s&page=0", targetFilter);
     }
 
 
@@ -198,8 +194,7 @@ public class PollController {
         pollService.delete(id);
         LOGGER.debug("user {} deleted poll with id {}",loggedUser,id);
 
-        String referer = request.getHeader("Referer");
-        return "redirect:"+ referer;
+        return "redirect:"+ request.getHeader("Referer");
     }
 
     @RequestMapping(value = "/polls/{id}/delete", method = POST)

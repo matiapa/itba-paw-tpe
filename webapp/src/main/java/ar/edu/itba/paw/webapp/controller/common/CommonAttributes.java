@@ -21,11 +21,4 @@ public class CommonAttributes {
         return principal instanceof UserPrincipal ? (UserPrincipal)principal : null;
     }
 
-    @ModelAttribute("canReadStats")
-    boolean canReadStats(){
-        User loggedUser = loggedUser();
-        return loggedUser != null && loggedUser().getPermissions().contains(
-                new Permission(Permission.Action.read, Entity.statistic));
-    }
-
 }

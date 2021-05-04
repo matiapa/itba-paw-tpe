@@ -45,7 +45,8 @@ public class UserDaoJdbc implements UserDao {
     public UserDaoJdbc(DataSource ds) {
         this.jdbcTemplate = new JdbcTemplate(ds);
         this.jdbcInsert= new SimpleJdbcInsert(ds)
-                .withTableName("users");
+            .usingColumns("id","name","surname","email","password","career_code","verified");
+
         this.jdbcInsertFavCourses= new SimpleJdbcInsert(ds).withTableName("fav_course");
         this.jdbcInsertVerificationCode= new SimpleJdbcInsert(ds).withTableName("user_verification");
 
@@ -123,7 +124,6 @@ public class UserDaoJdbc implements UserDao {
         args.put("email",email);
         args.put("password",password_hash);
         args.put("career_code",career_code);
-        args.put("signup_date",new Date());
         args.put("verified",false);
 
         final Number userID = jdbcInsert.execute(args);

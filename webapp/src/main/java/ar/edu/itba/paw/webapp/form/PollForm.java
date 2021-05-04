@@ -31,7 +31,6 @@ public class PollForm {
     @NotEmpty
     private ArrayList<String> options;
 
-    @NotNull
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private Date expiryDate;
 

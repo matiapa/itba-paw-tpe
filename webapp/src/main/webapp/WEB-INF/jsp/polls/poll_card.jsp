@@ -1,3 +1,5 @@
+<%@ page import="ar.edu.itba.paw.models.Permission" %>
+<%@ page import="ar.edu.itba.paw.models.Entity" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
@@ -5,7 +7,7 @@
 <%@ taglib prefix = "spring" uri="http://www.springframework.org/tags"%>
 
 <jsp:useBean type="ar.edu.itba.paw.models.Poll" scope="request" id="poll"/>
-<jsp:useBean type="java.lang.Boolean" scope="request" id="canDelete"/>
+<jsp:useBean id="user" type="ar.edu.itba.paw.models.User" scope="request"/>
 
 <div class="card shadow mb-4" style="margin-top: 32px;">
     <div class="card-header py-3">
@@ -31,7 +33,7 @@
                 </span>
             </div>
             <div class="col-auto">
-                <c:if test="${canDelete}">
+                <c:if test="<%= user.can(Permission.Action.delete, Entity.poll) %>">
                     <c:url var="url" value="/polls/${poll.id}/delete"/>
                     <form action="${url}" method="post">
                         <button type="submit" class="btn btn-icon" style="color:red">

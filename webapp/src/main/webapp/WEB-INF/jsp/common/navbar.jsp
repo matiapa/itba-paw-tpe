@@ -3,9 +3,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 
-<jsp:useBean type="ar.edu.itba.paw.models.User" scope="request" id="user"/>
-
 <%@ taglib prefix = "spring" uri="http://www.springframework.org/tags"%>
+<jsp:useBean id="user" scope="request" type="ar.edu.itba.paw.models.User"/>
 
 <nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion sidebar-toggled sidebar-dark p-0 toggled" style="background: rgb(2,86,138);">
 
@@ -60,7 +59,7 @@
                 </a>
             </li>
 
-            <c:if test="${canReadStats}">
+            <c:if test="<%= user.can(Permission.Action.read, Entity.statistic) %>">
                 <li class="nav-item">
                     <hr class="sidebar-divider">
                     <a class="nav-link" href="<c:url value="/admin/statistics"/>">

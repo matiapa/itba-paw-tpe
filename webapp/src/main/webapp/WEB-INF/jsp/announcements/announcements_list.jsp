@@ -1,8 +1,12 @@
+<%@ page import="ar.edu.itba.paw.models.Permission" %>
+<%@ page import="ar.edu.itba.paw.models.Entity" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 
 <%@ taglib prefix = "spring" uri="http://www.springframework.org/tags"%>
+
+<jsp:useBean id="user" type="ar.edu.itba.paw.models.User" scope="request"/>
 
 <!DOCTYPE html>
 <html>
@@ -38,7 +42,7 @@
                     </div>
                     <div class="col col-xl-2">
                         <a href="#popup" data-toggle="modal">
-                            <c:if test="${canCreate}">
+                            <c:if test="<%= user.can(Permission.Action.create, Entity.announcement) %>">
                                 <button class="btn btn-primary btn-sm">
                                     <i class="material-icons pull-left">add</i>
                                     <spring:message code="announcement.add"/>
