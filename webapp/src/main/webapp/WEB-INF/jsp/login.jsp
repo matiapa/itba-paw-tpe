@@ -28,7 +28,9 @@
                                 <p style="color:red">
                                     <spring:message code="login.error"/>
                                     <c:if test="${SPRING_SECURITY_LAST_EXCEPTION != null}">
-                                        <spring:message code="login.error.reason"/>: <c:out value="${SPRING_SECURITY_LAST_EXCEPTION.message}" />
+                                        <spring:message
+                                            code="${SPRING_SECURITY_LAST_EXCEPTION.message.trim().equals(\"Bad credentials\")
+                                            ? 'login.error.bad_credentials' : 'login.error.internal_error'}"/>
                                     </c:if>
                                 </p>
 
