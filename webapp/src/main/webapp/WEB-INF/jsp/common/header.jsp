@@ -39,7 +39,7 @@
                 <div class="nav-item dropdown no-arrow">
                     <a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false" href="#">
                         <span class="d-none d-lg-inline mr-2 text-gray-600 small">
-                            <c:out value="${user.name}"/>
+                            <c:out value="${user.fullName}"/>
                         </span>
                         <c:url value="/assets/img/avatars/avatar.png" var="defaultImage"/>
                         <img class="border rounded-circle img-profile"

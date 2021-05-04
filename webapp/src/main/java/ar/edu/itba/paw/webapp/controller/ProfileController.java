@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.models.Career;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.services.CareerService;
+import ar.edu.itba.paw.services.SgaService;
 import ar.edu.itba.paw.services.UserService;
 import ar.edu.itba.paw.webapp.exceptions.ResourceNotFoundException;
 import org.slf4j.Logger;
@@ -28,6 +29,8 @@ public class ProfileController {
 
     @Autowired UserService userService;
     @Autowired CareerService careerService;
+    @Autowired SgaService sgaService;
+
     private static final Logger LOGGER= LoggerFactory.getLogger(ProfileController.class);
 
     @RequestMapping(value = "/profile/own", method = GET)
@@ -49,7 +52,7 @@ public class ProfileController {
         return "redirect:/profile/own";
     }
 
-    @RequestMapping(value = "/profile/{id}", method = GET)
+    @RequestMapping(value = "/profile/{id:[0-9]+}", method = GET)
     public ModelAndView getProfileById(
         @PathVariable(value="id") int id,
         @ModelAttribute("user") User loggedUser
@@ -62,14 +65,46 @@ public class ProfileController {
             throw new ResourceNotFoundException();
         }
 
-
         Optional<Career> optCareer = careerService.findByCode(optUser.get().getCareerCode());
         if(! optCareer.isPresent()){
             LOGGER.debug("user {} in profile cant find career with code {}",loggedUser,optUser.get().getCareerCode());
             throw new ResourceNotFoundException();
         }
 
+        mav.addObject("profile", optUser.get());
+        mav.addObject("userCareer", optCareer.get());
 
+        return mav;
+    }
+
+
+    /* The purpose of this endpoint is to provide a way of showing information about not registered users
+        by using the SGAService, since this one only provides and endpoint to fetch by email, not id. This
+        is used for example for displaying the name of owners of contents that have been scrapped. */
+
+    @RequestMapping(value = "/profile/{email:[a-zA-Z]+@[a-zA-Z.]+}", method = GET)
+    public ModelAndView getProfileByEmail(
+        @PathVariable(value="email") String email,
+        @ModelAttribute("user") User loggedUser
+    ) {
+        final ModelAndView mav = new ModelAndView("profile/profile");
+
+        User user;
+        Optional<User> optUser = userService.findByEmail(email);
+        user = optUser.orElseGet(() -> sgaService.fetchFromEmail(email));
+
+        if(user == null){
+            LOGGER.debug("user {} in profile with email {} was not found",loggedUser,email);
+            throw new ResourceNotFoundException();
+        }
+
+        Optional<Career> optCareer = careerService.findByCode(user.getCareerCode());
+        if(! optCareer.isPresent()){
+            LOGGER.debug("user {} in profile cant find career with code {}",loggedUser,user.getCareerCode());
+            throw new ResourceNotFoundException();
+        }
+
+        mav.addObject("profile", user);
         mav.addObject("userCareer", optCareer.get());
 
         return mav;

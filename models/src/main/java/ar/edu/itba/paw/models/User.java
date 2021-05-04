@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.models;
 
 import java.security.Permissions;
+import java.util.Arrays;
 import java.util.List;
 import java.io.Serializable;
 import java.util.Date;
@@ -36,12 +37,14 @@ public class User implements Serializable {
         return id;
     }
 
+    public String getFullName() { return getName() + " " + getSurname(); }
+
     public String getName() {
-        return name;
+        return name != null ? normalizeCase(name) : "";
     }
 
     public String getSurname() {
-        return surname;
+        return surname != null ? normalizeCase(surname) : "";
     }
 
     public String getEmail() {
@@ -78,5 +81,13 @@ public class User implements Serializable {
         return getPermissions().contains(new Permission(
             action, entity
         ));
+    }
+
+    private String normalizeCase(String str) {
+        str = str.toLowerCase();
+        String[] arr = str.split(" ");
+        StringBuilder sb = new StringBuilder();
+        for(String s : arr) sb.append(Character.toUpperCase(s.charAt(0))).append(s.substring(1)).append(" ");
+        return sb.toString().trim();
     }
 }

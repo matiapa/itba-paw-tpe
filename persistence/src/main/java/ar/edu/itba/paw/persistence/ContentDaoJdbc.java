@@ -21,8 +21,8 @@ public class ContentDaoJdbc implements ContentDao{
     private final SimpleJdbcInsert jdbcInsert;
 
     private final RowMapper<Content> contentRowMapper = (rs, rowNum) -> {
-        final Optional<User> userOpt = userDao.findById(rs.getInt("submitted_by"));
-        if(!userOpt.isPresent())
+        final Optional<User> submitterOpt = userDao.findById(rs.getInt("submitted_by"));
+        if(!submitterOpt.isPresent())
             throw new NoSuchElementException();
 
         return new Content(
@@ -30,7 +30,8 @@ public class ContentDaoJdbc implements ContentDao{
             rs.getString("name"),
             rs.getString("link"),
             rs.getString("description"),
-            userOpt.get(),
+            submitterOpt.get(),
+            rs.getString("owner_email"),
             rs.getDate("creation_date"),
             rs.getDate("content_date"),
             ContentType.valueOf(rs.getString("content_type").trim())
@@ -41,7 +42,8 @@ public class ContentDaoJdbc implements ContentDao{
     public ContentDaoJdbc(DataSource ds){
         this.jdbcTemplate = new JdbcTemplate(ds);
         this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
-            .withTableName("course_content").usingGeneratedKeyColumns("id","creation_date");
+            .withTableName("course_content")
+            .usingGeneratedKeyColumns("id","creation_date");
     }
 
     private String queryBuilder(String courseId, ContentType contentType, Date minDate, Date maxDate, Integer offset, Integer limit){
@@ -53,10 +55,12 @@ public class ContentDaoJdbc implements ContentDao{
 
         if (contentType!= null)
             stringBuilder.append(String.format(" AND content_type='%s'", contentType.toString().replace("_", "-")));
+        if(minDate!=null || maxDate!=null)
+            stringBuilder.append(" AND content_date IS NOT NULL");
         if (minDate!= null)
-            stringBuilder.append(String.format(" AND creation_date>='%s'", minDate));
+            stringBuilder.append(String.format(" AND content_date>='%s'", minDate));
         if (maxDate!= null)
-            stringBuilder.append(String.format(" AND creation_date<='%s'", maxDate));
+            stringBuilder.append(String.format(" AND content_date<='%s'", maxDate));
 
         if(offset != null && limit != null)
             stringBuilder.append(String.format(" ORDER BY creation_date DESC OFFSET %d LIMIT %d", offset, limit));
@@ -79,6 +83,7 @@ public class ContentDaoJdbc implements ContentDao{
         args.put("name",name);
         args.put("link",link);
         args.put("submitted_by",user.getId());
+        args.put("owner_email", user.getEmail());
         args.put("course_id",courseId);
         args.put("description",description);
         args.put("content_type",contentType);

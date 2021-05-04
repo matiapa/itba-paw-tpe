@@ -168,7 +168,7 @@
                             <div class="row align-items-center no-gutters">
                                 <div class="col mr-2">
                                     <h6 class="mb-0">
-                                        <strong>${contribution.key.name} ${contribution.key.surname}</strong>
+                                        <strong>${contribution.key.fullName}</strong>
                                     </h6>
                                     <span class="text-xs">
                                         <spring:message code="statistics.contributions.contributions"

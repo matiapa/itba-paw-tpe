@@ -116,10 +116,11 @@
                                             <tr>
                                                 <td><c:out value="${content.name}"/></td>
                                                 <td><spring:message code="enum.contenttype.${content.contentType}"/></td>
-                                                <td><c:out value="${content.uploadDate}"/></td>
+                                                <td><c:out value="${content.contentDate}"/></td>
                                                 <td>
-                                                    <c:url var="profileUrl" value="/profile/${content.submitter.id}"/>
-                                                    <a href="${profileUrl}"><c:out value="${content.submitter.name}"/></a>
+                                                    <c:set var="owner" value="${contentOwners.get(content.id)}"/>
+                                                    <c:url var="profileUrl" value="/profile/${owner.email}"/>
+                                                    <a href="${profileUrl}"><c:out value="${owner.fullName}"/></a>
                                                 </td>
 
                                                 <td>

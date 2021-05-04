@@ -11,7 +11,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title><c:out value="${user.name} ${user.surname}"/></title>
+    <title><c:out value="${profile.fullName}"/></title>
 
     <jsp:include page="../common/styles.jsp"/>
 </head>
@@ -27,7 +27,7 @@
         <jsp:include page="../common/header.jsp"/>
 
         <div class="container-fluid">
-            <h3 class="text-dark mb-4"><c:out value="${user.name} ${user.surname}"/></h3>
+            <h3 class="text-dark mb-4"><c:out value="${profile.fullName}"/></h3>
 
             <div class="row mb-3">
 
@@ -36,7 +36,7 @@
                         <div class="card-body text-center shadow">
                             <c:url value="/assets/img/avatars/avatar.png" var="defaultImage"/>
                             <img class="rounded-circle mb-3 mt-4" id="currentPicture" width="160" height="160"
-                                 src="${user.profileImgB64 != null ? user.profileImgB64 : defaultImage}" >
+                                 src="${profile.profileImgB64 != null ? profile.profileImgB64 : defaultImage}" >
                         </div>
                     </div>
                 </div>
@@ -51,14 +51,14 @@
                                 <div class="form-row">
                                     <div class="col">
                                         <div class="form-group">
-                                            <label><strong><spring:message code="userId"/></strong></label>
-                                            <p><c:out value="${user.id}"/></p>
+                                            <label><strong><spring:message code="profileId"/></strong></label>
+                                            <p><c:out value="${profile.id}"/></p>
                                         </div>
                                     </div>
                                     <div class="col">
                                         <div class="form-group">
                                             <label><strong><spring:message code="email"/></strong></label>
-                                            <p><c:out value="${user.email}"/></p>
+                                            <p><c:out value="${profile.email}"/></p>
                                         </div>
                                     </div>
                                 </div>
@@ -66,13 +66,18 @@
                                     <div class="col">
                                         <div class="form-group">
                                             <label><strong><spring:message code="career"/></strong></label>
-                                            <p><c:out value="${user.name}"/></p>
+                                            <p><c:out value="${userCareer.name}"/></p>
                                         </div>
                                     </div>
                                     <div class="col">
                                         <div class="form-group">
                                             <label><strong><spring:message code="joinedOn"/></strong></label>
-                                            <p><fmt:formatDate type="date" dateStyle="short" value="${user.signupDate}"/></p>
+                                            <c:if test="${profile.signupDate != null}">
+                                                <p><fmt:formatDate type="date" dateStyle="short" value="${profile.signupDate}"/></p>
+                                            </c:if>
+                                            <c:if test="${profile.signupDate == null}">
+                                                <p>Aún no se ha registrado</p>
+                                            </c:if>
                                         </div>
                                     </div>
                                 </div>

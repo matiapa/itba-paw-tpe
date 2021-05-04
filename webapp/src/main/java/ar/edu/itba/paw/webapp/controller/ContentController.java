@@ -6,6 +6,7 @@ import ar.edu.itba.paw.models.Entity;
 import ar.edu.itba.paw.models.Permission;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.services.ContentService;
+import ar.edu.itba.paw.services.SgaService;
 import ar.edu.itba.paw.services.UserService;
 import ar.edu.itba.paw.webapp.controller.common.CommonFilters;
 import ar.edu.itba.paw.webapp.form.ContentForm;
@@ -25,9 +26,8 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.net.URISyntaxException;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 import static org.springframework.web.bind.annotation.RequestMethod.*;
@@ -38,7 +38,7 @@ public class ContentController {
 
     @Autowired private ContentService contentService;
 
-    @Autowired private UserService userService;
+    @Autowired private SgaService sgaService;
 
     @Autowired private CommonFilters commonFilters;
 
@@ -60,7 +60,6 @@ public class ContentController {
 
         // Add filters options
 
-        List<Content> contents;
         commonFilters.addCourses(mav, courseId);
 
         // -- By type
@@ -71,6 +70,9 @@ public class ContentController {
 
         // Add filtered content
 
+        List<Content> contents;
+        Map<Integer, User> contentOwners = new HashMap<>();
+
         if(courseId != null){
             mav.addObject("courseId", courseId);
 
@@ -78,7 +80,15 @@ public class ContentController {
             mav.addObject("pager", pager);
 
             contents = contentService.findByCourse(courseId, selectedType, minDate, maxDate, pager.getOffset(), pager.getLimit());
+            contents.sort(Comparator.comparing(Content::getUploadDate).reversed());
             mav.addObject("contents", contents);
+
+            contents.forEach(c -> {
+                User user = sgaService.fetchFromEmail(c.getOwnerMail());
+                if(user != null) contentOwners.put(c.getId(), user);
+            });
+
+            mav.addObject("contentOwners", contentOwners);
         }
 
         // Add other parameters

@@ -50,11 +50,16 @@
                         <form:label path="contentType"><spring:message code="form.type"/></form:label>
                         <form:select path="contentType" class="custom-select my-1 mr-sm-2" name="contentType">
                             <form:option value=""><spring:message code="form.type"/></form:option>
-                            <form:option value="exam"><spring:message code="exam"/></form:option>
-                            <form:option value="guide"><spring:message code="guide"/></form:option>
-                            <form:option value="resume"><spring:message code="resume"/></form:option>
-                            <form:option value="note"><spring:message code="note"/></form:option>
-                            <form:option value="other"><spring:message code="other"/></form:option>
+                            <form:option value="exam"><spring:message code="enum.contenttype.exam"/></form:option>
+                            <form:option value="guide"><spring:message code="enum.contenttype.guide"/></form:option>
+                            <form:option value="exercise"><spring:message code="enum.contenttype.exercise"/></form:option>
+                            <form:option value="project"><spring:message code="enum.contenttype.project"/></form:option>
+                            <form:option value="theory"><spring:message code="enum.contenttype.theory"/></form:option>
+                            <form:option value="summary"><spring:message code="enum.contenttype.summary"/></form:option>
+                            <form:option value="bibliography"><spring:message code="enum.contenttype.bibliography"/></form:option>
+                            <form:option value="solution"><spring:message code="enum.contenttype.solution"/></form:option>
+                            <form:option value="code"><spring:message code="enum.contenttype.code"/></form:option>
+                            <form:option value="miscellaneous"><spring:message code="enum.contenttype.miscellaneous"/></form:option>
                         </form:select>
                         <form:errors path="contentType" cssStyle="color: red" element="p"/>
                     </div>
