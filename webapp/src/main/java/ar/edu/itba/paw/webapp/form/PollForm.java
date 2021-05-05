@@ -27,7 +27,6 @@ public class PollForm {
     @Size(min = 5, max = 100)
     private String description;
 
-    @NotNull
     @NotEmpty
     private ArrayList<String> options;
 

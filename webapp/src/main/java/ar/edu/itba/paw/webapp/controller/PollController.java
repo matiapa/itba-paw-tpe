@@ -138,7 +138,7 @@ public class PollController {
         pollService.addPoll(
             pollForm.getTitle(),
             pollForm.getDescription(),
-            PollFormat.text,
+            PollFormat.multiple_choice,
             pollForm.getCareerCode(),
             pollForm.getCourseId(),
             pollForm.getExpiryDate(),

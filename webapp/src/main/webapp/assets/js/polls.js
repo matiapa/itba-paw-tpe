@@ -37,6 +37,12 @@ $("#courseId").change((event) => {
   $("#coursesPollFilterForm")[0].submit()
 });
 
+$("#submitPoll").click((event) => {
+  var i=0;
+  document.querySelectorAll('#optionsCol input').forEach(field => field.name = field.value == "" ?  "" : `options[${i++}]`)
+  $("#createPollForm")[0].submit()
+});
+
 // Append page param when a page is chosen
 
 $(".page-link").click((e) => {

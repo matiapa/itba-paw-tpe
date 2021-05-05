@@ -71,7 +71,7 @@
 
                         </div>
 
-                        <div class="col">
+                        <div class="col" id="optionsCol">
 
                             <h5 class="mb-3"><spring:message code="options"/></h5>
 
