@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.models.Career;
 import ar.edu.itba.paw.models.Course;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.services.StatisticsService;
@@ -13,11 +12,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
@@ -29,7 +26,6 @@ public class AdminController {
     @Autowired StatisticsService statisticsService;
 
     private static final Logger LOGGER= LoggerFactory.getLogger(AdminController.class);
-
 
     @RequestMapping(value = "/admin/statistics", method = GET)
     public ModelAndView statistics(

@@ -2,7 +2,6 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.models.ChatGroup;
 import ar.edu.itba.paw.models.ChatGroup.ChatPlatform;
-import ar.edu.itba.paw.models.User;
 
 import java.util.Date;
 import java.util.List;

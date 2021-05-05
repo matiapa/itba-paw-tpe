@@ -2,12 +2,9 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.models.Content;
 import ar.edu.itba.paw.models.ui.Pager;
-import ar.edu.itba.paw.models.Entity;
-import ar.edu.itba.paw.models.Permission;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.services.ContentService;
 import ar.edu.itba.paw.services.SgaService;
-import ar.edu.itba.paw.services.UserService;
 import ar.edu.itba.paw.webapp.controller.common.CommonFilters;
 import ar.edu.itba.paw.webapp.form.ContentForm;
 import org.slf4j.Logger;
@@ -27,7 +24,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.net.URISyntaxException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 import static org.springframework.web.bind.annotation.RequestMethod.*;
@@ -59,17 +55,14 @@ public class ContentController {
         final ModelAndView mav = new ModelAndView("contents/content_list");
 
         // Add filters options
-
         commonFilters.addCourses(mav, courseId);
 
         // -- By type
-
         Content.ContentType selectedType = contentType != null && !contentType.isEmpty()
                 ? Content.ContentType.valueOf(contentType) : null;
         mav.addObject("selectedType", selectedType);
 
         // Add filtered content
-
         List<Content> contents;
         Map<Integer, User> contentOwners = new HashMap<>();
 
@@ -92,7 +85,6 @@ public class ContentController {
         }
 
         // Add other parameters
-
         mav.addObject("showCreateForm", showCreateForm);
 
         return mav;

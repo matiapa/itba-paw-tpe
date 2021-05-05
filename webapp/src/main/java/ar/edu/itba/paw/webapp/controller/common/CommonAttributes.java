@@ -1,8 +1,5 @@
 package ar.edu.itba.paw.webapp.controller.common;
 
-import ar.edu.itba.paw.models.Entity;
-import ar.edu.itba.paw.models.Permission;
-import ar.edu.itba.paw.models.User;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
