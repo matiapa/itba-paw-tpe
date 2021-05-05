@@ -57,11 +57,9 @@ public class ChatGroupController {
         final ModelAndView mav = new ModelAndView("chats/chats_list");
 
         // Add filters options
-
         commonFilters.addCareers(mav, careerCode);
 
         // -- By platform
-
         mav.addObject("platforms", ChatGroup.ChatPlatform.values());
 
         ChatGroup.ChatPlatform selectedPlatform = platform != null && !platform.equals("")
@@ -69,7 +67,6 @@ public class ChatGroupController {
         mav.addObject("selectedPlatform", selectedPlatform);
 
         // -- By year
-
         mav.addObject("years", IntStream.range(1960, 2022).boxed()
                 .sorted(Comparator.reverseOrder()).collect(toList()));
 
@@ -77,14 +74,12 @@ public class ChatGroupController {
         mav.addObject("selectedYear", selectedYear);
 
         // -- By quarter
-
         mav.addObject("quarters", new Integer[]{1, 2});
 
         Integer selectedQuarter = quarter != null && quarter > 0 ? quarter : null;
         mav.addObject("selectedQuarter", selectedQuarter);
 
         // Add filtered chats
-
         List<ChatGroup> chatGroupList = null;
         Pager pager = null;
 
@@ -98,7 +93,6 @@ public class ChatGroupController {
         mav.addObject("pager", pager);
 
         // Add other parameters
-
         mav.addObject("showCreateForm", showCreateForm);
 
         return mav;

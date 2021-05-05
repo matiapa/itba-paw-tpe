@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.webapp.config;
 
-import java.io.FileNotFoundException;
 import java.nio.charset.StandardCharsets;
 
 import javax.sql.DataSource;
