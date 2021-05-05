@@ -99,7 +99,7 @@ public class ContentController {
     }
 
     @RequestMapping(value = "/contents", method = POST)
-    public String create(
+    public ModelAndView create(
         @Valid @ModelAttribute("createForm") final ContentForm form,
         final BindingResult errors
     ) throws URISyntaxException {
@@ -107,7 +107,8 @@ public class ContentController {
 
         if(errors.hasErrors()){
             LOGGER.debug("User failed to create content with form {}  and errors {}",form,errors);
-            return "redirect:/contents?showCreateForm=true";
+            return list(null, null, null, null, 0,
+                true, form, loggedUser);
         }
 
         contentService.createContent(
@@ -116,7 +117,8 @@ public class ContentController {
         );
         LOGGER.debug("User created content with form {} ",form);
 
-        return String.format("redirect:/contents?courseId=%s&page=0", form.getCourseId());
+        return list(form.getCourseId(), null, null, null, 0,
+                false, form, loggedUser);
     }
 
     @RequestMapping(value = "/contents/{id}", method = DELETE)

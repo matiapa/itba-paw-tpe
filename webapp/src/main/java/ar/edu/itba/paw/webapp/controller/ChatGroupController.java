@@ -106,7 +106,7 @@ public class ChatGroupController {
 
 
     @RequestMapping(value = "/chats", method = POST)
-    public String create(
+    public ModelAndView create(
         @Valid @ModelAttribute("createForm") final ChatGroupForm chatGroupForm,
         final BindingResult errors
     ) {
@@ -114,7 +114,8 @@ public class ChatGroupController {
 
         if(errors.hasErrors()){
             LOGGER.debug("User {} tried and failed to create a chatgroup with form {} and error {}",loggedUser,chatGroupForm,errors);
-            return "redirect:/chats?showCreateForm=true";
+            return list(null, null, null, null, 0, true,
+                    chatGroupForm, loggedUser);
         }
 
         ChatGroup chatGroup=chatGroupService.addGroup(
@@ -127,7 +128,8 @@ public class ChatGroupController {
         );
         LOGGER.debug("user {} created chatgroup {} with form {}",loggedUser,chatGroup,chatGroupForm);
 
-        return String.format("redirect:/chats?careerCode=%s&page=0", chatGroupForm.getCareerCode());
+        return list(chatGroupForm.getCareerCode(), null, null, null, 0, false,
+                chatGroupForm, loggedUser);
     }
 
     @RequestMapping(value = "/chats/{id}", method = DELETE)

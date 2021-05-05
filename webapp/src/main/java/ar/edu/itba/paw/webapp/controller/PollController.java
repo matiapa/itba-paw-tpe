@@ -122,7 +122,7 @@ public class PollController {
 
 
     @RequestMapping(value = "/polls", method = POST)
-    public String create(
+    public ModelAndView create(
         @Valid @ModelAttribute("createForm") final PollForm pollForm,
         final BindingResult errors
     ) {
@@ -130,7 +130,8 @@ public class PollController {
 
         if (errors.hasErrors()) {
             LOGGER.debug("user {} tried to create a poll but form {} had problems errors:{}",loggedUser,pollForm,errors);
-            return "redirect:/polls?showCreateForm=true";
+            return list(EntityTarget.general, pollForm.getCareerCode(), pollForm.getCourseId(),
+                null, null,0, true, pollForm, loggedUser);
         }
 
         LOGGER.debug("user {} is tryng to create a poll with  form {} ",loggedUser,pollForm);
@@ -147,9 +148,10 @@ public class PollController {
 
         LOGGER.debug("user {} created a poll with  form {} ",loggedUser,pollForm);
 
-        String targetFilter = commonFilters.getTargetFilter(pollForm.getCareerCode(), pollForm.getCourseId());
+        EntityTarget filterBy = commonFilters.getTarget(pollForm.getCareerCode(), pollForm.getCourseId());
 
-        return String.format("redirect:/polls?%s&page=0", targetFilter);
+        return list(filterBy, pollForm.getCareerCode(), pollForm.getCourseId(), null, null,
+                0, false, pollForm, loggedUser);
     }
 
 

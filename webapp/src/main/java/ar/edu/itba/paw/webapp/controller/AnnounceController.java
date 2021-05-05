@@ -104,14 +104,15 @@ public class AnnounceController {
 
 
     @RequestMapping(value = "/announcements", method = POST)
-    public String create(
+    public ModelAndView create(
         @Valid @ModelAttribute("createForm") final AnnounceForm form,
         final BindingResult errors
     ){
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         if (errors.hasErrors()) {
-            return "redirect:/announcements?showCreateForm=true";
+            return list(EntityTarget.general, null, null, true, false,
+                0, form, user);
         }
 
         announcementService.create(
@@ -120,9 +121,10 @@ public class AnnounceController {
             user
         );
 
-        String targetFilter = commonFilters.getTargetFilter(form.getCareerCode(), form.getCourseId());
+        EntityTarget filterBy = commonFilters.getTarget(form.getCareerCode(), form.getCourseId());
 
-        return String.format("redirect:/announcements?%s&page=0", targetFilter);
+        return list(filterBy, form.getCareerCode(), form.getCourseId(), false, false,
+                0, form, user);
     }
 
 

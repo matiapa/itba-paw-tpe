@@ -42,16 +42,16 @@ public class CommonFilters {
             : null;
         mav.addObject("selectedCourse", selectedCourse);
     }
-    
-    public String getTargetFilter(String careerCode, String courseId){
-        if(careerCode == null && courseId == null)
-            return "filterBy=general";
-        else if(careerCode == null && courseId != null)
-            return "filterBy=course&courseId="+courseId;
-        else if(courseId == null)
-            return "filterBy=career&careerCode="+careerCode;
 
-        return "filterBy=general";
+    public EntityTarget getTarget(String careerCode, String courseId){
+        if(careerCode == null && courseId == null)
+            return EntityTarget.general;
+        else if(careerCode == null && courseId != null)
+            return EntityTarget.course;
+        else if(courseId == null)
+            return EntityTarget.career;
+
+        return EntityTarget.general;
     }
 
 }
