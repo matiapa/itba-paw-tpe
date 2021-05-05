@@ -14,7 +14,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Cursos</title>
+    <title><spring:message code="courses"/></title>
 
     <jsp:include page="../common/styles.jsp"/>
 </head>
@@ -123,7 +123,7 @@
                                         </c:when>
                                         <c:otherwise>
                                             <div class="text-center"><i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
-                                                <p style="margin-top: 16px;"><spring:message code="announcement.chooseCareerPlease"/></p>
+                                                <p style="margin-top: 16px;"><spring:message code="course.chooseCareerPlease"/></p>
                                             </div>
                                         </c:otherwise>
                                     </c:choose>
