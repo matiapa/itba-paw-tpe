@@ -49,6 +49,7 @@ public class EmailServiceImpl implements EmailService{
         Map<String,Object> model = new HashMap<>();
         model.put("buttonLink", String.format("%s/register/verification?verificationCode=%d&email=%s", baseURL, verificationCode, email));
         model.put("text", messageSource.getMessage("register.verification_mail.body", null, Locale.getDefault()));
+        model.put("buttonText", messageSource.getMessage("register.verification_mail.buttonText", null, Locale.getDefault()));
 
         String subject = messageSource.getMessage("register.verification_mail.subject", null, Locale.getDefault());
 
