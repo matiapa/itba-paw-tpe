@@ -84,14 +84,14 @@
                                         <div class="form-group">
                                             <label><strong><spring:message code="name"/></strong></label>
                                             <input class="form-control" type="text"
-                                               value="<c:out value="${user.fullName}"/>" disabled="true">
+                                               value="<c:out value="${user.name}"/>" disabled="true">
                                         </div>
                                     </div>
                                     <div class="col">
                                         <div class="form-group">
                                             <label><strong><spring:message code="lastname"/></strong></label>
                                             <input class="form-control" type="text"
-                                               value="<c:out value="${user.fullName}"/>" disabled="true">
+                                               value="<c:out value="${user.surname}"/>" disabled="true">
                                         </div>
                                     </div>
                                 </div>
