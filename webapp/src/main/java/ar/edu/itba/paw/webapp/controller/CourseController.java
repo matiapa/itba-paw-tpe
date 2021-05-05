@@ -51,7 +51,10 @@ public class CourseController {
 
         if(careerCode != null) {
             courses = courseService.findByCareerSemester(careerCode);
+            List<CareerCourse> optionalCourses=courses.get(0);
+            courses.remove(0);
             mav.addObject("careerCourses",courses);
+            mav.addObject("careerOptionalCourses",optionalCourses);
 
             Career selectedCareer = careers.stream().filter(c -> c.getCode().equals(careerCode)).findFirst()
                     .orElseThrow(RuntimeException::new);

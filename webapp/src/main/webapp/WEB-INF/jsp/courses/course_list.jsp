@@ -84,6 +84,42 @@
                                                     </div>
                                                 </div>
                                             </c:forEach>
+                                            <div class="card">
+                                                <div class="card-header" role="tab">
+                                                    <h5 class="mb-0"><a data-toggle="collapse" aria-expanded="true" aria-controls="accordion-1 .item-optionalCourse" href="#accordion-1 .item-optionalCourse"><spring:message code="OptionalCourse"/></a></h5>
+                                                </div>
+                                                <div class="collapse show item-optionalCourse" role="tabpanel" data-parent="#accordion-1">
+
+                                                    <div class="card-body">
+                                                        <div class="table-responsive">
+                                                            <table class="table">
+                                                                <thead>
+                                                                <tr>
+                                                                    <th><spring:message code="code"/></th>
+                                                                    <th><spring:message code="name"/></th>
+                                                                    <th><spring:message code="quarters"/></th>
+                                                                    <th><spring:message code="credits"/></th>
+                                                                    <th><spring:message code="form.link"/></th>
+                                                                </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                <c:forEach var="course" items="${careerOptionalCourses}">
+                                                                    <tr>
+                                                                        <td><c:out value="${course.id}"/></td>
+                                                                        <td><c:out value="${course.name}"/></td>
+                                                                        <td><c:out value="${course.semester}"/></td>
+                                                                        <td><c:out value="${course.credits}"/></td>
+                                                                        <td><a class="btn btn-link" type="button"
+                                                                               href="<c:url value='/courses/${course.id}'/>"
+                                                                        ><spring:message code="open"/></a></td>
+                                                                    </tr>
+                                                                </c:forEach>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </c:when>
                                         <c:otherwise>
                                             <div class="text-center"><i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
