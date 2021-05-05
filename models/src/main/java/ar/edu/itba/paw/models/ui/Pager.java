@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.models.ui;
 
 public class Pager {
-    private static final int PAGE_SIZE = 5;
+    private static final int PAGE_SIZE = 10;
 
     private final int collectionSize;
     private final int page;

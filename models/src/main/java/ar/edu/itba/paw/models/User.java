@@ -13,7 +13,7 @@ public class User implements Serializable {
     private final String surname;
     private final String email;
     protected String password;
-    private final String profileImgB64;
+    private String profileImgB64;
     private final Date signupDate;
 
     private final List<Permission> permissions;
@@ -89,5 +89,9 @@ public class User implements Serializable {
         StringBuilder sb = new StringBuilder();
         for(String s : arr) sb.append(Character.toUpperCase(s.charAt(0))).append(s.substring(1)).append(" ");
         return sb.toString().trim();
+    }
+
+    public void setProfileImage(String base64Image){
+        this.profileImgB64 = base64Image;
     }
 }
