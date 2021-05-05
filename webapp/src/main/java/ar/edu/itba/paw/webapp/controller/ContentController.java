@@ -64,7 +64,7 @@ public class ContentController {
 
         // -- By type
 
-        Content.ContentType selectedType = contentType != null
+        Content.ContentType selectedType = contentType != null && !contentType.isEmpty()
                 ? Content.ContentType.valueOf(contentType) : null;
         mav.addObject("selectedType", selectedType);
 
