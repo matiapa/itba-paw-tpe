@@ -35,7 +35,7 @@
                         <ul class="list-group list-group-flush">
                             <c:if test="${announcements.size() == 0}">
                                 <li class="list-group-item">
-                                    No se encontraron elementos
+                                    <spring:message code="noAnnounces"/>
                                 </li>
                             </c:if>
                             <c:forEach var="announcement" items="${announcements}">
@@ -61,9 +61,9 @@
                         <div class="card-header py-3">
                             <h6 class="font-weight-bold m-0"><spring:message code="polls"/></h6>
                         </div>
-                        <c:if test="${announcements.size() == 0}">
+                        <c:if test="${polls.size() == 0}">
                             <li class="list-group-item">
-                                No se encontraron elementos
+                                <spring:message code="noPolls"/>
                             </li>
                         </c:if>
                         <c:forEach var="poll" items="${polls}">
