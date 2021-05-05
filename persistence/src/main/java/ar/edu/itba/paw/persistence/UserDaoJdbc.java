@@ -18,9 +18,10 @@ import java.util.*;
 public class UserDaoJdbc implements UserDao {
 
     private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert jdbcInsert;
+    private final SimpleJdbcInsert jdbcInsertUser;
     private final SimpleJdbcInsert jdbcInsertFavCourses;
     private final SimpleJdbcInsert jdbcInsertVerificationCode;
+    private final SimpleJdbcInsert jdbcInsertLoginActivity;
 
     private RowMapper<User> USER_ROW_MAPPER;
 
@@ -44,11 +45,15 @@ public class UserDaoJdbc implements UserDao {
     @Autowired
     public UserDaoJdbc(DataSource ds) {
         this.jdbcTemplate = new JdbcTemplate(ds);
-        this.jdbcInsert= new SimpleJdbcInsert(ds).withTableName("users")
+        this.jdbcInsertUser= new SimpleJdbcInsert(ds)
+            .withTableName("users")
             .usingColumns("id","name","surname","email","password","career_code","verified");
 
         this.jdbcInsertFavCourses= new SimpleJdbcInsert(ds).withTableName("fav_course");
         this.jdbcInsertVerificationCode= new SimpleJdbcInsert(ds).withTableName("user_verification");
+        this.jdbcInsertLoginActivity = new SimpleJdbcInsert(ds)
+            .withTableName("login_activity")
+            .usingColumns("user_id");
 
         USER_ROW_MAPPER = (rs, rowNum) -> {
             List<Permission> permissions = jdbcTemplate.query(
@@ -126,7 +131,7 @@ public class UserDaoJdbc implements UserDao {
         args.put("career_code",career_code);
         args.put("verified",false);
 
-        final Number userID = jdbcInsert.execute(args);
+        final Number userID = jdbcInsertUser.execute(args);
 
         for (String course:courses ) {
             addFavouriteCourse(id,course);
@@ -181,6 +186,13 @@ public class UserDaoJdbc implements UserDao {
             ).stream().findFirst();
 
         return db_verification_code.orElseThrow(() -> new RuntimeException("Verification code not found"));
+    }
+
+    @Override
+    public void registerLogin(int id) {
+        final Map<String,Object> args = new HashMap<>();
+        args.put("user_id", id);
+        jdbcInsertLoginActivity.execute(args);
     }
 
 }

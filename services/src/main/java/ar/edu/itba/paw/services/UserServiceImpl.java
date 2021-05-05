@@ -56,4 +56,9 @@ public class UserServiceImpl implements UserService {
         loggedUser.setProfileImage(pictureDataURI);
     }
 
+    @Override
+    public void registerLogin(User loggedUser) {
+        userDao.registerLogin(loggedUser.getId());
+    }
+
 }

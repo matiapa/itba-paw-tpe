@@ -20,4 +20,6 @@ public interface UserDao {
 
     void setProfilePicture(String pictureDataURI, int userId);
 
+	void registerLogin(int id);
+
 }
