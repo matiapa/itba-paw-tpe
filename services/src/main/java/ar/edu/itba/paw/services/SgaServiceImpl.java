@@ -2,6 +2,7 @@ package ar.edu.itba.paw.services;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Optional;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -33,9 +34,11 @@ public class SgaServiceImpl implements SgaService {
         try {
             SgaBasicData basicData = mapper.readValue(new URL(EMAIL_ENDPOINT + email), SgaBasicData.class);
             SgaExtendedData extendedData = mapper.readValue(new URL(DNI_ENDPOINT + basicData.dni), SgaExtendedData.class);
-            Career career = careerService.findByCode(extendedData.careerCode).get();
+            Optional<Career> career = careerService.findByCode(extendedData.careerCode);
+            if(!career.isPresent())
+                return null;
             return new User(extendedData.code, basicData.firstName, basicData.lastName, email, null,
-        null, null, null, career.getCode());
+        null, null, null, career.get().getCode());
         } catch (IOException e) {
             e.printStackTrace();
             return null;
