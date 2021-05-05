@@ -100,7 +100,7 @@
                                     <table class="table my-0" id="dataTable">
                                         <thead>
                                         <tr>
-                                            <th><spring:message code="form.description"/></th>
+                                            <th><spring:message code="form.title"/></th>
                                             <th><spring:message code="form.type"/></th>
                                             <th><spring:message code="date"/></th>
                                             <th><spring:message code="author"/></th>
@@ -161,7 +161,7 @@
                             <c:otherwise>
                                 <div class="text-center mt-5">
                                     <i class="fa fa-question-circle" style="margin-top: 32px;font-size: 32px;"></i>
-                                    <p style="margin-top: 16px;"><spring:message code="announcement.chooseCoursePlease"/></p>
+                                    <p style="margin-top: 16px;"><spring:message code="content.chooseCoursePlease"/></p>
                                 </div>
                             </c:otherwise>
                         </c:choose>
