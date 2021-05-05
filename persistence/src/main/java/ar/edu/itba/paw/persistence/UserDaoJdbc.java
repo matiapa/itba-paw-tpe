@@ -44,7 +44,7 @@ public class UserDaoJdbc implements UserDao {
     @Autowired
     public UserDaoJdbc(DataSource ds) {
         this.jdbcTemplate = new JdbcTemplate(ds);
-        this.jdbcInsert= new SimpleJdbcInsert(ds)
+        this.jdbcInsert= new SimpleJdbcInsert(ds).withTableName("users")
             .usingColumns("id","name","surname","email","password","career_code","verified");
 
         this.jdbcInsertFavCourses= new SimpleJdbcInsert(ds).withTableName("fav_course");
