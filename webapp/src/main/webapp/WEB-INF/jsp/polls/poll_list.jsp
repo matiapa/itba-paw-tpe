@@ -180,7 +180,8 @@
                                                     title=<spring:message code="chooseCourse"/> data-width="100%">
                                                 <c:forEach var="course" items="${courses}">
                                                     <option ${course.equals(selectedCourse) ? 'selected' : ''}
-                                                            value="${course.id}" data-tokens="${course.name}">${course.name}</option>
+                                                            value="${course.id}" data-tokens="${course.name}">${course.name} (${course.id})
+                                                    </option>
                                                 </c:forEach>
                                             </select>
                                         </div>

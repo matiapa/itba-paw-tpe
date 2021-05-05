@@ -16,3 +16,4 @@
 <link rel="stylesheet" href="<c:url value="/assets/css/fab.css"/>">
 <link rel="stylesheet" href="<c:url value="/assets/css/nav-tabs.css"/>">
 <link rel="stylesheet" href="<c:url value="/assets/css/sidebar.css"/>">
+<link rel="stylesheet" href="<c:url value="/assets/css/containers.css"/>">

@@ -140,9 +140,6 @@ public class UserDaoJdbc implements UserDao {
 
     @Override
     public void setProfilePicture(String pictureDataURI, int userId) {
-        System.out.println(pictureDataURI);
-        System.out.println(userId);
-
         jdbcTemplate.update(
         "UPDATE users SET profile_picture=? WHERE id=?",
             pictureDataURI, userId

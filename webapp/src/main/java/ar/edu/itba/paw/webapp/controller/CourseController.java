@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -32,7 +33,7 @@ public class CourseController {
 
     @Autowired private PollService pollService;
 
-    @Autowired private UserService userService;
+    @Autowired private SgaService sgaService;
 
     private static final Logger LOGGER= LoggerFactory.getLogger(CourseController.class);
 
@@ -87,6 +88,14 @@ public class CourseController {
 
         List<Content> contents = contentService.findByCourse(courseId, null, null, null, 0, 10);
         mav.addObject("contents", contents);
+
+        Map<Integer, User> contentOwners = new HashMap<>();
+        contents.forEach(c -> {
+            User user = sgaService.fetchFromEmail(c.getOwnerMail());
+            if(user != null) contentOwners.put(c.getId(), user);
+        });
+
+        mav.addObject("contentOwners", contentOwners);
 
         // Course polls
 

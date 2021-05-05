@@ -6,6 +6,8 @@
 
 <%@ taglib prefix = "spring" uri="http://www.springframework.org/tags"%>
 
+<jsp:useBean id="user" type="ar.edu.itba.paw.models.User" scope="request"/>
+
 <!DOCTYPE html>
 <html>
 
@@ -31,6 +33,11 @@
                             <h6 class="font-weight-bold m-0"><spring:message code="course.announcements"/></h6>
                         </div>
                         <ul class="list-group list-group-flush">
+                            <c:if test="${announcements.size() == 0}">
+                                <li class="list-group-item">
+                                    No se encontraron elementos
+                                </li>
+                            </c:if>
                             <c:forEach var="announcement" items="${announcements}">
                                 <li class="list-group-item">
                                     <div class="row align-items-center no-gutters">
@@ -46,7 +53,6 @@
                                     </div>
                                 </li>
                             </c:forEach>
-
                         </ul>
                     </div>
                 </div>
@@ -55,6 +61,11 @@
                         <div class="card-header py-3">
                             <h6 class="font-weight-bold m-0"><spring:message code="polls"/></h6>
                         </div>
+                        <c:if test="${announcements.size() == 0}">
+                            <li class="list-group-item">
+                                No se encontraron elementos
+                            </li>
+                        </c:if>
                         <c:forEach var="poll" items="${polls}">
                             <ul class="list-group list-group-flush">
                                 <li class="list-group-item">
@@ -76,61 +87,59 @@
             </div>
             <div class="row">
                 <div class="col-lg-6 col-xl-12 offset-xl-0 mb-4">
-                    <div class="card shadow mb-4">
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item">
-                                <div class="table-responsive table mt-2" id="dataTable-1" role="grid" aria-describedby="dataTable_info" style="margin-top: 32px;background: #ffffff;">
-                                    <table class="table my-0" id="dataTable">
-                                        <thead>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <div class="table-responsive table mt-2" id="dataTable-1" role="grid" aria-describedby="dataTable_info" style="margin-top: 32px;background: #ffffff;">
+                                <table class="table my-0" id="dataTable">
+                                    <thead>
+                                    <tr>
+                                        <th><spring:message code="form.description"/></th>
+                                        <th><spring:message code="form.type"/></th>
+                                        <th><spring:message code="date"/></th>
+                                        <th><spring:message code="author"/></th>
+                                        <th><spring:message code="form.link"/></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <c:forEach var="content" items="${contents}">
+                                        <c:set var="content" value="${content}" scope="request"/>
                                         <tr>
-                                            <th><spring:message code="form.description"/></th>
-                                            <th><spring:message code="form.type"/></th>
-                                            <th><spring:message code="date"/></th>
-                                            <th><spring:message code="author"/></th>
-                                            <th><spring:message code="form.link"/></th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <c:forEach var="content" items="${contents}">
-                                            <c:set var="content" value="${content}" scope="request"/>
-                                            <tr>
-                                                <td><c:out value="${content.name}"/></td>
-                                                <td><spring:message code="enum.contenttype.${content.contentType}"/></td>
-                                                <td><c:out value="${content.uploadDate}"/></td>
-                                                <td>
-                                                    <img class="rounded-circle mr-2" width="30" height="30"
-                                                         src="<c:url value="/assets/img/avatars/avatar-male.png"/>">
-                                                    <c:out value="${content.submitter.name}"/>
-                                                 </td>
+                                            <td><c:out value="${content.name}"/></td>
+                                            <td><spring:message code="enum.contenttype.${content.contentType}"/></td>
+                                            <td><c:out value="${content.uploadDate}"/></td>
+                                            <td>
+                                                <c:set var="owner" value="${contentOwners.get(content.id)}"/>
+                                                <c:url var="profileUrl" value="/profile/${owner.email}"/>
+                                                <a href="${profileUrl}"><c:out value="${owner.fullName}"/></a>
+                                            </td>
 
+                                            <td>
+                                                <a class="btn btn-link" target="_blank" rel="noopener noreferrer"
+                                                    href="<c:url value='${content.link}'/>" role="button">
+                                                <spring:message code="form.link"/>
+                                                </a>
+                                            </td>
+
+                                            <c:if test="<%= user.can(Permission.Action.delete, Entity.course_content) %>">
                                                 <td>
-                                                    <a class="btn btn-link" target="_blank" rel="noopener noreferrer"
-                                                        href="<c:url value='${content.link}'/>" role="button">
-                                                    <spring:message code="form.link"/>
-                                                    </a>
+                                                    <c:url var="url" value="/contents/${content.id}/delete"/>
+                                                    <form action="${url}" method="post">
+                                                        <button type="submit" class="btn btn-icon" style="color:red">
+                                                            <i class="material-icons">delete</i>
+                                                        </button>
+                                                    </form>
                                                 </td>
-
-                                                <c:if test="<%= user.can(Permission.Action.delete, Entity.course_content) %>">
-                                                    <td>
-                                                        <c:url var="url" value="/contents/${content.id}/delete"/>
-                                                        <form action="${url}" method="post">
-                                                            <button type="submit" class="btn btn-icon" style="color:red">
-                                                                <i class="material-icons">delete</i>
-                                                            </button>
-                                                        </form>
-                                                    </td>
-                                                </c:if>
-                                            </tr>
-                                        </c:forEach>
-                                        </tbody>
-                                        <tfoot>
-                                        <tr></tr>
-                                        </tfoot>
-                                    </table>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
+                                            </c:if>
+                                        </tr>
+                                    </c:forEach>
+                                    </tbody>
+                                    <tfoot>
+                                    <tr></tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
