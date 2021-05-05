@@ -18,22 +18,22 @@ INSERT INTO users(id,name,surname,email,career_code,verified) VALUES (3, 'User 3
 
 INSERT INTO login_activity(user_id, date) VALUES (1, '2021-05-02');
 
-INSERT INTO announcement(id, title, content, summary, submitted_by, career_code, course_id, creation_date) VALUES
-    (1, 'Test', 'Test', 'Test', 1 , 'A', null, '2021-05-03'),
-    (2, 'Test', 'Test', 'Test', 2 , 'B', null, '2021-05-03'),
-    (3, 'Test', 'Test', 'Test', 2 , null, '1.1', '2021-05-01');
+INSERT INTO announcement(title, content, summary, submitted_by, career_code, course_id, creation_date) VALUES
+    ('Test', 'Test', 'Test', 1 , 'A', null, '2021-05-03'),
+    ('Test', 'Test', 'Test', 2 , 'B', null, '2021-05-03'),
+    ('Test', 'Test', 'Test', 2 , null, '1.1', '2021-05-01');
 
-INSERT INTO chat_group(id, name, link, platform, submitted_by, career_code, creation_date) VALUES
-    (1, 'Test', 'Test', 'whatsapp', 1, 'B', '2021-05-03'),
-    (2, 'Test', 'Test', 'whatsapp', 2, 'C', '2021-05-03'),
-    (3, 'Test', 'Test', 'whatsapp', 2, 'C', '2021-05-01');
+INSERT INTO chat_group(name, link, platform, submitted_by, career_code, creation_date) VALUES
+    ('Test', 'Test', 'whatsapp', 1, 'B', '2021-05-03'),
+    ('Test', 'Test', 'whatsapp', 2, 'C', '2021-05-03'),
+    ('Test', 'Test', 'whatsapp', 2, 'C', '2021-05-01');
 
-INSERT INTO course_content(id, name, link, description, content_type, submitted_by, course_id, creation_date) VALUES
-    (1, 'Test', 'Test', 'Test', 'exam', 3, '1.2', '2021-05-03'),
-    (2, 'Test', 'Test', 'Test', 'exam', 3, '1.2', '2021-05-03'),
-    (3, 'Test', 'Test', 'Test', 'exam', 3, '1.3', '2021-05-01');
+INSERT INTO course_content(name, link, description, content_type, submitted_by, course_id, creation_date) VALUES
+    ('Test', 'Test', 'Test', 'exam', 3, '1.2', '2021-05-03'),
+    ('Test', 'Test', 'Test', 'exam', 3, '1.2', '2021-05-03'),
+    ('Test', 'Test', 'Test', 'exam', 3, '1.3', '2021-05-01');
 
-INSERT INTO poll(id, name, description, format, submitted_by, career_code, course_id, creation_date) VALUES
-    (1, 'Test', 'Test', 'text', 3, 'C', null, '2021-05-03'),
-    (2, 'Test', 'Test', 'text', 3, null, '1.3', '2021-05-03'),
-    (3, 'Test', 'Test', 'text', 3, null, '1.3', '2021-05-03');
+INSERT INTO poll(name, description, format, submitted_by, career_code, course_id, creation_date) VALUES
+    ('Test', 'Test', 'text', 3, 'C', null, '2021-05-03'),
+    ('Test', 'Test', 'text', 3, null, '1.3', '2021-05-03'),
+    ('Test', 'Test', 'text', 3, null, '1.3', '2021-05-03');

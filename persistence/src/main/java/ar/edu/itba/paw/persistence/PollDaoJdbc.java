@@ -27,6 +27,7 @@ public class PollDaoJdbc implements PollDao {
     @Autowired
     private UserDao userDao;
 
+    private final SimpleJdbcInsert simpleJdbcInsertPoll;
     private final SimpleJdbcInsert simpleJdbcInsertPollOption;
     private final SimpleJdbcInsert simpleJdbcInsertPollChoiceVote;
     private final SimpleJdbcInsert simpleJdbcInsertPollRegisterVote;
@@ -79,6 +80,11 @@ public class PollDaoJdbc implements PollDao {
 
         this.simpleJdbcInsertPollRegisterVote = new SimpleJdbcInsert(this.jdbcTemplate)
                 .withTableName("poll_vote_registry");
+
+        this.simpleJdbcInsertPoll = new SimpleJdbcInsert(this.jdbcTemplate)
+                .withTableName("poll")
+                .usingGeneratedKeyColumns("id")
+                .usingColumns("name", "description", "format", "course_id", "career_code", "expiry_date", "submitted_by");
     }
 
     
@@ -94,7 +100,7 @@ public class PollDaoJdbc implements PollDao {
 
         if (state != null){
             if(state == PollState.open)
-                stringBuilder.append(" AND expiry_date>=now() OR expiry_date IS NULL");
+                stringBuilder.append(" AND (expiry_date>=now() OR expiry_date IS NULL)");
             else
                 stringBuilder.append(" AND expiry_date<now()");
         }
@@ -172,34 +178,30 @@ public class PollDaoJdbc implements PollDao {
 
     @Override
     public Optional<Poll> findById(int id) {
-        return Optional.ofNullable(jdbcTemplate.queryForObject(
+        return jdbcTemplate.query(
             String.format("SELECT * FROM poll WHERE id='%d'", id),
             rowMapper
-        ));
+        ).stream().findFirst();
     }
 
     // -------------------- CREATE / DELETE --------------------
 
     @Transactional
     @Override
-    public void addPoll(String name, String description, PollFormat format, String careerCode, String courseId, Date expiryDate, int userId, List<String> pollOptions) {
+    public void addPoll(String name, String description, PollFormat format, String careerCode, String courseId, Date expiryDate, Integer userId, List<String> pollOptions) {
+        final Map<String, Object> args = new HashMap<>();
+        args.put("name", name);
+        args.put("description", description);
+        args.put("format", format.toString().replace("_","-"));
+        args.put("career_code", careerCode);
+        args.put("course_id", courseId);
+        args.put("expiry_date", expiryDate);
+        args.put("submitted_by", userId);
+        
+        final int id = simpleJdbcInsertPoll.executeAndReturnKey(args).intValue();
 
-        Poll poll = jdbcTemplate.queryForObject(
-        "INSERT INTO " +
-                "poll(name, description, format, career_code, course_id, creation_date, expiry_date, submitted_by)" +
-            " VALUES " +
-                "(?, ?, CAST(? AS poll_format_type), ?, ?, DEFAULT, ?, ?) " +
-            "RETURNING *;",
-            new Object[]{
-                name, description, format.toString().replace("_","-"),
-                careerCode, courseId, expiryDate, userId
-            },
-            rowMapper
-        );
-
-        final Number id = poll.getId();
         for(String pollOption : pollOptions){
-            addPollOption(id.intValue(), pollOption);
+            addPollOption(id, pollOption);
         }
     }
 
