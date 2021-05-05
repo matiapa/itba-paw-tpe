@@ -42,18 +42,21 @@
 
                                         <div class="row mt-3">
                                             <div class="col-sm-6 mb-3 mb-sm-0">
-                                                <form:input class="form-control form-control-user" type="text" id="exampleFirstName" placeholder="Nombre" path="name" value="${user.name}" />
+                                                <spring:message code="name" var="namePlaceholder"/>
+                                                <form:input class="form-control form-control-user" type="text" id="exampleFirstName" placeholder='${namePlaceholder}' path="name" value="${user.name}" />
                                                 <form:errors path="name" cssStyle="color: red" element="p"/>
                                             </div>
                                             <div class="col-sm-6">
-                                                <form:input class="form-control form-control-user" type="text" id="exampleLastName" placeholder="Apellido" path="surname" value="${user.surname}" />
+                                                <spring:message code="lastname" var="lastnamePlaceholder"/>
+                                                <form:input class="form-control form-control-user" type="text" id="exampleLastName" placeholder="${lastnamePlaceholder}" path="surname" value="${user.surname}" />
                                                 <form:errors path="surname" cssStyle="color: red" element="p"/>
                                             </div>
                                         </div>
 
                                         <div class="row mt-3">
                                             <div class="col-sm-12">
-                                                <form:input class="form-control form-control-user" type="email" id="exampleInputEmail"  placeholder="Email" path="email" value="${user.email}" />
+                                                <spring:message code="email" var="emailPlaceholder"/>
+                                                <form:input class="form-control form-control-user" type="email" id="exampleInputEmail"  placeholder="${emailPlaceholder}" path="email" value="${user.email}" />
                                                 <form:errors path="email" cssStyle="color: red" element="p"/>
                                                 <c:if test="${emailTaken}">
                                                     <h6 Style="color: red" ><spring:message code="emailTaken"/></h6>
@@ -64,14 +67,16 @@
 
                                         <div class="row mt-3">
                                             <div class="col-sm-12">
-                                                <form:input class="form-control form-control-user" type="password" id="examplePassword" placeholder="Password" path="password" value="${user.password}"  />
+                                                <spring:message code="password" var="passwordPlaceholder"/>
+                                                <form:input class="form-control form-control-user" type="password" id="examplePassword" placeholder="${passwordPlaceholder}" path="password" value="${user.password}"  />
                                                 <form:errors path="password" cssStyle="color: red" element="p"/>
                                             </div>
                                         </div>
 
                                         <div class="row mt-3">
                                             <div class="col-sm-12">
-                                                <form:input class="form-control form-control-user" type="text" id="exampleLegajo" placeholder="Legajo" path="id" value="${user.id}" />
+                                                <spring:message code="userId" var="userIdPlaceholder"/>
+                                                <form:input class="form-control form-control-user" type="text" id="exampleLegajo" placeholder="${userIdPlaceholder}" path="id" value=""/>
                                                 <form:errors path="id" cssStyle="color: red" element="p"/>
                                                 <c:if test="${idTaken}">
                                                     <h6 Style="color: red" ><spring:message code="idTaken"/></h6>
@@ -83,7 +88,8 @@
                                             <div class="col-sm-12">
 
                                                 <form:label path="careerCode"  name="career"><spring:message code="careerName"/></form:label>
-                                                <form:select path= "careerCode" class="selectpicker" data-live-search="true" title="Elegí una Carrera">
+                                                <spring:message code="chooseCareer" var="chooseCareerMessage"/>
+                                                <form:select path= "careerCode" class="selectpicker" data-live-search="true" title="${chooseCareerMessage}">
                                                     <c:forEach var="career" items="${careerList}">
                                                         <option ${career.equals(selectedCareer) ? 'selected' : ''}
                                                                 path="career" value="${career.code}" data-tokens="${career.name}">${career.name}</option>
@@ -109,7 +115,8 @@
                                             <div class="row">
                                                 <div class="form-group">
                                                     <form:label path="courses[${i}]"  name="courses[${i}]"><spring:message code="Courses"/></form:label>
-                                                    <form:select path= "courses[${i}]" class="selectpicker" data-live-search="true" title="Elegí un curso">
+                                                    <spring:message code="chooseCourse" var="chooseCourseMessage"/>
+                                                    <form:select path= "courses[${i}]" class="selectpicker" data-live-search="true" title='${chooseCourseMessage}'>
                                                         <c:forEach var="course" items="${courseList}">
                                                             <option ${course.equals(selectedCourse) ? 'selected' : ''}
                                                                     path="courses[${i}]" value="${course.id}" data-tokens="${course.name}">${course.name}</option>

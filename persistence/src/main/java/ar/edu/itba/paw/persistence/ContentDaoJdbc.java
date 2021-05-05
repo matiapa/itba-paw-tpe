@@ -43,7 +43,8 @@ public class ContentDaoJdbc implements ContentDao{
         this.jdbcTemplate = new JdbcTemplate(ds);
         this.jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
             .withTableName("course_content")
-            .usingGeneratedKeyColumns("id","creation_date");
+            .usingColumns("name", "link", "submitted_by", "owner_email", "course_id", "description", "content_type", "content_date")
+            .usingGeneratedKeyColumns("id");
     }
 
     private String queryBuilder(String courseId, ContentType contentType, Date minDate, Date maxDate, Integer offset, Integer limit){

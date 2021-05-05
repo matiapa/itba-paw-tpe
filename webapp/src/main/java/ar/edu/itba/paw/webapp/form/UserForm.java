@@ -32,7 +32,6 @@ public class UserForm {
     private int id;
 
     @NotEmpty
-    @NotNull
     private String careerCode;
 
 
