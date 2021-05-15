@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.form;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ public class UserForm {
     private String password;
 
     @NotNull
+    @Digits(integer = 6,fraction = 0)
     private int id;
 
     @NotEmpty
