@@ -18,7 +18,11 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -70,11 +74,11 @@ public class RegisterController {
                 .toString() + request.getContextPath();
 
         LOGGER.debug("user is attempting to register a new user with form {}",form);
-
+        Set<String> courses=form.getCourses().stream().filter(Objects::nonNull).collect(Collectors.toSet());
         userService.registerUser(
             form.getId(), form.getName(), form.getSurname(), form.getEmail(),
             new BCryptPasswordEncoder().encode(form.getPassword()), form.getCareerCode(),
-            form.getCourses(), websiteUrl
+            new ArrayList<String>(courses), websiteUrl
         );
 
         LOGGER.debug("user registered a new user with form {}",form);
