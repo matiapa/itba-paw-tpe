@@ -76,7 +76,7 @@
                                                 <p><fmt:formatDate type="date" dateStyle="short" value="${profile.signupDate}"/></p>
                                             </c:if>
                                             <c:if test="${profile.signupDate == null}">
-                                                <p>Aún no se ha registrado</p>
+                                                <p><spring:message code="notRegistered"/></p>
                                             </c:if>
                                         </div>
                                     </div>
