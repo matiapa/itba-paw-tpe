@@ -51,8 +51,8 @@
                         <form:label path="platform"><spring:message code="chat.platform"/></form:label>
 
                         <form:select path="platform" class="form-control">
+                            <option value=""><spring:message code="chat.choosePlatform"/></option>
                             <c:forEach var="platform" items="${platforms}">
-                                <option value=""><spring:message code="chat.choosePlatform"/></option>
                                 <form:option value="${platform}">
                                     <c:out value="${platformsTranslate.get(platform)}"/>
                                 </form:option>
