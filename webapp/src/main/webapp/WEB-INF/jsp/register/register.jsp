@@ -111,6 +111,10 @@
                                             <h4 class="text-dark mb-4"><spring:message code="studySubjects"/></h4>
                                         </div>
 
+                                        <div class="text-left">
+                                            <h6 class="text-dark mb-4"><spring:message code="studySubjectsHelper"/></h6>
+                                        </div>
+
                                         <c:forEach var ="i" begin="0" end ="4">
                                             <div class="row">
                                                 <div class="form-group">
