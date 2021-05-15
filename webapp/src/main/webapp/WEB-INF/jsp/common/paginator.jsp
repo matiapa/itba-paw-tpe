@@ -17,7 +17,7 @@
                         </li>
                     </c:if>
 
-                    <c:forEach begin="${10*(pager.currPage/10)}" step="1" end="${10*(pager.currPage/10+1)-1}" var="num">
+                    <c:forEach begin="${pager.currPage>5?pager.currPage-5:0}" step="1" end="${pager.currPage+5>pager.lastPage?pager.lastPage:pager.currPage+5}" var="num">
                         <li class="page-item ${num==pager.currPage ? 'active' : ''}">
                             <button class="page-link" id="${num}">
                                 <c:out value="${num + 1}"/>
