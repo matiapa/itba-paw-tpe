@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.models.Course;
 import ar.edu.itba.paw.models.User;
 
 import java.util.List;
@@ -21,5 +22,9 @@ public interface UserDao {
     void setProfilePicture(String pictureDataURI, int userId);
 
 	void registerLogin(int id);
+
+	void addFavouriteCourse(int id, String course);
+
+	void removeFavouriteCourse(int id, String course);
 
 }

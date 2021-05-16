@@ -20,4 +20,8 @@ public interface UserService {
 
     void registerLogin(User loggedUser);
 
+    void addFavouriteCourse(int id, String course);
+
+    void removeFavouriteCourse(int id, String course);
+
 }

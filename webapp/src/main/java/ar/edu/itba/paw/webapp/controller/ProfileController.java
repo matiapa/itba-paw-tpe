@@ -1,15 +1,18 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.models.Career;
+import ar.edu.itba.paw.models.Course;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.services.CareerService;
 import ar.edu.itba.paw.services.SgaService;
 import ar.edu.itba.paw.services.UserService;
 import ar.edu.itba.paw.webapp.exceptions.ResourceNotFoundException;
+import ar.edu.itba.paw.webapp.form.UserForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,11 +20,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.Base64;
 import java.util.Optional;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
+import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
@@ -108,6 +114,24 @@ public class ProfileController {
         mav.addObject("userCareer", optCareer.get());
 
         return mav;
+    }
+
+    @RequestMapping(value = "/profile/own", method = PUT)
+    public ModelAndView addFavouriteCourse(
+            @RequestParam("FavCourse") Course course,
+            @ModelAttribute("user") User loggedUser
+    ) {
+        userService.addFavouriteCourse(loggedUser.getId(), course.getId());
+        return new ModelAndView("profile/profile_own");
+    }
+
+    @RequestMapping(value = "/profile/own", method = DELETE)
+    public ModelAndView removeFavouriteCourse(
+            @RequestParam("NotFavCourse") Course course,
+            @ModelAttribute("user") User loggedUser
+    ){
+        userService.removeFavouriteCourse(loggedUser.getId(), course.getId());
+        return new ModelAndView("profile/profile_own");
     }
 
 }

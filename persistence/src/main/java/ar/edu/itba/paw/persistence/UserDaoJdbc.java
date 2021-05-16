@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.models.Course;
 import ar.edu.itba.paw.models.Entity;
 import ar.edu.itba.paw.models.Permission;
 import ar.edu.itba.paw.models.User;
@@ -99,13 +100,20 @@ public class UserDaoJdbc implements UserDao {
         ).stream().findFirst();
     }
 
-    private void addFavouriteCourse(int id,String courseId){
+    @Override
+    public void addFavouriteCourse(int id,String courseId){
         final Map<String,Object> args = new HashMap<>();
 
         args.put("course_id",courseId);
         args.put("user_id",id);
 
         jdbcInsertFavCourses.execute(args);
+    }
+
+    @Override
+    public void removeFavouriteCourse(int id, String course) {
+        jdbcTemplate.execute(String.format("DELETE FROM fav_course WHERE user_id=%d AND course_id=%d", id, course));
+
     }
 
     private void createVerificationCode(int id) {
@@ -142,6 +150,8 @@ public class UserDaoJdbc implements UserDao {
         return findById(userID.intValue())
             .orElseThrow(() -> new RuntimeException("Could not register user"));
     }
+
+
 
     @Override
     public void setProfilePicture(String pictureDataURI, int userId) {
@@ -194,5 +204,7 @@ public class UserDaoJdbc implements UserDao {
         args.put("user_id", id);
         jdbcInsertLoginActivity.execute(args);
     }
+
+
 
 }
