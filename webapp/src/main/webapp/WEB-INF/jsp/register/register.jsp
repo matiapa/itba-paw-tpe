@@ -43,12 +43,12 @@
                                         <div class="row mt-3">
                                             <div class="col-sm-6 mb-3 mb-sm-0">
                                                 <spring:message code="name" var="namePlaceholder"/>
-                                                <form:input class="form-control form-control-user" type="text" id="exampleFirstName" placeholder='${namePlaceholder}' path="name" value="${user.name}" />
+                                                <form:input class="form-control form-control-user" type="text" placeholder='${namePlaceholder}' path="name"/>
                                                 <form:errors path="name" cssStyle="color: red" element="p"/>
                                             </div>
                                             <div class="col-sm-6">
                                                 <spring:message code="lastname" var="lastnamePlaceholder"/>
-                                                <form:input class="form-control form-control-user" type="text" id="exampleLastName" placeholder="${lastnamePlaceholder}" path="surname" value="${user.surname}" />
+                                                <form:input class="form-control form-control-user" type="text" placeholder="${lastnamePlaceholder}" path="surname" />
                                                 <form:errors path="surname" cssStyle="color: red" element="p"/>
                                             </div>
                                         </div>
@@ -56,7 +56,7 @@
                                         <div class="row mt-3">
                                             <div class="col-sm-12">
                                                 <spring:message code="email" var="emailPlaceholder"/>
-                                                <form:input class="form-control form-control-user" type="email" id="exampleInputEmail"  placeholder="${emailPlaceholder}" path="email" value="${user.email}" />
+                                                <form:input class="form-control form-control-user" type="email" placeholder="${emailPlaceholder}" path="email" />
                                                 <form:errors path="email" cssStyle="color: red" element="p"/>
                                                 <c:if test="${emailTaken}">
                                                     <h6 Style="color: red" ><spring:message code="emailTaken"/></h6>
@@ -68,7 +68,7 @@
                                         <div class="row mt-3">
                                             <div class="col-sm-12">
                                                 <spring:message code="password" var="passwordPlaceholder"/>
-                                                <form:input class="form-control form-control-user" type="password" id="examplePassword" placeholder="${passwordPlaceholder}" path="password" value="${user.password}"  />
+                                                <form:input class="form-control form-control-user" type="password" placeholder="${passwordPlaceholder}" path="password"/>
                                                 <form:errors path="password" cssStyle="color: red" element="p"/>
                                             </div>
                                         </div>
@@ -76,7 +76,7 @@
                                         <div class="row mt-3">
                                             <div class="col-sm-12">
                                                 <spring:message code="userId" var="userIdPlaceholder"/>
-                                                <form:input class="form-control form-control-user" type="text" id="exampleLegajo" placeholder="${userIdPlaceholder}" path="id" value=""/>
+                                                <form:input class="form-control form-control-user" type="text" placeholder="${userIdPlaceholder}" path="id"/>
                                                 <form:errors path="id" cssStyle="color: red" element="p"/>
                                                 <c:if test="${idTaken}">
                                                     <h6 Style="color: red" ><spring:message code="idTaken"/></h6>
