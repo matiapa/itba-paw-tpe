@@ -113,6 +113,7 @@
                                     <table class="table my-0" id="dataTable">
                                         <thead>
                                         <tr>
+                                            <th><spring:message code="chat.name"/></th>
                                             <th><spring:message code="chat.platform"/></th>
                                             <th><spring:message code="year"/></th>
                                             <th><spring:message code="quarter"/></th>
@@ -126,6 +127,9 @@
                                         <c:forEach var="chatgroup" items="${chatgroups}">
                                             <tr>
                                                 <td>${chatgroup.name}</td>
+                                                <td>
+                                                    <spring:message code="enum.platform.${chatgroup.platform}"/>
+                                                </td>
                                                 <td>${chatgroup.creationYear}</td>
                                                 <td>${chatgroup.creationQuarter}</td>
                                                 <td>
