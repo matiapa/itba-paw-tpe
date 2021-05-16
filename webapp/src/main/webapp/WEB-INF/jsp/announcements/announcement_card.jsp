@@ -18,7 +18,6 @@
         <div class="row align-items-center">
             <div class="col">
                 <p style="padding-top: 0;"><c:out value="${announcement.summary}"/></p>
-                <p style="padding-top: 0;"><c:out value="${announcement.content}"/></p>
                 <span class="text-xs">
                     <fmt:formatDate type="both" dateStyle = "short" timeStyle = "short" value="${announcement.uploadDate}" var="uploadDateFormatted"/>
                     <c:url var="profileUrl" value="/profile/${announcement.uploader.id}"/>
@@ -47,6 +46,11 @@
                         </button>
                     </form>
                 </c:if>
+            </div>
+            <div class="col-auto">
+                <a href="<c:url value="/announcements/${announcement.id}"/>" class="btn btn-icon" type="button">
+                    <i class="material-icons">keyboard_arrow_right</i>
+                </a>
             </div>
         </div>
     </div>

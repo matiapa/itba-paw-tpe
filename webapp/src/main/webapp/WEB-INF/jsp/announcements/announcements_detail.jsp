@@ -31,9 +31,6 @@
                 <div class="container-fluid">
                     <div class="col">
                         <div class="row">
-                            <a href="javascript:history.back()"><spring:message code="back"/></a>
-                        </div>
-                        <div class="row">
                             <div id="${announcement.id}" class="card shadow mb-4" style="margin-top: 32px; width: 100%">
                                 <div class="card-header py-3">
                                     <h6 class="font-weight-bold m-0"><c:out value="${announcement.title}"/></h6>
@@ -43,8 +40,9 @@
                                     <p style="padding-top: 0;"><c:out value="${announcement.content}"/></p>
                                     <span class="text-xs">
                                         <fmt:formatDate type="both" dateStyle = "short" timeStyle = "short" value="${announcement.uploadDate}" var="uploadDateFormatted"/>
+                                        <c:url var="profileUrl" value="/profile/${announcement.uploader.id}"/>
                                         <spring:message code="publishedBy" htmlEscape="false" arguments=
-                                            '${fn:escapeXml(announcement.uploader.name)},
+                                            '<a href="${profileUrl}">${fn:escapeXml(announcement.uploader.name)}</a>,
                                             ${uploadDateFormatted}'/>
                                     </span>
                                 </div>
