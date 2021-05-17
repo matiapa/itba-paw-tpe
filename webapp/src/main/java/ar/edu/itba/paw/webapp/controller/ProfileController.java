@@ -116,22 +116,5 @@ public class ProfileController {
         return mav;
     }
 
-    @RequestMapping(value = "/profile/own", method = PUT)
-    public ModelAndView addFavouriteCourse(
-            @RequestParam("FavCourse") Course course,
-            @ModelAttribute("user") User loggedUser
-    ) {
-        userService.addFavouriteCourse(loggedUser.getId(), course.getId());
-        return new ModelAndView("profile/profile_own");
-    }
-
-    @RequestMapping(value = "/profile/own", method = DELETE)
-    public ModelAndView removeFavouriteCourse(
-            @RequestParam("NotFavCourse") Course course,
-            @ModelAttribute("user") User loggedUser
-    ){
-        userService.removeFavouriteCourse(loggedUser.getId(), course.getId());
-        return new ModelAndView("profile/profile_own");
-    }
 
 }

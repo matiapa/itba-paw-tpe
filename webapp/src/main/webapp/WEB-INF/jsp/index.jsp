@@ -2,6 +2,8 @@
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix = "spring" uri="http://www.springframework.org/tags"%>
 
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 
 <jsp:useBean type="java.util.List<ar.edu.itba.paw.models.Announcement>" scope="request" id="announcements"/>
@@ -139,7 +141,6 @@
                                 </div>
 
                                 <%-- Relevant courses list --%>
-
                                 <ul class="list-group list-group-flush">
                                     <c:choose>
                                     <c:when test="${courses.size() != 0}">
@@ -173,20 +174,35 @@
                                     </c:otherwise>
                                     </c:choose>
 
-
                                 </ul>
 
                             </div>
+                            <form:form modelAttribute="courseForm" action="${postUrl}" method="post">
+
+                                <div class="form-group">
+                                    <form:label path="course"  name="course"><spring:message code="Courses"/></form:label>
+                                    <spring:message code="chooseCourse" var="chooseCourseMessage"/>
+                                    <form:select path= "course" class="selectpicker" data-live-search="true" title='${chooseCourseMessage}'>
+                                        <c:forEach var="course" items="${allCourses}">
+                                            <option ${course.equals(selectedCourse) ? 'selected' : ''}
+                                                    path="course" value="${course.id}" data-tokens="${course.name}">${course.name}</option>
+                                        </c:forEach>
+                                    </form:select>
+                                    <form:errors path="course" cssStyle="color: red" element="p"/>
+                                </div>
+
+                                <div>
+                                    <button id="submitCourse" type="submit" class="btn btn-primary"><spring:message code="course.formAdd"/></button>
+                                </div>
+                            </form:form>
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
 
-    <jsp:include page="common/scripts.jsp"/>
+    <jsp:include page="../common/scripts.jsp"/>
 
 </body>
-
 </html>
