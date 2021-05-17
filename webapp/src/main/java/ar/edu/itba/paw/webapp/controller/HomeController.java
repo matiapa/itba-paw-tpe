@@ -8,12 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import ar.edu.itba.paw.models.User;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
@@ -36,7 +38,6 @@ public class HomeController {
     @RequestMapping("/")
     public ModelAndView getDashboard(
         @ModelAttribute("user") User loggedUser,
-        @RequestParam(name = "showCreateForm", required = false, defaultValue="false") Boolean showCreateForm,
         @ModelAttribute("courseForm") final CourseForm courseForm
         ) {
 
@@ -52,7 +53,6 @@ public class HomeController {
 
         mav.addObject("polls", pollService.findRelevant(loggedUser.getId()));
 
-        mav.addObject("showCreateForm", showCreateForm);
 
 
         return mav;
@@ -65,17 +65,30 @@ public class HomeController {
             final BindingResult errors
     ) {
         userService.addFavouriteCourse(loggedUser.getId(), courseForm.getCourse());
-        return getDashboard(loggedUser, false, courseForm);
+        return getDashboard(loggedUser, courseForm);
     }
 
-    @RequestMapping(value = "/", method = DELETE)
-    public ModelAndView removeFavouriteCourse(
-            @RequestParam("NotFavCourse") Course course,
-            @Valid @ModelAttribute("courseForm") final CourseForm courseForm,
+    @RequestMapping(value = "/{id}", method = DELETE)
+    public String removeFavouriteCourse(
+            @PathVariable(value = "id") String id, HttpServletRequest request,
             @ModelAttribute("user") User loggedUser
     ){
-        userService.removeFavouriteCourse(loggedUser.getId(), course.getId());
-        return getDashboard(loggedUser, false, courseForm);
+        System.out.println(id);
+
+        userService.removeFavouriteCourse(loggedUser.getId(), id);
+        System.out.println("paso");
+
+        return "redirect:"+ request.getHeader("Referer");
+    }
+
+
+    @RequestMapping(value = "/{id}/delete", method = POST)
+    public String deleteWithPost(
+            @PathVariable(value = "id") String id, HttpServletRequest request,
+            @ModelAttribute("user") User loggedUser
+    ) {
+        System.out.println("Voy a borrar");
+        return removeFavouriteCourse(id, request, loggedUser);
     }
 
 }

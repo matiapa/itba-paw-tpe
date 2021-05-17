@@ -157,6 +157,15 @@
                                                             <i class="material-icons">keyboard_arrow_right</i>
                                                         </a>
                                                     </div>
+
+                                                    <div class="col-auto">
+                                                        <c:url var="url" value="/${course.id}/delete"/>
+                                                        <form action="${url}" method="post">
+                                                            <button type="submit" class="btn btn-icon" style="color:red">
+                                                                <i class="material-icons">delete</i>
+                                                            </button>
+                                                        </form>
+                                                    </div>
                                                 </div>
                                             </li>
                                         </c:forEach>

@@ -112,8 +112,8 @@ public class UserDaoJdbc implements UserDao {
 
     @Override
     public void removeFavouriteCourse(int id, String course) {
-        jdbcTemplate.execute(String.format("DELETE FROM fav_course WHERE user_id=%d AND course_id=%d", id, course));
-
+        //jdbcTemplate.execute(String.format("DELETE FROM fav_course WHERE user_id=%d AND course_id=%s", id, course));
+        jdbcTemplate.update("DELETE FROM fav_course WHERE user_id=? AND course_id=?", id, course);
     }
 
     private void createVerificationCode(int id) {
