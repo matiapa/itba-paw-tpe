@@ -50,3 +50,9 @@ $(".page-link").click((e) => {
     url.searchParams.set('page', `${e.target.id}`);
     window.location.replace(url)
 });
+
+// ------------------------ Others ------------------------
+
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+})

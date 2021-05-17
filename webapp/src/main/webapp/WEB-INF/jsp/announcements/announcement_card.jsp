@@ -32,7 +32,8 @@
                 <c:if test="<%= user.can(Permission.Action.delete, Entity.announcement) %>">
                     <c:url var="url" value="/announcements/${announcement.id}/delete"/>
                     <form action="${url}" method="post">
-                       <button type="submit" class="btn btn-icon">
+                       <button type="submit" class="btn btn-icon"
+                           data-toggle="tooltip" title="<spring:message code="announcement.delete"/>">
                            <i class="material-icons">delete</i>
                        </button>
                     </form>
@@ -43,14 +44,16 @@
                 <c:url var="url" value="/announcements/${announcement.id}/seen"/>
                 <form action="${url}" method="post">
 <%--                    disabled="${announcement.seen}"--%>
-                    <button type="submit" class="btn btn-icon" ${announcement.seen ? 'disabled' : ''}>
+                    <button type="submit" class="btn btn-icon" ${announcement.seen ? 'disabled' : ''}
+                            data-toggle="tooltip" title="<spring:message code="announcement.checkAsSeen"/>">
                         <i class="material-icons">done</i>
                     </button>
                 </form>
             </div>
 
             <div class="col col-md-auto p-1">
-                <a href="<c:url value="/announcements/${announcement.id}"/>" class="btn btn-icon" type="button">
+                <a href="<c:url value="/announcements/${announcement.id}"/>" class="btn btn-icon" type="button"
+                   data-toggle="tooltip" title="<spring:message code="announcement.view"/>">
                     <i class="material-icons">keyboard_arrow_right</i>
                 </a>
             </div>
