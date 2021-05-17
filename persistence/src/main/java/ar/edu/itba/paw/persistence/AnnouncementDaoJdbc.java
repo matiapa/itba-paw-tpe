@@ -25,11 +25,15 @@ public class AnnouncementDaoJdbc implements AnnouncementDao {
         if(!userOpt.isPresent())
             throw new NoSuchElementException();
 
-        Boolean seen = jdbcTemplate.queryForObject(
-            "SELECT count(*)>0 AS seen FROM announcement_seen WHERE announcement_id=?",
-            new Object[] { rs.getInt("id") },
-            (rs2, rowNum2) -> rs2.getBoolean("seen")
-        );
+        Boolean seen = null;
+        try{
+            rs.getInt("user_id");
+            seen = jdbcTemplate.queryForObject(
+                    "SELECT count(*)>0 AS seen FROM announcement_seen WHERE announcement_id=? AND user_id=?",
+                    new Object[] { rs.getInt("id"), rs.getInt("user_id") },
+                    (rs2, rowNum2) -> rs2.getBoolean("seen")
+            );
+        }catch (Exception ignored) {}
 
         return new Announcement(
             rs.getInt("id"),
@@ -63,7 +67,7 @@ public class AnnouncementDaoJdbc implements AnnouncementDao {
         }
 
         if(offset != null && limit != null){
-            query.append(String.format(" ORDER BY creation_date DESC OFFSET %d LIMIT %d", offset, limit));
+            query.append(String.format(" ORDER BY creation_date DESC, id OFFSET %d LIMIT %d", offset, limit));
         }
 
         return query.toString();
@@ -71,14 +75,14 @@ public class AnnouncementDaoJdbc implements AnnouncementDao {
 
     @Override
     public List<Announcement> findRelevant(int userId, int limit) {
-        String query = "SELECT * FROM announcement\n" +
+        String query = "SELECT %d user_id, * FROM announcement\n" +
         "WHERE (expiry_date IS NULL OR expiry_date>now())\n" +
         "AND (course_id IS NULL OR course_id IN (SELECT course_id FROM fav_course WHERE user_id='%d'))\n" +
         "AND (career_code IS NULL OR career_code = (SELECT u.career_code FROM users u WHERE u.id='%d'))\n" +
         "ORDER BY creation_date DESC LIMIT %d";
 
         return jdbcTemplate.query(
-            String.format(query, userId, userId, limit),
+            String.format(query, userId, userId, userId, limit),
             announcementRowMapper
         );
     }
@@ -86,7 +90,7 @@ public class AnnouncementDaoJdbc implements AnnouncementDao {
     @Override
     public List<Announcement> findGeneral(boolean showSeen, int userId, int offset, int limit) {
         String query = queryBuilder(
-            "SELECT * FROM announcement WHERE career_code IS NULL AND course_id IS NULL",
+            String.format("SELECT %d user_id, * FROM announcement WHERE career_code IS NULL AND course_id IS NULL", userId),
             showSeen, userId, offset, limit
         );
 
@@ -96,7 +100,7 @@ public class AnnouncementDaoJdbc implements AnnouncementDao {
     @Override
     public List<Announcement> findByCourse(String courseId, boolean showSeen, int userId, int offset, int limit) {
         String query = queryBuilder(
-            String.format("SELECT * FROM announcement WHERE course_id='%s'", courseId),
+            String.format("SELECT %d user_id, * FROM announcement WHERE course_id='%s'", userId, courseId),
             showSeen, userId, offset, limit
         );
 
@@ -106,7 +110,7 @@ public class AnnouncementDaoJdbc implements AnnouncementDao {
     @Override
     public List<Announcement> findByCareer(String careerCode, boolean showSeen, int userId, int offset, int limit) {
         String query = queryBuilder(
-            String.format("SELECT * FROM announcement WHERE career_code='%s'", careerCode),
+            String.format("SELECT %d user_id, * FROM announcement WHERE career_code='%s'", userId, careerCode),
             showSeen, userId, offset, limit
         );
 
