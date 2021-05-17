@@ -63,6 +63,11 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     }
 
     @Override
+    public void markAllSeen(User loggedUser) {
+        announcementDao.markAllSeen(loggedUser);
+    }
+
+    @Override
     public void delete(User loggedUser, int id) {
         Permission reqPerm = new Permission(Permission.Action.delete, Entity.announcement);
         if(! loggedUser.getPermissions().contains(reqPerm))

@@ -26,6 +26,8 @@ public interface AnnouncementService {
 
     void markSeen(User loggedUser, int announcementId);
 
+    void markAllSeen(User loggedUser);
+
     void delete(User loggedUser, int id);
 
 }

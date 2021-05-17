@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.models.Announcement;
 import ar.edu.itba.paw.models.EntityTarget;
+import ar.edu.itba.paw.models.User;
 
 import java.util.Date;
 import java.util.List;
@@ -24,6 +25,8 @@ public interface AnnouncementDao {
         String courseId, Date expiryDate, Integer submittedBy);
 
     void markSeen(int announcementId, int userId);
+
+    void markAllSeen(User loggedUser);
 
     void delete(int id);
 

@@ -184,4 +184,14 @@ public class AnnounceController {
         return "redirect:"+ request.getHeader("Referer");
     }
 
+    @RequestMapping(value = "/announcements/seen", method = POST)
+    public String markAllSeen(
+        HttpServletRequest request,
+        @ModelAttribute("user") User loggedUser
+    ) {
+        announcementService.markAllSeen(loggedUser);
+
+        return "redirect:"+ request.getHeader("Referer");
+    }
+
 }

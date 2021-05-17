@@ -17,13 +17,18 @@
                         </li>
                     </c:if>
 
-                    <c:forEach begin="${pager.currPage>5?pager.currPage-5:0}" step="1" end="${pager.currPage+5>pager.lastPage?pager.lastPage:pager.currPage+5}" var="num">
-                        <li class="page-item ${num==pager.currPage ? 'active' : ''}">
-                            <button class="page-link" id="${num}">
-                                <c:out value="${num + 1}"/>
-                            </button>
-                        </li>
-                    </c:forEach>
+                    <c:set var="beginPage" value="${pager.currPage>5 ? pager.currPage-5 : 0}"/>
+                    <c:set var="endPage" value="${pager.currPage+5 > pager.lastPage ? pager.lastPage : pager.currPage+5}"/>
+
+                    <c:if test="${endPage > 0}">
+                        <c:forEach begin="${beginPage}" step="1" end="${endPage}" var="num">
+                            <li class="page-item ${num==pager.currPage ? 'active' : ''}">
+                                <button class="page-link" id="${num}">
+                                    <c:out value="${num + 1}"/>
+                                </button>
+                            </li>
+                        </c:forEach>
+                    </c:if>
 
                     <c:if test="${pager.currPage < pager.lastPage}">
                         <li class="page-item">

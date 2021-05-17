@@ -176,6 +176,15 @@ public class AnnouncementDaoJdbc implements AnnouncementDao {
     }
 
     @Override
+    public void markAllSeen(User loggedUser) {
+        jdbcTemplate.update(
+            "INSERT INTO announcement_seen(announcement_id, user_id) (SELECT id, ? FROM announcement)" +
+            "ON CONFLICT (announcement_id, user_id) DO NOTHING",
+            loggedUser.getId()
+        );
+    }
+
+    @Override
     public void delete(int id){
         jdbcTemplate.update("DELETE FROM announcement WHERE id=?", id);
     }
