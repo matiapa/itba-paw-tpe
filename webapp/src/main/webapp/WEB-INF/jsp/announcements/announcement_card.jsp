@@ -14,7 +14,7 @@
     <div class="card-header py-3">
         <h6 class="font-weight-bold m-0"><c:out value="${announcement.title}"/></h6>
     </div>
-    <div class="col mr-2" style="padding: 16px 24px;">
+    <div class="card-body">
         <div class="row align-items-center">
             <div class="col">
                 <p style="padding-top: 0;"><c:out value="${announcement.summary}"/></p>
@@ -27,27 +27,29 @@
                     />
                 </span>
             </div>
-            <div class="col-auto">
+
+            <div class="col col-md-auto p-1">
                 <c:if test="<%= user.can(Permission.Action.delete, Entity.announcement) %>">
                     <c:url var="url" value="/announcements/${announcement.id}/delete"/>
                     <form action="${url}" method="post">
-                       <button type="submit" class="btn btn-icon" style="color:red">
+                       <button type="submit" class="btn btn-icon">
                            <i class="material-icons">delete</i>
                        </button>
                     </form>
                 </c:if>
             </div>
-            <div class="col-auto">
-                <c:if test="${!announcement.seen}">
-                    <c:url var="url" value="/announcements/${announcement.id}/seen"/>
-                    <form action="${url}" method="post">
-                        <button type="submit" class="btn btn-icon">
-                            <i class="material-icons">done</i>
-                        </button>
-                    </form>
-                </c:if>
+
+            <div class="col col-md-auto p-1">
+                <c:url var="url" value="/announcements/${announcement.id}/seen"/>
+                <form action="${url}" method="post">
+<%--                    disabled="${announcement.seen}"--%>
+                    <button type="submit" class="btn btn-icon" ${announcement.seen ? 'disabled' : ''}>
+                        <i class="material-icons">done</i>
+                    </button>
+                </form>
             </div>
-            <div class="col-auto">
+
+            <div class="col col-md-auto p-1">
                 <a href="<c:url value="/announcements/${announcement.id}"/>" class="btn btn-icon" type="button">
                     <i class="material-icons">keyboard_arrow_right</i>
                 </a>
