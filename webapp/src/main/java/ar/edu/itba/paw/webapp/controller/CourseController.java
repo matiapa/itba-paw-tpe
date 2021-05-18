@@ -18,12 +18,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
+
 
 @Controller
 public class CourseController {
 
     @Autowired private CareerService careerService;
+
+    @Autowired private UserService userService;
 
     @Autowired private AnnouncementService announcementService;
 
@@ -71,6 +76,34 @@ public class CourseController {
         return mav;
     }
 
+    @RequestMapping(value = "courses/{id}/fav", method = POST)
+    public ModelAndView addFav(
+            @PathVariable(value="id") String id,
+            @ModelAttribute("user") User loggedUser
+    ){
+        userService.addFavouriteCourse(loggedUser.getId(), id);
+        return get(id, loggedUser);
+    }
+/*
+    @RequestMapping(value = "/{id}", method = DELETE)
+    public String removeFav(
+            @PathVariable(value = "id") String id, HttpServletRequest request,
+            @ModelAttribute("user") User loggedUser
+    ){
+        userService.removeFavouriteCourse(loggedUser.getId(), id);
+
+        return "redirect:"+ request.getHeader("Referer");
+    }
+
+
+    @RequestMapping(value = "courses/{id}/nofav", method = POST)
+    public String removeFavWithPost(
+            @PathVariable(value = "id") String id, HttpServletRequest request,
+            @ModelAttribute("user") User loggedUser
+    ) {
+        return removeFav(id, request, loggedUser);
+    }
+*/
     @RequestMapping(value = "/courses/{id:.+}", method = GET)
     public ModelAndView get(
         @PathVariable(value="id") String courseId,

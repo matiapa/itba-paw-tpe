@@ -73,10 +73,8 @@ public class HomeController {
             @PathVariable(value = "id") String id, HttpServletRequest request,
             @ModelAttribute("user") User loggedUser
     ){
-        System.out.println(id);
 
         userService.removeFavouriteCourse(loggedUser.getId(), id);
-        System.out.println("paso");
 
         return "redirect:"+ request.getHeader("Referer");
     }
@@ -87,7 +85,6 @@ public class HomeController {
             @PathVariable(value = "id") String id, HttpServletRequest request,
             @ModelAttribute("user") User loggedUser
     ) {
-        System.out.println("Voy a borrar");
         return removeFavouriteCourse(id, request, loggedUser);
     }
 
