@@ -43,16 +43,25 @@
             <div class="col col-md-auto p-1">
                 <c:url var="url" value="/announcements/${announcement.id}/seen"/>
                 <form action="${url}" method="post">
+<<<<<<< HEAD
                     <button type="submit" class="btn btn-icon" ${announcement.seen ? 'disabled' : ''}
                             data-toggle="tooltip" title="<spring:message code="announcement.checkAsSeen"/>">
+=======
+<%--                    disabled="${announcement.seen}"--%>
+                    <button type="submit" class="btn btn-icon" ${announcement.seen ? 'disabled' : ''}>
+>>>>>>> 570f4f1 (Improved card buttons style on announcement list)
                         <i class="material-icons">done</i>
                     </button>
                 </form>
             </div>
 
             <div class="col col-md-auto p-1">
+<<<<<<< HEAD
                 <a href="<c:url value="/announcements/${announcement.id}"/>" class="btn btn-icon" type="button"
                    data-toggle="tooltip" title="<spring:message code="announcement.view"/>">
+=======
+                <a href="<c:url value="/announcements/${announcement.id}"/>" class="btn btn-icon" type="button">
+>>>>>>> 570f4f1 (Improved card buttons style on announcement list)
                     <i class="material-icons">keyboard_arrow_right</i>
                 </a>
             </div>
