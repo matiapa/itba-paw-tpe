@@ -52,11 +52,9 @@
                                                         <div class="col mr-2">
                                                             <h6 class="mb-0"><strong><c:out value="${announcement.title}"/></strong></h6>
                                                             <span><c:out value="${announcement.summary}"/><br></span></div>
-                                                        <div class="col-auto">
-                                                            <a href="<c:url value="/announcements/${announcement.id}"/>" class="btn btn-icon" type="button">
+                                                            <a href="<c:url value="/announcements/${announcement.id}"/>" class="btn btn-icon stretched-link"  type="button">
                                                                 <i class="material-icons">keyboard_arrow_right</i>
                                                             </a>
-                                                        </div>
                                                     </div>
                                                 </li>
                                             </c:forEach>
@@ -107,11 +105,9 @@
                                                         <fmt:formatDate type="both" dateStyle = "short" timeStyle = "short" value="${poll.expiryDate}"/>
                                                     </span>
                                                         </div>
-                                                        <div class="col-auto">
-                                                            <a href="<c:url value="/polls/${poll.id}"/>" class="btn btn-icon" type="button">
-                                                                <i class="material-icons">keyboard_arrow_right</i>
-                                                            </a>
-                                                        </div>
+                                                        <a href="<c:url value="/polls/${poll.id}"/>" class="btn btn-icon stretched-link" type="button">
+                                                            <i class="material-icons">keyboard_arrow_right</i>
+                                                        </a>
                                                     </div>
                                                 </li>
 
