@@ -24,7 +24,7 @@ import ar.edu.itba.paw.models.Poll;
 import ar.edu.itba.paw.models.Poll.PollFormat;
 import ar.edu.itba.paw.models.Poll.PollOption;
 import ar.edu.itba.paw.models.Poll.PollState;
-import ar.edu.itba.paw.persistence.PollDaoJdbc;
+import ar.edu.itba.paw.persistence.jdbc.PollDaoJdbc;
 
 @Rollback
 @Sql("classpath:populators/poll_populate.sql")

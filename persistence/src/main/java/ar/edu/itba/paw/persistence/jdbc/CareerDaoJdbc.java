@@ -1,6 +1,7 @@
-package ar.edu.itba.paw.persistence;
+package ar.edu.itba.paw.persistence.jdbc;
 
 import ar.edu.itba.paw.models.Career;
+import ar.edu.itba.paw.persistence.CareerDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -12,7 +13,7 @@ import java.util.Optional;
 
 
 @Repository
-public class CareerDaoJdbc implements CareerDao{
+public class CareerDaoJdbc implements CareerDao {
 
     private final JdbcTemplate jdbcTemplate;
 

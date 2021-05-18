@@ -4,7 +4,7 @@ import ar.edu.itba.paw.models.Career;
 import ar.edu.itba.paw.models.Course;
 import ar.edu.itba.paw.models.Entity;
 import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.persistence.StatisticsDaoJdbc;
+import ar.edu.itba.paw.persistence.jdbc.StatisticsDaoJdbc;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

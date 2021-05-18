@@ -1,7 +1,8 @@
-package ar.edu.itba.paw.persistence;
+package ar.edu.itba.paw.persistence.jdbc;
 
 import ar.edu.itba.paw.models.CareerCourse;
 import ar.edu.itba.paw.models.Course;
+import ar.edu.itba.paw.persistence.CourseDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;

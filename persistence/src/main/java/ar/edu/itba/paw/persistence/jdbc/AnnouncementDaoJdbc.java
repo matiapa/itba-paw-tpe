@@ -1,8 +1,10 @@
-package ar.edu.itba.paw.persistence;
+package ar.edu.itba.paw.persistence.jdbc;
 
 import ar.edu.itba.paw.models.Announcement;
 import ar.edu.itba.paw.models.EntityTarget;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.persistence.AnnouncementDao;
+import ar.edu.itba.paw.persistence.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;

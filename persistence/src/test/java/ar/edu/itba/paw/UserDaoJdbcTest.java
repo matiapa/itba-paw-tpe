@@ -18,7 +18,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
 import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.persistence.UserDaoJdbc;
+import ar.edu.itba.paw.persistence.jdbc.UserDaoJdbc;
 
 @Rollback
 @Sql("classpath:populators/course_populate.sql")

@@ -2,7 +2,7 @@ package ar.edu.itba.paw;
 
 import ar.edu.itba.paw.models.Announcement;
 import ar.edu.itba.paw.models.EntityTarget;
-import ar.edu.itba.paw.persistence.AnnouncementDaoJdbc;
+import ar.edu.itba.paw.persistence.jdbc.AnnouncementDaoJdbc;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

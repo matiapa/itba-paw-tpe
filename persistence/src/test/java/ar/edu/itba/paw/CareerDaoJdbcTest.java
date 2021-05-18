@@ -2,7 +2,7 @@ package ar.edu.itba.paw;
 
 
 import ar.edu.itba.paw.models.Career;
-import ar.edu.itba.paw.persistence.CareerDaoJdbc;
+import ar.edu.itba.paw.persistence.jdbc.CareerDaoJdbc;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

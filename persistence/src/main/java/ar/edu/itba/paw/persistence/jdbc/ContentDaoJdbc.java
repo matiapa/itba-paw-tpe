@@ -1,8 +1,10 @@
-package ar.edu.itba.paw.persistence;
+package ar.edu.itba.paw.persistence.jdbc;
 
 import ar.edu.itba.paw.models.Content;
 import ar.edu.itba.paw.models.Content.ContentType;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.persistence.ContentDao;
+import ar.edu.itba.paw.persistence.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -13,7 +15,7 @@ import javax.sql.DataSource;
 import java.util.*;
 
 @Repository
-public class ContentDaoJdbc implements ContentDao{
+public class ContentDaoJdbc implements ContentDao {
 
     @Autowired private UserDao userDao;
 

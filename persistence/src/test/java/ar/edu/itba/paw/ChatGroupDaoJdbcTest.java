@@ -1,7 +1,7 @@
 package ar.edu.itba.paw;
 
 import ar.edu.itba.paw.models.ChatGroup;
-import ar.edu.itba.paw.persistence.ChatGroupDaoJdbc;
+import ar.edu.itba.paw.persistence.jdbc.ChatGroupDaoJdbc;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

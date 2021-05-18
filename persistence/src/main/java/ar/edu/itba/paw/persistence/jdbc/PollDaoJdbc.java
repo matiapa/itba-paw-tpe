@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.persistence;
+package ar.edu.itba.paw.persistence.jdbc;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -9,6 +9,8 @@ import java.util.Optional;
 import javax.sql.DataSource;
 
 import ar.edu.itba.paw.models.EntityTarget;
+import ar.edu.itba.paw.persistence.PollDao;
+import ar.edu.itba.paw.persistence.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;

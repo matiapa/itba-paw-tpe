@@ -1,9 +1,10 @@
-package ar.edu.itba.paw.persistence;
+package ar.edu.itba.paw.persistence.jdbc;
 
 import java.util.*;
 
 import javax.sql.DataSource;
 
+import ar.edu.itba.paw.persistence.ChatGroupDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -14,7 +15,7 @@ import ar.edu.itba.paw.models.ChatGroup;
 import ar.edu.itba.paw.models.ChatGroup.ChatPlatform;
 
 @Repository
-public class ChatGroupDaoJdbc implements ChatGroupDao{
+public class ChatGroupDaoJdbc implements ChatGroupDao {
 
     private final JdbcTemplate jdbcTemplate;
 
