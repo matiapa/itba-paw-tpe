@@ -33,8 +33,6 @@ public class HomeController {
 
     @Autowired private PollService pollService;
 
-    @Autowired private UserService userService;
-
     @RequestMapping("/")
     public ModelAndView getDashboard(
         @ModelAttribute("user") User loggedUser,
@@ -43,7 +41,7 @@ public class HomeController {
 
         final ModelAndView mav = new ModelAndView("index");
 
-        mav.addObject("courses", courseService.findFavourites(loggedUser, 10));
+        mav.addObject("courses", courseService.findFavourites(loggedUser));
 
         mav.addObject("allCourses", courseService.findAll());
 
@@ -56,39 +54,6 @@ public class HomeController {
         mav.addObject("controversialPolls", pollService.findControversial(loggedUser.getId()));
 
         return mav;
-    }
-
-    @RequestMapping(value = "/", method = POST)
-    public ModelAndView addFavouriteCourse(
-            @ModelAttribute("user") User loggedUser,
-            @Valid @ModelAttribute("courseForm") final CourseForm courseForm,
-            final BindingResult errors
-    ) {
-        userService.addFavouriteCourse(loggedUser.getId(), courseForm.getCourse());
-        return getDashboard(loggedUser, courseForm);
-    }
-
-    @RequestMapping(value = "/{id}", method = DELETE)
-    public String removeFavouriteCourse(
-            @PathVariable(value = "id") String id, HttpServletRequest request,
-            @ModelAttribute("user") User loggedUser
-    ){
-        System.out.println(id);
-
-        userService.removeFavouriteCourse(loggedUser.getId(), id);
-        System.out.println("paso");
-
-        return "redirect:"+ request.getHeader("Referer");
-    }
-
-
-    @RequestMapping(value = "/{id}/delete", method = POST)
-    public String deleteWithPost(
-            @PathVariable(value = "id") String id, HttpServletRequest request,
-            @ModelAttribute("user") User loggedUser
-    ) {
-        System.out.println("Voy a borrar");
-        return removeFavouriteCourse(id, request, loggedUser);
     }
 
 }

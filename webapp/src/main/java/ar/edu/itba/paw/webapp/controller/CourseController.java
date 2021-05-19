@@ -18,7 +18,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
+
 
 @Controller
 public class CourseController {
@@ -85,9 +88,11 @@ public class CourseController {
             LOGGER.debug("user {} cound not find course with id {}",loggedUser,courseId);
             throw new ResourceNotFoundException();
         }
+        Course course = selectedCourse.get();
 
+        course.setFaved(courseService.isFaved(courseId, loggedUser.getId()));
 
-        mav.addObject("course", selectedCourse.get());
+        mav.addObject("course", course);
 
         // Course announcements
 
@@ -113,6 +118,24 @@ public class CourseController {
         mav.addObject("polls",polls);
 
         return mav;
+    }
+
+    @RequestMapping(value = "courses/{id:.+}/fav", method = POST)
+    public ModelAndView addFav(
+        @PathVariable(value="id") String id,
+        @ModelAttribute("user") User loggedUser
+    ){
+        courseService.addFavourite(loggedUser.getId(), id);
+        return get(id, loggedUser);
+    }
+
+    @RequestMapping(value = "courses/{id:.+}/unfav", method = POST)
+    public ModelAndView removeFav(
+        @PathVariable(value="id") String id,
+        @ModelAttribute("user") User loggedUser
+    ){
+        courseService.removeFavourite(loggedUser.getId(), id);
+        return get(id, loggedUser);
     }
 
 }

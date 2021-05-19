@@ -42,6 +42,8 @@ public class UserDaoJdbc implements UserDao {
     private static final RowMapper<Integer> VERIFICATION_CODE_MAPPER = (rs, rowNum) ->
             rs.getInt("verification_code");
 
+    @Autowired private CourseDao courseDao;
+
 
     @Autowired
     public UserDaoJdbc(DataSource ds) {
@@ -100,21 +102,6 @@ public class UserDaoJdbc implements UserDao {
         ).stream().findFirst();
     }
 
-    @Override
-    public void addFavouriteCourse(int id,String courseId){
-        final Map<String,Object> args = new HashMap<>();
-
-        args.put("course_id",courseId);
-        args.put("user_id",id);
-
-        jdbcInsertFavCourses.execute(args);
-    }
-
-    @Override
-    public void removeFavouriteCourse(int id, String course) {
-        //jdbcTemplate.execute(String.format("DELETE FROM fav_course WHERE user_id=%d AND course_id=%s", id, course));
-        jdbcTemplate.update("DELETE FROM fav_course WHERE user_id=? AND course_id=?", id, course);
-    }
 
     private void createVerificationCode(int id) {
         final Map<String, Object> args = new HashMap<>();
@@ -142,7 +129,7 @@ public class UserDaoJdbc implements UserDao {
         final Number userID = jdbcInsertUser.execute(args);
 
         for (String course:courses ) {
-            addFavouriteCourse(id,course);
+            courseDao.addFavourite(id,course);
         }
 
         createVerificationCode(id);
@@ -150,7 +137,6 @@ public class UserDaoJdbc implements UserDao {
         return findById(userID.intValue())
             .orElseThrow(() -> new RuntimeException("Could not register user"));
     }
-
 
 
     @Override
