@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.Course;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
@@ -14,9 +15,10 @@ import java.util.*;
 @Repository
 public class CourseDaoJdbc implements CourseDao {
 
+    private final DataSource ds;
     private final JdbcTemplate jdbcTemplate;
 
-     static final RowMapper<Course> COURSE_ROW_MAPPER = (rs, rowNum) ->
+    static final RowMapper<Course> COURSE_ROW_MAPPER = (rs, rowNum) ->
         new Course(
             rs.getString("id"),
             rs.getString("name"),
@@ -34,6 +36,7 @@ public class CourseDaoJdbc implements CourseDao {
 
     @Autowired
     public CourseDaoJdbc(DataSource ds) {
+        this.ds = ds;
         this.jdbcTemplate = new JdbcTemplate(ds);
     }
 
@@ -50,15 +53,6 @@ public class CourseDaoJdbc implements CourseDao {
         return jdbcTemplate.query(
             String.format("SELECT * FROM fav_course JOIN course ON course_id=id " +
                 "WHERE user_id=%d", userId),
-            COURSE_ROW_MAPPER
-        );
-    }
-
-    @Override
-    public List<Course> findFavourites(int userId, int limit) {
-        return jdbcTemplate.query(
-            String.format("SELECT * FROM fav_course JOIN course ON course_id=id " +
-                "WHERE user_id=%d ORDER BY id LIMIT %d", userId, limit),
             COURSE_ROW_MAPPER
         );
     }
@@ -97,6 +91,28 @@ public class CourseDaoJdbc implements CourseDao {
         return result;
     }
 
+    @Override
+    public void addFavourite(int id,String courseId){
+        final Map<String,Object> args = new HashMap<>();
 
+        args.put("course_id",courseId);
+        args.put("user_id",id);
+
+        new SimpleJdbcInsert(ds).withTableName("fav_course").execute(args);
+    }
+
+    @Override
+    public void removeFavourite(int id, String course) {
+        jdbcTemplate.update("DELETE FROM fav_course WHERE user_id=? AND course_id=?", id, course);
+    }
+
+    @Override
+    public boolean isFaved(String courseId, Integer userId) {
+        return jdbcTemplate.queryForObject(
+                "SELECT count(*)>0 AS faved FROM paw.public.fav_course WHERE course_id=? AND user_id=?",
+                new Object[] { courseId, userId },
+                (rs, rowNum2) -> rs.getBoolean("faved")
+        );
+    }
 
 }

@@ -4,6 +4,7 @@ public class Course {
 
     private final String id, name;
     private final int credits;
+    private Boolean faved;
 
     public Course(String id, String name,int credits) {
         this.id = id;
@@ -21,5 +22,13 @@ public class Course {
 
     public int getCredits() {
         return credits;
+    }
+
+    public Boolean getFaved() {
+        return faved;
+    }
+
+    public void setFaved(Boolean faved) {
+        this.faved = faved;
     }
 }

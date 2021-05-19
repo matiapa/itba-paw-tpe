@@ -148,19 +148,11 @@
                                                             <strong><c:out value="${course.name}"/></strong>
                                                         </h6>
                                                     </div>
+
                                                     <div class="col-auto">
                                                         <a href="<c:url value="/courses/${course.id}"/>" class="btn btn-icon" type="button">
                                                             <i class="material-icons">keyboard_arrow_right</i>
                                                         </a>
-                                                    </div>
-
-                                                    <div class="col-auto">
-                                                        <c:url var="url" value="/${course.id}/delete"/>
-                                                        <form action="${url}" method="post">
-                                                            <button type="submit" class="btn btn-icon" style="color:red">
-                                                                <i class="material-icons">delete</i>
-                                                            </button>
-                                                        </form>
                                                     </div>
                                                 </div>
                                             </li>
@@ -182,24 +174,6 @@
                                 </ul>
 
                             </div>
-                            <form:form modelAttribute="courseForm" action="${postUrl}" method="post">
-
-                                <div class="form-group">
-                                    <form:label path="course"  name="course"><spring:message code="Courses"/></form:label>
-                                    <spring:message code="chooseCourse" var="chooseCourseMessage"/>
-                                    <form:select path= "course" class="selectpicker" data-live-search="true" title='${chooseCourseMessage}'>
-                                        <c:forEach var="course" items="${allCourses}">
-                                            <option ${course.equals(selectedCourse) ? 'selected' : ''}
-                                                    path="course" value="${course.id}" data-tokens="${course.name}">${course.name}</option>
-                                        </c:forEach>
-                                    </form:select>
-                                    <form:errors path="course" cssStyle="color: red" element="p"/>
-                                </div>
-
-                                <div>
-                                    <button id="submitCourse" type="submit" class="btn btn-primary"><spring:message code="course.formAdd"/></button>
-                                </div>
-                            </form:form>
                         </div>
                     </div>
                 </div>
@@ -207,7 +181,7 @@
         </div>
     </div>
 
-    <jsp:include page="../common/scripts.jsp"/>
+    <jsp:include page="common/scripts.jsp"/>
 
 </body>
 </html>

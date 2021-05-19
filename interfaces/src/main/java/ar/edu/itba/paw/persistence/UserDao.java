@@ -23,8 +23,4 @@ public interface UserDao {
 
 	void registerLogin(int id);
 
-	void addFavouriteCourse(int id, String course);
-
-	void removeFavouriteCourse(int id, String course);
-
 }

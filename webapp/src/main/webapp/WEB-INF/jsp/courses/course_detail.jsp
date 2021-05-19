@@ -26,6 +26,26 @@
             <div id="content">
                 <jsp:include page="../common/header.jsp"/>
         <div class="container-fluid">
+            <div class="mb-3" align="right">
+                <c:if test="${!course.faved}">
+                    <c:url var="url" value="/courses/${course.id}/fav"/>
+                    <form action="${url}" method="post">
+                        <button class="btn btn-primary btn-sm">
+                            <i class="material-icons pull-left">favorite</i>
+                            Agregar a favoritos
+                        </button>
+                    </form>
+                </c:if>
+                <c:if test="${course.faved}">
+                    <c:url var="url" value="/courses/${course.id}/unfav"/>
+                    <form action="${url}" method="post">
+                        <button class="btn btn-danger btn-sm">
+                            <i class="material-icons pull-left">delete</i>
+                            Quitar de favoritos
+                        </button>
+                    </form>
+                </c:if>
+            </div>
             <div class="row">
                 <div class="col-lg-6 mb-4">
                     <div class="card shadow mb-4">
@@ -57,22 +77,6 @@
                     </div>
                 </div>
                 <div class="col">
-                    <div class="mb-3" align="right">
-                            <c:url var="url" value="/courses/${course.id}/fav"/>
-                            <form action="${url}" method="post">
-                                <button class="btn btn-primary btn-sm">
-                                    <i class="material-icons pull-left">favorite</i>
-                                </button>
-                            </form>
-                        <!--
-                        <c:url var="url" value="/courses/${course.id}/nofav"/>
-                            <form action="${url}" method="post">
-                                <button class="btn btn-danger btn-sm">
-                                    <i class="material-icons pull-left">delete</i>
-                                </button>
-                            </form>
-                        -->
-                    </div>
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
                             <h6 class="font-weight-bold m-0"><spring:message code="polls"/></h6>

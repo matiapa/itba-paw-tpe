@@ -11,12 +11,18 @@ public interface CourseService {
 
     List<Course> findAll();
 
-    List<Course> findFavourites(User user, int limit);
+    List<Course> findFavourites(User user);
 
     List<Course> findByCareer(String careerCode, int limit);
 
     Optional<Course> findById(String id);
 
     Map<Integer,List<CareerCourse>> findByCareerSemester(String careerCode);
+
+    void addFavourite(int id, String course);
+
+    void removeFavourite(int id, String course);
+
+    boolean isFaved(String courseId, Integer userId);
 
 }

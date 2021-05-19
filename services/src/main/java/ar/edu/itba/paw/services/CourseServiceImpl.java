@@ -24,8 +24,8 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public List<Course> findFavourites(User user, int limit) {
-        return courseDao.findFavourites(user.getId(), limit);
+    public List<Course> findFavourites(User user) {
+        return courseDao.findFavourites(user.getId());
     }
 
     @Override
@@ -41,6 +41,21 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public Map<Integer, List<CareerCourse>> findByCareerSemester(String careerCode) {
         return courseDao.findByCareerSemester(careerCode);
+    }
+
+    @Override
+    public void addFavourite(int id, String course) {
+        courseDao.addFavourite(id, course);
+    }
+
+    @Override
+    public void removeFavourite(int id, String course){
+        courseDao.removeFavourite(id, course);
+    }
+
+    @Override
+    public boolean isFaved(String courseId, Integer userId) {
+        return courseDao.isFaved(courseId, userId);
     }
 
 }
