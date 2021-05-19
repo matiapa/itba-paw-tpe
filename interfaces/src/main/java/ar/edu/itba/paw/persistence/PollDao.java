@@ -14,6 +14,8 @@ public interface PollDao {
 
     List<Poll> findRelevant(int userId);
 
+    List<Poll> findControversial(int userId, int limit);
+
     List<Poll> findGeneral(PollFormat format, PollState pollState, int offset, int limit);
 
     List<Poll> findByCareer(String careerCode, PollFormat format, PollState pollState, int offset, int limit);

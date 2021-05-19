@@ -125,6 +125,25 @@ public class PollDaoJdbc implements PollDao {
     }
 
     @Override
+    public List<Poll> findControversial(int userId, int limit) {
+        String query = "select poll.*\n" +
+        "from (\n" +
+            "select poll_id, exp(-sum(p * ln(p)) * ln(sum(votes))) as points --, -sum(p * ln(p) / ln(2)) as entropy, sum(votes) as votes\n" +
+            "from (\n" +
+                "select poll_id, count(*) as votes, count(*)  / sum(count(*)) over (partition by poll_id) as p\n" +
+                "from poll_submission\n" +
+                "group by poll_id, option_id\n" +
+            ") as probs\n" +
+            "group by poll_id\n" +
+            "order by points desc\n" +
+            "limit %d\n" +
+        ") as selected\n" +
+        "join poll on poll_id=poll.id";
+
+        return jdbcTemplate.query(String.format(query, limit), rowMapper);
+    }
+
+    @Override
     public List<Poll> findGeneral(PollFormat format, PollState state, int offset, int limit) {
         String query = queryBuilder(
             "SELECT * FROM poll WHERE career_code IS NULL AND course_id IS NULL",
