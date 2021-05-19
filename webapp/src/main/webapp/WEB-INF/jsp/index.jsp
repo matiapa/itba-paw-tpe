@@ -51,12 +51,11 @@
                                                     <div class="row align-items-center no-gutters">
                                                         <div class="col mr-2">
                                                             <h6 class="mb-0"><strong><c:out value="${announcement.title}"/></strong></h6>
-                                                            <span><c:out value="${announcement.summary}"/><br></span></div>
-                                                        <div class="col-auto">
-                                                            <a href="<c:url value="/announcements/${announcement.id}"/>" class="btn btn-icon" type="button">
-                                                                <i class="material-icons">keyboard_arrow_right</i>
-                                                            </a>
+                                                            <span><c:out value="${announcement.summary}"/><br></span>
                                                         </div>
+                                                        <a href="<c:url value="/announcements/${announcement.id}"/>" class="btn btn-icon stretched-link" type="button">
+                                                            <i class="material-icons">keyboard_arrow_right</i>
+                                                        </a>
                                                     </div>
                                                 </li>
                                             </c:forEach>
@@ -93,11 +92,9 @@
                                                             <strong><c:out value="${course.name}"/></strong>
                                                         </h6>
                                                     </div>
-                                                    <div class="col-auto">
-                                                        <a href="<c:url value="/courses/${course.id}"/>" class="btn btn-icon" type="button">
-                                                            <i class="material-icons">keyboard_arrow_right</i>
-                                                        </a>
-                                                    </div>
+                                                    <a href="<c:url value="/courses/${course.id}"/>" class="btn btn-icon stretched-link" type="button">
+                                                        <i class="material-icons">keyboard_arrow_right</i>
+                                                    </a>
 
                                                     <div class="col-auto">
                                                         <c:url var="url" value="/${course.id}/delete"/>
@@ -152,7 +149,7 @@
 
                                 <div class="card-header py-3">
                                     <h6 class="font-weight-bold m-0"><spring:message code="relevantPolls"/></h6>
-                    </div>
+                                </div>
 
                                 <%-- Relevant polls list --%>
 
@@ -165,25 +162,22 @@
                                                         <div class="col mr-2">
                                                             <h6 class="mb-0"><strong><c:out value="${poll.name}"/></strong></h6>
                                                             <span class="text-xs">
-                                                        <c:if test="${poll.expiryDate != null}">
-                                                            <c:if test="${poll.isExpired}">
-                                                                <spring:message code="expiredOn"/>
-                                                            </c:if>
-                                                            <c:if test="${!poll.isExpired}">
-                                                                <spring:message code="expireOn"/>
-                                                            </c:if>
-                                                        </c:if>
-                                                        <fmt:formatDate type="both" dateStyle = "short" timeStyle = "short" value="${poll.expiryDate}"/>
-                                                    </span>
-                </div>
-                                                        <div class="col-auto">
-                                                            <a href="<c:url value="/polls/${poll.id}"/>" class="btn btn-icon" type="button">
-                                                                <i class="material-icons">keyboard_arrow_right</i>
-                                                            </a>
-            </div>
-        </div>
+                                                                <c:if test="${poll.expiryDate != null}">
+                                                                    <c:if test="${poll.isExpired}">
+                                                                        <spring:message code="expiredOn"/>
+                                                                    </c:if>
+                                                                    <c:if test="${!poll.isExpired}">
+                                                                        <spring:message code="expireOn"/>
+                                                                    </c:if>
+                                                                </c:if>
+                                                                <fmt:formatDate type="both" dateStyle = "short" timeStyle = "short" value="${poll.expiryDate}"/>
+                                                            </span>
+                                                        </div>
+                                                        <a href="<c:url value="/polls/${poll.id}"/>" class="btn btn-icon stretched-link" type="button">
+                                                            <i class="material-icons">keyboard_arrow_right</i>
+                                                        </a>
+                                                    </div>
                                                 </li>
-
                                             </c:forEach>
                                         </c:when>
                                         <c:otherwise>
@@ -191,7 +185,7 @@
                                                 <div class="row align-items-center no-gutters">
                                                     <div class="col mr-2" style="text-align: center;">
                                                         <h6 class="mb-0"><strong><spring:message code="noPolls"/></strong></h6>
-    </div>
+                                                    </div>
                                                 </div>
                                             </li>
 
