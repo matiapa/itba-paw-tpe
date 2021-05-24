@@ -72,7 +72,7 @@ public class ProfileController {
         }
 
         Optional<Career> optCareer = careerService.findByCode(optUser.get().getCareerCode());
-        if(! optCareer.isPresent()){
+        if(!optCareer.isPresent()){
             LOGGER.debug("user {} in profile cant find career with code {}",loggedUser,optUser.get().getCareerCode());
             throw new ResourceNotFoundException();
         }
@@ -105,7 +105,7 @@ public class ProfileController {
         }
 
         Optional<Career> optCareer = careerService.findByCode(user.getCareerCode());
-        if(! optCareer.isPresent()){
+        if(!optCareer.isPresent()){
             LOGGER.debug("user {} in profile cant find career with code {}",loggedUser,user.getCareerCode());
             throw new ResourceNotFoundException();
         }
