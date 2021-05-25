@@ -23,7 +23,7 @@ public class CareerDaoHibernate implements CareerDao {
                 "from Career", Career.class
         );
         final List<Career> list = query.getResultList();
-        return null;
+        return list;
     }
 
     @Override
