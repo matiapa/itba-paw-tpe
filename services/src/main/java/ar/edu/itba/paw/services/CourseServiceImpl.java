@@ -34,7 +34,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public Optional<Course> findById(String id) {
+    public Course findById(String id) {
         return courseDao.findById(id);
     }
 

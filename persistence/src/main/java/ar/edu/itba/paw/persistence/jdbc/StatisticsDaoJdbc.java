@@ -112,11 +112,12 @@ public class StatisticsDaoJdbc implements StatisticsDao {
         ") contribs FROM course ORDER BY contribs DESC LIMIT 10";
 
         Map<Course, Integer> map = new HashMap<>();
-        jdbcTemplate.query(query, (rs, rn) -> map.put(
+      /*
+       jdbcTemplate.query(query, (rs, rn) -> map.put(
             CourseDaoJdbc.COURSE_ROW_MAPPER.mapRow(rs, rn),
             rs.getInt("contribs")
         ));
-
+*/
         return map;
     }
 

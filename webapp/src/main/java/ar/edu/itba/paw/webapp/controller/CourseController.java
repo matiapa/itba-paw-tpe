@@ -80,14 +80,14 @@ public class CourseController {
 
         // Course details
 
-        Optional<Course> selectedCourse = courseService.findById(courseId);
-        if (!selectedCourse.isPresent()){
+        Course selectedCourse = courseService.findById(courseId);
+        if (selectedCourse == null){
             LOGGER.debug("user {} cound not find course with id {}",loggedUser,courseId);
             throw new ResourceNotFoundException();
         }
 
 
-        mav.addObject("course", selectedCourse.get());
+        mav.addObject("course", selectedCourse);
 
         // Course announcements
 

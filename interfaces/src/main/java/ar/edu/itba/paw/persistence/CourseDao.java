@@ -16,7 +16,7 @@ public interface CourseDao {
 
     List<Course> findByCareer(String careerCode, int limit);
 
-    Optional<Course> findById(String id);
+    Course findById(String id);
 
     Map<Integer, List<CareerCourse>> findByCareerSemester(String careerCode);
 

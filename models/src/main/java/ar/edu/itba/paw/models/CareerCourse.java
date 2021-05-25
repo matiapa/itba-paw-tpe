@@ -1,11 +1,19 @@
 package ar.edu.itba.paw.models;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "career_course")
 public class CareerCourse extends Course{
 
 
-    private final int year;
-    private final int semester;
+    private int year;
+    private int semester;
 
+    CareerCourse(){
+
+    }
     public CareerCourse(String id, String name,int credits,int semester) {
         super(id, name,credits);
         this.semester=semester%2 +1 ;
