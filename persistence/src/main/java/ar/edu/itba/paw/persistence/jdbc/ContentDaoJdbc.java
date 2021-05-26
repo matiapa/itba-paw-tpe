@@ -72,7 +72,7 @@ public class ContentDaoJdbc implements ContentDao {
     }
 
     @Override
-    public List<Content> findContent(String courseId, ContentType contentType, Date minDate, Date maxDate, int offset, int limit){
+    public List<Content> findContent(String courseId, ContentType contentType, Date minDate, Date maxDate, Integer offset, Integer limit){
         return jdbcTemplate.query(
             queryBuilder(courseId, contentType, minDate, maxDate, offset, limit),
             contentRowMapper
