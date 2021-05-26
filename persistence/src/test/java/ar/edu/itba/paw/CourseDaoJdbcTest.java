@@ -2,7 +2,7 @@ package ar.edu.itba.paw;
 
 import ar.edu.itba.paw.models.CareerCourse;
 import ar.edu.itba.paw.models.Course;
-import ar.edu.itba.paw.persistence.jdbc.CourseDaoJdbc;
+import ar.edu.itba.paw.persistence.jdbc.CourseDaoHibernate;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,7 +22,7 @@ import java.util.Optional;
 @ContextConfiguration(classes = TestConfig.class)
 public class CourseDaoJdbcTest {
 
-    @Autowired private CourseDaoJdbc courseDao;
+    @Autowired private CourseDaoHibernate courseDao;
 
     @Test
     public void findAllTest(){
@@ -50,10 +50,10 @@ public class CourseDaoJdbcTest {
 
     @Test
     public void findByIdTest() {
-        Optional<Course> course = courseDao.findById("1.1");
+        Course course = courseDao.findById("1.1");
 
-        Assert.assertTrue(course.isPresent());
-        Assert.assertEquals("Course 1", course.get().getName());
+        Assert.assertTrue(course != null);
+        Assert.assertEquals("Course 1", course.getName());
     }
 
     @Test

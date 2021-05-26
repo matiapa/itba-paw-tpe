@@ -1,9 +1,27 @@
 package ar.edu.itba.paw.models;
 
+import javax.persistence.*;
+import javax.persistence.Entity;
+
+@Entity
+@Table(name = "course")
 public class Course {
 
-    private final String id, name;
-    private final int credits;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "course_id_seq")
+    @SequenceGenerator(sequenceName = "course_id_seq", name = "course_id_seq", allocationSize = 1)
+    @Column(name = "id")
+    private String id;
+
+    @Column(length = 100, nullable = false)
+    private String name;
+
+    @Column(name = "credits")
+    private int credits;
+
+    Course(){
+
+    }
 
     public Course(String id, String name,int credits) {
         this.id = id;
