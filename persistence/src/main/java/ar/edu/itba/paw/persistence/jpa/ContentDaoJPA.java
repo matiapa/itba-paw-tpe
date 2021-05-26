@@ -1,4 +1,4 @@
-package jpa;
+package ar.edu.itba.paw.persistence.jpa;
 
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.persistence.ContentDao;
@@ -13,13 +13,12 @@ import java.util.List;
 
 @Repository
 public class ContentDaoJPA implements ContentDao {
+
     @PersistenceContext
     private EntityManager em;
 
-
     @Override
     public List<Content> findContent(String courseId, Content.ContentType contentType, Date minDate, Date maxDate, Integer offset, Integer limit){
-
 
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("FROM course_content WHERE course_id= :courseId");

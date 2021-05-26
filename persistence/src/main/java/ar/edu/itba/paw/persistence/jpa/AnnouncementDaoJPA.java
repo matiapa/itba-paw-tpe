@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class AnnouncementDaoJpa implements AnnouncementDao {
+public class AnnouncementDaoJPA implements AnnouncementDao {
 
     @PersistenceContext
     private EntityManager em;

@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.persistence.jdbc;
+package ar.edu.itba.paw.persistence.jpa;
 
 import ar.edu.itba.paw.models.Career;
 import ar.edu.itba.paw.models.CareerCourse;
@@ -13,7 +13,7 @@ import javax.persistence.TypedQuery;
 import java.util.*;
 
 @Repository
-public class CourseDaoHibernate implements CourseDao {
+public class CourseDaoJPA implements CourseDao {
 
     @PersistenceContext
     private EntityManager entityManager;

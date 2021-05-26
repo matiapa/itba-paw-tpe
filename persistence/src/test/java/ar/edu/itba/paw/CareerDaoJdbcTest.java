@@ -2,7 +2,7 @@ package ar.edu.itba.paw;
 
 
 import ar.edu.itba.paw.models.Career;
-import ar.edu.itba.paw.persistence.jdbc.CareerDaoHibernate;
+import ar.edu.itba.paw.persistence.jpa.CareerDaoJPA;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,7 +22,7 @@ import java.util.Optional;
 public class CareerDaoJdbcTest {
 
     @Autowired
-    private CareerDaoHibernate careerDao;
+    private CareerDaoJPA careerDao;
 
     @Test
     public void testFindById() {

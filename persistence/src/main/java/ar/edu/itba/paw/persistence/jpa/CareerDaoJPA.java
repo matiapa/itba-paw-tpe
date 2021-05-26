@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.persistence.jdbc;
+package ar.edu.itba.paw.persistence.jpa;
 
 import ar.edu.itba.paw.models.Career;
 import ar.edu.itba.paw.persistence.CareerDao;
@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class CareerDaoHibernate implements CareerDao {
+public class CareerDaoJPA implements CareerDao {
 
     @PersistenceContext
     private EntityManager entityManager;

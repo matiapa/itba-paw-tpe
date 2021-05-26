@@ -9,24 +9,24 @@ import java.util.Date;
 @Table(name = "course_content")
 public class Content {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "course_content_id_seq")
     @SequenceGenerator(sequenceName = "course_content_id_seq", name = "course_content_id_seq", allocationSize = 1)
     @Column(name = "id")
     private Integer id;
 
-    @Column(nullable = false)
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    @Column(name = "link", nullable = false)
     private String link;
 
+    @Column(name = "description")
     private String description;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "submitted_by")
     private User submitter;
-
 
     @Column(name = "owner_email")
     private String ownerMail;

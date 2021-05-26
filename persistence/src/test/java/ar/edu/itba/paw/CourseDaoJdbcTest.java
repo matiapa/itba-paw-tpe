@@ -2,7 +2,7 @@ package ar.edu.itba.paw;
 
 import ar.edu.itba.paw.models.CareerCourse;
 import ar.edu.itba.paw.models.Course;
-import ar.edu.itba.paw.persistence.jdbc.CourseDaoHibernate;
+import ar.edu.itba.paw.persistence.jpa.CourseDaoJPA;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,7 +14,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Rollback
 @Sql("classpath:populators/course_populate.sql")
@@ -22,7 +21,7 @@ import java.util.Optional;
 @ContextConfiguration(classes = TestConfig.class)
 public class CourseDaoJdbcTest {
 
-    @Autowired private CourseDaoHibernate courseDao;
+    @Autowired private CourseDaoJPA courseDao;
 
     @Test
     public void findAllTest(){

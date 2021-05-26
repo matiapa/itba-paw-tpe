@@ -1,4 +1,4 @@
-package jpa;
+package ar.edu.itba.paw.persistence.jpa;
 
 
 import ar.edu.itba.paw.models.*;
