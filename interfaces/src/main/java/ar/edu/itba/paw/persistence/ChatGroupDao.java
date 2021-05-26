@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.models.ChatGroup;
 import ar.edu.itba.paw.models.ChatGroup.ChatPlatform;
+import ar.edu.itba.paw.models.User;
 
 import java.util.Date;
 import java.util.List;
@@ -9,11 +10,11 @@ import java.util.Optional;
 
 public interface ChatGroupDao {
 
-    ChatGroup addGroup(String groupName, String careerCode, String link, int createdBy, Date creationDate, ChatPlatform platform);
+    ChatGroup addGroup(String groupName, String careerCode, String link, User createdBy, Date creationDate, ChatGroup.ChatPlatform platform);
 
     int getSize(String careerCode, ChatPlatform selectedPlatform, Integer selectedYear, Integer selectedQuarter);
 
-    List<ChatGroup> findByCareer(String careerCode, ChatPlatform platform, Integer year, Integer quarter, int offset, int limit);
+    List<ChatGroup> findByCareer(String careerCode, ChatGroup.ChatPlatform platform, Integer year, Integer quarter, Integer offset, Integer limit);
 
     Optional<ChatGroup> findById(String id);
 

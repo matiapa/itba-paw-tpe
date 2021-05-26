@@ -116,7 +116,7 @@ public class ChatGroupController {
             chatGroupForm.getName(),
             chatGroupForm.getCareerCode(),
             chatGroupForm.getLink(),
-            loggedUser.getId(),
+            loggedUser,
             chatGroupForm.getCreationDate(),
             chatGroupForm.getPlatform()
         );

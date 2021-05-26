@@ -2,6 +2,7 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.models.ChatGroup;
 import ar.edu.itba.paw.models.ChatGroup.ChatPlatform;
+import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.persistence.ChatGroupDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,9 +16,15 @@ public class ChatGroupServiceImpl implements ChatGroupService{
     @Autowired
     private ChatGroupDao chatGroupDao;
 
+
     @Override
-    public ChatGroup addGroup(String groupName, String careerCode, String link, int createdBy, Date creationDate, ChatPlatform platform) {
+    public ChatGroup addGroup(String groupName, String careerCode, String link, User createdBy, Date creationDate, ChatPlatform platform) {
         return chatGroupDao.addGroup(groupName, careerCode, link, createdBy, creationDate, platform);
+    }
+
+    @Override
+    public List<ChatGroup> findByCareer(String careerCode, ChatPlatform platform, Integer year, Integer quarter, Integer offset, Integer limit) {
+        return chatGroupDao.findByCareer(careerCode, platform, year, quarter, offset, limit);
     }
 
     @Override
@@ -26,10 +33,6 @@ public class ChatGroupServiceImpl implements ChatGroupService{
     }
 
 
-    @Override
-    public List<ChatGroup> findByCareer(String careerCode, ChatGroup.ChatPlatform platform, Integer year, Integer quarter, int offset, int limit) {
-        return chatGroupDao.findByCareer(careerCode, platform, year, quarter, offset, limit);
-    }
 
     @Override
     public void delete(int id) {
