@@ -12,7 +12,7 @@ public class Content {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "course_content_id_seq")
-    @SequenceGenerator(sequenceName = "coourse_content_id_seq", name = "course_content_id_seq", allocationSize = 1)
+    @SequenceGenerator(sequenceName = "course_content_id_seq", name = "course_content_id_seq", allocationSize = 1)
     @Column(name = "id")
     private Integer id;
 
