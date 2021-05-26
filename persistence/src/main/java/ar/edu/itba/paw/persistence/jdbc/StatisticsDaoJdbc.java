@@ -54,12 +54,16 @@ public class StatisticsDaoJdbc implements StatisticsDao {
         "   ) AS cs\n" +
         ") contribs FROM career ORDER BY contribs DESC LIMIT 5";
 
+        //TODO Cambiar jdbc rowmap
+
         Map<Career, Integer> map = new HashMap<>();
+        /*
         jdbcTemplate.query(query, (rs, rn) -> map.put(
             CareerDaoJdbc.CAREER_ROW_MAPPER.mapRow(rs, rn),
             rs.getInt("contribs")
         ));
 
+         */
         return map;
     }
 

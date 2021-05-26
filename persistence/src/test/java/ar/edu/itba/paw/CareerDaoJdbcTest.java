@@ -2,7 +2,7 @@ package ar.edu.itba.paw;
 
 
 import ar.edu.itba.paw.models.Career;
-import ar.edu.itba.paw.persistence.jdbc.CareerDaoJdbc;
+import ar.edu.itba.paw.persistence.jdbc.CareerDaoHibernate;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,14 +22,14 @@ import java.util.Optional;
 public class CareerDaoJdbcTest {
 
     @Autowired
-    private CareerDaoJdbc careerDao;
+    private CareerDaoHibernate careerDao;
 
     @Test
     public void testFindById() {
-        Optional<Career> careerOptional = careerDao.findByCode("S");
+        Optional<Career> career = careerDao.findByCode("S");
 
-        Assert.assertTrue(careerOptional.isPresent());
-        Assert.assertEquals("Career 1", careerOptional.get().getName());
+        Assert.assertTrue(career != null);
+        Assert.assertEquals("Career 1", career.get().getName());
     }
 
     @Test

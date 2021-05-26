@@ -11,8 +11,7 @@ import javax.sql.DataSource;
 import java.util.List;
 import java.util.Optional;
 
-
-@Repository
+/*
 public class CareerDaoJdbc implements CareerDao {
 
     private final JdbcTemplate jdbcTemplate;
@@ -49,3 +48,5 @@ public class CareerDaoJdbc implements CareerDao {
     }
 
 }
+
+*/
