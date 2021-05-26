@@ -17,7 +17,7 @@ public class ContentServiceImpl implements ContentService{
     private ContentDao contentDao;
 
     @Override
-    public List<Content> findByCourse(String courseId, ContentType contentType, Date minDate, Date maxDate, int offset, int limit) {
+    public List<Content> findByCourse(String courseId, ContentType contentType, Date minDate, Date maxDate, Integer offset, Integer limit) {
         return contentDao.findContent(courseId, contentType, minDate, maxDate, offset, limit);
     }
 

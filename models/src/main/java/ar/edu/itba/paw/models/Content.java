@@ -1,21 +1,45 @@
 package ar.edu.itba.paw.models;
 
+import javax.persistence.*;
+import javax.persistence.Entity;
 import java.util.Date;
 
+
+@Entity
+@Table(name = "course_content")
 public class Content {
 
-    private final int id;
-    private final String name, link, description;
 
-    private final User submitter;
-    private final String ownerMail;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "course_content_id_seq")
+    @SequenceGenerator(sequenceName = "coourse_content_id_seq", name = "course_content_id_seq", allocationSize = 1)
+    @Column(name = "id")
+    private Integer id;
 
-    private final Date uploadDate;
-    private final Date contentDate;
+    @Column(nullable = false)
+    private String name;
 
-    private final ContentType contentType;
+    @Column(nullable = false)
+    private String link;
 
-    public Content(int id, String name, String link, String description, User submitter, String ownerMail,
+    private String description;
+
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    private User submitter;
+
+
+    @Column(name = "owner_email")
+    private String ownerMail;
+
+    @Column(name = "creation_date", columnDefinition = "date default now() not null")
+    private Date uploadDate;
+
+    private Date contentDate;
+
+    @Enumerated(EnumType.STRING)
+    private ContentType contentType;
+
+    public Content(Integer id, String name, String link, String description, User submitter, String ownerMail,
            Date uploadDate, Date contentDate, ContentType contenttype) {
         this.id = id;
         this.name = name;
@@ -28,7 +52,11 @@ public class Content {
         this.contentType = contenttype;
     }
 
-    public int getId() {
+    public Content(){
+
+    }
+
+    public Integer getId() {
         return id;
     }
 
@@ -70,3 +98,42 @@ public class Content {
     }
 
 }
+
+//@Entity
+//@Table(name = "course")
+//public class Course {
+//
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "course_id_seq")
+//    @SequenceGenerator(sequenceName = "course_id_seq", name = "course_id_seq", allocationSize = 1)
+//    @Column(name = "id")
+//    private String id;
+//
+//    @Column(length = 100, nullable = false)
+//    private String name;
+//
+//    @Column(name = "credits")
+//    private int credits;
+//
+//    Course(){
+//
+//    }
+//
+//    public Course(String id, String name,int credits) {
+//        this.id = id;
+//        this.name = name;
+//        this.credits=credits;
+//    }
+//
+//    public String getId() {
+//        return id;
+//    }
+//
+//    public String getName() {
+//        return name;
+//    }
+//
+//    public int getCredits() {
+//        return credits;
+//    }
+//}

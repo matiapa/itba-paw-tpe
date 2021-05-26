@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface ContentDao {
 
-    List<Content> findContent(String courseId, ContentType contentType, Date minDate, Date maxDate,  int offset, int limit);
+    List<Content> findContent(String courseId, Content.ContentType contentType, Date minDate, Date maxDate, Integer offset, Integer limit);
 
     boolean createContent(String name, String link, String courseId, String description, String contentType, Date contentDate,User user);
 
