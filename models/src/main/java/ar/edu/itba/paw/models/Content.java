@@ -21,14 +21,6 @@ public class Content {
     @Column(name = "link", nullable = false)
     private String link;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "submitted_by")
-    private User submitter;
-
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "course_id")
-    private Course course;
-
     @Column(name = "description")
     private String description;
 
@@ -41,9 +33,18 @@ public class Content {
     @Column(name = "content_date")
     private Date contentDate;
 
-    @Column(name = "content_type")
     @Enumerated(EnumType.STRING)
+    @Column(name = "content_type")
     private ContentType contentType;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "submitted_by", nullable = false)
+    private User uploader;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "course_id", nullable = false)
+    private Course course;
+
 
     public Content(Integer id, String name, String link, String description, User submitter, String ownerMail,
            Date uploadDate, Date contentDate, ContentType contenttype, Course course) {
@@ -52,16 +53,15 @@ public class Content {
         this.link=link;
         this.description=description;
         this.ownerMail = ownerMail;
-        this.submitter = submitter;
+        this.uploader = submitter;
         this.uploadDate = uploadDate;
         this.contentDate = contentDate;
         this.contentType = contenttype;
         this.course = course;
     }
 
-    public Content(){
+    public Content(){}
 
-    }
 
     public Integer getId() {
         return id;
@@ -83,8 +83,8 @@ public class Content {
         return ownerMail;
     }
 
-    public User getSubmitter() {
-        return submitter;
+    public User getUploader() {
+        return uploader;
     }
 
     public Date getUploadDate() {
@@ -99,6 +99,49 @@ public class Content {
         return contentType;
     }
 
+    public Course getCourse() {
+        return course;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setOwnerMail(String ownerMail) {
+        this.ownerMail = ownerMail;
+    }
+
+    public void setUploadDate(Date uploadDate) {
+        this.uploadDate = uploadDate;
+    }
+
+    public void setContentDate(Date contentDate) {
+        this.contentDate = contentDate;
+    }
+
+    public void setContentType(ContentType contentType) {
+        this.contentType = contentType;
+    }
+
+    public void setUploader(User uploader) {
+        this.uploader = uploader;
+    }
+
+    public void setCourse(Course course) {
+        this.course = course;
+    }
 
     public enum ContentType{
         exam, guide, exercise, project, theory, summary, bibliography, solution, code, miscellaneous

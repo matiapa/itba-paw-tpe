@@ -24,6 +24,12 @@ public class Announcement {
     @Column(name = "content")
     private String content;
 
+    @Column(name = "creation_date", columnDefinition = "date default now() not null")
+    private Date uploadDate;
+
+    @Column(name = "expiry_date")
+    private Date expiryDate;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "career_code")
     private Career career;
@@ -31,6 +37,10 @@ public class Announcement {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id")
     private Course course;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "submitted_by", nullable = false)
+    private User uploader;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -40,17 +50,8 @@ public class Announcement {
     )
     private List<User> seenBy;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "submitted_by", nullable = false)
-    private User uploader;
 
-    @Column(name = "creation_date", columnDefinition = "date default now() not null")
-    private Date uploadDate;
-
-    @Column(name = "expiry_date")
-    private Date expiryDate;
-
-    Announcement(){}
+    public Announcement(){}
 
     public Announcement(Integer id, String title, String summary, String content, Career career, Course course,
                         User uploader, Date uploadDate, Date expiryDate) {
@@ -65,83 +66,84 @@ public class Announcement {
         this.expiryDate = expiryDate;
     }
 
+
     public Integer getId() {
         return id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public User getUploader() {
-        return uploader;
-    }
-
-    public String getSummary() {
-        return summary;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public Date getUploadDate() {
-        return uploadDate;
-    }
-
-    public Date getExpiryDate() {
-        return expiryDate;
-    }
-
-    public Career getCareer() {
-        return career;
-    }
-
-    public Course getCourse() {
-        return course;
-    }
-
-    public List<User> getSeenBy() {
-        return seenBy;
     }
 
     public void setId(Integer id) {
         this.id = id;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getSummary() {
+        return summary;
     }
 
     public void setSummary(String summary) {
         this.summary = summary;
     }
 
+    public String getContent() {
+        return content;
+    }
+
     public void setContent(String content) {
         this.content = content;
     }
 
-    public void setCareer(Career career) {
-        this.career = career;
-    }
-
-    public void setCourse(Course course) {
-        this.course = course;
-    }
-
-    public void setSeenBy(List<User> seenBy) {
-        this.seenBy = seenBy;
-    }
-
-    public void setUploader(User uploader) {
-        this.uploader = uploader;
+    public Date getUploadDate() {
+        return uploadDate;
     }
 
     public void setUploadDate(Date uploadDate) {
         this.uploadDate = uploadDate;
     }
 
+    public Date getExpiryDate() {
+        return expiryDate;
+    }
+
     public void setExpiryDate(Date expiryDate) {
         this.expiryDate = expiryDate;
+    }
+
+    public Career getCareer() {
+        return career;
+    }
+
+    public void setCareer(Career career) {
+        this.career = career;
+    }
+
+    public Course getCourse() {
+        return course;
+    }
+
+    public void setCourse(Course course) {
+        this.course = course;
+    }
+
+    public User getUploader() {
+        return uploader;
+    }
+
+    public void setUploader(User uploader) {
+        this.uploader = uploader;
+    }
+
+    public List<User> getSeenBy() {
+        return seenBy;
+    }
+
+    public void setSeenBy(List<User> seenBy) {
+        this.seenBy = seenBy;
     }
 }

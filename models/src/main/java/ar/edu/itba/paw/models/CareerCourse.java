@@ -18,7 +18,9 @@ public class CareerCourse extends Course{
     @Column(name = "semester", nullable = false)
     private int semester;
 
-    CareerCourse(){ }
+
+    public CareerCourse(){ }
+
 
     public int getSemester() {
         return semester%2 +1;

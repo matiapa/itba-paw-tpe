@@ -56,8 +56,10 @@ public class CourseDaoJPA implements CourseDao {
 
 
     @Override
-    public Course findById(String id) {
-        return entityManager.find(Course.class, id);
+    public Optional<Course> findById(String id) {
+        return Optional.ofNullable(
+            entityManager.find(Course.class, id)
+        );
     }
 
 }

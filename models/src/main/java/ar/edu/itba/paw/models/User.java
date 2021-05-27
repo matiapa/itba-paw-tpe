@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.models;
 
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import java.util.List;
 import java.io.Serializable;
 import java.util.Date;
@@ -17,13 +18,20 @@ public class User implements Serializable {
 
     private final List<Permission> permissions;
 
+    private final String careerCode;
+
     @ManyToMany(mappedBy = "seenBy")
-    List<Announcement> seenAnnouncements;
+    private List<Announcement> seenAnnouncements;
+
+    @OneToMany(mappedBy = "uploader")
+    private List<Announcement> uploadedAnnouncements;
 
     @ManyToMany(mappedBy = "favedBy")
-    List<Course> favedCourses;
+    private List<Course> favedCourses;
 
-    private final String careerCode;
+    @OneToMany(mappedBy = "uploader")
+    private List<Content> uploadedContent;
+
 
     public User(int id, String name, String surname, String email, String password, String profileImgB64,
                 Date signupDate, List<Permission> permissions, String careerCode) {
@@ -36,6 +44,26 @@ public class User implements Serializable {
         this.signupDate = signupDate;
         this.permissions = permissions;
         this.careerCode=careerCode;
+    }
+
+    public boolean can(String action, String entity){
+        return getPermissions().contains(new Permission(
+                Permission.Action.valueOf(action), Entity.valueOf(entity)
+        ));
+    }
+
+    public boolean can(Permission.Action action, Entity entity){
+        return getPermissions().contains(new Permission(
+                action, entity
+        ));
+    }
+
+    private String normalizeCase(String str) {
+        str = str.toLowerCase();
+        String[] arr = str.split(" ");
+        StringBuilder sb = new StringBuilder();
+        for(String s : arr) sb.append(Character.toUpperCase(s.charAt(0))).append(s.substring(1)).append(" ");
+        return sb.toString().trim();
     }
 
     public int getId() {
@@ -60,10 +88,6 @@ public class User implements Serializable {
         return password;
     }
 
-    public String getCareerCode() {
-        return careerCode;
-    }
-
     public String getProfileImgB64() {
         return profileImgB64;
     }
@@ -76,35 +100,51 @@ public class User implements Serializable {
         return permissions;
     }
 
+    public String getCareerCode() {
+        return careerCode;
+    }
+
+    public List<Announcement> getUploadedAnnouncements() {
+        return uploadedAnnouncements;
+    }
+
     public List<Course> getFavedCourses() {
         return favedCourses;
     }
 
-    public boolean can(String action, String entity){
-        return getPermissions().contains(new Permission(
-            Permission.Action.valueOf(action), Entity.valueOf(entity)
-        ));
+    public List<Announcement> getSeenAnnouncements() {
+        return seenAnnouncements;
     }
 
-    public boolean can(Permission.Action action, Entity entity){
-        return getPermissions().contains(new Permission(
-            action, entity
-        ));
-    }
-
-    private String normalizeCase(String str) {
-        str = str.toLowerCase();
-        String[] arr = str.split(" ");
-        StringBuilder sb = new StringBuilder();
-        for(String s : arr) sb.append(Character.toUpperCase(s.charAt(0))).append(s.substring(1)).append(" ");
-        return sb.toString().trim();
+    public List<Content> getUploadedContent() {
+        return uploadedContent;
     }
 
     public void setProfileImage(String base64Image){
         this.profileImgB64 = base64Image;
     }
 
-    public List<Announcement> getSeenAnnouncements() {
-        return seenAnnouncements;
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setProfileImgB64(String profileImgB64) {
+        this.profileImgB64 = profileImgB64;
+    }
+
+    public void setSeenAnnouncements(List<Announcement> seenAnnouncements) {
+        this.seenAnnouncements = seenAnnouncements;
+    }
+
+    public void setUploadedAnnouncements(List<Announcement> uploadedAnnouncements) {
+        this.uploadedAnnouncements = uploadedAnnouncements;
+    }
+
+    public void setFavedCourses(List<Course> favedCourses) {
+        this.favedCourses = favedCourses;
+    }
+
+    public void setUploadedContent(List<Content> uploadedContent) {
+        this.uploadedContent = uploadedContent;
     }
 }

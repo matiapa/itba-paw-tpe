@@ -10,7 +10,7 @@ public class ChatGroup {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "chat_group_id_seq")
-    @SequenceGenerator(sequenceName = "chat_group_id_seq", name = "chat_group_id_seq")
+    @SequenceGenerator(sequenceName = "chat_group_id_seq", name = "chat_group_id_seq", allocationSize = 1)
     @Column(name = "id")
     private Integer id;
 
@@ -35,6 +35,7 @@ public class ChatGroup {
     @Column(name = "platform", nullable = false)
     private ChatPlatform platform;
 
+
     public ChatGroup(Integer id, Career career, String name, String link, User user, Date creationDate, ChatPlatform platform){
         this.id = id;
         this.career = career;
@@ -46,6 +47,7 @@ public class ChatGroup {
     }
 
     public ChatGroup(){}
+
 
     public Integer getId() {return id;}
 

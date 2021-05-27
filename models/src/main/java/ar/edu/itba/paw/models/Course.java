@@ -19,10 +19,13 @@ public class Course {
     private Integer credits;
 
     @OneToMany(mappedBy = "course")
+    private List<Announcement> announcements;
+
+    @OneToMany(mappedBy = "course")
     private List<CareerCourse> courseCareers;
 
     @OneToMany(mappedBy = "course")
-    private List<Announcement> announcements;
+    private List<Content> content;
 
     @ManyToMany()
     @JoinTable(
@@ -32,7 +35,9 @@ public class Course {
     )
     private List<User> favedBy;
 
-    Course(){}
+
+    public Course(){}
+
 
     public String getId() {
         return id;
@@ -62,6 +67,10 @@ public class Course {
         return courseCareers;
     }
 
+    public List<Content> getContent() {
+        return content;
+    }
+
     public void setCourseCareers(List<CareerCourse> courseCareers) {
         this.courseCareers = courseCareers;
     }
@@ -84,6 +93,10 @@ public class Course {
 
     public void setFavedBy(List<User> favedBy) {
         this.favedBy = favedBy;
+    }
+
+    public void setContent(List<Content> content) {
+        this.content = content;
     }
 
 }

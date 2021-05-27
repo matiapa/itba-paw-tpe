@@ -1,9 +1,11 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.models.Content;
+import ar.edu.itba.paw.models.Course;
 import ar.edu.itba.paw.models.ui.Pager;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.services.ContentService;
+import ar.edu.itba.paw.services.CourseService;
 import ar.edu.itba.paw.services.SgaService;
 import ar.edu.itba.paw.webapp.controller.common.CommonFilters;
 import ar.edu.itba.paw.webapp.form.ContentForm;
@@ -36,6 +38,8 @@ public class ContentController {
 
     @Autowired private SgaService sgaService;
 
+    @Autowired private CourseService courseService;
+
     @Autowired private CommonFilters commonFilters;
 
     private static final Logger LOGGER= LoggerFactory.getLogger(ContentController.class);
@@ -55,7 +59,7 @@ public class ContentController {
         final ModelAndView mav = new ModelAndView("contents/content_list");
 
         // Add filters options
-        commonFilters.addCourses(mav, courseId);
+        Course selectedCourse = commonFilters.addCourses(mav, courseId);
 
         // -- By type
         Content.ContentType selectedType = contentType != null && !contentType.isEmpty()
@@ -69,10 +73,10 @@ public class ContentController {
         if(courseId != null){
             mav.addObject("courseId", courseId);
 
-            Pager pager = new Pager(contentService.getSize(courseId, selectedType, minDate, maxDate), page);
+            Pager pager = new Pager(contentService.getSize(selectedCourse, selectedType, minDate, maxDate), page);
             mav.addObject("pager", pager);
 
-            contents = contentService.findByCourse(courseId, selectedType, minDate, maxDate, pager.getOffset(), pager.getLimit());
+            contents = contentService.findByCourse(selectedCourse, selectedType, minDate, maxDate, pager.getOffset(), pager.getLimit());
             contents.sort(Comparator.comparing(Content::getUploadDate).reversed());
             mav.addObject("contents", contents);
 
@@ -103,10 +107,18 @@ public class ContentController {
                 true, form, loggedUser);
         }
 
+        // TODO: Change form content type to be enum
+
         contentService.createContent(
-            form.getName(),form.getLink(), form.getCourseId(), form.getDescription(), form.getContentType(),
-            form.getContentDate(), loggedUser
+            form.getName(),
+            form.getLink(),
+            courseService.findById(form.getCourseId()).orElseThrow(NoSuchElementException::new),
+            form.getDescription(),
+            Content.ContentType.valueOf(form.getContentType()),
+            form.getContentDate(),
+            loggedUser
         );
+
         LOGGER.debug("User created content with form {} ",form);
 
         return list(form.getCourseId(), null, null, null, 0,
@@ -117,7 +129,7 @@ public class ContentController {
     public String delete(
             @PathVariable(value="id") int id, HttpServletRequest request
     ) {
-        contentService.delete(id);
+        contentService.delete(contentService.findById(id).orElseThrow(NoSuchElementException::new));
         LOGGER.debug("User deleted content with id {}",id);
 
         return "redirect:"+request.getHeader("Referer");

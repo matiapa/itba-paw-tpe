@@ -24,7 +24,9 @@ public class Career {
     @OneToMany(mappedBy = "career", fetch = FetchType.LAZY)
     private List<ChatGroup> chatGroups;
 
-    Career(){}
+
+    public Career(){}
+
 
     public String getName() {
         return name;

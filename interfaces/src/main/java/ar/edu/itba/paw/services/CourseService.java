@@ -16,6 +16,6 @@ public interface CourseService {
 
     List<CareerCourse> findByCareer(Career career);
 
-    Course findById(String id);
+    Optional<Course> findById(String id);
 
 }

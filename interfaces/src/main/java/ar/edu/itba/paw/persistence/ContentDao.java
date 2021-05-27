@@ -7,15 +7,20 @@ import ar.edu.itba.paw.models.User;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 public interface ContentDao {
 
-    List<Content> findContent(String courseId, Content.ContentType contentType, Date minDate, Date maxDate, Integer offset, Integer limit);
+    List<Content> findByCourse(Course course, ContentType contentType, Date minDate, Date maxDate,
+                               Integer page, Integer pageSize);
 
-    boolean createContent(String name, String link, Course course, String description, String contentType, Date contentDate, User user);
+    Optional<Content> findById(int id);
 
-    int getSize(String courseId, ContentType contentType, Date minDate, Date maxDate);
+    int getSize(Course course, ContentType contentType, Date minDate, Date maxDate);
 
-    void delete(int id);
+    boolean createContent(String name, String link, Course course, String description, ContentType contentType,
+                          Date contentDate, User uploader);
+
+    void delete(Content content);
 
 }
