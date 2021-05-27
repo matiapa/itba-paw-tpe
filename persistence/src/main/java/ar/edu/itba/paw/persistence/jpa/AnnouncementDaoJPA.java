@@ -20,8 +20,6 @@ public class AnnouncementDaoJPA implements AnnouncementDao {
 
     String buildQuery(String baseSelect, EntityTarget target, Boolean hideSeen){
 
-        // Build query string
-
         String qryStr = baseSelect;
 
         switch(target){

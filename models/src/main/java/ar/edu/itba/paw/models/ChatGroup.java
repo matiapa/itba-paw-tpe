@@ -10,30 +10,29 @@ public class ChatGroup {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "chat_group_id_seq")
-    @SequenceGenerator(sequenceName = "chat_group_id_seq", name = "chat_group_id_seq", allocationSize = 1)
+    @SequenceGenerator(sequenceName = "chat_group_id_seq", name = "chat_group_id_seq")
     @Column(name = "id")
     private Integer id;
 
-//    @Column(name = "career_code")
-//    private String careerCode;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @Column(name = "career_code")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "career_code", nullable = false)
     private Career career;
 
-    @Column(name="name",nullable = false)
+    @Column(name="name", nullable = false)
     private String name;
 
-    @Column(name="link",nullable = false)
+    @Column(name="link", nullable = false)
     private String link;
 
     @Column(name = "creation_date")
     private Date creationDate;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    private User submittedBy;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "submitted_by", nullable = false)
+    private User uploader;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "platform", nullable = false)
     private ChatPlatform platform;
 
     public ChatGroup(Integer id, Career career, String name, String link, User user, Date creationDate, ChatPlatform platform){
@@ -42,13 +41,11 @@ public class ChatGroup {
         this.name = name;
         this.link = link;
         this.creationDate = creationDate;
-        this.submittedBy = user;
+        this.uploader = user;
         this.platform = platform;
     }
 
-    public ChatGroup(){
-
-    }
+    public ChatGroup(){}
 
     public Integer getId() {return id;}
 
@@ -64,8 +61,8 @@ public class ChatGroup {
         return name;
     }
 
-    public User getSubmittedBy() {
-        return submittedBy;
+    public User getUploader() {
+        return uploader;
     }
 
     public Date getCreationDate() {
@@ -84,9 +81,40 @@ public class ChatGroup {
         return platform;
     }
 
+    public Career getCareer() {
+        return career;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setCareer(Career career) {
+        this.career = career;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public void setUploader(User uploader) {
+        this.uploader = uploader;
+    }
+
+    public void setPlatform(ChatPlatform platform) {
+        this.platform = platform;
+    }
+
     public enum ChatPlatform {
         whatsapp, discord
     }
 
 }
-

@@ -1,20 +1,25 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.models.Career;
 import ar.edu.itba.paw.models.ChatGroup;
 import ar.edu.itba.paw.models.ChatGroup.ChatPlatform;
 import ar.edu.itba.paw.models.User;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 public interface ChatGroupService {
 
-    ChatGroup addGroup(String groupName, String careerCode, String link, User createdBy, Date creationDate, ChatGroup.ChatPlatform platform);
+    List<ChatGroup> findByCareer(Career career, ChatPlatform platform, Integer year, Integer quarter,
+                                 Integer page, Integer pageSize);
 
-    List<ChatGroup> findByCareer(String careerCode, ChatGroup.ChatPlatform platform, Integer year, Integer quarter, Integer offset, Integer limit);
+    Optional<ChatGroup> findById(String id);
 
-    int getSize(String careerCode, ChatPlatform selectedPlatform, Integer selectedYear, Integer selectedQuarter);
+    int getSize(Career career, ChatPlatform platform, Integer year, Integer quarter);
 
-    void delete(int id);
+    ChatGroup addGroup(String groupName, Career career, String link, User createdBy, Date creationDate, ChatPlatform platform);
+
+    void delete(ChatGroup chatGroup);
 
 }

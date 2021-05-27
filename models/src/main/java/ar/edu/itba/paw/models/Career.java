@@ -15,11 +15,14 @@ public class Career {
     @Column(length = 100, nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "career")
+    @OneToMany(mappedBy = "career", fetch = FetchType.LAZY)
     private List<CareerCourse> careerCourses;
 
-    @OneToMany(mappedBy = "career")
+    @OneToMany(mappedBy = "career", fetch = FetchType.LAZY)
     private List<Announcement> announcements;
+
+    @OneToMany(mappedBy = "career", fetch = FetchType.LAZY)
+    private List<ChatGroup> chatGroups;
 
     Career(){}
 
@@ -37,6 +40,14 @@ public class Career {
 
     public List<CareerCourse> getCareerCourses() {
         return careerCourses;
+    }
+
+    public List<ChatGroup> getChatGroups() {
+        return chatGroups;
+    }
+
+    public void setChatGroups(List<ChatGroup> chatGroups) {
+        this.chatGroups = chatGroups;
     }
 
     public void setCareerCourses(List<CareerCourse> careerCourses) {

@@ -25,14 +25,14 @@ public class Announcement {
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="career_code")
+    @JoinColumn(name = "career_code")
     private Career career;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="course_id")
+    @JoinColumn(name = "course_id")
     private Course course;
 
-    @ManyToMany()
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         name = "announcement_seen",
         joinColumns = @JoinColumn(name = "announcement_id"),
@@ -40,7 +40,8 @@ public class Announcement {
     )
     private List<User> seenBy;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "submitted_by", nullable = false)
     private User uploader;
 
     @Column(name = "creation_date", columnDefinition = "date default now() not null")

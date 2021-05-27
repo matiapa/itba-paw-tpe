@@ -2,9 +2,9 @@ package ar.edu.itba.paw.persistence.jpa;
 
 
 import ar.edu.itba.paw.models.*;
+import ar.edu.itba.paw.models.ChatGroup.ChatPlatform;
 import ar.edu.itba.paw.persistence.ChatGroupDao;
 import org.springframework.stereotype.Repository;
-import org.springframework.validation.beanvalidation.OptionalValidatorFactoryBean;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -19,140 +19,114 @@ public class ChatGroupDaoJPA implements ChatGroupDao {
     @PersistenceContext
     private EntityManager em;
 
-    @Override
-    public ChatGroup addGroup(String groupName, String careerCode, String link, User createdBy, Date creationDate, ChatGroup.ChatPlatform platform) {
-        Career career = careerCode != null ? em.find(Career.class, careerCode) : null;
-        ChatGroup chatGroup = new ChatGroup(null,career,groupName,link,createdBy,creationDate,platform);
-        em.persist(chatGroup);
-        return chatGroup;
-    }
+    String buildQuery(String baseSelect, ChatPlatform selectedPlatform, Integer selectedYear, Integer selectedQuarter){
+        String qryStr = baseSelect;
 
-    @Override
-    public int getSize(String careerCode, ChatGroup.ChatPlatform selectedPlatform, Integer selectedYear, Integer selectedQuarter) {
-
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("FROM chat_group WHERE career_code= :careerCode");
+        qryStr += " WHERE cg.career.code = :careerCode";
 
         if (selectedPlatform != null)
-            stringBuilder.append(" AND platform= :platform");
+            qryStr += " AND cg.platform = :platform";
 
-        int caso=0;
-        String minDate, maxDate;
         if(selectedYear != null && selectedQuarter != null){
-            caso=1;
-            stringBuilder.append(" AND creation_date>= :minDate AND creation_date<= :maxDate");
+            qryStr += " AND cg.creationDate >= :minDate AND cg.creationDate <= :maxDate";
 
         }else if(selectedYear != null){
-            caso=2;
-            stringBuilder.append(" AND creation_date>= :minDate AND creation_date<= :maxDate");
+            qryStr += " AND cg.creationDate >= :minDate AND cg.creationDate <= :maxDate";
 
         }else if(selectedQuarter != null){
-            caso=3;
-            stringBuilder.append(" AND EXTRACT(month FROM creation_date)>= :minQuarter AND EXTRACT(month FROM creation_date)<= :maxQuarter");
+            qryStr += " AND month(cg.creationDate) >= :minQuarter AND month(cg.creationDate) <= :maxQuarter";
         }
 
-        final TypedQuery<ChatGroup> query = em.createQuery(stringBuilder.toString(), ChatGroup.class);
-        query.setParameter("careerCode",careerCode);
-        query.setParameter("platform",selectedPlatform);
-        switch (caso){
-            case 1:
-                minDate = String.format("%d-%d-01", selectedYear, selectedQuarter == 1 ? 1 : 7);
-                maxDate = String.format("%d-%d-%d", selectedYear, selectedQuarter == 1 ? 6 : 12, selectedQuarter == 1 ? 30 : 31);
-                query.setParameter("minDate",minDate);
-                query.setParameter("maxDate",maxDate);
-                break;
-            case 2:
-                minDate = String.format("%d-01-01", selectedYear);
-                maxDate = String.format("%d-12-31", selectedYear);
-                query.setParameter("minDate",minDate);
-                query.setParameter("maxDate",maxDate);
-                break;
-            case 3:
-                query.setParameter("minQuarter",selectedQuarter == 1 ? 1 : 7);
-                query.setParameter("maxQuarter",selectedQuarter == 1 ? 6 : 12);
-                break;
-            default:break;
-
-        }
-        return query.getResultList().size();
-
-
+        return qryStr;
     }
 
     @Override
-    public List<ChatGroup> findByCareer(String careerCode, ChatGroup.ChatPlatform platform, Integer year, Integer quarter, Integer offset, Integer limit) {
+    public List<ChatGroup> findByCareer(Career career, ChatPlatform platform, Integer year, Integer quarter,
+                                        Integer page, Integer pageSize) {
+        String qryStr = buildQuery("SELECT cg FROM ChatGroup cg", platform, year, quarter);
 
+        TypedQuery<ChatGroup> query = em.createQuery(qryStr, ChatGroup.class);
 
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("FROM chat_group WHERE career_code= :careerCode");
+        query.setParameter("careerCode", career.getCode());
 
         if (platform != null)
-            stringBuilder.append(" AND platform= :platform");
+            query.setParameter("platform",platform);
 
-        int caso=0;
-        String minDate, maxDate;
         if(year != null && quarter != null){
-            caso=1;
-            stringBuilder.append(" AND creation_date>= :minDate AND creation_date<= :maxDate");
+            String minDate = String.format("%d-%d-01", year, quarter == 1 ? 1 : 7);
+            String maxDate = String.format("%d-%d-%d", year, quarter == 1 ? 6 : 12, quarter == 1 ? 30 : 31);
 
+            query.setParameter("minDate", Date.parse(minDate));
+            query.setParameter("maxDate", Date.parse(maxDate));
         }else if(year != null){
-            caso=2;
-            stringBuilder.append(" AND creation_date>= :minDate AND creation_date<= :maxDate");
+            String minDate = String.format("%d-01-01", year);
+            String maxDate = String.format("%d-12-31", year);
 
+            query.setParameter("minDate", Date.parse(minDate));
+            query.setParameter("maxDate", Date.parse(maxDate));
         }else if(quarter != null){
-            caso=3;
-            stringBuilder.append(" AND EXTRACT(month FROM creation_date)>= :minQuarter AND EXTRACT(month FROM creation_date)<= :maxQuarter");
+            query.setParameter("minQuarter", quarter == 1 ? 1 : 7);
+            query.setParameter("maxQuarter", quarter == 1 ? 6 : 12);
         }
 
-        if(offset != null && limit != null)
-            stringBuilder.append(" ORDER BY creation_date DESC OFFSET :offset LIMIT :limit");
-
-        final TypedQuery<ChatGroup> query = em.createQuery(stringBuilder.toString(), ChatGroup.class);
-        query.setParameter("careerCode",careerCode);
-        query.setParameter("platform",platform);
-        switch (caso){
-            case 1:
-                minDate = String.format("%d-%d-01", year, quarter == 1 ? 1 : 7);
-                maxDate = String.format("%d-%d-%d", year, quarter == 1 ? 6 : 12, quarter == 1 ? 30 : 31);
-                query.setParameter("minDate",minDate);
-                query.setParameter("maxDate",maxDate);
-                break;
-            case 2:
-                minDate = String.format("%d-01-01", year);
-                maxDate = String.format("%d-12-31", year);
-                query.setParameter("minDate",minDate);
-                query.setParameter("maxDate",maxDate);
-                break;
-            case 3:
-                query.setParameter("minQuarter",quarter == 1 ? 1 : 7);
-                query.setParameter("maxQuarter",quarter == 1 ? 6 : 12);
-                break;
-            default:break;
-
-        }
-        query.setParameter("offset",offset);
-        query.setParameter("limit",limit);
-
+        query.setFirstResult(pageSize * page);
+        query.setMaxResults(pageSize);
 
         return query.getResultList();
     }
 
-    @Override
-    public Optional<ChatGroup> findById(String id) {
-        ChatGroup optionalChatGroup=em.find(ChatGroup.class,id);
-        if (optionalChatGroup == null){
-            return Optional.empty();
-        }
-        else {
-            return Optional.of(optionalChatGroup);
-        }
-    }
 
     @Override
-    public void delete(int id) {
-        ChatGroup chatGroup= em.find(ChatGroup.class,id);
+    public int getSize(Career career, ChatPlatform platform, Integer year, Integer quarter) {
+        String qryStr = buildQuery("SELECT count(cg.id) FROM ChatGroup cg", platform, year, quarter);
+
+        TypedQuery<Integer> query = em.createQuery(qryStr, Integer.class);
+
+        query.setParameter("careerCode", career.getCode());
+
+        if (platform != null)
+            query.setParameter("platform", platform);
+
+        if(year != null && quarter != null){
+            String minDate = String.format("%d-%d-01", year, quarter == 1 ? 1 : 7);
+            String maxDate = String.format("%d-%d-%d", year, quarter == 1 ? 6 : 12, quarter == 1 ? 30 : 31);
+
+            query.setParameter("minDate", Date.parse(minDate));
+            query.setParameter("maxDate", Date.parse(maxDate));
+        }else if(year != null){
+            String minDate = String.format("%d-01-01", year);
+            String maxDate = String.format("%d-12-31", year);
+
+            query.setParameter("minDate", Date.parse(minDate));
+            query.setParameter("maxDate", Date.parse(maxDate));
+        }else if(quarter != null){
+            query.setParameter("minQuarter", quarter == 1 ? 1 : 7);
+            query.setParameter("maxQuarter", quarter == 1 ? 6 : 12);
+        }
+
+        return query.getSingleResult();
+    }
+
+
+    @Override
+    public Optional<ChatGroup> findById(String id) {
+       return Optional.ofNullable(em.find(ChatGroup.class, id));
+    }
+
+
+    @Override
+    public ChatGroup addGroup(String groupName, Career career, String link, User createdBy, Date creationDate, ChatPlatform platform){
+        ChatGroup chatGroup = new ChatGroup(null, career, groupName, link, createdBy, creationDate, platform);
+        em.persist(chatGroup);
+        return chatGroup;
+    }
+
+
+    @Override
+    public void delete(ChatGroup chatGroup) {
         em.remove(chatGroup);
         em.flush();
         em.clear();
     }
+
 }

@@ -7,11 +7,11 @@ import javax.persistence.Entity;
 @Table(name = "career_course")
 public class CareerCourse extends Course{
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "course_id", nullable = false)
     private Course course;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "career_code", nullable = false)
     private Career career;
 

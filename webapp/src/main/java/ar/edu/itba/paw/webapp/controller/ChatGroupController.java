@@ -7,14 +7,16 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.IntStream;
 
+import javax.management.relation.RelationServiceNotRegisteredException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.ui.Pager;
-import ar.edu.itba.paw.models.Entity;
-import ar.edu.itba.paw.models.Permission;
-import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.services.CareerService;
+import ar.edu.itba.paw.services.CourseService;
 import ar.edu.itba.paw.webapp.controller.common.CommonFilters;
+import ar.edu.itba.paw.webapp.exceptions.ResourceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +29,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import ar.edu.itba.paw.models.ChatGroup;
 import ar.edu.itba.paw.services.ChatGroupService;
 import ar.edu.itba.paw.webapp.form.ChatGroupForm;
 
@@ -36,8 +37,9 @@ public class ChatGroupController {
 
     @Autowired private ChatGroupService chatGroupService;
 
-    @Autowired private CommonFilters commonFilters;
+    @Autowired private CareerService careerService;
 
+    @Autowired private CommonFilters commonFilters;
 
 
     private static final Logger LOGGER= LoggerFactory.getLogger(ChatGroupController.class);
@@ -57,7 +59,7 @@ public class ChatGroupController {
         final ModelAndView mav = new ModelAndView("chats/chats_list");
 
         // Add filters options
-        commonFilters.addCareers(mav, careerCode);
+        Career selectedCareer = commonFilters.addCareers(mav, careerCode);
 
         // -- By platform
         mav.addObject("platforms", ChatGroup.ChatPlatform.values());
@@ -85,8 +87,8 @@ public class ChatGroupController {
 
         if(careerCode != null){
             mav.addObject("careerCode", careerCode);
-            pager = new Pager(chatGroupService.getSize(careerCode, selectedPlatform, selectedYear, selectedQuarter), page);
-            chatGroupList = chatGroupService.findByCareer(careerCode, selectedPlatform, selectedYear, selectedQuarter, pager.getOffset(), pager.getLimit());
+            pager = new Pager(chatGroupService.getSize(selectedCareer, selectedPlatform, selectedYear, selectedQuarter), page);
+            chatGroupList = chatGroupService.findByCareer(selectedCareer, selectedPlatform, selectedYear, selectedQuarter, pager.getOffset(), pager.getLimit());
         }
 
         mav.addObject("chatgroups", chatGroupList);
@@ -114,7 +116,7 @@ public class ChatGroupController {
 
         ChatGroup chatGroup=chatGroupService.addGroup(
             chatGroupForm.getName(),
-            chatGroupForm.getCareerCode(),
+            careerService.findByCode(chatGroupForm.getCareerCode()).orElseThrow(ResourceNotFoundException::new),
             chatGroupForm.getLink(),
             loggedUser,
             chatGroupForm.getCreationDate(),
@@ -126,20 +128,23 @@ public class ChatGroupController {
                 chatGroupForm, loggedUser);
     }
 
+
     @RequestMapping(value = "/chats/{id}", method = DELETE)
     public String delete(
-            @PathVariable(value="id") int id, HttpServletRequest request,
-            @ModelAttribute("user") final User loggedUser
+        @PathVariable(value="id") String id, HttpServletRequest request,
+        @ModelAttribute("user") final User loggedUser
     ) {
-        chatGroupService.delete(id);
+        chatGroupService.delete(chatGroupService.findById(id).orElseThrow(ResourceNotFoundException::new));
+
         LOGGER.debug("user {} deleted chatgroup with id {}",loggedUser,id);
 
         return "redirect:"+request.getHeader("Referer");
     }
 
+
     @RequestMapping(value = "/chats/{id}/delete", method = POST)
     public String deleteWithPost(
-            @PathVariable(value="id") int id, HttpServletRequest request,
+            @PathVariable(value="id") String id, HttpServletRequest request,
             @ModelAttribute("user") final User loggedUser
     ) {
         return delete(id, request,loggedUser);

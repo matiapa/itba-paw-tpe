@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.models.Career;
 import ar.edu.itba.paw.models.ChatGroup;
 import ar.edu.itba.paw.models.ChatGroup.ChatPlatform;
 import ar.edu.itba.paw.models.User;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ChatGroupServiceImpl implements ChatGroupService{
@@ -18,25 +20,28 @@ public class ChatGroupServiceImpl implements ChatGroupService{
 
 
     @Override
-    public ChatGroup addGroup(String groupName, String careerCode, String link, User createdBy, Date creationDate, ChatPlatform platform) {
-        return chatGroupDao.addGroup(groupName, careerCode, link, createdBy, creationDate, platform);
+    public ChatGroup addGroup(String groupName, Career career, String link, User createdBy, Date creationDate, ChatPlatform platform) {
+        return chatGroupDao.addGroup(groupName, career, link, createdBy, creationDate, platform);
     }
 
     @Override
-    public List<ChatGroup> findByCareer(String careerCode, ChatPlatform platform, Integer year, Integer quarter, Integer offset, Integer limit) {
-        return chatGroupDao.findByCareer(careerCode, platform, year, quarter, offset, limit);
+    public List<ChatGroup> findByCareer(Career career, ChatPlatform platform, Integer year, Integer quarter, Integer offset, Integer limit) {
+        return chatGroupDao.findByCareer(career, platform, year, quarter, offset, limit);
     }
 
     @Override
-    public int getSize(String careerCode, ChatPlatform selectedPlatform, Integer selectedYear, Integer selectedQuarter) {
-        return chatGroupDao.getSize(careerCode, selectedPlatform, selectedYear, selectedQuarter);
+    public Optional<ChatGroup> findById(String id) {
+        return chatGroupDao.findById(id);
     }
 
-
+    @Override
+    public int getSize(Career career, ChatPlatform selectedPlatform, Integer selectedYear, Integer selectedQuarter) {
+        return chatGroupDao.getSize(career, selectedPlatform, selectedYear, selectedQuarter);
+    }
 
     @Override
-    public void delete(int id) {
-            chatGroupDao.delete(id);
+    public void delete(ChatGroup chatGroup) {
+            chatGroupDao.delete(chatGroup);
     }
 
 }
