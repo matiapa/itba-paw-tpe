@@ -3,6 +3,7 @@ package ar.edu.itba.paw.persistence.jpa;
 import ar.edu.itba.paw.models.Career;
 import ar.edu.itba.paw.models.CareerCourse;
 import ar.edu.itba.paw.models.Course;
+import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.persistence.CourseDao;
 import org.hibernate.Criteria;
 import org.springframework.stereotype.Repository;
@@ -22,63 +23,41 @@ public class CourseDaoJPA implements CourseDao {
     @Override
     public List<Course> findAll() {
         final TypedQuery<Course> query = entityManager.createQuery(
-                "from course", Course.class
+        "SELECT c FROM Course c", Course.class
         );
         final List<Course> list = query.getResultList();
         return list;
     }
+
 
     @Override
-    public List<Course> findFavourites(int userId) {
+    public List<Course> findFavourites(User ofUser) {
         final TypedQuery<Course> query = entityManager.createQuery(
-                "FROM fav_course AS fc INNER JOIN course AS c ON fc.course_id = c.id" +
-                        "WHERE user_id = :userId ORDER BY c.id", Course.class
+    "SELECT c FROM Course c WHERE :userId IN (SELECT u.id FROM c.favedBy u)", Course.class
         );
-        final List<Course> list = query.getResultList();
-        return list;
+
+        query.setParameter("userId", ofUser.getId());
+
+        return query.getResultList();
     }
+
 
     @Override
-    public List<Course> findFavourites(int userId, int limit) {
-        final TypedQuery<Course> query = entityManager.createQuery(
-          "FROM fav_course AS fc INNER JOIN course AS c ON fc.course_id = c.id" +
-                  "WHERE user_id = :userId ORDER BY c.id LIMIT :limit", Course.class
+    public List<CareerCourse> findByCareer(Career career) {
+        final TypedQuery<CareerCourse> query = entityManager.createQuery(
+            "SELECT c FROM CareerCourse c WHERE c.career.code = :careerCode",
+                CareerCourse.class
         );
-        final List<Course> list = query.getResultList();
-        return list;
+
+        query.setParameter("careerCode", career.getCode());
+
+        return query.getResultList();
     }
 
-    @Override
-    public List<Course> findByCareer(String careerCode, int limit) {
-        final TypedQuery<Course> query = entityManager.createQuery(
-                "FROM course AS c INNER JOIN career_course AS cc ON cc.course_id = c.id" +
-                        "WHERE cc.code = :careerCode" +
-                        "ORDER BY c.id LIMIT :limit", Course.class
-        );
-        final List<Course> list = query.getResultList();
-        return list;
-
-    }
 
     @Override
     public Course findById(String id) {
         return entityManager.find(Course.class, id);
     }
 
-    @Override
-    public Map<Integer, List<CareerCourse>> findByCareerSemester(String careerCode) {
-        final TypedQuery<CareerCourse> query = entityManager.createQuery(
-            "FROM career_course AS cc INNER JOIN course AS c ON cc.course_id = c.id" +
-                    "WHERE cc.career_code = :careerCode", CareerCourse.class
-        );
-        List<CareerCourse> list = query.getResultList();
-        Map<Integer, List<CareerCourse>> result = new HashMap<>();
-        for (CareerCourse careerCourse : list) {
-            if (!result.containsKey(careerCourse.getYear())) {
-                result.put(careerCourse.getYear(), new ArrayList<>());
-            }
-            result.get((careerCourse.getYear())).add(careerCourse);
-        }
-        return result;
-    }
 }

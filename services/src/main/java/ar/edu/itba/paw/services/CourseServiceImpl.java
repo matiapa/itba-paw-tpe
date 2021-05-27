@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import ar.edu.itba.paw.models.Career;
 import ar.edu.itba.paw.models.CareerCourse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,23 +25,18 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public List<Course> findFavourites(User user, int limit) {
-        return courseDao.findFavourites(user.getId(), limit);
+    public List<Course> findFavourites(User user) {
+        return courseDao.findFavourites(user);
     }
 
     @Override
-    public List<Course> findByCareer(String careerCode, int limit) {
-        return courseDao.findByCareer(careerCode, limit);
+    public List<CareerCourse> findByCareer(Career career) {
+        return courseDao.findByCareer(career);
     }
 
     @Override
     public Course findById(String id) {
         return courseDao.findById(id);
-    }
-
-    @Override
-    public Map<Integer, List<CareerCourse>> findByCareerSemester(String careerCode) {
-        return courseDao.findByCareerSemester(careerCode);
     }
 
 }

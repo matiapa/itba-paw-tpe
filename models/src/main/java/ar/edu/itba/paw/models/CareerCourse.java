@@ -1,31 +1,51 @@
 package ar.edu.itba.paw.models;
 
+import javax.persistence.*;
 import javax.persistence.Entity;
-import javax.persistence.Table;
 
 @Entity
 @Table(name = "career_course")
 public class CareerCourse extends Course{
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "course_id", nullable = false)
+    private Course course;
 
-    private int year;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "career_code", nullable = false)
+    private Career career;
+
+    @Column(name = "semester", nullable = false)
     private int semester;
 
-    CareerCourse(){
-
-    }
-    public CareerCourse(String id, String name,int credits,int semester) {
-        super(id, name,credits);
-        this.semester=semester%2 +1 ;
-        this.year=(semester+1)/2;
-
-    }
+    CareerCourse(){ }
 
     public int getSemester() {
-        return semester;
+        return semester%2 +1;
     }
 
     public int getYear() {
-        return year;
+        return (semester+1)/2;
     }
+
+    public Course getCourse() {
+        return course;
+    }
+
+    public void setCourse(Course course) {
+        this.course = course;
+    }
+
+    public Career getCareer() {
+        return career;
+    }
+
+    public void setCareer(Career career) {
+        this.career = career;
+    }
+
+    public void setSemester(int semester) {
+        this.semester = semester;
+    }
+
 }

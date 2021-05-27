@@ -9,8 +9,6 @@ import java.util.List;
 public class Course {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "course_id_seq")
-    @SequenceGenerator(sequenceName = "course_id_seq", name = "course_id_seq", allocationSize = 1)
     @Column(name = "id")
     private String id;
 
@@ -18,9 +16,12 @@ public class Course {
     private String name;
 
     @Column(name = "credits")
-    private int credits;
+    private Integer credits;
 
-    @OneToMany(mappedBy = "course_id")
+    @OneToMany(mappedBy = "course")
+    private List<CareerCourse> courseCareers;
+
+    @OneToMany(mappedBy = "course")
     private List<Announcement> announcements;
 
     @ManyToMany()
@@ -32,12 +33,6 @@ public class Course {
     private List<User> favedBy;
 
     Course(){}
-
-    public Course(String id, String name,int credits) {
-        this.id = id;
-        this.name = name;
-        this.credits=credits;
-    }
 
     public String getId() {
         return id;
@@ -58,4 +53,37 @@ public class Course {
     public List<User> getFavedBy() {
         return favedBy;
     }
+
+    public void setCredits(Integer credits) {
+        this.credits = credits;
+    }
+
+    public List<CareerCourse> getCourseCareers() {
+        return courseCareers;
+    }
+
+    public void setCourseCareers(List<CareerCourse> courseCareers) {
+        this.courseCareers = courseCareers;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setCredits(int credits) {
+        this.credits = credits;
+    }
+
+    public void setAnnouncements(List<Announcement> announcements) {
+        this.announcements = announcements;
+    }
+
+    public void setFavedBy(List<User> favedBy) {
+        this.favedBy = favedBy;
+    }
+
 }

@@ -16,6 +16,9 @@ public class Career {
     private String name;
 
     @OneToMany(mappedBy = "career")
+    private List<CareerCourse> careerCourses;
+
+    @OneToMany(mappedBy = "career")
     private List<Announcement> announcements;
 
     Career(){}
@@ -30,6 +33,14 @@ public class Career {
 
     public List<Announcement> getAnnouncements() {
         return announcements;
+    }
+
+    public List<CareerCourse> getCareerCourses() {
+        return careerCourses;
+    }
+
+    public void setCareerCourses(List<CareerCourse> careerCourses) {
+        this.careerCourses = careerCourses;
     }
 
     public void setCode(String code) {

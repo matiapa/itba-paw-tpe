@@ -43,7 +43,7 @@ public class HomeController {
 
         final ModelAndView mav = new ModelAndView("index");
 
-        mav.addObject("courses", courseService.findFavourites(loggedUser, 10));
+        mav.addObject("courses", courseService.findFavourites(loggedUser));
 
         mav.addObject("allCourses", courseService.findAll());
 
