@@ -8,14 +8,14 @@ import java.util.List;
 @Table(name = "career")
 public class Career {
 
-    @Column(length = 100, nullable = false)
-    private String name;
-
     @Id
     @Column(name = "code")
     private String code;
 
-    @OneToMany(mappedBy = "career_id")
+    @Column(length = 100, nullable = false)
+    private String name;
+
+    @OneToMany(mappedBy = "career")
     private List<Announcement> announcements;
 
     Career(){}
@@ -30,6 +30,18 @@ public class Career {
 
     public List<Announcement> getAnnouncements() {
         return announcements;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setAnnouncements(List<Announcement> announcements) {
+        this.announcements = announcements;
     }
 
 }

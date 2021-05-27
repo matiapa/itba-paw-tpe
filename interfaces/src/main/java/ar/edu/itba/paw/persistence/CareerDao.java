@@ -11,6 +11,4 @@ public interface CareerDao {
 
     Optional<Career> findByCode(String code);
 
-
-
 }

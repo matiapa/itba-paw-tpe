@@ -25,6 +25,7 @@ public class Announcement {
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="career_code")
     private Career career;
 
     @ManyToOne(fetch = FetchType.LAZY)

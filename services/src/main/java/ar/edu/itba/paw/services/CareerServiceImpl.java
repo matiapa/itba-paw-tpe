@@ -24,4 +24,5 @@ public class CareerServiceImpl implements CareerService{
     public List<Career> findAll() {
         return careerDao.findAll();
     }
+
 }

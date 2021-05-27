@@ -20,17 +20,17 @@ public class CareerDaoJPA implements CareerDao {
     @Override
     public List<Career> findAll() {
         final TypedQuery<Career> query = entityManager.createQuery(
-                "from Career", Career.class
+        "SELECT c FROM Career c", Career.class
         );
-        final List<Career> list = query.getResultList();
-        return list;
+        return query.getResultList();
     }
 
     @Override
     public Optional<Career> findByCode(String code) {
         final TypedQuery<Career> query = entityManager.createQuery(
-                "from Career as c where c.code = :code", Career.class);
+        "SELECT c FROM Career c WHERE c.code = :code", Career.class);
         query.setParameter("code", code);
         return query.getResultList().stream().findFirst();
     }
+
 }
