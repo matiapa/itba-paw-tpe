@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.models;
 
+import javax.persistence.ManyToMany;
 import java.util.List;
 import java.io.Serializable;
 import java.util.Date;
@@ -15,6 +16,12 @@ public class User implements Serializable {
     private final Date signupDate;
 
     private final List<Permission> permissions;
+
+    @ManyToMany(mappedBy = "seenBy")
+    List<Announcement> seenAnnouncements;
+
+    @ManyToMany(mappedBy = "favedBy")
+    List<Course> favedCourses;
 
     private final String careerCode;
 
@@ -69,6 +76,10 @@ public class User implements Serializable {
         return permissions;
     }
 
+    public List<Course> getFavedCourses() {
+        return favedCourses;
+    }
+
     public boolean can(String action, String entity){
         return getPermissions().contains(new Permission(
             Permission.Action.valueOf(action), Entity.valueOf(entity)
@@ -91,5 +102,9 @@ public class User implements Serializable {
 
     public void setProfileImage(String base64Image){
         this.profileImgB64 = base64Image;
+    }
+
+    public List<Announcement> getSeenAnnouncements() {
+        return seenAnnouncements;
     }
 }

@@ -11,6 +11,8 @@ import javax.validation.Valid;
 
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.ui.Pager;
+import ar.edu.itba.paw.services.CareerService;
+import ar.edu.itba.paw.services.CourseService;
 import ar.edu.itba.paw.services.UserService;
 import ar.edu.itba.paw.webapp.controller.common.CommonFilters;
 import ar.edu.itba.paw.webapp.exceptions.ResourceNotFoundException;
@@ -38,7 +40,9 @@ public class AnnounceController {
 
     @Autowired private AnnouncementService announcementService;
 
-    @Autowired private UserService userService;
+    @Autowired private CareerService careerService;
+
+    @Autowired private CourseService courseService;
 
     @Autowired private CommonFilters commonFilters;
 
@@ -62,8 +66,8 @@ public class AnnounceController {
         // Add filters options
 
         mav.addObject("filterBy", filterBy);
-        commonFilters.addCareers(mav, careerCode);
-        commonFilters.addCourses(mav, courseId);
+        Career selectedCareer = commonFilters.addCareers(mav, careerCode);
+        Course selectedCourse = commonFilters.addCourses(mav, courseId);
 
         // Add filtered announcements
 
@@ -75,20 +79,20 @@ public class AnnounceController {
         switch(filterBy){
             case career:
                 if(careerCode != null){
-                    pager = new Pager(announcementService.getSize(filterBy, careerCode, showSeen, userId), page);
-                    announcements = announcementService.findByCareer(loggedUser, careerCode, showSeen, pager.getOffset(), pager.getLimit());
+                    pager = new Pager(announcementService.getSize(filterBy, careerCode, loggedUser), page);
+                    announcements = announcementService.findByCareer(selectedCareer, loggedUser, pager.getOffset(), pager.getLimit());
                 }
                 break;
             case course:
                 if(courseId != null){
-                    pager = new Pager(announcementService.getSize(filterBy, courseId, showSeen, userId), page);
-                    announcements = announcementService.findByCourse(loggedUser, courseId, showSeen, pager.getOffset(), pager.getLimit());
+                    pager = new Pager(announcementService.getSize(filterBy, courseId, loggedUser), page);
+                    announcements = announcementService.findByCourse(selectedCourse, loggedUser, pager.getOffset(), pager.getLimit());
                 }
                 break;
             case general:
             default:
-                pager = new Pager(announcementService.getSize(filterBy, courseId, showSeen, userId), page);
-                announcements = announcementService.findGeneral(loggedUser, showSeen, pager.getOffset(), pager.getLimit());
+                pager = new Pager(announcementService.getSize(filterBy, courseId, loggedUser), page);
+                announcements = announcementService.findGeneral(loggedUser, pager.getOffset(), pager.getLimit());
         }
 
         mav.addObject("pager", pager);
@@ -115,9 +119,12 @@ public class AnnounceController {
                 0, form, user);
         }
 
+        Career career = careerService.findByCode(form.getCareerCode()).orElseThrow(ResourceNotFoundException::new);
+        Course course = courseService.findById(form.getCourseId());
+
         announcementService.create(
             form.getTitle(), form.getSummary(), form.getContent(),
-            form.getCareerCode(), form.getCourseId(), form.getExpiryDate(),
+            career, course, form.getExpiryDate(),
             user
         );
 
@@ -152,9 +159,10 @@ public class AnnounceController {
         @PathVariable(value="id") int id, HttpServletRequest request,
         @ModelAttribute("user") User loggedUser
     ) {
-
+        Announcement announcement = announcementService.findById(id).orElseThrow(ResourceNotFoundException::new);
+        
         LOGGER.debug("user {} is attempting to delete announcement with id {}",loggedUser,id);
-        announcementService.delete(loggedUser, id);
+        announcementService.delete(announcement, loggedUser);
         LOGGER.debug("user {} deleted announcement with id {}",loggedUser,id);
 
         return "redirect:"+ request.getHeader("Referer");
@@ -177,7 +185,8 @@ public class AnnounceController {
 
         LOGGER.debug("user {} is trying to mark announcement with id {} as seen",loggedUser,id);
 
-        announcementService.markSeen(loggedUser, id);
+        announcementService.markSeen(announcementService.findById(id)
+                .orElseThrow(ResourceNotFoundException::new), loggedUser);
 
         LOGGER.debug("user {} marked announcement with id {} as seen",loggedUser,id);
 

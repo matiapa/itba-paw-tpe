@@ -91,7 +91,7 @@ public class CourseController {
 
         // Course announcements
 
-        List<Announcement> announcements = announcementService.findByCourse(loggedUser, courseId, false, 0, 10);
+        List<Announcement> announcements = announcementService.findByCourse(selectedCourse, loggedUser, 0, 10);
         mav.addObject("announcements",announcements);
 
         // Course content

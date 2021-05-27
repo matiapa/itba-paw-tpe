@@ -47,7 +47,7 @@ public class HomeController {
 
         mav.addObject("allCourses", courseService.findAll());
 
-        mav.addObject("announcements", announcementService.findRelevant(loggedUser,5));
+        mav.addObject("announcements", announcementService.findRelevant(loggedUser,0, 5));
 
         mav.addObject("careers", careerService.findAll());
 

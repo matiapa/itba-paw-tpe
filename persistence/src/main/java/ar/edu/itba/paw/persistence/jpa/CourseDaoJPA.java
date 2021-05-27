@@ -57,6 +57,7 @@ public class CourseDaoJPA implements CourseDao {
         );
         final List<Course> list = query.getResultList();
         return list;
+
     }
 
     @Override

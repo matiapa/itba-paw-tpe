@@ -2,6 +2,7 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.models.Content;
 import ar.edu.itba.paw.models.Content.ContentType;
+import ar.edu.itba.paw.models.Course;
 import ar.edu.itba.paw.models.User;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -14,7 +15,7 @@ public interface ContentService {
 
     int getSize(String courseId, ContentType contentType, Date minDate, Date maxDate);
 
-    boolean createContent(String name, String link, String courseId, String description, String contentType, Date contentDate,User user);
+    boolean createContent(String name, String link, Course course, String description, String contentType, Date contentDate, User user);
 
     void delete(int id);
 

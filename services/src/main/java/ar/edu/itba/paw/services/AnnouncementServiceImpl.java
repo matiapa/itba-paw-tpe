@@ -1,10 +1,6 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.models.Announcement;
-import ar.edu.itba.paw.models.EntityTarget;
-import ar.edu.itba.paw.models.Entity;
-import ar.edu.itba.paw.models.Permission;
-import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.persistence.AnnouncementDao;
 import exceptions.UnauthorizedException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,28 +17,28 @@ public class AnnouncementServiceImpl implements AnnouncementService {
 
 
     @Override
-    public List<Announcement> findRelevant(User loggedUser, int limit) {
-        return announcementDao.findRelevant(loggedUser.getId(), limit);
+    public List<Announcement> findRelevant(User forUser, int page, int pageSize) {
+        return announcementDao.findRelevant(forUser, page, pageSize);
     }
 
     @Override
-    public List<Announcement> findGeneral(User loggedUser, boolean showSeen, int offset, int limit) {
-        return announcementDao.findGeneral(showSeen, loggedUser.getId(), offset, limit);
+    public List<Announcement> findGeneral(User hideSeenBy, int page, int pageSize) {
+        return announcementDao.findGeneral(hideSeenBy, page, pageSize);
     }
 
     @Override
-    public List<Announcement> findByCourse(User loggedUser, String courseId, boolean showSeen, int offset, int limit) {
-        return announcementDao.findByCourse(courseId, showSeen, loggedUser.getId(), offset, limit);
+    public List<Announcement> findByCourse(Course course, User hideSeenBy, int page, int pageSize) {
+        return announcementDao.findByCourse(course, hideSeenBy, page, pageSize);
     }
 
     @Override
-    public List<Announcement> findByCareer(User loggedUser, String careerCode, boolean showSeen, int offset, int limit) {
-        return announcementDao.findByCareer(careerCode, showSeen, loggedUser.getId(), offset, limit);
+    public List<Announcement> findByCareer(Career career, User hideSeenBy, int page, int pageSize) {
+        return announcementDao.findByCareer(career, hideSeenBy, page, pageSize);
     }
 
     @Override
-    public int getSize(EntityTarget target, String code, boolean showSeen, int userId){
-        return announcementDao.getSize(target, code, showSeen, userId);
+    public int getSize(EntityTarget target, String targetCode, User hideSeenBy){
+        return announcementDao.getSize(target, targetCode, hideSeenBy);
     }
 
     @Override
@@ -51,29 +47,28 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     }
 
     @Override
-    public Announcement create(String title, String summary, String content, String careerCode,
-       String courseId, Date expiryDate, User author) {
-        return announcementDao.create(title, summary, content, careerCode, courseId, expiryDate,
-            author.getId());
+    public Announcement create(String title, String summary, String content, Career career,
+       Course course, Date expiryDate, User uploader) {
+        return announcementDao.create(title, summary, content, career, course, expiryDate, uploader);
     }
 
     @Override
-    public void markSeen(User loggedUser, int announcementId) {
-        announcementDao.markSeen(announcementId, loggedUser.getId());
+    public void markSeen(Announcement announcement, User seenBy) {
+        announcementDao.markSeen(announcement, seenBy);
     }
 
     @Override
-    public void markAllSeen(User loggedUser) {
-        announcementDao.markAllSeen(loggedUser);
+    public void markAllSeen(User seenBy) {
+        announcementDao.markAllSeen(seenBy);
     }
 
     @Override
-    public void delete(User loggedUser, int id) {
+    public void delete(Announcement announcement, User loggedUser) {
         Permission reqPerm = new Permission(Permission.Action.delete, Entity.announcement);
         if(! loggedUser.getPermissions().contains(reqPerm))
             throw new UnauthorizedException();
 
-        announcementDao.delete(id);
+        announcementDao.delete(announcement);
     }
 
 }

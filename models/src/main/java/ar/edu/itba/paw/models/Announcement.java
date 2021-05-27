@@ -3,6 +3,7 @@ package ar.edu.itba.paw.models;
 import javax.persistence.*;
 import javax.persistence.Entity;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "announcement")
@@ -29,6 +30,14 @@ public class Announcement {
     @ManyToOne(fetch = FetchType.LAZY)
     private Course course;
 
+    @ManyToMany()
+    @JoinTable(
+        name = "announcement_seen",
+        joinColumns = @JoinColumn(name = "announcement_id"),
+        inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private List<User> seenBy;
+
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private User uploader;
 
@@ -38,12 +47,10 @@ public class Announcement {
     @Column(name = "expiry_date")
     private Date expiryDate;
 
-    private Boolean seen;
-
     Announcement(){}
 
     public Announcement(Integer id, String title, String summary, String content, Career career, Course course,
-                        User uploader, Date uploadDate, Date expiryDate, Boolean seen) {
+                        User uploader, Date uploadDate, Date expiryDate) {
         this.id = id;
         this.uploader = uploader;
         this.title = title;
@@ -53,7 +60,6 @@ public class Announcement {
         this.career = career;
         this.course = course;
         this.expiryDate = expiryDate;
-        this.seen = seen;
     }
 
     public Integer getId() {
@@ -84,15 +90,55 @@ public class Announcement {
         return expiryDate;
     }
 
-    public Boolean getSeen() {
-        return seen;
-    }
-
     public Career getCareer() {
         return career;
     }
 
     public Course getCourse() {
         return course;
+    }
+
+    public List<User> getSeenBy() {
+        return seenBy;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public void setCareer(Career career) {
+        this.career = career;
+    }
+
+    public void setCourse(Course course) {
+        this.course = course;
+    }
+
+    public void setSeenBy(List<User> seenBy) {
+        this.seenBy = seenBy;
+    }
+
+    public void setUploader(User uploader) {
+        this.uploader = uploader;
+    }
+
+    public void setUploadDate(Date uploadDate) {
+        this.uploadDate = uploadDate;
+    }
+
+    public void setExpiryDate(Date expiryDate) {
+        this.expiryDate = expiryDate;
     }
 }

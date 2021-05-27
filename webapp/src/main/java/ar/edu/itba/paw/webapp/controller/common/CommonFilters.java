@@ -21,7 +21,7 @@ public class CommonFilters {
     @Autowired private CareerService careerService;
     @Autowired private CourseService courseService;
 
-    public void addCareers(ModelAndView mav, String selectedCareerCode){
+    public Career addCareers(ModelAndView mav, String selectedCareerCode){
         List<Career> careers = careerService.findAll();
         mav.addObject("careers", careers);
 
@@ -30,9 +30,11 @@ public class CommonFilters {
                 .orElseThrow(RuntimeException::new)
             : null;
         mav.addObject("selectedCareer", selectedCareer);
+
+        return selectedCareer;
     }
 
-    public void addCourses(ModelAndView mav, String selectedCourseId){
+    public Course addCourses(ModelAndView mav, String selectedCourseId){
         List<Course> courses = courseService.findAll();
         mav.addObject("courses", courses);
 
@@ -41,6 +43,8 @@ public class CommonFilters {
                 .orElseThrow(RuntimeException::new)
             : null;
         mav.addObject("selectedCourse", selectedCourse);
+
+        return selectedCourse;
     }
 
     public EntityTarget getTarget(String careerCode, String courseId){

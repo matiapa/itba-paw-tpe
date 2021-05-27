@@ -21,12 +21,16 @@ public class Content {
     @Column(name = "link", nullable = false)
     private String link;
 
-    @Column(name = "description")
-    private String description;
-
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "submitted_by")
     private User submitter;
+
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "course_id")
+    private Course course;
+
+    @Column(name = "description")
+    private String description;
 
     @Column(name = "owner_email")
     private String ownerMail;
@@ -34,13 +38,15 @@ public class Content {
     @Column(name = "creation_date", columnDefinition = "date default now() not null")
     private Date uploadDate;
 
+    @Column(name = "content_date")
     private Date contentDate;
 
+    @Column(name = "content_type")
     @Enumerated(EnumType.STRING)
     private ContentType contentType;
 
     public Content(Integer id, String name, String link, String description, User submitter, String ownerMail,
-           Date uploadDate, Date contentDate, ContentType contenttype) {
+           Date uploadDate, Date contentDate, ContentType contenttype, Course course) {
         this.id = id;
         this.name = name;
         this.link=link;
@@ -50,6 +56,7 @@ public class Content {
         this.uploadDate = uploadDate;
         this.contentDate = contentDate;
         this.contentType = contenttype;
+        this.course = course;
     }
 
     public Content(){

@@ -2,6 +2,7 @@ package ar.edu.itba.paw.models;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
+import java.util.List;
 
 @Entity
 @Table(name = "course")
@@ -19,9 +20,18 @@ public class Course {
     @Column(name = "credits")
     private int credits;
 
-    Course(){
+    @OneToMany(mappedBy = "course_id")
+    private List<Announcement> announcements;
 
-    }
+    @ManyToMany()
+    @JoinTable(
+        name = "fav_course",
+        joinColumns = @JoinColumn(name = "course_id"),
+        inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private List<User> favedBy;
+
+    Course(){}
 
     public Course(String id, String name,int credits) {
         this.id = id;
@@ -39,5 +49,13 @@ public class Course {
 
     public int getCredits() {
         return credits;
+    }
+
+    public List<Announcement> getAnnouncements() {
+        return announcements;
+    }
+
+    public List<User> getFavedBy() {
+        return favedBy;
     }
 }
