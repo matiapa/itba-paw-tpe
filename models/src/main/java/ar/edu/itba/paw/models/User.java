@@ -87,7 +87,7 @@ public class User implements Serializable {
 
     public boolean can(Permission.Action action, Entity entity){
         return getPermissions().contains(new Permission(
-                action, entity
+            action, entity
         ));
     }
 

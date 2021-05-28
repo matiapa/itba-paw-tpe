@@ -18,13 +18,13 @@ public class Course {
     @Column(name = "credits")
     private Integer credits;
 
-    @OneToMany(mappedBy = "course")
+    @OneToMany(mappedBy = "course", fetch = FetchType.LAZY)
     private List<Announcement> announcements;
 
-    @OneToMany(mappedBy = "course")
+    @OneToMany(mappedBy = "course", fetch = FetchType.LAZY)
     private List<CareerCourse> courseCareers;
 
-    @OneToMany(mappedBy = "course")
+    @OneToMany(mappedBy = "course", fetch = FetchType.LAZY)
     private List<Content> content;
 
     @ManyToMany()

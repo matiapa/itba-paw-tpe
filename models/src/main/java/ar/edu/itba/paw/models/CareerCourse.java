@@ -5,7 +5,15 @@ import javax.persistence.Entity;
 
 @Entity
 @Table(name = "career_course")
-public class CareerCourse extends Course{
+public class CareerCourse {
+
+    // TODO: Use a composite key
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "career_course_id_seq")
+    @SequenceGenerator(sequenceName = "career_course_id_seq", name = "career_course_id_seq", allocationSize = 1)
+    @Column(name = "id")
+    private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "course_id", nullable = false)

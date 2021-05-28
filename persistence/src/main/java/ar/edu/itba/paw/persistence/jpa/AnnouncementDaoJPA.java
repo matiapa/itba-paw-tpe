@@ -35,6 +35,7 @@ public class AnnouncementDaoJPA implements AnnouncementDao {
             qryStr += " AND :seenBy NOT IN (SELECT user.id FROM a.seenBy AS user)";
 
         return qryStr;
+
     }
 
     List<Announcement> findAnnouncements(EntityTarget target, String targetCode,
@@ -44,9 +45,10 @@ public class AnnouncementDaoJPA implements AnnouncementDao {
 
         TypedQuery<Announcement> query = em.createQuery(qryStr, Announcement.class);
 
-        query.setParameter("targetCode", targetCode);
+        if(target != EntityTarget.general)
+            query.setParameter("targetCode", targetCode);
 
-        if(hideSeenBy != null) query.setParameter("seenBy", hideSeenBy);
+        if(hideSeenBy != null) query.setParameter("seenBy", hideSeenBy.getId());
 
         query.setFirstResult(limit * offset);
         query.setMaxResults(limit);
@@ -54,17 +56,19 @@ public class AnnouncementDaoJPA implements AnnouncementDao {
         return query.getResultList();
     }
 
-    int countAnnouncements(EntityTarget target, String targetCode, User hideSeenBy){
+    Long countAnnouncements(EntityTarget target, String targetCode, User hideSeenBy){
 
         String qryStr = buildQuery("SELECT count(a.id) FROM Announcement a", target, hideSeenBy != null);
 
-        TypedQuery<Integer> query = em.createQuery(qryStr, Integer.class);
+        TypedQuery<Long> query = em.createQuery(qryStr, Long.class);
 
-        query.setParameter("targetCode", targetCode);
+        if(target != EntityTarget.general)
+            query.setParameter("targetCode", targetCode);
 
-        if(hideSeenBy != null) query.setParameter("seenBy", hideSeenBy);
+        if(hideSeenBy != null) query.setParameter("seenBy", hideSeenBy.getId());
 
         return query.getSingleResult();
+
     }
 
 
@@ -112,7 +116,7 @@ public class AnnouncementDaoJPA implements AnnouncementDao {
 
     @Override
     public int getSize(EntityTarget target, String targetCode, User hideSeenBy) {
-        return countAnnouncements(target, targetCode, hideSeenBy);
+        return countAnnouncements(target, targetCode, hideSeenBy).intValue();
     }
 
     @Override
