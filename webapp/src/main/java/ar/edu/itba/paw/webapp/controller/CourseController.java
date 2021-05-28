@@ -1,9 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.services.*;
@@ -37,39 +34,39 @@ public class CourseController {
 
     private static final Logger LOGGER= LoggerFactory.getLogger(CourseController.class);
 
-
-    @RequestMapping(value = "/courses", method = GET)
-    public ModelAndView list(
-        @RequestParam(name="careerCode", required = false) String careerCode
-    ){
-        final ModelAndView mav = new ModelAndView("courses/course_list");
-
-        Map<Integer,List<CareerCourse>> courses;
-
-        List<Career> careers = careerService.findAll();
-        mav.addObject("careers", careers);
-
-        if(careerCode != null) {
-            courses = courseService.findByCareerSemester(careerCode);
-            if (courses.containsKey(0)){
-                List<CareerCourse> optionalCourses=courses.get(0);
-                courses.remove(0);
-                mav.addObject("careerOptionalCourses",optionalCourses);
-            }
-            else {
-                mav.addObject("careerOptionalCourses",null);
-            }
-
-            mav.addObject("careerCourses",courses);
-
-
-            Career selectedCareer = careers.stream().filter(c -> c.getCode().equals(careerCode)).findFirst()
-                    .orElseThrow(RuntimeException::new);
-            mav.addObject("selectedCareer", selectedCareer);
-        }
-
-        return mav;
-    }
+//    TODO: Fix this method
+//    @RequestMapping(value = "/courses", method = GET)
+//    public ModelAndView list(
+//        @RequestParam(name="careerCode", required = false) String careerCode
+//    ){
+//        final ModelAndView mav = new ModelAndView("courses/course_list");
+//
+//        Map<Integer,List<CareerCourse>> courses;
+//
+//        List<Career> careers = careerService.findAll();
+//        mav.addObject("careers", careers);
+//
+//        if(careerCode != null) {
+//            courses = courseService.findByCareerSemester(careerCode);
+//            if (courses.containsKey(0)){
+//                List<CareerCourse> optionalCourses=courses.get(0);
+//                courses.remove(0);
+//                mav.addObject("careerOptionalCourses",optionalCourses);
+//            }
+//            else {
+//                mav.addObject("careerOptionalCourses",null);
+//            }
+//
+//            mav.addObject("careerCourses",courses);
+//
+//
+//            Career selectedCareer = careers.stream().filter(c -> c.getCode().equals(careerCode)).findFirst()
+//                    .orElseThrow(RuntimeException::new);
+//            mav.addObject("selectedCareer", selectedCareer);
+//        }
+//
+//        return mav;
+//    }
 
     @RequestMapping(value = "/courses/{id:.+}", method = GET)
     public ModelAndView get(
@@ -80,12 +77,11 @@ public class CourseController {
 
         // Course details
 
-        Course selectedCourse = courseService.findById(courseId);
+        Course selectedCourse = courseService.findById(courseId).orElseThrow(NoSuchElementException::new);
         if (selectedCourse == null){
             LOGGER.debug("user {} cound not find course with id {}",loggedUser,courseId);
             throw new ResourceNotFoundException();
         }
-
 
         mav.addObject("course", selectedCourse);
 
@@ -96,7 +92,7 @@ public class CourseController {
 
         // Course content
 
-        List<Content> contents = contentService.findByCourse(courseId, null, null, null, 0, 10);
+        List<Content> contents = contentService.findByCourse(selectedCourse, null, null, null, 0, 10);
         mav.addObject("contents", contents);
 
         Map<Integer, User> contentOwners = new HashMap<>();

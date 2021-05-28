@@ -25,8 +25,7 @@ public class CourseDaoJPA implements CourseDao {
         final TypedQuery<Course> query = entityManager.createQuery(
         "SELECT c FROM Course c", Course.class
         );
-        final List<Course> list = query.getResultList();
-        return list;
+        return query.getResultList();
     }
 
 

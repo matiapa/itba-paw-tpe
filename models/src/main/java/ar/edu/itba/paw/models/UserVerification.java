@@ -11,7 +11,11 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "user_verification")
 public class UserVerification {
+
     @Id
+    @Column(name = "user_id", nullable = false)
+    private Integer userId;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;

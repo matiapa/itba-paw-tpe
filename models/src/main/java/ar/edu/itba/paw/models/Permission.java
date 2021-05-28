@@ -2,13 +2,7 @@ package ar.edu.itba.paw.models;
 
 import java.util.Objects;
 
-import javax.persistence.Column;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @javax.persistence.Entity
 @Table(name = "permission")
@@ -16,6 +10,14 @@ public class Permission {
 
     public enum Action {create, read, update, delete}
 
+    // TODO: Put a composed key
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "permission_id_seq")
+    @SequenceGenerator(sequenceName = "permission_id_seq", name = "permission_id_seq", allocationSize = 1)
+    @Column(name = "id")
+    private Integer id;
+
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Action action;
 

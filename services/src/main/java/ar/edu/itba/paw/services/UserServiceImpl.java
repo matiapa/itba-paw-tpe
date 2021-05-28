@@ -50,7 +50,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void setProfilePicture(User loggedUser, String pictureDataURI) {
         userDao.setProfilePicture(pictureDataURI, loggedUser);
-        loggedUser.setProfileImage(pictureDataURI);
+        loggedUser.setProfilePicture(pictureDataURI);
     }
 
     @Override

@@ -30,12 +30,14 @@ public class UserDaoJPA implements UserDao {
 
     @Override
     public Optional<User> findById(int id) {
-        return Optional.ofNullable(em.find(User.class, id));
+        return Optional.ofNullable(
+            em.find(User.class, id)
+        );
     }
 
     @Override
     public Optional<User> findByEmail(String email) {
-        TypedQuery<User> query = em.createQuery("from User where email = :email", User.class);
+        TypedQuery<User> query = em.createQuery("SELECT u FROM User u WHERE u.email = :email", User.class);
         query.setParameter("email", email);
         return Optional.ofNullable(query.getSingleResult());
     }
@@ -51,7 +53,7 @@ public class UserDaoJPA implements UserDao {
     public User registerUser(int id, String name, String surname, String email, String passwordHash, Career career,
             List<Course> courses) {
         User user = new User(id, name, surname, email, passwordHash, career);
-        user.setFavoriteCourses(new TreeSet<Course>(courses));
+        user.setFavoriteCourses(new TreeSet<>(courses));
         createVerificationCode(user);
         em.persist(user);
         return user;
@@ -76,7 +78,7 @@ public class UserDaoJPA implements UserDao {
 
     @Override
     public void setProfilePicture(String pictureDataURI, User user) {
-        user.setProfileImage(pictureDataURI);
+        user.setProfilePicture(pictureDataURI);
         em.merge(user);
     }
 

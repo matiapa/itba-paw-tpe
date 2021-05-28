@@ -1,10 +1,11 @@
 package ar.edu.itba.paw.models;
 
+import java.util.List;
+import java.util.Date;
+import java.util.Set;
+import java.io.Serializable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
-import java.util.List;
-import java.io.Serializable;
-import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -14,7 +15,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-@javax.persistence.Entity
+@javax.persistence.Entity(name = "User")
 @Table(name = "users")
 public class User implements Serializable {
 
@@ -34,7 +35,6 @@ public class User implements Serializable {
     @Column
     protected String password;
 
-    @Lob
     @Column(name = "profile_picture")
     private String profileImgB64;
 
@@ -61,7 +61,7 @@ public class User implements Serializable {
     private List<Announcement> uploadedAnnouncements;
 
     @ManyToMany(mappedBy = "favedBy")
-    private List<Course> favedCourses;
+    private Set<Course> favedCourses;
 
     @OneToMany(mappedBy = "uploader")
     private List<Content> uploadedContent;
@@ -143,7 +143,7 @@ public class User implements Serializable {
         return profileImgB64;
     }
 
-    public void setProfileImgB64(String profileImgB64) {
+    public void setProfilePicture(String profileImgB64) {
         this.profileImgB64 = profileImgB64;
     }
 
@@ -203,11 +203,11 @@ public class User implements Serializable {
         this.uploadedAnnouncements = uploadedAnnouncements;
     }
 
-    public List<Course> getFavedCourses() {
+    public Set<Course> getFavoriteCourses() {
         return favedCourses;
     }
 
-    public void setFavedCourses(List<Course> favedCourses) {
+    public void setFavoriteCourses(Set<Course> favedCourses) {
         this.favedCourses = favedCourses;
     }
 

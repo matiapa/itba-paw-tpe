@@ -120,7 +120,7 @@ public class AnnounceController {
         }
 
         Career career = careerService.findByCode(form.getCareerCode()).orElseThrow(ResourceNotFoundException::new);
-        Course course = courseService.findById(form.getCourseId());
+        Course course = courseService.findById(form.getCourseId()).orElseThrow(ResourceNotFoundException::new);
 
         announcementService.create(
             form.getTitle(), form.getSummary(), form.getContent(),

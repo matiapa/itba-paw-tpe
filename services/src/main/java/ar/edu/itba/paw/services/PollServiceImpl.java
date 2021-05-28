@@ -21,7 +21,9 @@ import ar.edu.itba.paw.persistence.PollDao;
 @Service
 public class PollServiceImpl implements PollService {
 
-    @Autowired private PollDao pollDao;
+    // TODO: Uncomment this
+//    @Autowired private PollDao pollDao;
+    private PollDao pollDao;
 
     @Override
     public List<Poll> findRelevant(int userId){
