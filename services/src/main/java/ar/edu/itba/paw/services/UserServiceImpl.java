@@ -1,8 +1,5 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.persistence.UserDao;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -10,6 +7,11 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import ar.edu.itba.paw.models.Career;
+import ar.edu.itba.paw.models.Course;
+import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.persistence.UserDao;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -31,39 +33,39 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public User registerUser(int id, String name, String surname, String email, String passwordHash,
-             String careerCode, List<String> courses, String websiteUrl) throws IOException {
-        User user = userDao.registerUser(id, name, surname, email, passwordHash, careerCode, courses);
+    public User registerUser(int id, String name, String surname, String email,String passwordHash, Career career,
+          List<Course> courses, String websiteUrl) throws IOException {
+        User user = userDao.registerUser(id, name, surname, email, passwordHash, career, courses);
 
-        emailService.sendVerificationEmail(email, websiteUrl);
+        emailService.sendVerificationEmail(user, websiteUrl);
 
         return user;
     }
 
     @Override
-    public boolean verifyEmail(int userId, int verificationCode) {
-        return userDao.verifyEmail(userId, verificationCode);
+    public boolean verifyEmail(User user, int verificationCode) {
+        return userDao.verifyEmail(user, verificationCode);
     }
 
     @Override
     public void setProfilePicture(User loggedUser, String pictureDataURI) {
-        userDao.setProfilePicture(pictureDataURI, loggedUser.getId());
+        userDao.setProfilePicture(pictureDataURI, loggedUser);
         loggedUser.setProfileImage(pictureDataURI);
     }
 
     @Override
     public void registerLogin(User loggedUser) {
-        userDao.registerLogin(loggedUser.getId());
+        userDao.registerLogin(loggedUser);
     }
 
     @Override
-    public void addFavouriteCourse(int id, String course) {
-        userDao.addFavouriteCourse(id, course);
+    public void addFavouriteCourse(User user, Course course) {
+        userDao.addFavouriteCourse(user, course);
     }
 
     @Override
-    public void removeFavouriteCourse(int id, String course){
-        userDao.removeFavouriteCourse(id, course);
+    public void removeFavouriteCourse(User user, Course course){
+        userDao.removeFavouriteCourse(user, course);
     }
 
 

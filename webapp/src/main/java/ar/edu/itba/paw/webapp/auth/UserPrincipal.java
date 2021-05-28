@@ -17,7 +17,7 @@ public class UserPrincipal extends User implements UserDetails, CredentialsConta
 
     public UserPrincipal(User user, Collection<? extends GrantedAuthority> authorities) {
         super(user.getId(), user.getName(), user.getSurname(), user.getEmail(), user.getPassword(),
-        user.getProfileImgB64(), user.getSignupDate(), user.getPermissions(), user.getCareerCode());
+        user.getCareer());
 
         this.authorities = (authorities != null)
 				? Collections.unmodifiableSet(new LinkedHashSet<>(authorities))

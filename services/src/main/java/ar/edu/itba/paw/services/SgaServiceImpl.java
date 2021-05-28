@@ -37,8 +37,7 @@ public class SgaServiceImpl implements SgaService {
             Optional<Career> career = careerService.findByCode(extendedData.careerCode);
             if(!career.isPresent())
                 return null;
-            return new User(extendedData.code, basicData.firstName, basicData.lastName, email, null,
-        null, null, null, career.get().getCode());
+            return new User(extendedData.code, basicData.firstName, basicData.lastName, email, null, career.get());
         } catch (IOException e) {
             e.printStackTrace();
             return null;

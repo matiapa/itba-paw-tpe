@@ -1,25 +1,30 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.models.Course;
-import ar.edu.itba.paw.services.*;
-import ar.edu.itba.paw.webapp.form.ChatGroupForm;
-import ar.edu.itba.paw.webapp.form.CourseForm;
+import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
+
+import java.util.Optional;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import ar.edu.itba.paw.models.Course;
 import ar.edu.itba.paw.models.User;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-
-import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import ar.edu.itba.paw.services.AnnouncementService;
+import ar.edu.itba.paw.services.CareerService;
+import ar.edu.itba.paw.services.CourseService;
+import ar.edu.itba.paw.services.PollService;
+import ar.edu.itba.paw.services.UserService;
+import ar.edu.itba.paw.webapp.exceptions.BadRequestException;
+import ar.edu.itba.paw.webapp.form.CourseForm;
 
 
 @Controller
@@ -64,7 +69,10 @@ public class HomeController {
             @Valid @ModelAttribute("courseForm") final CourseForm courseForm,
             final BindingResult errors
     ) {
-        userService.addFavouriteCourse(loggedUser.getId(), courseForm.getCourse());
+        Optional<Course> course = courseService.findById(courseForm.getCourse());
+        if(!course.isPresent())
+            throw new BadRequestException();
+        userService.addFavouriteCourse(loggedUser, course.get());
         return getDashboard(loggedUser, courseForm);
     }
 
@@ -73,10 +81,10 @@ public class HomeController {
             @PathVariable(value = "id") String id, HttpServletRequest request,
             @ModelAttribute("user") User loggedUser
     ){
-        System.out.println(id);
-
-        userService.removeFavouriteCourse(loggedUser.getId(), id);
-        System.out.println("paso");
+        Optional<Course> course = courseService.findById(id);
+        if(!course.isPresent())
+            throw new BadRequestException();
+        userService.removeFavouriteCourse(loggedUser, course.get());
 
         return "redirect:"+ request.getHeader("Referer");
     }

@@ -5,20 +5,54 @@ import javax.persistence.OneToMany;
 import java.util.List;
 import java.io.Serializable;
 import java.util.Date;
+import javax.persistence.Column;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
+@javax.persistence.Entity
+@Table(name = "users")
 public class User implements Serializable {
 
-    private final int id;
-    private final String name;
-    private final String surname;
-    private final String email;
+    @Id
+    @Column(nullable = false)
+    private int id;
+
+    @Column(nullable = false)
+    private String name;
+
+    @Column()
+    private String surname;
+
+    @Column(nullable = false)
+    private String email;
+
+    @Column
     protected String password;
+
+    @Lob
+    @Column(name = "profile_picture")
     private String profileImgB64;
-    private final Date signupDate;
 
-    private final List<Permission> permissions;
+    @Column(name = "signup_date", columnDefinition = "date default now() not null")
+    private Date signupDate;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "career_code")
+    private Career career;
+    
+    @Column(columnDefinition = "boolean default false not null")
+    private boolean verified;
 
-    private final String careerCode;
+    @OneToMany(fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "user")
+    private List<Permission> permissions;
+    
+    @OneToOne(mappedBy = "user", orphanRemoval = true)
+    private UserVerification verification;
 
     @ManyToMany(mappedBy = "seenBy")
     private List<Announcement> seenAnnouncements;
@@ -33,18 +67,17 @@ public class User implements Serializable {
     private List<Content> uploadedContent;
 
 
-    public User(int id, String name, String surname, String email, String password, String profileImgB64,
-                Date signupDate, List<Permission> permissions, String careerCode) {
+    public User(int id, String name, String surname, String email, String password, Career career) {
         this.id = id;
         this.name = name;
         this.surname = surname;
         this.email = email;
         this.password = password;
-        this.profileImgB64 = profileImgB64;
-        this.signupDate = signupDate;
-        this.permissions = permissions;
-        this.careerCode=careerCode;
+        this.career=career;
     }
+
+    public User(){}
+
 
     public boolean can(String action, String entity){
         return getPermissions().contains(new Permission(
@@ -70,78 +103,116 @@ public class User implements Serializable {
         return id;
     }
 
-    public String getFullName() { return getName() + " " + getSurname(); }
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getName() {
-        return name != null ? normalizeCase(name) : "";
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getSurname() {
-        return surname != null ? normalizeCase(surname) : "";
+        return surname;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
     }
 
     public String getEmail() {
         return email;
     }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getPassword() {
         return password;
-    }
-
-    public String getProfileImgB64() {
-        return profileImgB64;
-    }
-
-    public Date getSignupDate() {
-        return signupDate;
-    }
-
-    public List<Permission> getPermissions() {
-        return permissions;
-    }
-
-    public String getCareerCode() {
-        return careerCode;
-    }
-
-    public List<Announcement> getUploadedAnnouncements() {
-        return uploadedAnnouncements;
-    }
-
-    public List<Course> getFavedCourses() {
-        return favedCourses;
-    }
-
-    public List<Announcement> getSeenAnnouncements() {
-        return seenAnnouncements;
-    }
-
-    public List<Content> getUploadedContent() {
-        return uploadedContent;
-    }
-
-    public void setProfileImage(String base64Image){
-        this.profileImgB64 = base64Image;
     }
 
     public void setPassword(String password) {
         this.password = password;
     }
 
+    public String getProfileImgB64() {
+        return profileImgB64;
+    }
+
     public void setProfileImgB64(String profileImgB64) {
         this.profileImgB64 = profileImgB64;
+    }
+
+    public Date getSignupDate() {
+        return signupDate;
+    }
+
+    public void setSignupDate(Date signupDate) {
+        this.signupDate = signupDate;
+    }
+
+    public Career getCareer() {
+        return career;
+    }
+
+    public void setCareer(Career career) {
+        this.career = career;
+    }
+
+    public boolean isVerified() {
+        return verified;
+    }
+
+    public void setVerified(boolean verified) {
+        this.verified = verified;
+    }
+
+    public List<Permission> getPermissions() {
+        return permissions;
+    }
+
+    public void setPermissions(List<Permission> permissions) {
+        this.permissions = permissions;
+    }
+
+    public UserVerification getVerification() {
+        return verification;
+    }
+
+    public void setVerification(UserVerification verification) {
+        this.verification = verification;
+    }
+
+    public List<Announcement> getSeenAnnouncements() {
+        return seenAnnouncements;
     }
 
     public void setSeenAnnouncements(List<Announcement> seenAnnouncements) {
         this.seenAnnouncements = seenAnnouncements;
     }
 
+    public List<Announcement> getUploadedAnnouncements() {
+        return uploadedAnnouncements;
+    }
+
     public void setUploadedAnnouncements(List<Announcement> uploadedAnnouncements) {
         this.uploadedAnnouncements = uploadedAnnouncements;
     }
 
+    public List<Course> getFavedCourses() {
+        return favedCourses;
+    }
+
     public void setFavedCourses(List<Course> favedCourses) {
         this.favedCourses = favedCourses;
+    }
+
+    public List<Content> getUploadedContent() {
+        return uploadedContent;
     }
 
     public void setUploadedContent(List<Content> uploadedContent) {

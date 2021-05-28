@@ -1,18 +1,16 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.models.Career;
-import ar.edu.itba.paw.models.Course;
-import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.services.CareerService;
-import ar.edu.itba.paw.services.SgaService;
-import ar.edu.itba.paw.services.UserService;
-import ar.edu.itba.paw.webapp.exceptions.ResourceNotFoundException;
-import ar.edu.itba.paw.webapp.form.UserForm;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
+
+import java.io.IOException;
+import java.util.Base64;
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,15 +18,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.validation.Valid;
-import java.io.IOException;
-import java.util.Base64;
-import java.util.Optional;
-
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
-import static org.springframework.web.bind.annotation.RequestMethod.PUT;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import ar.edu.itba.paw.models.Career;
+import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.services.CareerService;
+import ar.edu.itba.paw.services.SgaService;
+import ar.edu.itba.paw.services.UserService;
+import ar.edu.itba.paw.webapp.exceptions.ResourceNotFoundException;
 
 @Controller
 public class ProfileController {
@@ -71,14 +66,10 @@ public class ProfileController {
             throw new ResourceNotFoundException();
         }
 
-        Optional<Career> optCareer = careerService.findByCode(optUser.get().getCareerCode());
-        if(!optCareer.isPresent()){
-            LOGGER.debug("user {} in profile cant find career with code {}",loggedUser,optUser.get().getCareerCode());
-            throw new ResourceNotFoundException();
-        }
+        Career career = optUser.get().getCareer();
 
         mav.addObject("profile", optUser.get());
-        mav.addObject("userCareer", optCareer.get());
+        mav.addObject("userCareer", career);
 
         return mav;
     }
@@ -104,14 +95,10 @@ public class ProfileController {
             throw new ResourceNotFoundException();
         }
 
-        Optional<Career> optCareer = careerService.findByCode(user.getCareerCode());
-        if(!optCareer.isPresent()){
-            LOGGER.debug("user {} in profile cant find career with code {}",loggedUser,user.getCareerCode());
-            throw new ResourceNotFoundException();
-        }
+        Career career = user.getCareer();
 
         mav.addObject("profile", user);
-        mav.addObject("userCareer", optCareer.get());
+        mav.addObject("userCareer", career);
 
         return mav;
     }
