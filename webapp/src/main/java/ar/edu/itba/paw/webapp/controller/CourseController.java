@@ -1,10 +1,12 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import java.util.*;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
-import ar.edu.itba.paw.models.*;
-import ar.edu.itba.paw.services.*;
-import ar.edu.itba.paw.webapp.exceptions.ResourceNotFoundException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,15 +14,24 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import ar.edu.itba.paw.models.Announcement;
+import ar.edu.itba.paw.models.Content;
+import ar.edu.itba.paw.models.Course;
+import ar.edu.itba.paw.models.Poll;
+import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.UserData;
+import ar.edu.itba.paw.services.AnnouncementService;
+import ar.edu.itba.paw.services.ContentService;
+import ar.edu.itba.paw.services.CourseService;
+import ar.edu.itba.paw.services.PollService;
+import ar.edu.itba.paw.services.SgaService;
+import ar.edu.itba.paw.webapp.auth.UserPrincipal;
+import ar.edu.itba.paw.webapp.exceptions.ResourceNotFoundException;
 
 @Controller
 public class CourseController {
-
-    @Autowired private CareerService careerService;
 
     @Autowired private AnnouncementService announcementService;
 
@@ -71,8 +82,9 @@ public class CourseController {
     @RequestMapping(value = "/courses/{id:.+}", method = GET)
     public ModelAndView get(
         @PathVariable(value="id") String courseId,
-        @ModelAttribute("user") User loggedUser
+        @ModelAttribute("user") UserPrincipal principal
     ){
+        final User loggedUser = principal.getUser();
         final ModelAndView mav = new ModelAndView("courses/course_detail");
 
         // Course details
@@ -95,9 +107,9 @@ public class CourseController {
         List<Content> contents = contentService.findByCourse(selectedCourse, null, null, null, 0, 10);
         mav.addObject("contents", contents);
 
-        Map<Integer, User> contentOwners = new HashMap<>();
+        Map<Integer, UserData> contentOwners = new HashMap<>();
         contents.forEach(c -> {
-            User user = sgaService.fetchFromEmail(c.getOwnerMail());
+            UserData user = sgaService.fetchFromEmail(c.getOwnerMail());
             if(user != null) contentOwners.put(c.getId(), user);
         });
 

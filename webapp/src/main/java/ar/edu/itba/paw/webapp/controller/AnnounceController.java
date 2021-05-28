@@ -2,6 +2,10 @@ package ar.edu.itba.paw.webapp.controller;
 
 
 
+import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -9,17 +13,9 @@ import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import ar.edu.itba.paw.models.*;
-import ar.edu.itba.paw.models.ui.Pager;
-import ar.edu.itba.paw.services.CareerService;
-import ar.edu.itba.paw.services.CourseService;
-import ar.edu.itba.paw.services.UserService;
-import ar.edu.itba.paw.webapp.controller.common.CommonFilters;
-import ar.edu.itba.paw.webapp.exceptions.ResourceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -28,12 +24,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import ar.edu.itba.paw.models.Announcement;
+import ar.edu.itba.paw.models.Career;
+import ar.edu.itba.paw.models.Course;
+import ar.edu.itba.paw.models.EntityTarget;
+import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.ui.Pager;
 import ar.edu.itba.paw.services.AnnouncementService;
+import ar.edu.itba.paw.services.CareerService;
+import ar.edu.itba.paw.services.CourseService;
+import ar.edu.itba.paw.webapp.auth.UserPrincipal;
+import ar.edu.itba.paw.webapp.controller.common.CommonFilters;
+import ar.edu.itba.paw.webapp.exceptions.ResourceNotFoundException;
 import ar.edu.itba.paw.webapp.form.AnnounceForm;
-
-import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
 public class AnnounceController {
@@ -59,9 +62,10 @@ public class AnnounceController {
         @RequestParam(name="showSeen", required = false, defaultValue="false") boolean showSeen,
         @RequestParam(name="page", required = false, defaultValue = "0") int page,
         @ModelAttribute("createForm") final AnnounceForm form,
-        @ModelAttribute("user") final User loggedUser
+        @ModelAttribute("user") UserPrincipal principal
     ){
         final ModelAndView mav = new ModelAndView("announcements/announcements_list");
+        final User loggedUser = principal.getUser();
 
         // Add filters options
 
@@ -73,8 +77,6 @@ public class AnnounceController {
 
         List<Announcement> announcements = new ArrayList<>();
         Pager pager = null;
-
-        int userId = loggedUser.getId();
 
         switch(filterBy){
             case career:
@@ -110,13 +112,14 @@ public class AnnounceController {
     @RequestMapping(value = "/announcements", method = POST)
     public ModelAndView create(
         @Valid @ModelAttribute("createForm") final AnnounceForm form,
+        @ModelAttribute("user") UserPrincipal principal,
         final BindingResult errors
     ){
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        final User loggedUser = principal.getUser();
 
         if (errors.hasErrors()) {
             return list(EntityTarget.general, null, null, true, false,
-                0, form, user);
+                0, form, principal);
         }
 
         Career career = careerService.findByCode(form.getCareerCode()).orElseThrow(ResourceNotFoundException::new);
@@ -125,21 +128,22 @@ public class AnnounceController {
         announcementService.create(
             form.getTitle(), form.getSummary(), form.getContent(),
             career, course, form.getExpiryDate(),
-            user
+            loggedUser
         );
 
         EntityTarget filterBy = commonFilters.getTarget(form.getCareerCode(), form.getCourseId());
 
         return list(filterBy, form.getCareerCode(), form.getCourseId(), false, false,
-                0, form, user);
+                0, form, principal);
     }
 
 
     @RequestMapping(value = "/announcements/{id}", method = GET)
     public ModelAndView get(
         @PathVariable(value = "id") Integer id,
-        @ModelAttribute("user") User loggedUser
+        @ModelAttribute("user") UserPrincipal principal
     ){
+        final User loggedUser = principal.getUser();
         final ModelAndView mav = new ModelAndView("announcements/announcements_detail");
 
         Optional<Announcement> optionalAnnouncement = announcementService.findById(id);
@@ -157,8 +161,9 @@ public class AnnounceController {
     @RequestMapping(value = "/announcements/{id}", method = DELETE)
     public String delete(
         @PathVariable(value="id") int id, HttpServletRequest request,
-        @ModelAttribute("user") User loggedUser
+        @ModelAttribute("user") UserPrincipal principal
     ) {
+        final User loggedUser = principal.getUser();
         Announcement announcement = announcementService.findById(id).orElseThrow(ResourceNotFoundException::new);
         
         LOGGER.debug("user {} is attempting to delete announcement with id {}",loggedUser,id);
@@ -171,17 +176,18 @@ public class AnnounceController {
     @RequestMapping(value = "/announcements/{id}/delete", method = POST)
     public String deleteWithPost(
         @PathVariable(value="id") int id, HttpServletRequest request,
-        @ModelAttribute("user") User loggedUser
+        @ModelAttribute("user") UserPrincipal principal
     ) {
-        return delete(id, request, loggedUser);
+        return delete(id, request, principal);
     }
 
 
     @RequestMapping(value = "/announcements/{id}/seen", method = POST)
     public String markSeen(
         @PathVariable(value="id") int id, HttpServletRequest request,
-        @ModelAttribute("user") User loggedUser
+        @ModelAttribute("user") UserPrincipal principal
     ) {
+        final User loggedUser = principal.getUser();
 
         LOGGER.debug("user {} is trying to mark announcement with id {} as seen",loggedUser,id);
 
@@ -196,8 +202,9 @@ public class AnnounceController {
     @RequestMapping(value = "/announcements/seen", method = POST)
     public String markAllSeen(
         HttpServletRequest request,
-        @ModelAttribute("user") User loggedUser
+        @ModelAttribute("user") UserPrincipal principal
     ) {
+        final User loggedUser = principal.getUser();
         announcementService.markAllSeen(loggedUser);
 
         return "redirect:"+ request.getHeader("Referer");

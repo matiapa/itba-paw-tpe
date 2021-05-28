@@ -23,6 +23,7 @@ import ar.edu.itba.paw.services.CareerService;
 import ar.edu.itba.paw.services.CourseService;
 import ar.edu.itba.paw.services.PollService;
 import ar.edu.itba.paw.services.UserService;
+import ar.edu.itba.paw.webapp.auth.UserPrincipal;
 import ar.edu.itba.paw.webapp.exceptions.BadRequestException;
 import ar.edu.itba.paw.webapp.form.CourseForm;
 
@@ -42,10 +43,10 @@ public class HomeController {
 
     @RequestMapping("/")
     public ModelAndView getDashboard(
-        @ModelAttribute("user") User loggedUser,
+        @ModelAttribute("user") UserPrincipal principal,
         @ModelAttribute("courseForm") final CourseForm courseForm
-        ) {
-
+    ) {
+        final User loggedUser = principal.getUser();
         final ModelAndView mav = new ModelAndView("index");
 
         mav.addObject("courses", courseService.findFavourites(loggedUser));
@@ -65,22 +66,24 @@ public class HomeController {
 
     @RequestMapping(value = "/", method = POST)
     public ModelAndView addFavouriteCourse(
-            @ModelAttribute("user") User loggedUser,
+            @ModelAttribute("user") UserPrincipal principal,
             @Valid @ModelAttribute("courseForm") final CourseForm courseForm,
             final BindingResult errors
     ) {
+        final User loggedUser = principal.getUser();
         Optional<Course> course = courseService.findById(courseForm.getCourse());
         if(!course.isPresent())
             throw new BadRequestException();
         userService.addFavouriteCourse(loggedUser, course.get());
-        return getDashboard(loggedUser, courseForm);
+        return getDashboard(principal, courseForm);
     }
 
     @RequestMapping(value = "/{id}", method = DELETE)
     public String removeFavouriteCourse(
             @PathVariable(value = "id") String id, HttpServletRequest request,
-            @ModelAttribute("user") User loggedUser
+            @ModelAttribute("user") UserPrincipal principal
     ){
+        final User loggedUser = principal.getUser();
         Optional<Course> course = courseService.findById(id);
         if(!course.isPresent())
             throw new BadRequestException();
@@ -93,10 +96,10 @@ public class HomeController {
     @RequestMapping(value = "/{id}/delete", method = POST)
     public String deleteWithPost(
             @PathVariable(value = "id") String id, HttpServletRequest request,
-            @ModelAttribute("user") User loggedUser
+            @ModelAttribute("user") UserPrincipal principal
     ) {
         System.out.println("Voy a borrar");
-        return removeFavouriteCourse(id, request, loggedUser);
+        return removeFavouriteCourse(id, request, principal);
     }
 
 }

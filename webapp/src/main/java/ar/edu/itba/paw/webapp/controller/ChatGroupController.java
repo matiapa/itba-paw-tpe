@@ -1,26 +1,20 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import static java.util.stream.Collectors.toList;
-import static org.springframework.web.bind.annotation.RequestMethod.*;
+import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import javax.management.relation.RelationServiceNotRegisteredException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import ar.edu.itba.paw.models.*;
-import ar.edu.itba.paw.models.ui.Pager;
-import ar.edu.itba.paw.services.CareerService;
-import ar.edu.itba.paw.services.CourseService;
-import ar.edu.itba.paw.webapp.controller.common.CommonFilters;
-import ar.edu.itba.paw.webapp.exceptions.ResourceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -29,7 +23,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import ar.edu.itba.paw.models.Career;
+import ar.edu.itba.paw.models.ChatGroup;
+import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.ui.Pager;
+import ar.edu.itba.paw.services.CareerService;
 import ar.edu.itba.paw.services.ChatGroupService;
+import ar.edu.itba.paw.webapp.auth.UserPrincipal;
+import ar.edu.itba.paw.webapp.controller.common.CommonFilters;
+import ar.edu.itba.paw.webapp.exceptions.ResourceNotFoundException;
 import ar.edu.itba.paw.webapp.form.ChatGroupForm;
 
 @Controller
@@ -54,7 +56,7 @@ public class ChatGroupController {
         @RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
         @RequestParam(name = "showCreateForm", required = false, defaultValue="false") Boolean showCreateForm,
         @ModelAttribute("createForm") final ChatGroupForm chatGroupForm,
-        @ModelAttribute("user") final User loggedUser
+        @ModelAttribute("user") UserPrincipal principal
     ){
         final ModelAndView mav = new ModelAndView("chats/chats_list");
 
@@ -104,14 +106,15 @@ public class ChatGroupController {
     @RequestMapping(value = "/chats", method = POST)
     public ModelAndView create(
         @Valid @ModelAttribute("createForm") final ChatGroupForm chatGroupForm,
+        @ModelAttribute("user") UserPrincipal principal,
         final BindingResult errors
     ) {
-        User loggedUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        final User loggedUser = principal.getUser();
 
         if(errors.hasErrors()){
             LOGGER.debug("User {} tried and failed to create a chatgroup with form {} and error {}",loggedUser,chatGroupForm,errors);
             return list(null, null, null, null, 0, true,
-                    chatGroupForm, loggedUser);
+                    chatGroupForm, principal);
         }
 
         ChatGroup chatGroup=chatGroupService.addGroup(
@@ -125,15 +128,16 @@ public class ChatGroupController {
         LOGGER.debug("user {} created chatgroup {} with form {}",loggedUser,chatGroup,chatGroupForm);
 
         return list(chatGroupForm.getCareerCode(), null, null, null, 0, false,
-                chatGroupForm, loggedUser);
+                chatGroupForm, principal);
     }
 
 
     @RequestMapping(value = "/chats/{id}", method = DELETE)
     public String delete(
         @PathVariable(value="id") String id, HttpServletRequest request,
-        @ModelAttribute("user") final User loggedUser
+        @ModelAttribute("user") UserPrincipal principal
     ) {
+        final User loggedUser = principal.getUser();
         chatGroupService.delete(chatGroupService.findById(id).orElseThrow(ResourceNotFoundException::new));
 
         LOGGER.debug("user {} deleted chatgroup with id {}",loggedUser,id);
@@ -145,9 +149,9 @@ public class ChatGroupController {
     @RequestMapping(value = "/chats/{id}/delete", method = POST)
     public String deleteWithPost(
             @PathVariable(value="id") String id, HttpServletRequest request,
-            @ModelAttribute("user") final User loggedUser
+            @ModelAttribute("user") UserPrincipal principal
     ) {
-        return delete(id, request,loggedUser);
+        return delete(id, request, principal);
     }
 
 }
