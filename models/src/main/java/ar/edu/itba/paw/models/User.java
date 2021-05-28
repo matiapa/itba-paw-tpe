@@ -1,23 +1,23 @@
 package ar.edu.itba.paw.models;
 
-import java.util.List;
-import java.util.Date;
-import java.util.Set;
 import java.io.Serializable;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @javax.persistence.Entity(name = "User")
 @Table(name = "users")
-public class User implements Serializable {
+public class User implements Serializable, UserData {
 
     @Id
     @Column(nullable = false)
@@ -51,7 +51,7 @@ public class User implements Serializable {
     @OneToMany(fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "user")
     private List<Permission> permissions;
     
-    @OneToOne(mappedBy = "user", orphanRemoval = true)
+    @OneToOne(mappedBy = "user", orphanRemoval = true, fetch = FetchType.LAZY)
     private UserVerification verification;
 
     @ManyToMany(mappedBy = "seenBy")
@@ -103,10 +103,6 @@ public class User implements Serializable {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
     }
@@ -127,10 +123,6 @@ public class User implements Serializable {
         return email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public String getPassword() {
         return password;
     }
@@ -149,10 +141,6 @@ public class User implements Serializable {
 
     public Date getSignupDate() {
         return signupDate;
-    }
-
-    public void setSignupDate(Date signupDate) {
-        this.signupDate = signupDate;
     }
 
     public Career getCareer() {
@@ -199,10 +187,6 @@ public class User implements Serializable {
         return uploadedAnnouncements;
     }
 
-    public void setUploadedAnnouncements(List<Announcement> uploadedAnnouncements) {
-        this.uploadedAnnouncements = uploadedAnnouncements;
-    }
-
     public Set<Course> getFavoriteCourses() {
         return favedCourses;
     }
@@ -213,9 +197,5 @@ public class User implements Serializable {
 
     public List<Content> getUploadedContent() {
         return uploadedContent;
-    }
-
-    public void setUploadedContent(List<Content> uploadedContent) {
-        this.uploadedContent = uploadedContent;
     }
 }
