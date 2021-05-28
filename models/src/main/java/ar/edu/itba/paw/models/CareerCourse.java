@@ -2,18 +2,13 @@ package ar.edu.itba.paw.models;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
+import java.io.Serializable;
+import java.util.Objects;
 
 @Entity
 @Table(name = "career_course")
+@IdClass(CareerCourse.CareerCourseId.class)
 public class CareerCourse {
-
-    // TODO: Use a composite key
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "career_course_id_seq")
-    @SequenceGenerator(sequenceName = "career_course_id_seq", name = "career_course_id_seq", allocationSize = 1)
-    @Column(name = "id")
-    private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "course_id", nullable = false)
@@ -25,6 +20,14 @@ public class CareerCourse {
 
     @Column(name = "semester", nullable = false)
     private int semester;
+
+    @Id
+    @Column(name = "course_id", insertable = false, updatable = false)
+    private String courseId;
+
+    @Id
+    @Column(name = "career_code", insertable = false, updatable = false)
+    private String careerCode;
 
 
     public CareerCourse(){ }
@@ -56,6 +59,29 @@ public class CareerCourse {
 
     public void setSemester(int semester) {
         this.semester = semester;
+    }
+
+
+    public static class CareerCourseId implements Serializable {
+
+        private String careerCode;
+        private String courseId;
+
+        public CareerCourseId(){}
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            CareerCourseId that = (CareerCourseId) o;
+            return Objects.equals(careerCode, that.careerCode) && Objects.equals(courseId, that.courseId);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(careerCode, courseId);
+        }
+
     }
 
 }
