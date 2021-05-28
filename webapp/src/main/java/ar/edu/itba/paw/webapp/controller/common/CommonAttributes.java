@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.controller.common;
 
+import ar.edu.itba.paw.models.User;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -11,11 +12,11 @@ import ar.edu.itba.paw.webapp.auth.UserPrincipal;
 public class CommonAttributes {
 
     @ModelAttribute("user")
-    UserPrincipal loggedUser(){
+    User loggedUser(){
         if(SecurityContextHolder.getContext().getAuthentication() == null)
             return null;
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return principal instanceof UserPrincipal ? (UserPrincipal)principal : null;
+        return principal instanceof UserPrincipal ? ((UserPrincipal) principal).getUser() : null;
     }
 
 }

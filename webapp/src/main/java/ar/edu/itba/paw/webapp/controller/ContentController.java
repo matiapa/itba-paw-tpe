@@ -63,7 +63,7 @@ public class ContentController {
         @RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
         @RequestParam(name = "showCreateForm", required = false, defaultValue="false") Boolean showCreateForm,
         @ModelAttribute("createForm") final ContentForm contentForm,
-        @ModelAttribute("user") UserPrincipal principal
+        @ModelAttribute("user") User loggedUser
     ) {
         final ModelAndView mav = new ModelAndView("contents/content_list");
 
@@ -107,14 +107,14 @@ public class ContentController {
     public ModelAndView create(
         @Valid @ModelAttribute("createForm") final ContentForm form,
         final BindingResult errors,
-        @ModelAttribute("user") UserPrincipal principal
+        @ModelAttribute("user") User loggedUser
     ) throws URISyntaxException {
-        final User loggedUser = principal.getUser();
+
 
         if(errors.hasErrors()){
             LOGGER.debug("User failed to create content with form {}  and errors {}",form,errors);
             return list(null, null, null, null, 0,
-                true, form, principal);
+                true, form, loggedUser);
         }
 
         // TODO: Change form content type to be enum
@@ -132,7 +132,7 @@ public class ContentController {
         LOGGER.debug("User created content with form {} ",form);
 
         return list(form.getCourseId(), null, null, null, 0,
-                false, form, principal);
+                false, form, loggedUser);
     }
 
     @RequestMapping(value = "/contents/{id}", method = DELETE)

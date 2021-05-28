@@ -34,9 +34,9 @@ public class AdminController {
 
     @RequestMapping(value = "/admin/statistics", method = GET)
     public ModelAndView statistics(
-        @ModelAttribute("user") UserPrincipal principal
+        @ModelAttribute("user") User loggedUser
     ){
-        final User loggedUser = principal.getUser();
+
         LOGGER.debug("user {}  accessed admin controller",loggedUser);
 
         ModelAndView mav = new ModelAndView("statistics/statistics");

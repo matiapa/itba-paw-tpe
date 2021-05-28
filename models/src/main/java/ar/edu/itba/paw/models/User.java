@@ -91,6 +91,8 @@ public class User implements Serializable, UserData {
         ));
     }
 
+    // TODO: Move this method
+
     private String normalizeCase(String str) {
         str = str.toLowerCase();
         String[] arr = str.split(" ");
@@ -102,6 +104,8 @@ public class User implements Serializable, UserData {
     public int getId() {
         return id;
     }
+
+    public String getFullName() { return getName() + " " + getSurname(); }
 
     public String getName() {
         return name;

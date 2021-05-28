@@ -43,10 +43,10 @@ public class HomeController {
 
     @RequestMapping("/")
     public ModelAndView getDashboard(
-        @ModelAttribute("user") UserPrincipal principal,
+        @ModelAttribute("user") User loggedUser,
         @ModelAttribute("courseForm") final CourseForm courseForm
     ) {
-        final User loggedUser = principal.getUser();
+
         final ModelAndView mav = new ModelAndView("index");
 
         mav.addObject("courses", courseService.findFavourites(loggedUser));
@@ -66,24 +66,24 @@ public class HomeController {
 
     @RequestMapping(value = "/", method = POST)
     public ModelAndView addFavouriteCourse(
-            @ModelAttribute("user") UserPrincipal principal,
+            @ModelAttribute("user") User loggedUser,
             @Valid @ModelAttribute("courseForm") final CourseForm courseForm,
             final BindingResult errors
     ) {
-        final User loggedUser = principal.getUser();
+
         Optional<Course> course = courseService.findById(courseForm.getCourse());
         if(!course.isPresent())
             throw new BadRequestException();
         userService.addFavouriteCourse(loggedUser, course.get());
-        return getDashboard(principal, courseForm);
+        return getDashboard(loggedUser, courseForm);
     }
 
     @RequestMapping(value = "/{id}", method = DELETE)
     public String removeFavouriteCourse(
             @PathVariable(value = "id") String id, HttpServletRequest request,
-            @ModelAttribute("user") UserPrincipal principal
+            @ModelAttribute("user") User loggedUser
     ){
-        final User loggedUser = principal.getUser();
+
         Optional<Course> course = courseService.findById(id);
         if(!course.isPresent())
             throw new BadRequestException();
@@ -96,10 +96,10 @@ public class HomeController {
     @RequestMapping(value = "/{id}/delete", method = POST)
     public String deleteWithPost(
             @PathVariable(value = "id") String id, HttpServletRequest request,
-            @ModelAttribute("user") UserPrincipal principal
+            @ModelAttribute("user") User loggedUser
     ) {
         System.out.println("Voy a borrar");
-        return removeFavouriteCourse(id, request, principal);
+        return removeFavouriteCourse(id, request, loggedUser);
     }
 
 }

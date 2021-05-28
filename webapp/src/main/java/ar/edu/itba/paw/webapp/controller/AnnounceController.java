@@ -62,10 +62,10 @@ public class AnnounceController {
         @RequestParam(name="showSeen", required = false, defaultValue="false") boolean showSeen,
         @RequestParam(name="page", required = false, defaultValue = "0") int page,
         @ModelAttribute("createForm") final AnnounceForm form,
-        @ModelAttribute("user") UserPrincipal principal
+        @ModelAttribute("user") User loggedUser
     ){
         final ModelAndView mav = new ModelAndView("announcements/announcements_list");
-        final User loggedUser = principal.getUser();
+
 
         // Add filters options
 
@@ -112,14 +112,14 @@ public class AnnounceController {
     @RequestMapping(value = "/announcements", method = POST)
     public ModelAndView create(
         @Valid @ModelAttribute("createForm") final AnnounceForm form,
-        @ModelAttribute("user") UserPrincipal principal,
+        @ModelAttribute("user") User loggedUser,
         final BindingResult errors
     ){
-        final User loggedUser = principal.getUser();
+
 
         if (errors.hasErrors()) {
             return list(EntityTarget.general, null, null, true, false,
-                0, form, principal);
+                0, form, loggedUser);
         }
 
         Career career = careerService.findByCode(form.getCareerCode()).orElseThrow(ResourceNotFoundException::new);
@@ -134,16 +134,16 @@ public class AnnounceController {
         EntityTarget filterBy = commonFilters.getTarget(form.getCareerCode(), form.getCourseId());
 
         return list(filterBy, form.getCareerCode(), form.getCourseId(), false, false,
-                0, form, principal);
+                0, form, loggedUser);
     }
 
 
     @RequestMapping(value = "/announcements/{id}", method = GET)
     public ModelAndView get(
         @PathVariable(value = "id") Integer id,
-        @ModelAttribute("user") UserPrincipal principal
+        @ModelAttribute("user") User loggedUser
     ){
-        final User loggedUser = principal.getUser();
+
         final ModelAndView mav = new ModelAndView("announcements/announcements_detail");
 
         Optional<Announcement> optionalAnnouncement = announcementService.findById(id);
@@ -161,9 +161,9 @@ public class AnnounceController {
     @RequestMapping(value = "/announcements/{id}", method = DELETE)
     public String delete(
         @PathVariable(value="id") int id, HttpServletRequest request,
-        @ModelAttribute("user") UserPrincipal principal
+        @ModelAttribute("user") User loggedUser
     ) {
-        final User loggedUser = principal.getUser();
+
         Announcement announcement = announcementService.findById(id).orElseThrow(ResourceNotFoundException::new);
         
         LOGGER.debug("user {} is attempting to delete announcement with id {}",loggedUser,id);
@@ -176,18 +176,18 @@ public class AnnounceController {
     @RequestMapping(value = "/announcements/{id}/delete", method = POST)
     public String deleteWithPost(
         @PathVariable(value="id") int id, HttpServletRequest request,
-        @ModelAttribute("user") UserPrincipal principal
+        @ModelAttribute("user") User loggedUser
     ) {
-        return delete(id, request, principal);
+        return delete(id, request, loggedUser);
     }
 
 
     @RequestMapping(value = "/announcements/{id}/seen", method = POST)
     public String markSeen(
         @PathVariable(value="id") int id, HttpServletRequest request,
-        @ModelAttribute("user") UserPrincipal principal
+        @ModelAttribute("user") User loggedUser
     ) {
-        final User loggedUser = principal.getUser();
+
 
         LOGGER.debug("user {} is trying to mark announcement with id {} as seen",loggedUser,id);
 
@@ -202,9 +202,9 @@ public class AnnounceController {
     @RequestMapping(value = "/announcements/seen", method = POST)
     public String markAllSeen(
         HttpServletRequest request,
-        @ModelAttribute("user") UserPrincipal principal
+        @ModelAttribute("user") User loggedUser
     ) {
-        final User loggedUser = principal.getUser();
+
         announcementService.markAllSeen(loggedUser);
 
         return "redirect:"+ request.getHeader("Referer");

@@ -44,9 +44,9 @@ public class ProfileController {
     @RequestMapping(value = "/profile/own/image", method = POST)
     public String setProfileImage(
         @RequestParam("newPicture") MultipartFile newPicture,
-        @ModelAttribute("user") UserPrincipal principal
+        @ModelAttribute("user") User loggedUser
     ) throws IOException {
-        final User loggedUser = principal.getUser();
+
         String type = newPicture.getContentType();
         String base64 = Base64.getEncoder().encodeToString(newPicture.getBytes());
         String dataURI = String.format("data:%s;base64,%s", type, base64);
@@ -59,10 +59,10 @@ public class ProfileController {
     @RequestMapping(value = "/profile/{id:[0-9]+}", method = GET)
     public ModelAndView getProfileById(
         @PathVariable(value="id") int id,
-        @ModelAttribute("user") UserPrincipal principal
+        @ModelAttribute("user") User loggedUser
     ) {
         final ModelAndView mav = new ModelAndView("profile/profile");
-        final User loggedUser = principal.getUser();
+
 
         Optional<User> optUser = userService.findById(id);
         if(! optUser.isPresent()){
@@ -86,10 +86,10 @@ public class ProfileController {
     @RequestMapping(value = "/profile/{email:[a-zA-Z]+@[a-zA-Z.]+}", method = GET)
     public ModelAndView getProfileByEmail(
         @PathVariable(value="email") String email,
-        @ModelAttribute("user") UserPrincipal principal
+        @ModelAttribute("user") User loggedUser
     ) {
         final ModelAndView mav = new ModelAndView("profile/profile");
-        final User loggedUser = principal.getUser();
+
 
         UserData user;
         Optional<User> optUser = userService.findByEmail(email);

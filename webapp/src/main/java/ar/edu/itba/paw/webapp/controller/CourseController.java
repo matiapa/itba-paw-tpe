@@ -82,9 +82,9 @@ public class CourseController {
     @RequestMapping(value = "/courses/{id:.+}", method = GET)
     public ModelAndView get(
         @PathVariable(value="id") String courseId,
-        @ModelAttribute("user") UserPrincipal principal
+        @ModelAttribute("user") User loggedUser
     ){
-        final User loggedUser = principal.getUser();
+
         final ModelAndView mav = new ModelAndView("courses/course_detail");
 
         // Course details

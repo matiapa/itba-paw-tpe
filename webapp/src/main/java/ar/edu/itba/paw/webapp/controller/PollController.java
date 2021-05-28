@@ -62,7 +62,7 @@ public class PollController {
         @RequestParam(name = "page", required = false, defaultValue = "0") int page,
         @RequestParam(name = "showCreateForm", required = false, defaultValue="false") boolean showCreateForm,
         @ModelAttribute("createForm") final PollForm pollForm,
-        @ModelAttribute("user") UserPrincipal principal
+        @ModelAttribute("user") User loggedUser
     ) {
         final ModelAndView mav = new ModelAndView("polls/poll_list");
 
@@ -129,15 +129,15 @@ public class PollController {
     @RequestMapping(value = "/polls", method = POST)
     public ModelAndView create(
         @Valid @ModelAttribute("createForm") final PollForm pollForm,
-        @ModelAttribute("user") UserPrincipal principal,
+        @ModelAttribute("user") User loggedUser,
         final BindingResult errors
     ) {
-        final User loggedUser = principal.getUser();
+
 
         if (errors.hasErrors()) {
             LOGGER.debug("user {} tried to create a poll but form {} had problems errors:{}",loggedUser,pollForm,errors);
             return list(EntityTarget.general, pollForm.getCareerCode(), pollForm.getCourseId(),
-                null, null,0, true, pollForm, principal);
+                null, null,0, true, pollForm, loggedUser);
         }
 
         LOGGER.debug("user {} is tryng to create a poll with  form {} ",loggedUser,pollForm);
@@ -157,16 +157,16 @@ public class PollController {
         EntityTarget filterBy = commonFilters.getTarget(pollForm.getCareerCode(), pollForm.getCourseId());
 
         return list(filterBy, pollForm.getCareerCode(), pollForm.getCourseId(), null, null,
-                0, false, pollForm, principal);
+                0, false, pollForm, loggedUser);
     }
 
 
     @RequestMapping(value = "/polls/{id}", method = GET)
     public ModelAndView get(
         @PathVariable(value="id") int pollId,
-        @ModelAttribute("user") UserPrincipal principal
+        @ModelAttribute("user") User loggedUser
     ){
-        final User loggedUser = principal.getUser();
+
         final ModelAndView mav = new ModelAndView("polls/poll_detail");
 
         Optional<Poll> selectedPoll= pollService.findById(pollId);
@@ -204,9 +204,9 @@ public class PollController {
     @RequestMapping(value = "/polls/{id}", method = DELETE)
     public String delete(
         @PathVariable(value="id") int id, HttpServletRequest request,
-        @ModelAttribute("user") UserPrincipal principal
+        @ModelAttribute("user") User loggedUser
     ) {
-        final User loggedUser = principal.getUser();
+
         LOGGER.debug("user {} is attempting to delete in poll with id {}",loggedUser,id);
         pollService.delete(id);
         LOGGER.debug("user {} deleted poll with id {}",loggedUser,id);
@@ -217,9 +217,9 @@ public class PollController {
     @RequestMapping(value = "/polls/{id}/delete", method = POST)
     public String deleteWithPost(
         @PathVariable(value="id") int id, HttpServletRequest request,
-        @ModelAttribute("user") UserPrincipal principal
+        @ModelAttribute("user") User loggedUser
     ) {
-        return delete(id, request, principal);
+        return delete(id, request, loggedUser);
     }
 
 
@@ -227,9 +227,9 @@ public class PollController {
     public String votePoll(
             @PathVariable(value="id") int id,
             @RequestParam int option,
-            @ModelAttribute("user") UserPrincipal principal
+            @ModelAttribute("user") User loggedUser
     ) {
-        final User loggedUser = principal.getUser();
+
         LOGGER.debug("user {} is attempting to vote in poll with id {} with option {}",loggedUser,id,option);
         pollService.voteChoicePoll(id, option, loggedUser);
 
