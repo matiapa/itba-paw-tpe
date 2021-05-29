@@ -1,7 +1,5 @@
 package ar.edu.itba.paw.services;
-import ar.edu.itba.paw.models.Announcement;
-import ar.edu.itba.paw.models.EntityTarget;
-import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.*;
 
 import java.util.Date;
 import java.util.List;
@@ -9,25 +7,25 @@ import java.util.Optional;
 
 public interface AnnouncementService {
 
-    List<Announcement> findRelevant(User loggedUser, int limit);
+    List<Announcement> findRelevant(User forUser, int page, int pageSize);
 
-    List<Announcement> findGeneral(User loggedUser, boolean showSeen, int offset, int limit);
+    List<Announcement> findGeneral(User hideSeenBy, int page, int pageSize);
 
-    List<Announcement> findByCourse(User loggedUser, String courseId, boolean showSeen, int offset, int limit);
+    List<Announcement> findByCourse(Course course, User hideSeenBy, int page, int pageSize);
 
-    List<Announcement> findByCareer(User loggedUser, String careerCode, boolean showSeen, int offset, int limit);
+    List<Announcement> findByCareer(Career career, User hideSeenBy, int page, int pageSize);
 
     Optional<Announcement> findById(int id);
     
-    int getSize(EntityTarget target, String code, boolean showSeen, int userId);
+    int getSize(EntityTarget target, String targetCode, User hideSeenBy);
 
-    Announcement create(String title, String summary, String content, String careerCode,
-       String courseId, Date expiryDate, User author);
+    Announcement create(String title, String summary, String content, Career career,
+        Course course, Date expiryDate, User uploader);
 
-    void markSeen(User loggedUser, int announcementId);
+    void markSeen(Announcement announcement, User seenBy);
 
-    void markAllSeen(User loggedUser);
+    void markAllSeen(User seenBy);
 
-    void delete(User loggedUser, int id);
+    void delete(Announcement announcement, User loggedUser);
 
 }

@@ -1,77 +1,88 @@
 package ar.edu.itba.paw.models;
 
-import java.util.List;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
-public class User implements Serializable {
+import javax.persistence.Column;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
-    private final int id;
-    private final String name;
-    private final String surname;
-    private final String email;
+@javax.persistence.Entity(name = "User")
+@Table(name = "users")
+public class User implements Serializable, UserData {
+
+    @Id
+    @Column(nullable = false)
+    private int id;
+
+    @Column(nullable = false)
+    private String name;
+
+    @Column()
+    private String surname;
+
+    @Column(nullable = false)
+    private String email;
+
+    @Column
     protected String password;
-    private String profileImgB64;
-    private final Date signupDate;
 
-    private final List<Permission> permissions;
+    @Column(name = "profile_picture")
+    private String profilePicture;
 
-    private final String careerCode;
+    @Column(name = "signup_date", nullable = false)
+    private Date signupDate = new Date();
+    
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "career_code")
+    private Career career;
+    
+    @Column(nullable = false)
+    private boolean verified = false;
 
-    public User(int id, String name, String surname, String email, String password, String profileImgB64,
-                Date signupDate, List<Permission> permissions, String careerCode) {
+    @OneToMany(fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "user")
+    private List<Permission> permissions;
+    
+    @OneToOne(mappedBy = "user", orphanRemoval = true, fetch = FetchType.LAZY)
+    private UserVerification verification;
+
+    @ManyToMany(mappedBy = "seenBy")
+    private List<Announcement> seenAnnouncements;
+
+    @OneToMany(mappedBy = "uploader")
+    private List<Announcement> uploadedAnnouncements;
+
+    @ManyToMany(mappedBy = "favedBy")
+    private Set<Course> favoriteCourses;
+
+    @OneToMany(mappedBy = "uploader")
+    private List<Content> uploadedContent;
+
+
+    public User(int id, String name, String surname, String email, String password, Career career) {
         this.id = id;
         this.name = name;
         this.surname = surname;
         this.email = email;
         this.password = password;
-        this.profileImgB64 = profileImgB64;
-        this.signupDate = signupDate;
-        this.permissions = permissions;
-        this.careerCode=careerCode;
+        this.career=career;
     }
 
-    public int getId() {
-        return id;
-    }
+    public User(){}
 
-    public String getFullName() { return getName() + " " + getSurname(); }
-
-    public String getName() {
-        return name != null ? normalizeCase(name) : "";
-    }
-
-    public String getSurname() {
-        return surname != null ? normalizeCase(surname) : "";
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getCareerCode() {
-        return careerCode;
-    }
-
-    public String getProfileImgB64() {
-        return profileImgB64;
-    }
-
-    public Date getSignupDate() {
-        return signupDate;
-    }
-
-    public List<Permission> getPermissions() {
-        return permissions;
-    }
 
     public boolean can(String action, String entity){
         return getPermissions().contains(new Permission(
-            Permission.Action.valueOf(action), Entity.valueOf(entity)
+                Permission.Action.valueOf(action), Entity.valueOf(entity)
         ));
     }
 
@@ -81,6 +92,8 @@ public class User implements Serializable {
         ));
     }
 
+    // TODO: Move this method
+
     private String normalizeCase(String str) {
         str = str.toLowerCase();
         String[] arr = str.split(" ");
@@ -89,7 +102,86 @@ public class User implements Serializable {
         return sb.toString().trim();
     }
 
-    public void setProfileImage(String base64Image){
-        this.profileImgB64 = base64Image;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return id == user.id;
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    public String getFullName() { return getName() + " " + getSurname(); }
+
+    @Override
+    public int getId() {
+        return id;
+    }
+
+    @Override
+    public String getName() {
+        return normalizeCase(name);
+    }
+
+    @Override
+    public String getSurname() {
+        return normalizeCase(surname);
+    }
+
+    @Override
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public String getProfilePicture() {
+        return profilePicture;
+    }
+
+    @Override
+    public Date getSignupDate() {
+        return signupDate;
+    }
+
+    @Override
+    public Career getCareer() {
+        return career;
+    }
+
+    public List<Permission> getPermissions() {
+        return permissions;
+    }
+
+    public UserVerification getVerification() {
+        return verification;
+    }
+
+    public Set<Course> getFavoriteCourses() {
+        return favoriteCourses;
+    }
+
+    public List<Announcement> getSeenAnnouncements() {
+        return seenAnnouncements;
+    }
+
+    public void setVerified(boolean verified) {
+        this.verified = verified;
+    }
+
+    public void setFavoriteCourses(Set<Course> favoriteCourses) {
+        this.favoriteCourses = favoriteCourses;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
+    }
+
 }

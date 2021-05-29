@@ -35,7 +35,7 @@
                         <div class="card-body text-center shadow">
                             <c:url value="/assets/img/avatars/avatar.png" var="defaultImage"/>
                             <img class="rounded-circle mb-3 mt-4" id="currentPicture" width="160" height="160"
-                                 src="${user.profileImgB64 != null ? user.profileImgB64 : defaultImage}" >
+                                 src="${user.profilePicture != null ? user.profilePicture : defaultImage}" >
                             <c:url value="/profile/own/image" var="postFormUrl"/>
                             <form:form method="post" action="${postFormUrl}" enctype="multipart/form-data">
                                 <div class="custom-file">

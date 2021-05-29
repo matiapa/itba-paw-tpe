@@ -36,7 +36,7 @@
                         <div class="card-body text-center shadow">
                             <c:url value="/assets/img/avatars/avatar.png" var="defaultImage"/>
                             <img class="rounded-circle mb-3 mt-4" id="currentPicture" width="160" height="160"
-                                 src="${profile.profileImgB64 != null ? profile.profileImgB64 : defaultImage}" >
+                                 src="${profile.profilePicture != null ? profile.profilePicture : defaultImage}" >
                         </div>
                     </div>
                 </div>

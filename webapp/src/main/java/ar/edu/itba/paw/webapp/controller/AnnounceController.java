@@ -2,6 +2,10 @@ package ar.edu.itba.paw.webapp.controller;
 
 
 
+import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -9,16 +13,11 @@ import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import ar.edu.itba.paw.models.*;
-import ar.edu.itba.paw.models.ui.Pager;
-import ar.edu.itba.paw.services.UserService;
-import ar.edu.itba.paw.webapp.controller.common.CommonFilters;
-import ar.edu.itba.paw.webapp.exceptions.ResourceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,19 +25,28 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import ar.edu.itba.paw.models.Announcement;
+import ar.edu.itba.paw.models.Career;
+import ar.edu.itba.paw.models.Course;
+import ar.edu.itba.paw.models.EntityTarget;
+import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.ui.Pager;
 import ar.edu.itba.paw.services.AnnouncementService;
+import ar.edu.itba.paw.services.CareerService;
+import ar.edu.itba.paw.services.CourseService;
+import ar.edu.itba.paw.webapp.auth.UserPrincipal;
+import ar.edu.itba.paw.webapp.controller.common.CommonFilters;
+import ar.edu.itba.paw.webapp.exceptions.ResourceNotFoundException;
 import ar.edu.itba.paw.webapp.form.AnnounceForm;
-
-import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
 public class AnnounceController {
 
     @Autowired private AnnouncementService announcementService;
 
-    @Autowired private UserService userService;
+    @Autowired private CareerService careerService;
+
+    @Autowired private CourseService courseService;
 
     @Autowired private CommonFilters commonFilters;
 
@@ -55,40 +63,40 @@ public class AnnounceController {
         @RequestParam(name="showSeen", required = false, defaultValue="false") boolean showSeen,
         @RequestParam(name="page", required = false, defaultValue = "0") int page,
         @ModelAttribute("createForm") final AnnounceForm form,
-        @ModelAttribute("user") final User loggedUser
+        @ModelAttribute("user") User loggedUser
     ){
         final ModelAndView mav = new ModelAndView("announcements/announcements_list");
 
         // Add filters options
 
         mav.addObject("filterBy", filterBy);
-        commonFilters.addCareers(mav, careerCode);
-        commonFilters.addCourses(mav, courseId);
+        Career selectedCareer = commonFilters.addCareers(mav, careerCode);
+        Course selectedCourse = commonFilters.addCourses(mav, courseId);
 
         // Add filtered announcements
 
         List<Announcement> announcements = new ArrayList<>();
         Pager pager = null;
 
-        int userId = loggedUser.getId();
+        User hideSeenBy = showSeen ? null : loggedUser;
 
         switch(filterBy){
             case career:
                 if(careerCode != null){
-                    pager = new Pager(announcementService.getSize(filterBy, careerCode, showSeen, userId), page);
-                    announcements = announcementService.findByCareer(loggedUser, careerCode, showSeen, pager.getOffset(), pager.getLimit());
+                    pager = new Pager(announcementService.getSize(filterBy, careerCode, hideSeenBy), page);
+                    announcements = announcementService.findByCareer(selectedCareer, hideSeenBy, pager.getOffset(), pager.getLimit());
                 }
                 break;
             case course:
                 if(courseId != null){
-                    pager = new Pager(announcementService.getSize(filterBy, courseId, showSeen, userId), page);
-                    announcements = announcementService.findByCourse(loggedUser, courseId, showSeen, pager.getOffset(), pager.getLimit());
+                    pager = new Pager(announcementService.getSize(filterBy, courseId, hideSeenBy), page);
+                    announcements = announcementService.findByCourse(selectedCourse, hideSeenBy, pager.getOffset(), pager.getLimit());
                 }
                 break;
             case general:
             default:
-                pager = new Pager(announcementService.getSize(filterBy, courseId, showSeen, userId), page);
-                announcements = announcementService.findGeneral(loggedUser, showSeen, pager.getOffset(), pager.getLimit());
+                pager = new Pager(announcementService.getSize(filterBy, courseId, hideSeenBy), page);
+                announcements = announcementService.findGeneral(hideSeenBy, pager.getOffset(), pager.getLimit());
         }
 
         mav.addObject("pager", pager);
@@ -106,25 +114,30 @@ public class AnnounceController {
     @RequestMapping(value = "/announcements", method = POST)
     public ModelAndView create(
         @Valid @ModelAttribute("createForm") final AnnounceForm form,
+        @ModelAttribute("user") User loggedUser,
         final BindingResult errors
     ){
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
         if (errors.hasErrors()) {
             return list(EntityTarget.general, null, null, true, false,
-                0, form, user);
+                0, form, loggedUser);
         }
+
+        Career career = form.getCareerCode() == null ? null
+            : careerService.findByCode(form.getCareerCode()).orElseThrow(ResourceNotFoundException::new);
+
+        Course course = form.getCourseId() == null ? null
+            : courseService.findById(form.getCourseId()).orElseThrow(ResourceNotFoundException::new);
 
         announcementService.create(
             form.getTitle(), form.getSummary(), form.getContent(),
-            form.getCareerCode(), form.getCourseId(), form.getExpiryDate(),
-            user
+            career, course, form.getExpiryDate(),
+            loggedUser
         );
 
         EntityTarget filterBy = commonFilters.getTarget(form.getCareerCode(), form.getCourseId());
 
         return list(filterBy, form.getCareerCode(), form.getCourseId(), false, false,
-                0, form, user);
+                0, form, loggedUser);
     }
 
 
@@ -133,6 +146,7 @@ public class AnnounceController {
         @PathVariable(value = "id") Integer id,
         @ModelAttribute("user") User loggedUser
     ){
+
         final ModelAndView mav = new ModelAndView("announcements/announcements_detail");
 
         Optional<Announcement> optionalAnnouncement = announcementService.findById(id);
@@ -144,6 +158,7 @@ public class AnnounceController {
         mav.addObject("announcement", optionalAnnouncement.get());
 
         return mav;
+
     }
 
 
@@ -153,8 +168,10 @@ public class AnnounceController {
         @ModelAttribute("user") User loggedUser
     ) {
 
+        Announcement announcement = announcementService.findById(id).orElseThrow(ResourceNotFoundException::new);
+        
         LOGGER.debug("user {} is attempting to delete announcement with id {}",loggedUser,id);
-        announcementService.delete(loggedUser, id);
+        announcementService.delete(announcement, loggedUser);
         LOGGER.debug("user {} deleted announcement with id {}",loggedUser,id);
 
         return "redirect:"+ request.getHeader("Referer");
@@ -175,9 +192,11 @@ public class AnnounceController {
         @ModelAttribute("user") User loggedUser
     ) {
 
+
         LOGGER.debug("user {} is trying to mark announcement with id {} as seen",loggedUser,id);
 
-        announcementService.markSeen(loggedUser, id);
+        announcementService.markSeen(announcementService.findById(id)
+                .orElseThrow(ResourceNotFoundException::new), loggedUser);
 
         LOGGER.debug("user {} marked announcement with id {} as seen",loggedUser,id);
 
@@ -189,6 +208,7 @@ public class AnnounceController {
         HttpServletRequest request,
         @ModelAttribute("user") User loggedUser
     ) {
+
         announcementService.markAllSeen(loggedUser);
 
         return "redirect:"+ request.getHeader("Referer");

@@ -1,8 +1,18 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.services.*;
-import ar.edu.itba.paw.webapp.form.UserForm;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,17 +25,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import ar.edu.itba.paw.models.Career;
+import ar.edu.itba.paw.models.Course;
+import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.services.CareerService;
+import ar.edu.itba.paw.services.CourseService;
+import ar.edu.itba.paw.services.UserService;
+import ar.edu.itba.paw.webapp.exceptions.BadRequestException;
+import ar.edu.itba.paw.webapp.form.UserForm;
 
 
 @Controller
@@ -74,11 +81,26 @@ public class RegisterController {
                 .toString() + request.getContextPath();
 
         LOGGER.debug("user is attempting to register a new user with form {}",form);
-        Set<String> courses=form.getCourses().stream().filter(Objects::nonNull).collect(Collectors.toSet());
+        
+        Stream<Optional<Course>> coursesOpt = form
+            .getCourses()
+            .stream()
+            .filter(Objects::nonNull)
+            .map(code -> courseService.findById(code));
+        if(!coursesOpt.allMatch(Optional<Course>::isPresent))
+            throw new BadRequestException();
+        List<Course> courses = coursesOpt
+            .map(opt -> opt.get())
+            .collect(Collectors.toList());
+
+        Optional<Career> optCareer = careerService.findByCode(form.getCareerCode());
+        if(!optCareer.isPresent())
+            throw new BadRequestException();
+        
         userService.registerUser(
             form.getId(), form.getName(), form.getSurname(), form.getEmail(),
-            new BCryptPasswordEncoder().encode(form.getPassword()), form.getCareerCode(),
-            new ArrayList<String>(courses), websiteUrl
+            new BCryptPasswordEncoder().encode(form.getPassword()), optCareer.get(),
+            courses, websiteUrl
         );
 
         LOGGER.debug("user registered a new user with form {}",form);
@@ -100,7 +122,7 @@ public class RegisterController {
            throw new RuntimeException( "email not found");
         }
         LOGGER.debug("attempting to verify user with email {} and code {}",email,verification_code);
-        boolean worked = userService.verifyEmail(userOptional.get().getId(),verification_code);
+        boolean worked = userService.verifyEmail(userOptional.get(),verification_code);
         LOGGER.debug("verified user with email {} and code {}",email,verification_code);
 
         mav.addObject("worked", worked);
