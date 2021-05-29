@@ -21,4 +21,5 @@ public interface UserService {
     boolean verifyEmail(User user, int verificationCode);
 
     void registerLogin(User loggedUser);
+    
 }

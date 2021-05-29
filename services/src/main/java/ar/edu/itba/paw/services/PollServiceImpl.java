@@ -31,6 +31,11 @@ public class PollServiceImpl implements PollService {
     }
 
     @Override
+    public List<Poll> findControversial(int userId) {
+        return pollDao.findControversial(userId, 5);
+    }
+
+    @Override
     public List<Poll> findGeneral(PollFormat format, PollState pollState, int offset, int limit){
         return pollDao.findGeneral(format, pollState, offset, limit);
     }

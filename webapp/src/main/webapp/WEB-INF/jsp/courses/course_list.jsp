@@ -66,10 +66,10 @@
                                                                 <table class="table">
                                                                     <thead>
                                                                         <tr>
-                                                                            <th><spring:message code="code"/></th>
-                                                                            <th><spring:message code="name"/></th>
-                                                                            <th><spring:message code="credits"/></th>
-                                                                            <th><spring:message code="form.link"/></th>
+                                                                            <th scope="col"><spring:message code="code"/></th>
+                                                                            <th scope="col"><spring:message code="name"/></th>
+                                                                            <th scope="col"><spring:message code="credits"/></th>
+                                                                            <th scope="col"><spring:message code="form.link"/></th>
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody>
