@@ -11,11 +11,13 @@ import java.util.Map;
 @Controller
 public class ErrorController{
 
-    static Map<String, String> CODE_DESC = new HashMap<String, String>() {{
-        put("403", "No tenés acceso a esta página");
-        put("404", "Esta página no ha sido encontrada");
-        put("500", "Ha ocurrido un error interno");
-    }};
+    static Map<String, String> CODE_DESC;
+    static {
+        CODE_DESC = new HashMap<>();
+        CODE_DESC.put("403", "No tenés acceso a esta página");
+        CODE_DESC.put("404", "Esta página no ha sido encontrada");
+        CODE_DESC.put("500", "Ha ocurrido un error interno");
+    }
 
     @RequestMapping("/error/{code}")
     public ModelAndView error404(
