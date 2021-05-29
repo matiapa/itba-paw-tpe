@@ -6,12 +6,13 @@ import ar.edu.itba.paw.models.EntityTarget;
 import ar.edu.itba.paw.services.CareerService;
 import ar.edu.itba.paw.services.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
-@Controller
+@Component
 public class CommonFilters {
 
     /* The reason this class was not designed to by a ControllerAdvice with ModelAttribute methods is because theses
