@@ -30,7 +30,7 @@ public class ChatGroupServiceImpl implements ChatGroupService{
     }
 
     @Override
-    public Optional<ChatGroup> findById(String id) {
+    public Optional<ChatGroup> findById(int id) {
         return chatGroupDao.findById(id);
     }
 

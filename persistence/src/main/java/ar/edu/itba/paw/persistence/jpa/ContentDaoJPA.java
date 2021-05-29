@@ -6,6 +6,7 @@ import ar.edu.itba.paw.models.Course;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.persistence.ContentDao;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -39,9 +40,13 @@ public class ContentDaoJPA implements ContentDao {
         final TypedQuery<Content> query = em.createQuery(stringBuilder.toString(), Content.class);
 
         query.setParameter("courseId", course.getId());
-        query.setParameter("contentType", contentType);
-        query.setParameter("minDate", minDate);
-        query.setParameter("maxDate", maxDate);
+
+        if (contentType != null)
+            query.setParameter("contentType", contentType);
+        if (minDate != null)
+            query.setParameter("minDate", minDate);
+        if (maxDate != null)
+            query.setParameter("maxDate", maxDate);
 
         query.setFirstResult(pageSize * page);
         query.setMaxResults(pageSize);
@@ -70,26 +75,34 @@ public class ContentDaoJPA implements ContentDao {
         if (maxDate!= null)
             stringBuilder.append(" AND c.contentDate <= :maxDate");
 
-        final TypedQuery<Integer> query = em.createQuery(stringBuilder.toString(), Integer.class);
+        final TypedQuery<Long> query = em.createQuery(stringBuilder.toString(), Long.class);
 
         query.setParameter("courseId", course.getId());
-        query.setParameter("contentType", contentType);
-        query.setParameter("minDate", minDate);
-        query.setParameter("maxDate", maxDate);
 
-        return query.getSingleResult();
+        if (contentType != null)
+            query.setParameter("contentType", contentType);
+        if (minDate != null)
+            query.setParameter("minDate", minDate);
+        if (maxDate != null)
+            query.setParameter("maxDate", maxDate);
+
+        return query.getSingleResult().intValue();
     }
 
     @Override
+    @Transactional
     public boolean createContent(String name, String link, Course course, String description, ContentType contentType,
             Date contentDate, User uploader) {
-        Content content = new Content(null, name, link, description, uploader, uploader.getEmail(), null,
+        Content content = new Content(null, name, link, description, uploader, uploader.getEmail(),
                 contentDate, contentType, course);
         em.persist(content);
+        em.flush();
+        em.clear();
         return true;
     }
 
     @Override
+    @Transactional
     public void delete(Content content) {
         em.remove(content);
         em.flush();

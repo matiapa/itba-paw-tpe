@@ -90,4 +90,5 @@ public class UserPrincipal implements UserDetails, CredentialsContainer {
             return false;
         return true;
     }
+
 }

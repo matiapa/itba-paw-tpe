@@ -43,7 +43,7 @@
                         </span>
                         <c:url value="/assets/img/avatars/avatar.png" var="defaultImage"/>
                         <img class="border rounded-circle img-profile"
-                             src="${user.profileImgB64 != null ? user.profileImgB64 : defaultImage}">
+                             src="${user.profilePicture != null ? user.profilePicture : defaultImage}">
                     </a>
                     <div class="dropdown-menu shadow dropdown-menu-right animated--grow-in">
                         <a class="dropdown-item" href="<c:url value="/profile/own"/>">

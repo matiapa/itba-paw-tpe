@@ -58,15 +58,4 @@ public class UserServiceImpl implements UserService {
         userDao.registerLogin(loggedUser);
     }
 
-    @Override
-    public void addFavouriteCourse(User user, Course course) {
-        userDao.addFavouriteCourse(user, course);
-    }
-
-    @Override
-    public void removeFavouriteCourse(User user, Course course){
-        userDao.removeFavouriteCourse(user, course);
-    }
-
-
 }

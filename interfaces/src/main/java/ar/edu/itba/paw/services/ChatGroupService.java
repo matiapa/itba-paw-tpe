@@ -14,7 +14,7 @@ public interface ChatGroupService {
     List<ChatGroup> findByCareer(Career career, ChatPlatform platform, Integer year, Integer quarter,
                                  Integer page, Integer pageSize);
 
-    Optional<ChatGroup> findById(String id);
+    Optional<ChatGroup> findById(int id);
 
     int getSize(Career career, ChatPlatform platform, Integer year, Integer quarter);
 

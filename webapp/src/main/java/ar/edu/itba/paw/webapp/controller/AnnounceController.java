@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -66,7 +67,6 @@ public class AnnounceController {
     ){
         final ModelAndView mav = new ModelAndView("announcements/announcements_list");
 
-
         // Add filters options
 
         mav.addObject("filterBy", filterBy);
@@ -78,23 +78,25 @@ public class AnnounceController {
         List<Announcement> announcements = new ArrayList<>();
         Pager pager = null;
 
+        User hideSeenBy = showSeen ? null : loggedUser;
+
         switch(filterBy){
             case career:
                 if(careerCode != null){
-                    pager = new Pager(announcementService.getSize(filterBy, careerCode, loggedUser), page);
-                    announcements = announcementService.findByCareer(selectedCareer, loggedUser, pager.getOffset(), pager.getLimit());
+                    pager = new Pager(announcementService.getSize(filterBy, careerCode, hideSeenBy), page);
+                    announcements = announcementService.findByCareer(selectedCareer, hideSeenBy, pager.getOffset(), pager.getLimit());
                 }
                 break;
             case course:
                 if(courseId != null){
-                    pager = new Pager(announcementService.getSize(filterBy, courseId, loggedUser), page);
-                    announcements = announcementService.findByCourse(selectedCourse, loggedUser, pager.getOffset(), pager.getLimit());
+                    pager = new Pager(announcementService.getSize(filterBy, courseId, hideSeenBy), page);
+                    announcements = announcementService.findByCourse(selectedCourse, hideSeenBy, pager.getOffset(), pager.getLimit());
                 }
                 break;
             case general:
             default:
-                pager = new Pager(announcementService.getSize(filterBy, courseId, loggedUser), page);
-                announcements = announcementService.findGeneral(loggedUser, pager.getOffset(), pager.getLimit());
+                pager = new Pager(announcementService.getSize(filterBy, courseId, hideSeenBy), page);
+                announcements = announcementService.findGeneral(hideSeenBy, pager.getOffset(), pager.getLimit());
         }
 
         mav.addObject("pager", pager);
@@ -115,15 +117,16 @@ public class AnnounceController {
         @ModelAttribute("user") User loggedUser,
         final BindingResult errors
     ){
-
-
         if (errors.hasErrors()) {
             return list(EntityTarget.general, null, null, true, false,
                 0, form, loggedUser);
         }
 
-        Career career = careerService.findByCode(form.getCareerCode()).orElseThrow(ResourceNotFoundException::new);
-        Course course = courseService.findById(form.getCourseId()).orElseThrow(ResourceNotFoundException::new);
+        Career career = form.getCareerCode() == null ? null
+            : careerService.findByCode(form.getCareerCode()).orElseThrow(ResourceNotFoundException::new);
+
+        Course course = form.getCourseId() == null ? null
+            : courseService.findById(form.getCourseId()).orElseThrow(ResourceNotFoundException::new);
 
         announcementService.create(
             form.getTitle(), form.getSummary(), form.getContent(),
@@ -155,6 +158,7 @@ public class AnnounceController {
         mav.addObject("announcement", optionalAnnouncement.get());
 
         return mav;
+
     }
 
 

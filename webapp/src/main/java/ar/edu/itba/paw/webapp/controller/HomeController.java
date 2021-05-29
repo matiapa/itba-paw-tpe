@@ -57,49 +57,9 @@ public class HomeController {
 
         mav.addObject("careers", careerService.findAll());
 
-        mav.addObject("polls", pollService.findRelevant(loggedUser.getId()));
-
-
+//        mav.addObject("polls", pollService.findRelevant(loggedUser.getId()));
 
         return mav;
-    }
-
-    @RequestMapping(value = "/", method = POST)
-    public ModelAndView addFavouriteCourse(
-            @ModelAttribute("user") User loggedUser,
-            @Valid @ModelAttribute("courseForm") final CourseForm courseForm,
-            final BindingResult errors
-    ) {
-
-        Optional<Course> course = courseService.findById(courseForm.getCourse());
-        if(!course.isPresent())
-            throw new BadRequestException();
-        userService.addFavouriteCourse(loggedUser, course.get());
-        return getDashboard(loggedUser, courseForm);
-    }
-
-    @RequestMapping(value = "/{id}", method = DELETE)
-    public String removeFavouriteCourse(
-            @PathVariable(value = "id") String id, HttpServletRequest request,
-            @ModelAttribute("user") User loggedUser
-    ){
-
-        Optional<Course> course = courseService.findById(id);
-        if(!course.isPresent())
-            throw new BadRequestException();
-        userService.removeFavouriteCourse(loggedUser, course.get());
-
-        return "redirect:"+ request.getHeader("Referer");
-    }
-
-
-    @RequestMapping(value = "/{id}/delete", method = POST)
-    public String deleteWithPost(
-            @PathVariable(value = "id") String id, HttpServletRequest request,
-            @ModelAttribute("user") User loggedUser
-    ) {
-        System.out.println("Voy a borrar");
-        return removeFavouriteCourse(id, request, loggedUser);
     }
 
 }

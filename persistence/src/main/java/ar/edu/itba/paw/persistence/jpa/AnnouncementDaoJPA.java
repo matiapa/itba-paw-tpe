@@ -3,6 +3,7 @@ package ar.edu.itba.paw.persistence.jpa;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.persistence.AnnouncementDao;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -82,9 +83,12 @@ public class AnnouncementDaoJPA implements AnnouncementDao {
 
         String qryStr = "SELECT a FROM Announcement a WHERE a.expiryDate IS NULL OR a.expiryDate > current_date " +
             "AND (a.course IS NULL OR :forUserId IN (SELECT c.id FROM a.course.favedBy c)) " +
-            "AND (a.career IS NULL OR a.career.id = :forUserCareer)";
+            "AND (a.career IS NULL OR a.career.code = :forUserCareerCode)";
 
         TypedQuery<Announcement> query = em.createQuery(qryStr, Announcement.class);
+
+        query.setParameter("forUserId", forUser.getId());
+        query.setParameter("forUserCareerCode", forUser.getCareer().getCode());
 
         query.setFirstResult(pageSize * page);
         query.setMaxResults(pageSize);
@@ -120,16 +124,17 @@ public class AnnouncementDaoJPA implements AnnouncementDao {
     }
 
     @Override
+    @Transactional
     public Announcement create(String title, String summary, String content, Career career, Course course,
            Date expiryDate, User submitter) {
-        Announcement announcement = new Announcement(null, title, summary, content, career, course, submitter,
-         null, expiryDate);
+        Announcement announcement = new Announcement(null, title, summary, content, career, course, submitter, expiryDate);
         em.persist(announcement);
 
         return announcement;
     }
 
     @Override
+    @Transactional
     public void markSeen(Announcement announcement, User seenBy) {
         announcement.getSeenBy().add(seenBy);
         em.merge(announcement);
@@ -141,6 +146,7 @@ public class AnnouncementDaoJPA implements AnnouncementDao {
     }
 
     @Override
+    @Transactional
     public void delete(Announcement announcement) {
         em.remove(announcement);
         em.flush();

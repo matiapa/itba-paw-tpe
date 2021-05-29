@@ -27,8 +27,8 @@ public class Content {
     @Column(name = "owner_email")
     private String ownerMail;
 
-    @Column(name = "creation_date", columnDefinition = "date default now() not null")
-    private Date uploadDate;
+    @Column(name = "creation_date", nullable = false)
+    private Date uploadDate = new Date();
 
     @Column(name = "content_date")
     private Date contentDate;
@@ -47,14 +47,13 @@ public class Content {
 
 
     public Content(Integer id, String name, String link, String description, User submitter, String ownerMail,
-           Date uploadDate, Date contentDate, ContentType contenttype, Course course) {
+           Date contentDate, ContentType contenttype, Course course) {
         this.id = id;
         this.name = name;
         this.link=link;
         this.description=description;
         this.ownerMail = ownerMail;
         this.uploader = submitter;
-        this.uploadDate = uploadDate;
         this.contentDate = contentDate;
         this.contentType = contenttype;
         this.course = course;

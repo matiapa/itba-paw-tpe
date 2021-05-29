@@ -34,11 +34,7 @@ public class CareerCourse {
 
 
     public int getSemester() {
-        return semester%2 +1;
-    }
-
-    public int getYear() {
-        return (semester+1)/2;
+        return semester;
     }
 
     public Course getCourse() {

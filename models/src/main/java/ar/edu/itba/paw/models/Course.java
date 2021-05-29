@@ -35,6 +35,12 @@ public class Course {
     )
     private List<User> favedBy;
 
+    @Override
+    public String toString() {
+        return "Course{" +
+                "id='" + id + '\'' +
+                '}';
+    }
 
     public Course(){}
 

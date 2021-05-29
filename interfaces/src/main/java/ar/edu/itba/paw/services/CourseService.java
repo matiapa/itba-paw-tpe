@@ -18,4 +18,6 @@ public interface CourseService {
 
     Optional<Course> findById(String id);
 
+    void markFavorite(Course course, User ofUser, boolean favorite);
+
 }

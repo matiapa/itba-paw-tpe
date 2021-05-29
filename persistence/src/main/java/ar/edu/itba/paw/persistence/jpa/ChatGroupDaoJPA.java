@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.models.ChatGroup.ChatPlatform;
 import ar.edu.itba.paw.persistence.ChatGroupDao;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -80,7 +81,7 @@ public class ChatGroupDaoJPA implements ChatGroupDao {
     public int getSize(Career career, ChatPlatform platform, Integer year, Integer quarter) {
         String qryStr = buildQuery("SELECT count(cg.id) FROM ChatGroup cg", platform, year, quarter);
 
-        TypedQuery<Integer> query = em.createQuery(qryStr, Integer.class);
+        TypedQuery<Long> query = em.createQuery(qryStr, Long.class);
 
         query.setParameter("careerCode", career.getCode());
 
@@ -104,17 +105,20 @@ public class ChatGroupDaoJPA implements ChatGroupDao {
             query.setParameter("maxQuarter", quarter == 1 ? 6 : 12);
         }
 
-        return query.getSingleResult();
+        return query.getSingleResult().intValue();
     }
 
 
     @Override
-    public Optional<ChatGroup> findById(String id) {
-       return Optional.ofNullable(em.find(ChatGroup.class, id));
+    public Optional<ChatGroup> findById(int id) {
+       return Optional.ofNullable(
+           em.find(ChatGroup.class, id)
+       );
     }
 
 
     @Override
+    @Transactional
     public ChatGroup addGroup(String groupName, Career career, String link, User createdBy, Date creationDate, ChatPlatform platform){
         ChatGroup chatGroup = new ChatGroup(null, career, groupName, link, createdBy, creationDate, platform);
         em.persist(chatGroup);
@@ -123,6 +127,7 @@ public class ChatGroupDaoJPA implements ChatGroupDao {
 
 
     @Override
+    @Transactional
     public void delete(ChatGroup chatGroup) {
         em.remove(chatGroup);
         em.flush();

@@ -77,9 +77,9 @@
                                             <option ${selectedYear == null ? 'selected' : ''} value="">
                                                 <spring:message code="year"/>
                                             </option>
-                                            <c:forEach var="year" items="${years}">
-                                                <option ${selectedYear == year ? 'selected' : ''} value="${year}">
-                                                        ${year}
+                                            <c:forEach var="semester" items="${years}">
+                                                <option ${selectedYear == semester ? 'selected' : ''} value="${semester}">
+                                                        ${semester}
                                                 </option>
                                             </c:forEach>
                                         </select>

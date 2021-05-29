@@ -134,7 +134,7 @@ public class ChatGroupController {
 
     @RequestMapping(value = "/chats/{id}", method = DELETE)
     public String delete(
-        @PathVariable(value="id") String id, HttpServletRequest request,
+        @PathVariable(value="id") Integer id, HttpServletRequest request,
         @ModelAttribute("user") User loggedUser
     ) {
 
@@ -148,7 +148,7 @@ public class ChatGroupController {
 
     @RequestMapping(value = "/chats/{id}/delete", method = POST)
     public String deleteWithPost(
-            @PathVariable(value="id") String id, HttpServletRequest request,
+            @PathVariable(value="id") Integer id, HttpServletRequest request,
             @ModelAttribute("user") User loggedUser
     ) {
         return delete(id, request, loggedUser);

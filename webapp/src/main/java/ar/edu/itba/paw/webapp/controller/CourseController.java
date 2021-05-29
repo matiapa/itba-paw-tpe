@@ -1,12 +1,12 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
+import java.util.*;
 
+import ar.edu.itba.paw.models.*;
+import ar.edu.itba.paw.services.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,19 +14,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import ar.edu.itba.paw.models.Announcement;
-import ar.edu.itba.paw.models.Content;
-import ar.edu.itba.paw.models.Course;
-import ar.edu.itba.paw.models.Poll;
-import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.models.UserData;
-import ar.edu.itba.paw.services.AnnouncementService;
-import ar.edu.itba.paw.services.ContentService;
-import ar.edu.itba.paw.services.CourseService;
-import ar.edu.itba.paw.services.PollService;
-import ar.edu.itba.paw.services.SgaService;
 import ar.edu.itba.paw.webapp.auth.UserPrincipal;
 import ar.edu.itba.paw.webapp.exceptions.ResourceNotFoundException;
 
@@ -39,45 +29,51 @@ public class CourseController {
 
     @Autowired private CourseService courseService;
 
+    @Autowired private CareerService careerService;
+
     @Autowired private PollService pollService;
 
     @Autowired private SgaService sgaService;
 
+
     private static final Logger LOGGER= LoggerFactory.getLogger(CourseController.class);
 
-//    TODO: Fix this method
-//    @RequestMapping(value = "/courses", method = GET)
-//    public ModelAndView list(
-//        @RequestParam(name="careerCode", required = false) String careerCode
-//    ){
-//        final ModelAndView mav = new ModelAndView("courses/course_list");
-//
-//        Map<Integer,List<CareerCourse>> courses;
-//
-//        List<Career> careers = careerService.findAll();
-//        mav.addObject("careers", careers);
-//
-//        if(careerCode != null) {
-//            courses = courseService.findByCareerSemester(careerCode);
-//            if (courses.containsKey(0)){
-//                List<CareerCourse> optionalCourses=courses.get(0);
-//                courses.remove(0);
-//                mav.addObject("careerOptionalCourses",optionalCourses);
-//            }
-//            else {
-//                mav.addObject("careerOptionalCourses",null);
-//            }
-//
-//            mav.addObject("careerCourses",courses);
-//
-//
-//            Career selectedCareer = careers.stream().filter(c -> c.getCode().equals(careerCode)).findFirst()
-//                    .orElseThrow(RuntimeException::new);
-//            mav.addObject("selectedCareer", selectedCareer);
-//        }
-//
-//        return mav;
-//    }
+    @RequestMapping(value = "/courses", method = GET)
+    public ModelAndView list(
+        @RequestParam(name="careerCode", required = false) String careerCode
+    ){
+        final ModelAndView mav = new ModelAndView("courses/course_list");
+
+        List<Career> careers = careerService.findAll();
+        mav.addObject("careers", careers);
+
+        if(careerCode != null) {
+            Career selectedCareer = careers.stream().filter(c -> c.getCode().equals(careerCode)).findFirst()
+                    .orElseThrow(NoSuchElementException::new);
+
+            List<CareerCourse> careerCourses = courseService.findByCareer(selectedCareer);
+
+            Map<Integer, List<Course>> coursesBySemester = new HashMap<>();
+            List<Course> optionalCourses = new ArrayList<>();
+
+            careerCourses.forEach(cc -> {
+                if(cc.getSemester() == 0)
+                    optionalCourses.add(cc.getCourse());
+                else if(coursesBySemester.get(cc.getSemester()) == null) {
+                    LinkedList<Course> ll = new LinkedList<>();
+                    ll.add(cc.getCourse());
+                    coursesBySemester.put(cc.getSemester(), ll);
+                }else
+                    coursesBySemester.get(cc.getSemester()).add(cc.getCourse());
+            });
+
+            mav.addObject("optionalCourses", optionalCourses);
+            mav.addObject("coursesBySemester", coursesBySemester);
+            mav.addObject("selectedCareer", selectedCareer);
+        }
+
+        return mav;
+    }
 
     @RequestMapping(value = "/courses/{id:.+}", method = GET)
     public ModelAndView get(
@@ -117,10 +113,34 @@ public class CourseController {
 
         // Course polls
 
-        List<Poll> polls = pollService.findByCourse(courseId, null, null, 0, 10);
-        mav.addObject("polls",polls);
+//        List<Poll> polls = pollService.findByCourse(courseId, null, null, 0, 10);
+//        mav.addObject("polls",polls);
 
         return mav;
+    }
+
+    @RequestMapping(value = "courses/{id:.+}/fav", method = POST)
+    public ModelAndView addFav(
+            @PathVariable(value="id") String id,
+            @ModelAttribute("user") User loggedUser
+    ){
+        courseService.markFavorite(
+            courseService.findById(id).orElseThrow(NoSuchElementException::new),
+            loggedUser, true
+        );
+        return get(id, loggedUser);
+    }
+
+    @RequestMapping(value = "courses/{id:.+}/unfav", method = POST)
+    public ModelAndView removeFav(
+            @PathVariable(value="id") String id,
+            @ModelAttribute("user") User loggedUser
+    ){
+        courseService.markFavorite(
+            courseService.findById(id).orElseThrow(NoSuchElementException::new),
+            loggedUser, false
+        );
+        return get(id, loggedUser);
     }
 
 }

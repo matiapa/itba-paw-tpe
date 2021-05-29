@@ -17,8 +17,8 @@ public class LoginActivity {
     private User user;
 
     @Id
-    @Column(columnDefinition = "timestamp default now() not null")
-    private Date date;
+    @Column(nullable = false)
+    private final Date date = new Date();
 
     @Id
     @Column(name = "user_id", insertable = false, updatable = false)

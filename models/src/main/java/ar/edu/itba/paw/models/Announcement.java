@@ -4,6 +4,7 @@ import javax.persistence.*;
 import javax.persistence.Entity;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "announcement")
@@ -24,8 +25,8 @@ public class Announcement {
     @Column(name = "content")
     private String content;
 
-    @Column(name = "creation_date", columnDefinition = "date default now() not null")
-    private Date uploadDate;
+    @Column(name = "creation_date", nullable = false)
+    private Date uploadDate = new Date();
 
     @Column(name = "expiry_date")
     private Date expiryDate;
@@ -54,13 +55,12 @@ public class Announcement {
     public Announcement(){}
 
     public Announcement(Integer id, String title, String summary, String content, Career career, Course course,
-                        User uploader, Date uploadDate, Date expiryDate) {
+                        User uploader, Date expiryDate) {
         this.id = id;
         this.uploader = uploader;
         this.title = title;
         this.summary = summary;
         this.content = content;
-        this.uploadDate = uploadDate;
         this.career = career;
         this.course = course;
         this.expiryDate = expiryDate;

@@ -21,9 +21,4 @@ public interface UserService {
     boolean verifyEmail(User user, int verificationCode);
 
     void registerLogin(User loggedUser);
-
-    void addFavouriteCourse(User user, Course course);
-
-    void removeFavouriteCourse(User user, Course course);
-
 }

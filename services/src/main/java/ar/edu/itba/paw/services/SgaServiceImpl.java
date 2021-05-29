@@ -2,6 +2,7 @@ package ar.edu.itba.paw.services;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Date;
 import java.util.Optional;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -59,27 +60,43 @@ public class SgaServiceImpl implements SgaService {
             this.career = career;
         }
 
+        @Override
         public int getId() {
             return id;
         }
 
+        @Override
+        public String getFullName(){ return name + " " + surname; }
+
+        @Override
         public String getName() {
             return name;
         }
 
+        @Override
         public String getSurname() {
             return surname;
         }
 
+        @Override
         public String getEmail() {
             return email;
         }
 
+        @Override
         public Career getCareer() {
             return career;
         }
-    
-        
+
+        @Override
+        public String getProfilePicture() {
+            return null;
+        }
+
+        @Override
+        public Date getSignupDate() {
+            return null;
+        }
     }
 
     private static class SgaBasicData {

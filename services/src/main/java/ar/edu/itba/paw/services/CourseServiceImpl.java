@@ -39,4 +39,9 @@ public class CourseServiceImpl implements CourseService {
         return courseDao.findById(id);
     }
 
+    @Override
+    public void markFavorite(Course course, User ofUser, boolean favorite) {
+        courseDao.markFavorite(course, ofUser, favorite);
+    }
+
 }

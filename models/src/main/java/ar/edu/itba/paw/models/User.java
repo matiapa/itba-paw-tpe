@@ -3,6 +3,7 @@ package ar.edu.itba.paw.models;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -36,17 +37,17 @@ public class User implements Serializable, UserData {
     protected String password;
 
     @Column(name = "profile_picture")
-    private String profileImgB64;
+    private String profilePicture;
 
-    @Column(name = "signup_date", columnDefinition = "date default now() not null")
-    private Date signupDate;
+    @Column(name = "signup_date", nullable = false)
+    private Date signupDate = new Date();
     
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "career_code")
     private Career career;
     
-    @Column(columnDefinition = "boolean default false not null")
-    private boolean verified;
+    @Column(nullable = false)
+    private boolean verified = false;
 
     @OneToMany(fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "user")
     private List<Permission> permissions;
@@ -61,7 +62,7 @@ public class User implements Serializable, UserData {
     private List<Announcement> uploadedAnnouncements;
 
     @ManyToMany(mappedBy = "favedBy")
-    private Set<Course> favedCourses;
+    private Set<Course> favoriteCourses;
 
     @OneToMany(mappedBy = "uploader")
     private List<Content> uploadedContent;
@@ -101,28 +102,37 @@ public class User implements Serializable, UserData {
         return sb.toString().trim();
     }
 
-    public int getId() {
-        return id;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return id == user.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
     public String getFullName() { return getName() + " " + getSurname(); }
 
+    @Override
+    public int getId() {
+        return id;
+    }
+
+    @Override
     public String getName() {
-        return name;
+        return normalizeCase(name);
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
+    @Override
     public String getSurname() {
-        return surname;
+        return normalizeCase(surname);
     }
 
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
-
+    @Override
     public String getEmail() {
         return email;
     }
@@ -131,75 +141,47 @@ public class User implements Serializable, UserData {
         return password;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    @Override
+    public String getProfilePicture() {
+        return profilePicture;
     }
 
-    public String getProfileImgB64() {
-        return profileImgB64;
-    }
-
-    public void setProfilePicture(String profileImgB64) {
-        this.profileImgB64 = profileImgB64;
-    }
-
+    @Override
     public Date getSignupDate() {
         return signupDate;
     }
 
+    @Override
     public Career getCareer() {
         return career;
-    }
-
-    public void setCareer(Career career) {
-        this.career = career;
-    }
-
-    public boolean isVerified() {
-        return verified;
-    }
-
-    public void setVerified(boolean verified) {
-        this.verified = verified;
     }
 
     public List<Permission> getPermissions() {
         return permissions;
     }
 
-    public void setPermissions(List<Permission> permissions) {
-        this.permissions = permissions;
-    }
-
     public UserVerification getVerification() {
         return verification;
     }
 
-    public void setVerification(UserVerification verification) {
-        this.verification = verification;
+    public Set<Course> getFavoriteCourses() {
+        return favoriteCourses;
     }
 
     public List<Announcement> getSeenAnnouncements() {
         return seenAnnouncements;
     }
 
-    public void setSeenAnnouncements(List<Announcement> seenAnnouncements) {
-        this.seenAnnouncements = seenAnnouncements;
+    public void setVerified(boolean verified) {
+        this.verified = verified;
     }
 
-    public List<Announcement> getUploadedAnnouncements() {
-        return uploadedAnnouncements;
+    public void setFavoriteCourses(Set<Course> favoriteCourses) {
+        this.favoriteCourses = favoriteCourses;
     }
 
-    public Set<Course> getFavoriteCourses() {
-        return favedCourses;
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
     }
 
-    public void setFavoriteCourses(Set<Course> favedCourses) {
-        this.favedCourses = favedCourses;
-    }
-
-    public List<Content> getUploadedContent() {
-        return uploadedContent;
-    }
 }

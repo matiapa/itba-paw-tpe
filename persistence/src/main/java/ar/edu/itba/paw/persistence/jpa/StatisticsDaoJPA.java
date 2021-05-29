@@ -9,6 +9,8 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.*;
 
 @Repository
@@ -26,7 +28,7 @@ public class StatisticsDaoJPA implements StatisticsDao {
 
         Map<Entity, Integer> map = new HashMap<>();
         for(Object[] row : res)
-            map.put(Entity.valueOf((String) row[0]), (Integer) row[1]);
+            map.put(Entity.valueOf((String) row[0]), ((BigDecimal) row[1]).intValue());
 
         return map;
     }
@@ -38,19 +40,20 @@ public class StatisticsDaoJPA implements StatisticsDao {
 
         Map<Career, Integer> map = new HashMap<>();
         for(Object[] row : res)
-            map.put(em.find(Career.class, row[0]), (Integer) row[1]);
+            map.put(em.find(Career.class, row[0]), ((BigDecimal) row[1]).intValue());
 
         return map;
     }
 
     @Override
     public Map<Date, Integer> contributionsByDate() {
-        List<Object[]> res = em.createNativeQuery("SELECT id, contribs FROM statistics.top_users_contribs")
+        List<Object[]> res = em.createNativeQuery("SELECT date, contribs FROM statistics.daily_contribs")
                 .getResultList();
 
         Map<Date, Integer> map = new HashMap<>();
-        for(Object[] row : res)
-            map.put((Date) row[0], (Integer) row[1]);
+        for(Object[] row : res){
+            map.put((Date) row[0], ((BigInteger) row[1]).intValue());
+        }
 
         return map;
     }
@@ -62,7 +65,7 @@ public class StatisticsDaoJPA implements StatisticsDao {
 
         Map<User, Integer> map = new HashMap<>();
         for(Object[] row : res)
-            map.put(em.find(User.class, row[0]), (Integer) row[1]);
+            map.put(em.find(User.class, row[0]), ((BigDecimal) row[1]).intValue());
 
         return map;
     }
@@ -74,7 +77,7 @@ public class StatisticsDaoJPA implements StatisticsDao {
 
         Map<Course, Integer> map = new HashMap<>();
         for(Object[] row : res)
-            map.put(em.find(Course.class, row[0]), (Integer) row[1]);
+            map.put(em.find(Course.class, row[0]), ((BigDecimal) row[1]).intValue());
 
         return map;
     }
