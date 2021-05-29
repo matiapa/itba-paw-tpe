@@ -6,7 +6,7 @@ import ar.edu.itba.paw.models.Entity;
 import ar.edu.itba.paw.models.Permission;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.persistence.AnnouncementDao;
-import exceptions.UnauthorizedException;
+import ar.edu.itba.paw.exceptions.UnauthorizedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

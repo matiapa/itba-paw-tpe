@@ -1,4 +1,4 @@
-package exceptions;
+package ar.edu.itba.paw.exceptions;
 
 public class UnauthorizedException extends RuntimeException{
 
