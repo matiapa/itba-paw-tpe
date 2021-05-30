@@ -1,20 +1,13 @@
 package ar.edu.itba.paw.models;
 
 import java.io.Serializable;
+import java.sql.Blob;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-import javax.persistence.Column;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @javax.persistence.Entity(name = "User")
 @Table(name = "users")
@@ -38,6 +31,10 @@ public class User implements Serializable, UserData {
 
     @Column(name = "profile_picture")
     private String profilePicture;
+
+    @Lob
+    @Column(name = "picture")
+    private byte[] picture;
 
     @Column(name = "signup_date", nullable = false)
     private Date signupDate = new Date();
@@ -82,7 +79,7 @@ public class User implements Serializable, UserData {
 
     public boolean can(String action, String entity){
         return getPermissions().contains(new Permission(
-                Permission.Action.valueOf(action), Entity.valueOf(entity)
+            Permission.Action.valueOf(action), Entity.valueOf(entity)
         ));
     }
 
@@ -172,6 +169,10 @@ public class User implements Serializable, UserData {
         return seenAnnouncements;
     }
 
+    public byte[] getPicture() {
+        return picture;
+    }
+
     public void setVerified(boolean verified) {
         this.verified = verified;
     }
@@ -182,6 +183,10 @@ public class User implements Serializable, UserData {
 
     public void setProfilePicture(String profilePicture) {
         this.profilePicture = profilePicture;
+    }
+
+    public void setPicture(byte[] picture) {
+        this.picture = picture;
     }
 
 }

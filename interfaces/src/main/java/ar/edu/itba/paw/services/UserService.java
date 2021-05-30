@@ -16,10 +16,10 @@ public interface UserService {
     User registerUser(int id, String name, String surname, String email,String passwordHash, Career career,
           List<Course> courses, String websiteUrl) throws IOException;
 
-    void setProfilePicture(User loggedUser, String pictureDataURI);
+    void setPicture(User user, byte picture[]);
 
     boolean verifyEmail(User user, int verificationCode);
 
-    void registerLogin(User loggedUser);
+    void registerLogin(User user);
     
 }

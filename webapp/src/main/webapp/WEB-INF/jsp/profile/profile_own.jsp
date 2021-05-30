@@ -33,9 +33,12 @@
                 <div class="col-lg-4">
                     <div class="card mb-3">
                         <div class="card-body text-center shadow">
-                            <c:url value="/assets/img/avatars/avatar.png" var="defaultImage"/>
+
+                            <c:url value="/profile/${user.id}/picture" var="profileImage"/>
+
                             <img class="rounded-circle mb-3 mt-4" id="currentPicture" width="160" height="160"
-                                 src="${user.profilePicture != null ? user.profilePicture : defaultImage}" >
+                                 src="${profileImage}" >
+
                             <c:url value="/profile/own/image" var="postFormUrl"/>
                             <form:form method="post" action="${postFormUrl}" enctype="multipart/form-data">
                                 <div class="custom-file">

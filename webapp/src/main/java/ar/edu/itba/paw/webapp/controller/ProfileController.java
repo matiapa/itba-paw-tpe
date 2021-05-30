@@ -27,6 +27,9 @@ import ar.edu.itba.paw.services.UserService;
 import ar.edu.itba.paw.webapp.auth.UserPrincipal;
 import ar.edu.itba.paw.webapp.exceptions.ResourceNotFoundException;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 @Controller
 public class ProfileController {
 
@@ -47,11 +50,11 @@ public class ProfileController {
         @ModelAttribute("user") User loggedUser
     ) throws IOException {
 
-        String type = newPicture.getContentType();
-        String base64 = Base64.getEncoder().encodeToString(newPicture.getBytes());
-        String dataURI = String.format("data:%s;base64,%s", type, base64);
+//        String type = newPicture.getContentType();
+//        String base64 = Base64.getEncoder().encodeToString(newPicture.getBytes());
+//        String dataURI = String.format("data:%s;base64,%s", type, base64);
 
-        userService.setProfilePicture(loggedUser, dataURI);
+        userService.setPicture(loggedUser, newPicture.getBytes());
 
         return "redirect:/profile/own";
     }
@@ -76,6 +79,29 @@ public class ProfileController {
         mav.addObject("userCareer", career);
 
         return mav;
+    }
+
+
+    @RequestMapping(value = "/profile/{id:[0-9]+}/picture", method = GET)
+    public void getProfilePicture(
+        @PathVariable(value="id") int id,
+        @ModelAttribute("user") User loggedUser,
+        HttpServletResponse response
+    ) throws IOException{
+        Optional<User> optUser = userService.findById(id);
+        if(! optUser.isPresent()){
+            LOGGER.debug("user {} in profile with id {} was not found",loggedUser,id);
+            throw new ResourceNotFoundException();
+        }
+
+        byte[] image = optUser.get().getPicture();
+        if (image.length == 0) {
+            response.sendRedirect("/assets/img/avatars/avatar.png");
+        } else {
+            response.setContentType("image/png");
+            response.getOutputStream().write(image);
+        }
+
     }
 
 
