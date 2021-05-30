@@ -17,6 +17,21 @@
                         </li>
                     </c:if>
 
+                    <c:if test="${pager.currPage > 5}">
+                        <li class="page-item">
+                            <button class="page-link" id="${0}">
+                                <c:out value="${1}"/>
+                            </button>
+                        </li>
+
+                        <li class="page-item disabled">
+                            <button class="page-link">
+                                <c:out value="..."/>
+                            </button>
+                        </li>
+
+                    </c:if>
+
                     <c:set var="beginPage" value="${pager.currPage>5 ? pager.currPage-5 : 0}"/>
                     <c:set var="endPage" value="${pager.currPage+5 > pager.lastPage ? pager.lastPage : pager.currPage+5}"/>
 
@@ -28,6 +43,20 @@
                                 </button>
                             </li>
                         </c:forEach>
+                    </c:if>
+
+                    <c:if test="${pager.currPage + 5 < pager.lastPage}">
+                        <li class="page-item disabled">
+                            <button class="page-link">
+                                <c:out value="..."/>
+                            </button>
+                        </li>
+
+                        <li class="page-item ${pager.lastPage==pager.currPage ? 'active' : ''}">
+                            <button class="page-link" id="${pager.lastPage}">
+                                <c:out value="${pager.lastPage + 1}"/>
+                            </button>
+                        </li>
                     </c:if>
 
                     <c:if test="${pager.currPage < pager.lastPage}">
