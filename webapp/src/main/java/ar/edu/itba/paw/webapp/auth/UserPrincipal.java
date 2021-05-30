@@ -12,16 +12,19 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import ar.edu.itba.paw.models.User;
 
-public class UserPrincipal extends User implements UserDetails, CredentialsContainer {
-	private Set<GrantedAuthority> authorities;
+public class UserPrincipal implements UserDetails, CredentialsContainer {
+	private final Set<GrantedAuthority> authorities;
+    private final User user;
 
     public UserPrincipal(User user, Collection<? extends GrantedAuthority> authorities) {
-        super(user.getId(), user.getName(), user.getSurname(), user.getEmail(), user.getPassword(),
-        user.getProfileImgB64(), user.getSignupDate(), user.getPermissions(), user.getCareerCode());
-
+        this.user = user;
         this.authorities = (authorities != null)
 				? Collections.unmodifiableSet(new LinkedHashSet<>(authorities))
 				: Collections.unmodifiableSet(new LinkedHashSet<>(AuthorityUtils.NO_AUTHORITIES));
+    }
+
+    public User getUser() {
+        return user;
     }
 
     @Override
@@ -31,13 +34,11 @@ public class UserPrincipal extends User implements UserDetails, CredentialsConta
 
     @Override
     public void eraseCredentials() {
-        this.password = null;
-        
     }
 
     @Override
     public String getUsername() {
-        return getEmail();
+        return user.getEmail();
     }
 
     @Override
@@ -61,15 +62,33 @@ public class UserPrincipal extends User implements UserDetails, CredentialsConta
     }
 
     @Override
-	public boolean equals(Object rhs) {
-		if (rhs instanceof User) {
-			return getEmail().equals(((User) rhs).getEmail());
-		}
-		return false;
-	}
+    public String getPassword() {
+        return user.getPassword();
+    }
 
-	@Override
-	public int hashCode() {
-		return getEmail().hashCode();
-	}
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((user == null) ? 0 : user.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        UserPrincipal other = (UserPrincipal) obj;
+        if (user == null) {
+            if (other.user != null)
+                return false;
+        } else if (!user.equals(other.user))
+            return false;
+        return true;
+    }
+
 }

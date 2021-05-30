@@ -2,19 +2,25 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.models.Content;
 import ar.edu.itba.paw.models.Content.ContentType;
+import ar.edu.itba.paw.models.Course;
 import ar.edu.itba.paw.models.User;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 public interface ContentDao {
 
-    List<Content> findContent(String courseId, ContentType contentType, Date minDate, Date maxDate,  int offset, int limit);
+    List<Content> findByCourse(Course course, ContentType contentType, Date minDate, Date maxDate,
+                               Integer page, Integer pageSize);
 
-    boolean createContent(String name, String link, String courseId, String description, String contentType, Date contentDate,User user);
+    Optional<Content> findById(int id);
 
-    int getSize(String courseId, ContentType contentType, Date minDate, Date maxDate);
+    int getSize(Course course, ContentType contentType, Date minDate, Date maxDate);
 
-    void delete(int id);
+    boolean createContent(String name, String link, Course course, String description, ContentType contentType,
+                          Date contentDate, User uploader);
+
+    void delete(Content content);
 
 }

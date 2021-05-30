@@ -3,6 +3,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import ar.edu.itba.paw.models.Career;
 import ar.edu.itba.paw.models.CareerCourse;
 import ar.edu.itba.paw.models.Course;
 import ar.edu.itba.paw.models.User;
@@ -13,16 +14,10 @@ public interface CourseService {
 
     List<Course> findFavourites(User user);
 
-    List<Course> findByCareer(String careerCode, int limit);
+    List<CareerCourse> findByCareer(Career career);
 
     Optional<Course> findById(String id);
 
-    Map<Integer,List<CareerCourse>> findByCareerSemester(String careerCode);
-
-    void addFavourite(int id, String course);
-
-    void removeFavourite(int id, String course);
-
-    boolean isFaved(String courseId, Integer userId);
+    void markFavorite(Course course, User ofUser, boolean favorite);
 
 }

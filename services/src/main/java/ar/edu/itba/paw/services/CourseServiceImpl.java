@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import ar.edu.itba.paw.models.Career;
 import ar.edu.itba.paw.models.CareerCourse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,12 +26,12 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public List<Course> findFavourites(User user) {
-        return courseDao.findFavourites(user.getId());
+        return courseDao.findFavourites(user);
     }
 
     @Override
-    public List<Course> findByCareer(String careerCode, int limit) {
-        return courseDao.findByCareer(careerCode, limit);
+    public List<CareerCourse> findByCareer(Career career) {
+        return courseDao.findByCareer(career);
     }
 
     @Override
@@ -39,23 +40,8 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public Map<Integer, List<CareerCourse>> findByCareerSemester(String careerCode) {
-        return courseDao.findByCareerSemester(careerCode);
-    }
-
-    @Override
-    public void addFavourite(int id, String course) {
-        courseDao.addFavourite(id, course);
-    }
-
-    @Override
-    public void removeFavourite(int id, String course){
-        courseDao.removeFavourite(id, course);
-    }
-
-    @Override
-    public boolean isFaved(String courseId, Integer userId) {
-        return courseDao.isFaved(courseId, userId);
+    public void markFavorite(Course course, User ofUser, boolean favorite) {
+        courseDao.markFavorite(course, ofUser, favorite);
     }
 
 }

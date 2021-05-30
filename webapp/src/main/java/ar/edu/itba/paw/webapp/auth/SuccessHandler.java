@@ -24,7 +24,7 @@ public class SuccessHandler extends SavedRequestAwareAuthenticationSuccessHandle
         super.onAuthenticationSuccess(request, response, authentication);
             
         UserPrincipal loggedUser = (UserPrincipal) authentication.getPrincipal();
-        userService.registerLogin(loggedUser);
+        userService.registerLogin(loggedUser.getUser());
     }
     
 }

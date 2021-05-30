@@ -1,9 +1,14 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.models.Course;
-import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.services.StatisticsService;
-import ar.edu.itba.paw.services.UserService;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+
+import java.text.SimpleDateFormat;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +17,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.stream.Collectors;
-
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import ar.edu.itba.paw.models.Course;
+import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.services.StatisticsService;
+import ar.edu.itba.paw.services.UserService;
+import ar.edu.itba.paw.webapp.auth.UserPrincipal;
 
 @Controller
 public class AdminController {
@@ -31,6 +36,7 @@ public class AdminController {
     public ModelAndView statistics(
         @ModelAttribute("user") User loggedUser
     ){
+
         LOGGER.debug("user {}  accessed admin controller",loggedUser);
 
         ModelAndView mav = new ModelAndView("statistics/statistics");

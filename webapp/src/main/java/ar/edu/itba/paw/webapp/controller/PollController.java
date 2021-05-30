@@ -1,19 +1,23 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
+
 import java.text.DateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import ar.edu.itba.paw.models.ui.Pager;
-import ar.edu.itba.paw.models.*;
-import ar.edu.itba.paw.webapp.controller.common.CommonFilters;
-import ar.edu.itba.paw.webapp.exceptions.ResourceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -22,21 +26,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import ar.edu.itba.paw.models.EntityTarget;
+import ar.edu.itba.paw.models.Poll;
 import ar.edu.itba.paw.models.Poll.PollFormat;
 import ar.edu.itba.paw.models.Poll.PollOption;
-
-import ar.edu.itba.paw.services.PollService;
-import ar.edu.itba.paw.services.UserService;
-import ar.edu.itba.paw.webapp.form.PollForm;
 import ar.edu.itba.paw.models.Poll.PollState;
-
-import static org.springframework.web.bind.annotation.RequestMethod.*;
+import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.ui.Pager;
+import ar.edu.itba.paw.services.PollService;
+import ar.edu.itba.paw.webapp.auth.UserPrincipal;
+import ar.edu.itba.paw.webapp.controller.common.CommonFilters;
+import ar.edu.itba.paw.webapp.exceptions.ResourceNotFoundException;
+import ar.edu.itba.paw.webapp.form.PollForm;
 
 
 @Controller
 public class PollController {
-
-    @Autowired private UserService userService;
 
     @Autowired private PollService pollService;
 
@@ -57,7 +62,7 @@ public class PollController {
         @RequestParam(name = "page", required = false, defaultValue = "0") int page,
         @RequestParam(name = "showCreateForm", required = false, defaultValue="false") boolean showCreateForm,
         @ModelAttribute("createForm") final PollForm pollForm,
-        @ModelAttribute("user") final User loggedUser
+        @ModelAttribute("user") User loggedUser
     ) {
         final ModelAndView mav = new ModelAndView("polls/poll_list");
 
@@ -124,9 +129,10 @@ public class PollController {
     @RequestMapping(value = "/polls", method = POST)
     public ModelAndView create(
         @Valid @ModelAttribute("createForm") final PollForm pollForm,
+        @ModelAttribute("user") User loggedUser,
         final BindingResult errors
     ) {
-        User loggedUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
 
         if (errors.hasErrors()) {
             LOGGER.debug("user {} tried to create a poll but form {} had problems errors:{}",loggedUser,pollForm,errors);
@@ -160,6 +166,7 @@ public class PollController {
         @PathVariable(value="id") int pollId,
         @ModelAttribute("user") User loggedUser
     ){
+
         final ModelAndView mav = new ModelAndView("polls/poll_detail");
 
         Optional<Poll> selectedPoll= pollService.findById(pollId);
@@ -199,6 +206,7 @@ public class PollController {
         @PathVariable(value="id") int id, HttpServletRequest request,
         @ModelAttribute("user") User loggedUser
     ) {
+
         LOGGER.debug("user {} is attempting to delete in poll with id {}",loggedUser,id);
         pollService.delete(id);
         LOGGER.debug("user {} deleted poll with id {}",loggedUser,id);
@@ -211,7 +219,7 @@ public class PollController {
         @PathVariable(value="id") int id, HttpServletRequest request,
         @ModelAttribute("user") User loggedUser
     ) {
-        return delete(id, request,loggedUser);
+        return delete(id, request, loggedUser);
     }
 
 
@@ -221,6 +229,7 @@ public class PollController {
             @RequestParam int option,
             @ModelAttribute("user") User loggedUser
     ) {
+
         LOGGER.debug("user {} is attempting to vote in poll with id {} with option {}",loggedUser,id,option);
         pollService.voteChoicePoll(id, option, loggedUser);
 

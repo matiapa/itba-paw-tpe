@@ -2,6 +2,7 @@ package ar.edu.itba.paw.services;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Date;
 import java.util.Optional;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -12,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ar.edu.itba.paw.models.Career;
-import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.UserData;
 
 @Service
 public class SgaServiceImpl implements SgaService {
@@ -30,17 +31,70 @@ public class SgaServiceImpl implements SgaService {
     }
 
     @Override
-    public User fetchFromEmail(String email) {
+    public UserData fetchFromEmail(String email) {
         try {
             SgaBasicData basicData = mapper.readValue(new URL(EMAIL_ENDPOINT + email), SgaBasicData.class);
             SgaExtendedData extendedData = mapper.readValue(new URL(DNI_ENDPOINT + basicData.dni), SgaExtendedData.class);
             Optional<Career> career = careerService.findByCode(extendedData.careerCode);
             if(!career.isPresent())
                 return null;
-            return new User(extendedData.code, basicData.firstName, basicData.lastName, email, null,
-        null, null, null, career.get().getCode());
+            return new SgaUser(extendedData.code, basicData.firstName, basicData.lastName, email, career.get());
         } catch (IOException e) {
             e.printStackTrace();
+            return null;
+        }
+    }
+
+    private static class SgaUser implements UserData {
+        private final int id;
+        private final String name;
+        private final String surname;
+        private final String email;
+        private final Career career;
+
+        public SgaUser(int id, String name, String surname, String email, Career career) {
+            this.id = id;
+            this.name = name;
+            this.surname = surname;
+            this.email = email;
+            this.career = career;
+        }
+
+        @Override
+        public int getId() {
+            return id;
+        }
+
+        @Override
+        public String getFullName(){ return name + " " + surname; }
+
+        @Override
+        public String getName() {
+            return name;
+        }
+
+        @Override
+        public String getSurname() {
+            return surname;
+        }
+
+        @Override
+        public String getEmail() {
+            return email;
+        }
+
+        @Override
+        public Career getCareer() {
+            return career;
+        }
+
+        @Override
+        public String getProfilePicture() {
+            return null;
+        }
+
+        @Override
+        public Date getSignupDate() {
             return null;
         }
     }

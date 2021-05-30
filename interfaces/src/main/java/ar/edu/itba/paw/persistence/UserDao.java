@@ -1,10 +1,11 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.models.Course;
-import ar.edu.itba.paw.models.User;
-
 import java.util.List;
 import java.util.Optional;
+
+import ar.edu.itba.paw.models.Career;
+import ar.edu.itba.paw.models.Course;
+import ar.edu.itba.paw.models.User;
 
 public interface UserDao {
 
@@ -13,14 +14,14 @@ public interface UserDao {
     Optional<User> findByEmail(String email);
     
     User registerUser(int id, String name, String surname, String email,String password_hash,
-          String careerCode, List<String>courses);
+          Career career, List<Course> courses);
 
-    boolean verifyEmail(int userId, int verificationCode);
+    boolean verifyEmail(User user, int verificationCode);
 
-    int getVerificationCode(String email);
+    Optional<Integer> getVerificationCode(User user);
 
-    void setProfilePicture(String pictureDataURI, int userId);
+    void setProfilePicture(String pictureDataURI, User user);
 
-	void registerLogin(int id);
+	void registerLogin(User user);
 
 }

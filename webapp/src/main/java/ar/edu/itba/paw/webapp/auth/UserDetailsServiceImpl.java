@@ -24,14 +24,17 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(final String email) throws UsernameNotFoundException {
         final Optional<User> userOpt = us.findByEmail(email);
 
-        if (! userOpt.isPresent())
+        if (!userOpt.isPresent())
             throw new UsernameNotFoundException("Email not found");
 
         final User user = userOpt.get();
 
         final Collection<? extends GrantedAuthority> authorities = user.getPermissions().stream()
-            .map(Permission::toString).map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+            .map(Permission::toString)
+            .map(SimpleGrantedAuthority::new)
+            .collect(Collectors.toList());
 
         return new UserPrincipal(user, authorities);
     }
+
 }

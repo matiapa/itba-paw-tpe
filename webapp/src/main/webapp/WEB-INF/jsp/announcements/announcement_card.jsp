@@ -43,7 +43,7 @@
             <div class="col col-md-auto p-1">
                 <c:url var="url" value="/announcements/${announcement.id}/seen"/>
                 <form action="${url}" method="post">
-                    <button type="submit" class="btn btn-icon" ${announcement.seen ? 'disabled' : ''}
+                    <button type="submit" class="btn btn-icon" ${announcement.seenBy.contains(user) ? 'disabled' : ''}
                             data-toggle="tooltip" title="<spring:message code="announcement.checkAsSeen"/>">
                         <i class="material-icons">done</i>
                     </button>

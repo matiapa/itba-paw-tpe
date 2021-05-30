@@ -1,7 +1,9 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.UserData;
 
 public interface SgaService {
-    User fetchFromEmail(String email);
+
+    UserData fetchFromEmail(String email);
+
 }
