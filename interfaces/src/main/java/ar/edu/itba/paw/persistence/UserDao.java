@@ -6,6 +6,7 @@ import java.util.Optional;
 import ar.edu.itba.paw.models.Career;
 import ar.edu.itba.paw.models.Course;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.UserWorkRate;
 
 public interface UserDao {
 

@@ -41,9 +41,8 @@
                         <span class="d-none d-lg-inline mr-2 text-gray-600 small">
                             <c:out value="${user.fullName}"/>
                         </span>
-                        <c:url value="/assets/img/avatars/avatar.png" var="defaultImage"/>
-                        <img class="border rounded-circle img-profile"
-                             src="${user.profilePicture != null ? user.profilePicture : defaultImage}">
+                        <c:url value="/profile/${user.id}/picture" var="picture"/>
+                        <img class="border rounded-circle img-profile" src="${picture}">
                     </a>
                     <div class="dropdown-menu shadow dropdown-menu-right animated--grow-in">
                         <a class="dropdown-item" href="<c:url value="/profile/own"/>">

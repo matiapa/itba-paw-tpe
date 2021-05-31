@@ -16,7 +16,7 @@ public interface UserData {
 
     Career getCareer();
 
-    String getProfilePicture();
+    byte[] getPicture();
 
     Date getSignupDate();
 

@@ -6,6 +6,7 @@ import java.util.Optional;
 import ar.edu.itba.paw.models.Career;
 import ar.edu.itba.paw.models.Course;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.UserWorkRate;
 
 public interface UserService {
 
@@ -21,5 +22,5 @@ public interface UserService {
     boolean verifyEmail(User user, int verificationCode);
 
     void registerLogin(User user);
-    
+
 }
