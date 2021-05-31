@@ -5,17 +5,13 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import java.net.URISyntaxException;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import ar.edu.itba.paw.models.*;
+import ar.edu.itba.paw.webapp.exceptions.ResourceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -133,6 +129,26 @@ public class ContentController {
 
         return list(form.getCourseId(), null, null, null, 0,
                 false, form, loggedUser);
+    }
+
+    @RequestMapping(value = "/contents/{id}", method = GET)
+    public ModelAndView get(
+            @PathVariable(value = "id") Integer id,
+            @ModelAttribute("user") User loggedUser
+    ){
+
+        final ModelAndView mav = new ModelAndView("contents/content_detail");
+
+        Optional<Content> optionalContent = contentService.findById(id);
+        if (! optionalContent.isPresent()){
+            LOGGER.debug("user {} tried accessing content with id {} but didnt exist",loggedUser,id);
+            throw new ResourceNotFoundException();
+        }
+
+        mav.addObject("content", optionalContent.get());
+
+        return mav;
+
     }
 
     @RequestMapping(value = "/contents/{id}", method = DELETE)

@@ -115,7 +115,8 @@
                                         <c:forEach var="content" items="${contents}">
                                             <c:set var="content" value="${content}" scope="request"/>
                                             <tr>
-                                                <td><c:out value="${content.name}"/></td>
+                                                <c:url var="url" value="/contents/${content.id}"/>
+                                                <td><a href="${url}"><c:out value="${content.name}"/></a></td>
                                                 <td><spring:message code="enum.contenttype.${content.contentType}"/></td>
                                                 <td><c:out value="${content.contentDate}"/></td>
                                                 <td>
