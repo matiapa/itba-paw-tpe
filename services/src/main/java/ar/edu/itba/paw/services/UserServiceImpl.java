@@ -48,14 +48,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void setProfilePicture(User loggedUser, String pictureDataURI) {
-        userDao.setProfilePicture(pictureDataURI, loggedUser);
-        loggedUser.setProfilePicture(pictureDataURI);
+    public void setPicture(User user, byte picture[]) {
+        userDao.setPicture(user, picture);
     }
 
     @Override
-    public void registerLogin(User loggedUser) {
-        userDao.registerLogin(loggedUser);
+    public void registerLogin(User user) {
+        userDao.registerLogin(user);
     }
 
 }

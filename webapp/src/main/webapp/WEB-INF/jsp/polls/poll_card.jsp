@@ -33,7 +33,7 @@
                         </span>
                     </div>
                     <div class="col-auto">
-                        <c:if test="<%= user.can(Permission.Action.delete, Entity.poll) %>">
+                        <c:if test="${canDeletePoll}%>">
                             <c:url var="url" value="/polls/${poll.id}/delete"/>
                             <form action="${url}" method="post">
                                 <button type="submit" class="btn btn-icon" style="color:red">

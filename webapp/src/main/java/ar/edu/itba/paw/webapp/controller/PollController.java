@@ -15,6 +15,8 @@ import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import ar.edu.itba.paw.models.Entity;
+import ar.edu.itba.paw.models.Permission;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -121,7 +123,9 @@ public class PollController {
         // Add other parameters
 
         mav.addObject("showCreateForm", showCreateForm);
-        
+
+        mav.addObject("canDeletePoll", loggedUser.can(Permission.Action.delete, Entity.poll));
+
         return mav;
     }
 

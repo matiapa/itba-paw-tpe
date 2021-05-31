@@ -21,6 +21,7 @@ import ar.edu.itba.paw.persistence.UserDao;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository
+@Transactional
 public class UserDaoJPA implements UserDao {
 
     @PersistenceContext
@@ -92,8 +93,8 @@ public class UserDaoJPA implements UserDao {
 
     @Override
     @Transactional
-    public void setProfilePicture(String pictureDataURI, User user) {
-        user.setProfilePicture(pictureDataURI);
+    public void setPicture(User user, byte picture[]) {
+        user.setPicture(picture);
         em.merge(user);
     }
 

@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.models;
 
 import java.io.Serializable;
+import java.sql.Blob;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -31,6 +32,10 @@ public class User implements Serializable, UserData {
     @Column(name = "profile_picture")
     private String profilePicture;
 
+    @Lob
+    @Column(name = "picture")
+    private byte[] picture;
+
     @Column(name = "signup_date", nullable = false)
     private Date signupDate = new Date();
     
@@ -46,7 +51,6 @@ public class User implements Serializable, UserData {
     
     @OneToOne(mappedBy = "user", orphanRemoval = true, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private UserVerification verification;
-
 
     @ManyToMany(mappedBy = "seenBy")
     private List<Announcement> seenAnnouncements;
@@ -75,7 +79,7 @@ public class User implements Serializable, UserData {
 
     public boolean can(String action, String entity){
         return getPermissions().contains(new Permission(
-                Permission.Action.valueOf(action), Entity.valueOf(entity)
+            Permission.Action.valueOf(action), Entity.valueOf(entity)
         ));
     }
 
@@ -165,6 +169,10 @@ public class User implements Serializable, UserData {
         return seenAnnouncements;
     }
 
+    public byte[] getPicture() {
+        return picture;
+    }
+
     public void setVerified(boolean verified) {
         this.verified = verified;
     }
@@ -179,6 +187,10 @@ public class User implements Serializable, UserData {
 
     public void setVerification(UserVerification verification) {
         this.verification = verification;
+    }
+
+    public void setPicture(byte[] picture) {
+        this.picture = picture;
     }
 
 }

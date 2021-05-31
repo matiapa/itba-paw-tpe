@@ -20,7 +20,7 @@ public interface UserDao {
 
     Optional<Integer> getVerificationCode(User user);
 
-    void setProfilePicture(String pictureDataURI, User user);
+    void setPicture(User loggedUser, byte picture[]);
 
 	void registerLogin(User user);
 

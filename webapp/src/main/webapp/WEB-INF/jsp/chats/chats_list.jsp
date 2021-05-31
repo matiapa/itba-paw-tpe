@@ -137,7 +137,7 @@
                                                         <spring:message code="open"/>
                                                     </a>
                                                 </td>
-                                                <c:if test="<%= user.can(Permission.Action.delete, Entity.chat_group) %>">
+                                                <c:if test="${canDeleteChat}">
                                                     <td>
                                                         <c:url var="url" value="/chats/${chatgroup.id}/delete"/>
                                                         <form action="${url}" method="post">
