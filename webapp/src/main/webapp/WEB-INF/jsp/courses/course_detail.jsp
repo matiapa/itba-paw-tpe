@@ -32,7 +32,7 @@
                         <form action="${url}" method="post">
                             <button class="btn btn-primary btn-sm">
                                 <i class="material-icons pull-left">favorite</i>
-                                Agregar a favoritos
+                                <spring:message code="course.addFavourites"/>
                             </button>
                         </form>
                     </c:if>
@@ -41,7 +41,7 @@
                         <form action="${url}" method="post">
                             <button class="btn btn-danger btn-sm">
                                 <i class="material-icons pull-left">delete</i>
-                                Quitar de favoritos
+                                <spring:message code="course.removeFavourites"/>
                             </button>
                         </form>
                     </c:if>
@@ -119,7 +119,7 @@
                                     <table class="table my-0" id="dataTable">
                                         <thead>
                                         <tr>
-                                            <th><spring:message code="form.description"/></th>
+                                            <th><spring:message code="form.title"/></th>
                                             <th><spring:message code="form.type"/></th>
                                             <th><spring:message code="date"/></th>
                                             <th><spring:message code="author"/></th>
@@ -130,7 +130,8 @@
                                         <c:forEach var="content" items="${contents}">
                                             <c:set var="content" value="${content}" scope="request"/>
                                             <tr>
-                                                <td><c:out value="${content.name}"/></td>
+                                                <c:url var="url" value="/contents/${content.id}"/>
+                                                <td><a href="${url}"><c:out value="${content.name}"/></a></td>
                                                 <td><spring:message code="enum.contenttype.${content.contentType}"/></td>
                                                 <td><c:out value="${content.uploadDate}"/></td>
                                                 <td>
