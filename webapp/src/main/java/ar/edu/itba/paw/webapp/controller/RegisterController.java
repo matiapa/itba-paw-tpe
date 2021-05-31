@@ -4,9 +4,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -55,12 +53,33 @@ public class RegisterController {
     ) {
         final ModelAndView mav = new ModelAndView("register/register");
 
-        mav.addObject("careerList", careerService.findAll());
+        List <Career> careers=careerService.findAll();
+        //filtrar la entrada seleccionada para no tener duplicados
+        if (form.getCareerCode()!=null){
+            careers.removeIf(x -> (x.getCode().equals(form.getCareerCode())));
+        }
+
+        mav.addObject("careerList",careers );
+        mav.addObject("selectedCareer",careerService.findByCode(form.getCareerCode()));
+
+
+        List<Course> selectedCourses=new ArrayList<>();
+        if (form.getCourses()!=null&&form.getCourses().size()>0){
+            Set<String> codes=new HashSet<>(form.getCourses());
+            codes.removeIf(Objects::isNull);
+            for (String code: codes) {
+                Optional<Course>optionalCourse=courseService.findById(code);
+                optionalCourse.ifPresent(selectedCourses::add);
+            }
+        }
 
         mav.addObject("courseList", courseService.findAll());
+        mav.addObject("selectedCourses",selectedCourses);
 
         mav.addObject("emailTaken",emailTaken);
         mav.addObject("idTaken",idTaken);
+
+
 
         return mav;
     }
@@ -71,7 +90,10 @@ public class RegisterController {
         @Valid @ModelAttribute("UserForm") final UserForm form, final BindingResult errors
     ) throws IOException {
         boolean emailTaken=userService.findByEmail(form.getEmail()).isPresent();
-        boolean idTaken=userService.findById(form.getId()).isPresent();
+        boolean idTaken=false;
+        if (form.getId()!=null)
+            idTaken=userService.findById(form.getId()).isPresent();
+
         if (errors.hasErrors()||emailTaken||idTaken){
             LOGGER.debug("register Userform {} is invalid with errors {}",form,errors);
             return getRegister(form,emailTaken,idTaken);
