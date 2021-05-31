@@ -45,7 +45,7 @@
 
                         <div class="col col-md-auto">
                             <a href="#popup" data-toggle="modal">
-                                <c:if test="<%= user.can(Permission.Action.create, Entity.announcement) %>">
+                                <c:if test="${canCreateAnnounce}">
                                     <button class="btn btn-primary btn-sm">
                                         <i class="material-icons pull-left">add</i>
                                         <spring:message code="announcement.add"/>

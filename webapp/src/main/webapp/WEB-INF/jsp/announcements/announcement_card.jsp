@@ -29,7 +29,7 @@
             </div>
 
             <div class="col col-md-auto p-1">
-                <c:if test="<%= user.can(Permission.Action.delete, Entity.announcement) %>">
+                <c:if test="${canDeleteAnnounce}">
                     <c:url var="url" value="/announcements/${announcement.id}/delete"/>
                     <form action="${url}" method="post">
                        <button type="submit" class="btn btn-icon"

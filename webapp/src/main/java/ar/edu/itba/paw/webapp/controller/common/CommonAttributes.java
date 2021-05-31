@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.webapp.controller.common;
 
+import ar.edu.itba.paw.models.Entity;
+import ar.edu.itba.paw.models.Permission;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,11 @@ public class CommonAttributes {
 
         return userService.findByEmail(((UserPrincipal) principal).getUsername())
                 .orElseThrow(RuntimeException::new);
+    }
+
+    @ModelAttribute("canReadStats")
+    boolean canReadStats() {
+        return loggedUser().can(Permission.Action.read, Entity.statistic);
     }
 
 }

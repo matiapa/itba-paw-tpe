@@ -146,7 +146,7 @@
                                                     </a>
                                                 </td>
 
-                                                <c:if test="<%= user.can(Permission.Action.delete, Entity.course_content) %>">
+                                                <c:if test="${canDeleteContent}">
                                                     <td>
                                                         <c:url var="url" value="/contents/${content.id}/delete"/>
                                                         <form action="${url}" method="post">

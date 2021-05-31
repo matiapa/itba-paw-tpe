@@ -15,6 +15,7 @@ import java.util.NoSuchElementException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import ar.edu.itba.paw.models.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +28,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import ar.edu.itba.paw.models.Content;
-import ar.edu.itba.paw.models.Course;
-import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.models.UserData;
 import ar.edu.itba.paw.models.ui.Pager;
 import ar.edu.itba.paw.services.ContentService;
 import ar.edu.itba.paw.services.CourseService;
@@ -98,7 +95,10 @@ public class ContentController {
         }
 
         // Add other parameters
+
         mav.addObject("showCreateForm", showCreateForm);
+
+        mav.addObject("canDeleteContent", loggedUser.can(Permission.Action.delete, Entity.course_content));
 
         return mav;
     }

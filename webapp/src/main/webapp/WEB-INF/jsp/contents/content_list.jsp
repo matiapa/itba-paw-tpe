@@ -106,7 +106,7 @@
                                             <th><spring:message code="author"/></th>
                                             <th><spring:message code="form.link"/></th>
 
-                                            <c:if test="<%= user.can(Permission.Action.delete, Entity.course_content) %>">
+                                            <c:if test="${canDeleteContent}">
                                                 <th></th>
                                             </c:if>
                                         </tr>
@@ -131,7 +131,7 @@
                                                     </a>
                                                 </td>
 
-                                                <c:if test="<%= user.can(Permission.Action.delete, Entity.course_content) %>">
+                                                <c:if test="${canDeleteContent}">
                                                     <td>
                                                         <c:url var="url" value="/contents/${content.id}/delete"/>
                                                         <form action="${url}" method="post">
