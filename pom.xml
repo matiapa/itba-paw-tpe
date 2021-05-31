@@ -66,12 +66,11 @@
     <!-- Sessions -->
 
     <spring-security.version>4.0.4.RELEASE</spring-security.version>
-    <spring-context-support.version>5.2.8.RELEASE</spring-context-support.version>
+    <spring-context-support.version>4.2.5.RELEASE</spring-context-support.version>
 
     <!-- Mailing -->
 
-    <spring-boot-starter-mail.version>2.3.4.RELEASE</spring-boot-starter-mail.version>
-    <javax.mail.version>1.16.8</javax.mail.version>
+    <javax.mail.version>1.6.2</javax.mail.version>
     <org.thymeleaf.version>3.0.11.RELEASE</org.thymeleaf.version>
 
     <!-- Logging -->
@@ -269,11 +268,6 @@
         <version>${spring-context-support.version}</version>
       </dependency>
 
-      <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-mail</artifactId>
-        <version>${spring-boot-starter-mail.version}</version>
-      </dependency>
 
       <dependency>
         <groupId>com.sun.mail</groupId>
@@ -289,7 +283,7 @@
 
       <dependency>
         <groupId>org.thymeleaf</groupId>
-        <artifactId>thymeleaf-spring5</artifactId>
+        <artifactId>thymeleaf-spring4</artifactId>
         <version>${org.thymeleaf.version}</version>
       </dependency>
 

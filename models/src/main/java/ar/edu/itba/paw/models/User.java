@@ -6,15 +6,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-import javax.persistence.Column;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @javax.persistence.Entity(name = "User")
 @Table(name = "users")
@@ -52,8 +44,9 @@ public class User implements Serializable, UserData {
     @OneToMany(fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "user")
     private List<Permission> permissions;
     
-    @OneToOne(mappedBy = "user", orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "user", orphanRemoval = true, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private UserVerification verification;
+
 
     @ManyToMany(mappedBy = "seenBy")
     private List<Announcement> seenAnnouncements;
@@ -182,6 +175,10 @@ public class User implements Serializable, UserData {
 
     public void setProfilePicture(String profilePicture) {
         this.profilePicture = profilePicture;
+    }
+
+    public void setVerification(UserVerification verification) {
+        this.verification = verification;
     }
 
 }

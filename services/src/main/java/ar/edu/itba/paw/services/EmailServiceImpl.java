@@ -19,8 +19,9 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.context.Context;
-import org.thymeleaf.spring5.SpringTemplateEngine;
+import org.thymeleaf.spring4.SpringTemplateEngine;
 
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.persistence.UserDao;
@@ -41,21 +42,22 @@ public class EmailServiceImpl implements EmailService{
     @Resource
     private MessageSource messageSource;
 
-    @Async
+
     @Override
     public void sendVerificationEmail(User user, String baseURL) throws IOException {
-        Optional<Integer> verificationCode = userDao.getVerificationCode(user);
-        if(!verificationCode.isPresent())
+
+        if(user.getVerification().getCode()==null)
             throw new RuntimeException("Missing verification code");
 
         Map<String,Object> model = new HashMap<>();
-        model.put("buttonLink", String.format("%s/register/verification?verificationCode=%d&email=%s", baseURL, verificationCode, user.getEmail()));
+        model.put("buttonLink", String.format("%s/register/verification?verificationCode=%d&email=%s", baseURL, user.getVerification().getCode(), user.getEmail()));
         model.put("text", messageSource.getMessage("register.verification_mail.body", null, Locale.getDefault()));
         model.put("buttonText", messageSource.getMessage("register.verification_mail.buttonText", null, Locale.getDefault()));
 
         String subject = messageSource.getMessage("register.verification_mail.subject", null, Locale.getDefault());
 
         sendMessageUsingThymeleafTemplate(user.getEmail(), subject, model);
+
     }
 
     private void sendMessageUsingThymeleafTemplate(String to, String subject, Map<String, Object> templateModel) throws IOException {
@@ -87,6 +89,7 @@ public class EmailServiceImpl implements EmailService{
         }
 
         mailSender.send(message);
+
     }
 
 }

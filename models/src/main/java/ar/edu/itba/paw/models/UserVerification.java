@@ -26,6 +26,7 @@ public class UserVerification {
     public UserVerification() { }
 
     public UserVerification(User user, Integer code) {
+        this.userId= user.getId();
         this.user = user;
         this.code = code;
     }

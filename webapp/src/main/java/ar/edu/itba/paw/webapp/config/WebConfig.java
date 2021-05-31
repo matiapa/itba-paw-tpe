@@ -27,7 +27,8 @@ import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
-import org.thymeleaf.spring5.SpringTemplateEngine;
+
+import org.thymeleaf.spring4.SpringTemplateEngine;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 import org.thymeleaf.templateresolver.ITemplateResolver;
 
@@ -145,6 +146,9 @@ public class WebConfig {
         props.put("mail.smtp.auth","true");
         props.put("mail.smtp.starttls.enable","true");
         props.put("mail.debug","true");
+//        props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
+        props.put("mail.smtp.ssl.trust", "*");
+        props.put("mail.smtp.socketFactory.class","javax.net.ssl.SSLSocketFactory");
 
         return mailSender;
     }

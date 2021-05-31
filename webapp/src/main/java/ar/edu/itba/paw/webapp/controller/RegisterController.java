@@ -89,9 +89,13 @@ public class RegisterController {
             .map(code -> courseService.findById(code));
         if(!coursesOpt.allMatch(Optional<Course>::isPresent))
             throw new BadRequestException();
-        List<Course> courses = coursesOpt
-            .map(opt -> opt.get())
-            .collect(Collectors.toList());
+
+        List<Course> courses = form
+                .getCourses()
+                .stream()
+                .filter(Objects::nonNull)
+                .map(code -> courseService.findById(code)).map(Optional::get)
+                .collect(Collectors.toList());
 
         Optional<Career> optCareer = careerService.findByCode(form.getCareerCode());
         if(!optCareer.isPresent())
