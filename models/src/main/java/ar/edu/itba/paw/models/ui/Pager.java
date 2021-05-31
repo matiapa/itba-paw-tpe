@@ -11,7 +11,7 @@ public class Pager {
     public Pager(int collectionSize, int currentPage){
         this.collectionSize = collectionSize;
         this.page = currentPage >= 0 ? currentPage : getLastPage() - (currentPage+1);
-        this.offset = this.page * PAGE_SIZE;
+        this.offset = this.page;
         this.limit = PAGE_SIZE;
     }
 

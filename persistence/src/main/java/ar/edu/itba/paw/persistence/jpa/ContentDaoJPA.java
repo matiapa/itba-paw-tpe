@@ -64,7 +64,7 @@ public class ContentDaoJPA implements ContentDao {
     @Override
     public int getSize(Course course, Content.ContentType contentType, Date minDate, Date maxDate) {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("SELECT count(c.id) from Content AS c WHERE c.course.id = :courseId");
+        stringBuilder.append("SELECT count(c) from Content AS c WHERE c.course.id = :courseId");
 
         if (contentType!= null)
             stringBuilder.append(" AND c.contentType = :contentType");
