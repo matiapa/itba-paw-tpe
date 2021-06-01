@@ -44,26 +44,29 @@ public class EmailServiceImpl implements EmailService{
 
 
     @Override
-    public void sendVerificationEmail(User user, String baseURL) throws IOException {
+    public void sendVerificationEmail(User user, String baseURL,Locale locale) throws IOException {
 
         if(user.getVerification().getCode()==null)
             throw new RuntimeException("Missing verification code");
 
         Map<String,Object> model = new HashMap<>();
+
+        model.put("title",messageSource.getMessage("register.verification_mail.title",null,locale));
+        model.put("text", messageSource.getMessage("register.verification_mail.body", null, locale));
+        model.put("buttonText", messageSource.getMessage("register.verification_mail.buttonText", null, locale));
         model.put("buttonLink", String.format("%s/register/verification?verificationCode=%d&email=%s", baseURL, user.getVerification().getCode(), user.getEmail()));
-        model.put("text", messageSource.getMessage("register.verification_mail.body", null, Locale.getDefault()));
-        model.put("buttonText", messageSource.getMessage("register.verification_mail.buttonText", null, Locale.getDefault()));
+        model.put("baseUrl",baseURL);
 
-        String subject = messageSource.getMessage("register.verification_mail.subject", null, Locale.getDefault());
+        String subject = messageSource.getMessage("register.verification_mail.subject", null, locale);
 
-        sendMessageUsingThymeleafTemplate(user.getEmail(), subject, model);
+        sendMessageUsingThymeleafTemplate(user.getEmail(), subject, model,"register-verification.html");
 
     }
 
-    private void sendMessageUsingThymeleafTemplate(String to, String subject, Map<String, Object> templateModel) throws IOException {
+    private void sendMessageUsingThymeleafTemplate(String to, String subject, Map<String, Object> templateModel,String template) throws IOException {
         Context thymeleafContext = new Context();
         thymeleafContext.setVariables(templateModel);
-        String htmlBody = thymeleafTemplateEngine.process("template-thymeleaf.html",thymeleafContext);
+        String htmlBody = thymeleafTemplateEngine.process(template,thymeleafContext);
 
         sendHTMLMessage(to,subject,htmlBody);
     }

@@ -2,6 +2,7 @@ package ar.edu.itba.paw.services;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,11 +34,11 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public User registerUser(int id, String name, String surname, String email,String passwordHash, Career career,
-          List<Course> courses, String websiteUrl) throws IOException {
+    public User registerUser(int id, String name, String surname, String email, String passwordHash, Career career,
+                             List<Course> courses, String websiteUrl, Locale locale) throws IOException {
         User user = userDao.registerUser(id, name, surname, email, passwordHash, career, courses);
 
-        emailService.sendVerificationEmail(user, websiteUrl);
+        emailService.sendVerificationEmail(user, websiteUrl,locale);
 
         return user;
     }

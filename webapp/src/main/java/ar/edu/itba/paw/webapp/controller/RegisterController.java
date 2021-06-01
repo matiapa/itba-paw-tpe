@@ -14,6 +14,7 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -126,8 +127,7 @@ public class RegisterController {
         userService.registerUser(
             form.getId(), form.getName(), form.getSurname(), form.getEmail(),
             new BCryptPasswordEncoder().encode(form.getPassword()), optCareer.get(),
-            courses, websiteUrl
-        );
+            courses, websiteUrl, LocaleContextHolder.getLocale());
 
         LOGGER.debug("user registered a new user with form {}",form);
 
