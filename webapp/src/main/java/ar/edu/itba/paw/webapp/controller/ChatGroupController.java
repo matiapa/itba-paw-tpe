@@ -24,10 +24,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import ar.edu.itba.paw.models.ui.Pager;
+import ar.edu.itba.paw.webapp.controller.common.Pager;
 import ar.edu.itba.paw.services.CareerService;
 import ar.edu.itba.paw.services.ChatGroupService;
-import ar.edu.itba.paw.webapp.auth.UserPrincipal;
 import ar.edu.itba.paw.webapp.controller.common.CommonFilters;
 import ar.edu.itba.paw.webapp.exceptions.ResourceNotFoundException;
 import ar.edu.itba.paw.webapp.form.ChatGroupForm;

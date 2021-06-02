@@ -26,11 +26,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import ar.edu.itba.paw.models.ui.Pager;
+import ar.edu.itba.paw.webapp.controller.common.Pager;
 import ar.edu.itba.paw.services.ContentService;
 import ar.edu.itba.paw.services.CourseService;
 import ar.edu.itba.paw.services.SgaService;
-import ar.edu.itba.paw.webapp.auth.UserPrincipal;
 import ar.edu.itba.paw.webapp.controller.common.CommonFilters;
 import ar.edu.itba.paw.webapp.form.ContentForm;
 

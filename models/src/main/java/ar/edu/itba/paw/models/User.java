@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.models;
 
 import java.io.Serializable;
-import java.sql.Blob;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -29,9 +28,6 @@ public class User implements Serializable, UserData {
     @Column
     protected String password;
 
-    @Column(name = "profile_picture")
-    private String profilePicture;
-
     @Lob
     @Column(name = "picture")
     private byte[] picture;
@@ -55,14 +51,11 @@ public class User implements Serializable, UserData {
     @ManyToMany(mappedBy = "seenBy")
     private List<Announcement> seenAnnouncements;
 
-    @OneToMany(mappedBy = "uploader")
-    private List<Announcement> uploadedAnnouncements;
-
     @ManyToMany(mappedBy = "favedBy")
     private Set<Course> favoriteCourses;
 
-    @OneToMany(mappedBy = "uploader")
-    private List<Content> uploadedContent;
+    @OneToMany(mappedBy = "rated", fetch = FetchType.LAZY)
+    private List<UserWorkRate> rates;
 
 
     public User(int id, String name, String surname, String email, String password, Career career) {
@@ -139,11 +132,6 @@ public class User implements Serializable, UserData {
     }
 
     @Override
-    public String getProfilePicture() {
-        return profilePicture;
-    }
-
-    @Override
     public Date getSignupDate() {
         return signupDate;
     }
@@ -179,10 +167,6 @@ public class User implements Serializable, UserData {
 
     public void setFavoriteCourses(Set<Course> favoriteCourses) {
         this.favoriteCourses = favoriteCourses;
-    }
-
-    public void setProfilePicture(String profilePicture) {
-        this.profilePicture = profilePicture;
     }
 
     public void setVerification(UserVerification verification) {

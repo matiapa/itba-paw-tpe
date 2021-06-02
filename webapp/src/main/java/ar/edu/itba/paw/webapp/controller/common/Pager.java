@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.models.ui;
+package ar.edu.itba.paw.webapp.controller.common;
 
 public class Pager {
     private static final int PAGE_SIZE = 10;

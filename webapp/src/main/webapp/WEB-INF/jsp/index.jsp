@@ -66,13 +66,11 @@
                                                 <div class="row align-items-center no-gutters">
                                                     <div class="col mr-2" style="text-align: center;">
                                                         <h6 class="mb-0"><strong><spring:message code="noAnnounces"/></strong></h6>
-                                                        <span><c:out value="${announcement.summary}"/><br></span>
                                                     </div>
                                                 </div>
                                             </li>
                                         </c:otherwise>
                                     </c:choose>
-
                                 </ul>
 
                             </div>

@@ -10,13 +10,9 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
+import ar.edu.itba.paw.models.*;
 import org.springframework.stereotype.Repository;
 
-import ar.edu.itba.paw.models.Career;
-import ar.edu.itba.paw.models.Course;
-import ar.edu.itba.paw.models.LoginActivity;
-import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.models.UserVerification;
 import ar.edu.itba.paw.persistence.UserDao;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -104,5 +100,5 @@ public class UserDaoJPA implements UserDao {
         LoginActivity activity = new LoginActivity(user);
         em.persist(activity);
     }
-    
+
 }
