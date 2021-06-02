@@ -199,6 +199,7 @@ public class PollDaoJPA implements PollDao {
         }
 	}
 
+    @Transactional
 	@Override
 	public void voteChoicePoll(Poll poll, PollOption option, User user) {
 		PollVote vote = new PollVote(option);
@@ -212,6 +213,7 @@ public class PollDaoJPA implements PollDao {
 		return poll.getVotedBy().contains(user);
 	}
 
+    @Transactional
 	@Override
 	public void delete(Poll poll) {
 		em.remove(poll);
