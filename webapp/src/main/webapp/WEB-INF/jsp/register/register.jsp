@@ -76,7 +76,7 @@
                                         <div class="row mt-3">
                                             <div class="col-sm-12">
                                                 <spring:message code="userId" var="userIdPlaceholder"/>
-                                                <form:input class="form-control form-control-user" type="text" placeholder="${userIdPlaceholder}" path="id"/>
+                                                <form:input class="form-control form-control-user" type="number" placeholder="${userIdPlaceholder}" path="id"/>
                                                 <form:errors path="id" cssStyle="color: red" element="p"/>
                                                 <c:if test="${idTaken}">
                                                     <h6 Style="color: red" ><spring:message code="idTaken"/></h6>
@@ -90,6 +90,9 @@
                                                 <form:label path="careerCode"  name="career"><spring:message code="careerName"/></form:label>
                                                 <spring:message code="chooseCareer" var="chooseCareerMessage"/>
                                                 <form:select path= "careerCode" class="selectpicker" data-live-search="true" title="${chooseCareerMessage}">
+                                                    <c:if test="${selectedCareer.present}">
+                                                        <option selected value="${selectedCareer.get().code}">${selectedCareer.get().name}</option>
+                                                    </c:if>
                                                     <c:forEach var="career" items="${careerList}">
                                                         <option ${career.equals(selectedCareer) ? 'selected' : ''}
                                                                 path="career" value="${career.code}" data-tokens="${career.name}">${career.name}</option>
@@ -121,6 +124,9 @@
                                                     <form:label path="courses[${i}]"  name="courses[${i}]"><spring:message code="Courses"/></form:label>
                                                     <spring:message code="chooseCourse" var="chooseCourseMessage"/>
                                                     <form:select path= "courses[${i}]" class="selectpicker" data-live-search="true" title='${chooseCourseMessage}'>
+                                                        <c:if test="${selectedCourses.size()>i}">
+                                                            <option selected value="${selectedCourses.get(i).id}">${selectedCourses.get(i).name}</option>
+                                                        </c:if>
                                                         <c:forEach var="course" items="${courseList}">
                                                             <option ${course.equals(selectedCourse) ? 'selected' : ''}
                                                                     path="courses[${i}]" value="${course.id}" data-tokens="${course.name}">${course.name}</option>

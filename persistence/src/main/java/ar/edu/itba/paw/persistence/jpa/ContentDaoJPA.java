@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence.jpa;
 
 import ar.edu.itba.paw.models.Content;
 import ar.edu.itba.paw.models.Content.ContentType;
+import ar.edu.itba.paw.models.ContentReview;
 import ar.edu.itba.paw.models.Course;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.persistence.ContentDao;
@@ -107,6 +108,41 @@ public class ContentDaoJPA implements ContentDao {
         em.remove(content);
         em.flush();
         em.clear();
+    }
+
+    @Override
+    public List<ContentReview> getReviews(Content content, Integer page, Integer pageSize) {
+
+        final TypedQuery<ContentReview> query = em.createQuery(
+                "SELECT c FROM ContentReview c WHERE c.content= :content ", ContentReview.class
+        );
+
+        query.setParameter("content", content);
+        query.setFirstResult(page * pageSize);
+        query.setMaxResults(pageSize);
+        return query.getResultList();
+
+    }
+
+    @Override
+    @Transactional
+    public ContentReview createContentReview(Content content, String review, User uploader) {
+        ContentReview contentReview = new ContentReview(null,review,uploader,content);
+        em.persist(contentReview);
+        em.flush();
+        em.clear();
+        return contentReview;
+    }
+
+    @Override
+    public int getReviewsSize(Content content) {
+        final TypedQuery<ContentReview> query = em.createQuery(
+                "SELECT c FROM ContentReview c WHERE c.content= :content ", ContentReview.class
+        );
+
+        query.setParameter("content", content);
+
+        return query.getResultList().size();
     }
 
 }

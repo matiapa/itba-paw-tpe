@@ -45,7 +45,7 @@ public class User implements Serializable, UserData {
     @OneToMany(fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "user")
     private List<Permission> permissions;
     
-    @OneToOne(mappedBy = "user", orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "user", orphanRemoval = true, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private UserVerification verification;
 
     @ManyToMany(mappedBy = "seenBy")
@@ -167,6 +167,10 @@ public class User implements Serializable, UserData {
 
     public void setFavoriteCourses(Set<Course> favoriteCourses) {
         this.favoriteCourses = favoriteCourses;
+    }
+
+    public void setVerification(UserVerification verification) {
+        this.verification = verification;
     }
 
     public void setPicture(byte[] picture) {

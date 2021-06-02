@@ -48,9 +48,10 @@ public class UserDaoJPA implements UserDao {
     }
 
     @Transactional
-    private void createVerificationCode(User user) {
+    void createVerificationCode(User user) {
         int code=random.nextInt(1000000);
         UserVerification verification = new UserVerification(user, code);
+        user.setVerification(verification);
         em.persist(verification);
     }
 
@@ -60,8 +61,8 @@ public class UserDaoJPA implements UserDao {
             List<Course> courses) {
         User user = new User(id, name, surname, email, passwordHash, career);
         user.setFavoriteCourses(new TreeSet<>(courses));
-        createVerificationCode(user);
         em.persist(user);
+        createVerificationCode(user);
         return user;
     }
 
@@ -73,7 +74,10 @@ public class UserDaoJPA implements UserDao {
 
         user.setVerified(true);
         em.remove(user.getVerification());
+        user.setVerification(null);
         em.flush();
+        em.clear();
+        em.merge(user);
         return true;
     }
 

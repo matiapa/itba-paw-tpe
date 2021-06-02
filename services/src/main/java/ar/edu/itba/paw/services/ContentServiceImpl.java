@@ -2,6 +2,7 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.models.Content;
 import ar.edu.itba.paw.models.Content.ContentType;
+import ar.edu.itba.paw.models.ContentReview;
 import ar.edu.itba.paw.models.Course;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.persistence.ContentDao;
@@ -43,6 +44,21 @@ public class ContentServiceImpl implements ContentService{
     @Override
     public void delete(Content content) {
             contentDao.delete(content);
+    }
+
+    @Override
+    public List<ContentReview> getReviews(Content content, Integer page, Integer pageSize) {
+        return contentDao.getReviews(content,page,pageSize);
+    }
+
+    @Override
+    public ContentReview createContentReview(Content content, String review, User uploader) {
+        return contentDao.createContentReview(content,review,uploader);
+    }
+
+    @Override
+    public int getReviewsSize(Content content) {
+        return contentDao.getReviewsSize(content);
     }
 
 }
