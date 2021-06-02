@@ -12,6 +12,8 @@ import javax.validation.Valid;
 
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.webapp.exceptions.ResourceNotFoundException;
+import ar.edu.itba.paw.webapp.form.AnnounceForm;
+import ar.edu.itba.paw.webapp.form.ContentReviewForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -134,10 +136,14 @@ public class ContentController {
     @RequestMapping(value = "/contents/{id}", method = GET)
     public ModelAndView get(
             @PathVariable(value = "id") Integer id,
-            @ModelAttribute("user") User loggedUser
+            @ModelAttribute("ContentReviewForm") final ContentReviewForm form,
+            @ModelAttribute("user") User loggedUser,
+            @RequestParam(name="page", required = false, defaultValue = "0") int page
     ){
 
         final ModelAndView mav = new ModelAndView("contents/content_detail");
+
+
 
         Optional<Content> optionalContent = contentService.findById(id);
         if (! optionalContent.isPresent()){
@@ -145,9 +151,39 @@ public class ContentController {
             throw new ResourceNotFoundException();
         }
 
+        Pager pager = new Pager(contentService.getReviewsSize(optionalContent.get()),page);
+
+        mav.addObject("pager",pager);
+
         mav.addObject("content", optionalContent.get());
+        mav.addObject("reviews",contentService.getReviews(optionalContent.get(),page,10));
 
         return mav;
+
+    }
+
+
+    @RequestMapping(value = "/contents/{id}", method = POST)
+    public ModelAndView postReview(
+            @PathVariable(value = "id") Integer id,
+            @Valid @ModelAttribute("ContentReviewForm") final ContentReviewForm form,final BindingResult errors,
+            @ModelAttribute("user") User loggedUser,
+            @RequestParam(name="page", required = false, defaultValue = "0") int page
+    ){
+
+
+        if (errors.hasErrors()){
+            LOGGER.debug("user {} tried to post a review on content with id {} with errors {}",loggedUser,id,errors);
+            return get(id,form,loggedUser,page);
+        }
+        Optional<Content> optionalContent=contentService.findById(id);
+        if (!optionalContent.isPresent()){
+            LOGGER.debug("user {} tried to review content with id {} but didnt exist",loggedUser,id);
+            throw new ResourceNotFoundException();
+        }
+        contentService.createContentReview(optionalContent.get(), form.getReviewBody(),loggedUser);
+
+        return get(id, form, loggedUser, page);
 
     }
 

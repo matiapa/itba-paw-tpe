@@ -30,8 +30,6 @@ public class CourseController {
 
     @Autowired private CareerService careerService;
 
-    @Autowired private PollService pollService;
-
     @Autowired private SgaService sgaService;
 
 

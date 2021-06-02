@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.models.Content;
 import ar.edu.itba.paw.models.Content.ContentType;
+import ar.edu.itba.paw.models.ContentReview;
 import ar.edu.itba.paw.models.Course;
 import ar.edu.itba.paw.models.User;
 
@@ -22,5 +23,11 @@ public interface ContentDao {
                           Date contentDate, User uploader);
 
     void delete(Content content);
+
+    List<ContentReview> getReviews(Content content, Integer page, Integer pageSize);
+
+    ContentReview createContentReview(Content content,String review,User uploader);
+
+    int getReviewsSize(Content content);
 
 }

@@ -3,6 +3,7 @@ package ar.edu.itba.paw.models;
 import javax.persistence.*;
 import javax.persistence.Entity;
 import java.util.Date;
+import java.util.List;
 
 
 @Entity
@@ -45,6 +46,8 @@ public class Content {
     @JoinColumn(name = "course_id", nullable = false)
     private Course course;
 
+    @OneToMany(mappedBy = "content", fetch = FetchType.LAZY)
+    private List<ContentReview> reviewList;
 
     public Content(Integer id, String name, String link, String description, User submitter, String ownerMail,
            Date contentDate, ContentType contenttype, Course course) {
@@ -140,6 +143,14 @@ public class Content {
 
     public void setCourse(Course course) {
         this.course = course;
+    }
+
+    public List<ContentReview> getReviewList() {
+        return reviewList;
+    }
+
+    public void setReviewList(List<ContentReview> reviewList) {
+        this.reviewList = reviewList;
     }
 
     public enum ContentType{

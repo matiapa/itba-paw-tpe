@@ -3,9 +3,11 @@
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib prefix = "spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
 
 <jsp:useBean type="ar.edu.itba.paw.models.Content" scope="request" id="content"/>
+<jsp:useBean type="java.util.List<ar.edu.itba.paw.models.ContentReview>" scope="request" id="reviews"/>
 
 <!DOCTYPE html>
 <html>
@@ -38,7 +40,15 @@
                                     </h6>
                                 </div>
                                 <div class="col mr-2" style="padding: 16px 24px;">
-                                    <p style="padding-top: 0;"><c:out value="${content.description}"/></p>
+                                    <c:choose>
+                                        <c:when test="${content.description==null}">
+                                            <p style="padding-top: 0;"><spring:message code="content.noDescription"/></p>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <p style="padding-top: 0;"><c:out value="${content.description}"/></p>
+                                        </c:otherwise>
+                                    </c:choose>
+
                                     <c:if test="${content.ownerMail!=null}">
                                         <p><spring:message code="content.ownerMailHelper"/> <c:out value="${content.ownerMail}"/></p>
                                     </c:if>
@@ -57,6 +67,45 @@
                         </div>
                     </div>
                 </div>
+                <div class="container-fluid">
+                    <div class="col">
+                        <div class="row">
+                            <div class="card-header py-3">
+                                <h6 class="font-weight-bold m-0">
+                                    Reviews
+                                </h6>
+                            </div>
+                            <div id="comment_input" class="card shadow mb-4" style="width: 100%">
+                                <c:url value="/contents/${content.id}" var="postFormUrl"/>
+                                <form:form modelAttribute="ContentReviewForm" action="${postFormUrl}" method="post">
+                                    <div class="form-group">
+                                        <spring:message code="content.contentReviewHelper" var="TextAreaHelper"/>
+                                        <form:textarea path="reviewBody" class="form-control"  placeholder="${TextAreaHelper}" aria-label="With textarea"/>
+                                        <form:errors path="reviewBody" cssStyle="color: red" element="p"/>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary"><spring:message code="content.contentReviewSubmitButtonText"/></button>
+                                </form:form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+                <c:forEach var="review" items="${reviews}">
+                    <c:set var="review" value="${review}" scope="request"/>
+                    <div class="container-fluid">
+                        <div class="col">
+                            <div class="row">
+                                <jsp:include page="content_review_card.jsp"/>
+                            </div>
+                        </div>
+                    </div>
+                </c:forEach>
+
+                <jsp:include page="../common/paginator.jsp"/>
 
             </div>
         </div>
@@ -64,6 +113,9 @@
     </div>
 
     <jsp:include page="../common/scripts.jsp"/>
+
+
+    <script src="<c:url value="/assets/js/content.js"/>"></script>
 
 </body>
 
