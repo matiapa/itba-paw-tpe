@@ -79,19 +79,19 @@ public class AnnounceController {
             case career:
                 if(careerCode != null){
                     pager = new Pager(announcementService.getSize(filterBy, careerCode, hideSeenBy), page);
-                    announcements = announcementService.findByCareer(selectedCareer, hideSeenBy, pager.getOffset(), pager.getLimit());
+                    announcements = announcementService.findByCareer(selectedCareer, hideSeenBy, pager.getCurrPage(), pager.getLimit());
                 }
                 break;
             case course:
                 if(courseId != null){
                     pager = new Pager(announcementService.getSize(filterBy, courseId, hideSeenBy), page);
-                    announcements = announcementService.findByCourse(selectedCourse, hideSeenBy, pager.getOffset(), pager.getLimit());
+                    announcements = announcementService.findByCourse(selectedCourse, hideSeenBy, pager.getCurrPage(), pager.getLimit());
                 }
                 break;
             case general:
             default:
                 pager = new Pager(announcementService.getSize(filterBy, courseId, hideSeenBy), page);
-                announcements = announcementService.findGeneral(hideSeenBy, pager.getOffset(), pager.getLimit());
+                announcements = announcementService.findGeneral(hideSeenBy, pager.getCurrPage(), pager.getLimit());
         }
 
         mav.addObject("pager", pager);

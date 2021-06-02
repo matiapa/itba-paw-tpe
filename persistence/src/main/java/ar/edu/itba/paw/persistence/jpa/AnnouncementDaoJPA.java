@@ -40,7 +40,7 @@ public class AnnouncementDaoJPA implements AnnouncementDao {
     }
 
     List<Announcement> findAnnouncements(EntityTarget target, String targetCode,
-             User hideSeenBy, Integer limit, Integer offset){
+             User hideSeenBy, Integer pageSize, Integer page){
 
         String qryStr = buildQuery("SELECT a FROM Announcement a", target, hideSeenBy != null);
 
@@ -51,8 +51,8 @@ public class AnnouncementDaoJPA implements AnnouncementDao {
 
         if(hideSeenBy != null) query.setParameter("seenBy", hideSeenBy.getId());
 
-        query.setFirstResult(limit * offset);
-        query.setMaxResults(limit);
+        query.setFirstResult(pageSize * page);
+        query.setMaxResults(pageSize);
 
         return query.getResultList();
     }

@@ -87,7 +87,7 @@ public class ChatGroupController {
         if(careerCode != null){
             mav.addObject("careerCode", careerCode);
             pager = new Pager(chatGroupService.getSize(selectedCareer, selectedPlatform, selectedYear, selectedQuarter), page);
-            chatGroupList = chatGroupService.findByCareer(selectedCareer, selectedPlatform, selectedYear, selectedQuarter, pager.getOffset(), pager.getLimit());
+            chatGroupList = chatGroupService.findByCareer(selectedCareer, selectedPlatform, selectedYear, selectedQuarter, pager.getCurrPage(), pager.getLimit());
         }
 
         mav.addObject("chatgroups", chatGroupList);

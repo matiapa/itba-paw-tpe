@@ -79,7 +79,7 @@ public class ContentController {
             Pager pager = new Pager(contentService.getSize(selectedCourse, selectedType, minDate, maxDate), page);
             mav.addObject("pager", pager);
 
-            contents = contentService.findByCourse(selectedCourse, selectedType, minDate, maxDate, pager.getOffset(), pager.getLimit());
+            contents = contentService.findByCourse(selectedCourse, selectedType, minDate, maxDate, pager.getCurrPage(), pager.getLimit());
             contents.sort(Comparator.comparing(Content::getUploadDate).reversed());
             mav.addObject("contents", contents);
 
