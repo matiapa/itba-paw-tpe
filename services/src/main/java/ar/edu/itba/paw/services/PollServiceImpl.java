@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import ar.edu.itba.paw.models.Career;
+import ar.edu.itba.paw.models.Course;
 import ar.edu.itba.paw.models.EntityTarget;
 import ar.edu.itba.paw.models.User;
 
@@ -21,38 +23,48 @@ import ar.edu.itba.paw.persistence.PollDao;
 @Service
 public class PollServiceImpl implements PollService {
 
-    // TODO: Uncomment this
-//    @Autowired private PollDao pollDao;
-    private PollDao pollDao;
+    @Autowired private PollDao pollDao;
 
     @Override
-    public List<Poll> findRelevant(int userId){
-        return pollDao.findRelevant(userId);
+    public List<Poll> findRelevant(User user, int topN) {
+        return pollDao.findRelevant(user, topN);
     }
 
     @Override
-    public List<Poll> findControversial(int userId) {
-        return pollDao.findControversial(userId, 5);
+    public List<Poll> findControversial(User user, int topN) {
+        return pollDao.findControversial(user, topN);
     }
 
     @Override
-    public List<Poll> findGeneral(PollFormat format, PollState pollState, int offset, int limit){
-        return pollDao.findGeneral(format, pollState, offset, limit);
+    public List<Poll> findGeneral(PollFormat format, PollState pollState, Integer page, Integer pageSize) {
+        return pollDao.findGeneral(format, pollState, page, pageSize);
     }
 
     @Override
-    public List<Poll> findByCareer(String careerCode, PollFormat format, PollState pollState, int offset, int limit){
-        return pollDao.findByCareer(careerCode, format, pollState, offset, limit);
+    public List<Poll> findByCareer(Career career, PollFormat format, PollState pollState, Integer page,
+            Integer pageSize) {
+        return pollDao.findByCareer(career, format, pollState, page, pageSize);
     }
 
     @Override
-    public List<Poll> findByCourse(String courseId, PollFormat format, Poll.PollState pollState, int offset, int limit){
-        return pollDao.findByCourse(courseId, format, pollState, offset, limit);
+    public List<Poll> findByCourse(Course course, PollFormat format, PollState pollState, Integer page,
+            Integer pageSize) {
+        return pollDao.findByCourse(course, format, pollState, page, pageSize);
     }
 
     @Override
-    public int getSize(EntityTarget filterBy, String code, PollFormat format, PollState pollState){
-        return pollDao.getSize(filterBy, code, format, pollState);
+    public int getCount(EntityTarget filterBy, Career career, PollFormat format, PollState pollState) {
+        return pollDao.getCount(filterBy, career, format, pollState);
+    }
+
+    @Override
+    public int getCount(EntityTarget filterBy, Course course, PollFormat format, PollState pollState) {
+        return pollDao.getCount(filterBy, course, format, pollState);
+    }
+
+    @Override
+    public int getCount(EntityTarget filterBy, PollFormat format, PollState pollState) {
+        return pollDao.getCount(filterBy, format, pollState);
     }
 
     @Override
@@ -61,28 +73,41 @@ public class PollServiceImpl implements PollService {
     }
 
     @Override
-    public Map<PollOption, Integer> getVotes(int id) {
-        return pollDao.getVotes(id);
+    public Map<PollOption, Integer> getVotes(Poll poll) {
+        return pollDao.getVotes(poll);
     }
 
     @Override
-    public void addPoll(String name, String description, PollFormat format, String careerCode, String courseId, Date expiryDate, User user, List<String> pollOptions) {
-        pollDao.addPoll(name, description, format, careerCode, courseId, expiryDate, user.getId(), pollOptions);
+    public void addPoll(String name, String description, PollFormat format, Course course,
+            Date expiryDate, User user, List<String> pollOptions) {
+        pollDao.addPoll(name, description, format, course, expiryDate, user, pollOptions);
     }
 
     @Override
-    public void voteChoicePoll(int pollId, int optionId, User user) {
-        pollDao.voteChoicePoll(pollId, optionId, user.getId());
+    public void addPoll(String name, String description, PollFormat format, Career career,
+            Date expiryDate, User user, List<String> pollOptions) {
+        pollDao.addPoll(name, description, format, career, expiryDate, user, pollOptions);
     }
 
     @Override
-    public boolean hasVoted(int pollId, User user) {
-        return pollDao.hasVoted(pollId, user.getId());
+    public void addPoll(String name, String description, PollFormat format,
+            Date expiryDate, User user, List<String> pollOptions) {
+        pollDao.addPoll(name, description, format, expiryDate, user, pollOptions);
     }
 
     @Override
-    public void delete(int id) {
-        pollDao.delete(id);
+    public void voteChoicePoll(Poll poll, PollOption option, User user) {
+        pollDao.voteChoicePoll(poll, option, user);
+    }
+
+    @Override
+    public boolean hasVoted(Poll poll, User user) {
+        return pollDao.hasVoted(poll, user);
+    }
+
+    @Override
+    public void delete(Poll poll) {
+        pollDao.delete(poll);
     }
 
 }
