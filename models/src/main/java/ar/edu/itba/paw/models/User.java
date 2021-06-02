@@ -6,15 +6,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-import javax.persistence.Column;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @javax.persistence.Entity(name = "User")
 @Table(name = "users")
@@ -36,8 +28,9 @@ public class User implements Serializable, UserData {
     @Column
     protected String password;
 
-    @Column(name = "profile_picture")
-    private String profilePicture;
+    @Lob
+    @Column(name = "picture")
+    private byte[] picture;
 
     @Column(name = "signup_date", nullable = false)
     private Date signupDate = new Date();
@@ -52,20 +45,17 @@ public class User implements Serializable, UserData {
     @OneToMany(fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "user")
     private List<Permission> permissions;
     
-    @OneToOne(mappedBy = "user", orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "user", orphanRemoval = true, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private UserVerification verification;
 
     @ManyToMany(mappedBy = "seenBy")
     private List<Announcement> seenAnnouncements;
 
-    @OneToMany(mappedBy = "uploader")
-    private List<Announcement> uploadedAnnouncements;
-
     @ManyToMany(mappedBy = "favedBy")
     private Set<Course> favoriteCourses;
 
-    @OneToMany(mappedBy = "uploader")
-    private List<Content> uploadedContent;
+    @OneToMany(mappedBy = "rated", fetch = FetchType.LAZY)
+    private List<UserWorkRate> rates;
 
 
     public User(int id, String name, String surname, String email, String password, Career career) {
@@ -82,7 +72,7 @@ public class User implements Serializable, UserData {
 
     public boolean can(String action, String entity){
         return getPermissions().contains(new Permission(
-                Permission.Action.valueOf(action), Entity.valueOf(entity)
+            Permission.Action.valueOf(action), Entity.valueOf(entity)
         ));
     }
 
@@ -142,11 +132,6 @@ public class User implements Serializable, UserData {
     }
 
     @Override
-    public String getProfilePicture() {
-        return profilePicture;
-    }
-
-    @Override
     public Date getSignupDate() {
         return signupDate;
     }
@@ -172,6 +157,10 @@ public class User implements Serializable, UserData {
         return seenAnnouncements;
     }
 
+    public byte[] getPicture() {
+        return picture;
+    }
+
     public void setVerified(boolean verified) {
         this.verified = verified;
     }
@@ -180,8 +169,12 @@ public class User implements Serializable, UserData {
         this.favoriteCourses = favoriteCourses;
     }
 
-    public void setProfilePicture(String profilePicture) {
-        this.profilePicture = profilePicture;
+    public void setVerification(UserVerification verification) {
+        this.verification = verification;
+    }
+
+    public void setPicture(byte[] picture) {
+        this.picture = picture;
     }
 
 }

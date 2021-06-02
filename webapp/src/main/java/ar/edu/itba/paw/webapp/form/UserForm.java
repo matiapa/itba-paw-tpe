@@ -31,7 +31,7 @@ public class UserForm {
 
     @NotNull
     @Digits(integer = 6,fraction = 0)
-    private int id;
+    private Integer id;
 
     @NotEmpty
     private String careerCode;
@@ -64,7 +64,7 @@ public class UserForm {
         return email;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -81,7 +81,7 @@ public class UserForm {
         this.email = email;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

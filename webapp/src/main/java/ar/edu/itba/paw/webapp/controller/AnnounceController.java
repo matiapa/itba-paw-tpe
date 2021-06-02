@@ -13,11 +13,11 @@ import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import ar.edu.itba.paw.models.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,16 +25,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import ar.edu.itba.paw.models.Announcement;
-import ar.edu.itba.paw.models.Career;
-import ar.edu.itba.paw.models.Course;
 import ar.edu.itba.paw.models.EntityTarget;
-import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.models.ui.Pager;
+import ar.edu.itba.paw.webapp.controller.common.Pager;
 import ar.edu.itba.paw.services.AnnouncementService;
 import ar.edu.itba.paw.services.CareerService;
 import ar.edu.itba.paw.services.CourseService;
-import ar.edu.itba.paw.webapp.auth.UserPrincipal;
 import ar.edu.itba.paw.webapp.controller.common.CommonFilters;
 import ar.edu.itba.paw.webapp.exceptions.ResourceNotFoundException;
 import ar.edu.itba.paw.webapp.form.AnnounceForm;
@@ -106,6 +101,9 @@ public class AnnounceController {
 
         mav.addObject("showCreateForm", showCreateForm);
         mav.addObject("showSeen", showSeen);
+
+        mav.addObject("canCreateAnnounce", loggedUser.can(Permission.Action.create, Entity.announcement));
+        mav.addObject("canDeleteAnnounce", loggedUser.can(Permission.Action.delete, Entity.announcement));
 
         return mav;
     }

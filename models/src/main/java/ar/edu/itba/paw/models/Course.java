@@ -6,7 +6,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "course")
-public class Course {
+public class Course implements Comparable <Course>{
 
     @Id
     @Column(name = "id")
@@ -105,4 +105,10 @@ public class Course {
         this.content = content;
     }
 
+
+
+    @Override
+    public int compareTo(Course o) {
+        return this.name.compareTo(o.name);
+    }
 }

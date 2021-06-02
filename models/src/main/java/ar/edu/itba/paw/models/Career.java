@@ -2,11 +2,13 @@ package ar.edu.itba.paw.models;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
+
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
 @Table(name = "career")
-public class Career {
+public class Career implements Serializable {
 
     @Id
     @Column(name = "code")

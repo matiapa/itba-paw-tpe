@@ -5,16 +5,15 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import java.net.URISyntaxException;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import ar.edu.itba.paw.models.*;
+import ar.edu.itba.paw.webapp.exceptions.ResourceNotFoundException;
+import ar.edu.itba.paw.webapp.form.AnnounceForm;
+import ar.edu.itba.paw.webapp.form.ContentReviewForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,15 +26,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import ar.edu.itba.paw.models.Content;
-import ar.edu.itba.paw.models.Course;
-import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.models.UserData;
-import ar.edu.itba.paw.models.ui.Pager;
+import ar.edu.itba.paw.webapp.controller.common.Pager;
 import ar.edu.itba.paw.services.ContentService;
 import ar.edu.itba.paw.services.CourseService;
 import ar.edu.itba.paw.services.SgaService;
-import ar.edu.itba.paw.webapp.auth.UserPrincipal;
 import ar.edu.itba.paw.webapp.controller.common.CommonFilters;
 import ar.edu.itba.paw.webapp.form.ContentForm;
 
@@ -98,7 +92,10 @@ public class ContentController {
         }
 
         // Add other parameters
+
         mav.addObject("showCreateForm", showCreateForm);
+
+        mav.addObject("canDeleteContent", loggedUser.can(Permission.Action.delete, Entity.course_content));
 
         return mav;
     }
@@ -133,6 +130,60 @@ public class ContentController {
 
         return list(form.getCourseId(), null, null, null, 0,
                 false, form, loggedUser);
+    }
+
+    @RequestMapping(value = "/contents/{id}", method = GET)
+    public ModelAndView get(
+            @PathVariable(value = "id") Integer id,
+            @ModelAttribute("ContentReviewForm") final ContentReviewForm form,
+            @ModelAttribute("user") User loggedUser,
+            @RequestParam(name="page", required = false, defaultValue = "0") int page
+    ){
+
+        final ModelAndView mav = new ModelAndView("contents/content_detail");
+
+
+
+        Optional<Content> optionalContent = contentService.findById(id);
+        if (! optionalContent.isPresent()){
+            LOGGER.debug("user {} tried accessing content with id {} but didnt exist",loggedUser,id);
+            throw new ResourceNotFoundException();
+        }
+
+        Pager pager = new Pager(contentService.getReviewsSize(optionalContent.get()),page);
+
+        mav.addObject("pager",pager);
+
+        mav.addObject("content", optionalContent.get());
+        mav.addObject("reviews",contentService.getReviews(optionalContent.get(),page,10));
+
+        return mav;
+
+    }
+
+
+    @RequestMapping(value = "/contents/{id}", method = POST)
+    public ModelAndView postReview(
+            @PathVariable(value = "id") Integer id,
+            @Valid @ModelAttribute("ContentReviewForm") final ContentReviewForm form,final BindingResult errors,
+            @ModelAttribute("user") User loggedUser,
+            @RequestParam(name="page", required = false, defaultValue = "0") int page
+    ){
+
+
+        if (errors.hasErrors()){
+            LOGGER.debug("user {} tried to post a review on content with id {} with errors {}",loggedUser,id,errors);
+            return get(id,form,loggedUser,page);
+        }
+        Optional<Content> optionalContent=contentService.findById(id);
+        if (!optionalContent.isPresent()){
+            LOGGER.debug("user {} tried to review content with id {} but didnt exist",loggedUser,id);
+            throw new ResourceNotFoundException();
+        }
+        contentService.createContentReview(optionalContent.get(), form.getReviewBody(),loggedUser);
+
+        return get(id, form, loggedUser, page);
+
     }
 
     @RequestMapping(value = "/contents/{id}", method = DELETE)

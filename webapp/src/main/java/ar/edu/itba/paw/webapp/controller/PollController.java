@@ -26,16 +26,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import ar.edu.itba.paw.models.Career;
+import ar.edu.itba.paw.models.Course;
+import ar.edu.itba.paw.models.Entity;
 import ar.edu.itba.paw.models.EntityTarget;
+import ar.edu.itba.paw.models.Permission;
 import ar.edu.itba.paw.models.Poll;
 import ar.edu.itba.paw.models.Poll.PollFormat;
 import ar.edu.itba.paw.models.Poll.PollOption;
 import ar.edu.itba.paw.models.Poll.PollState;
 import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.models.ui.Pager;
+import ar.edu.itba.paw.services.CareerService;
+import ar.edu.itba.paw.services.CourseService;
 import ar.edu.itba.paw.services.PollService;
-import ar.edu.itba.paw.webapp.auth.UserPrincipal;
 import ar.edu.itba.paw.webapp.controller.common.CommonFilters;
+import ar.edu.itba.paw.webapp.controller.common.Pager;
+import ar.edu.itba.paw.webapp.exceptions.BadRequestException;
 import ar.edu.itba.paw.webapp.exceptions.ResourceNotFoundException;
 import ar.edu.itba.paw.webapp.form.PollForm;
 
@@ -44,6 +50,8 @@ import ar.edu.itba.paw.webapp.form.PollForm;
 public class PollController {
 
     @Autowired private PollService pollService;
+    @Autowired private CourseService courseService;
+    @Autowired private CareerService careerService;
 
     @Autowired private CommonFilters commonFilters;
 
@@ -70,8 +78,8 @@ public class PollController {
 
         mav.addObject("filterBy", filterBy);
 
-        commonFilters.addCareers(mav, careerCode);
-        commonFilters.addCourses(mav, courseId);
+        Career career = commonFilters.addCareers(mav, careerCode);
+        Course course = commonFilters.addCourses(mav, courseId);
 
         // -- By Type
 
@@ -96,22 +104,22 @@ public class PollController {
         switch (filterBy) {
             case course:
                 if (courseId != null){
-                    pager = new Pager(pollService.getSize(filterBy, courseId, selectedType, selectedState), page);
-                    pollList = pollService.findByCourse(courseId, selectedType, selectedState,
-                            pager.getOffset(), pager.getLimit());
+                    pager = new Pager(pollService.getCount(filterBy, course, selectedType, selectedState), page);
+                    pollList = pollService.findByCourse(course, selectedType, selectedState,
+                            pager.getCurrPage(), pager.getLimit());
                 }
                 break;
             case career:
                 if (careerCode != null){
-                    pager = new Pager(pollService.getSize(filterBy, careerCode, selectedType, selectedState), page);
-                    pollList = pollService.findByCareer(careerCode, selectedType, selectedState,
-                            pager.getOffset(), pager.getLimit());
+                    pager = new Pager(pollService.getCount(filterBy, career, selectedType, selectedState), page);
+                    pollList = pollService.findByCareer(career, selectedType, selectedState,
+                            pager.getCurrPage(), pager.getLimit());
                 }
                 break;
             case general:
             default:
-                pager = new Pager(pollService.getSize(filterBy, null, selectedType, selectedState), page);
-                pollList = pollService.findGeneral(selectedType, selectedState, pager.getOffset(), pager.getLimit());
+                pager = new Pager(pollService.getCount(filterBy, selectedType, selectedState), page);
+                pollList = pollService.findGeneral(selectedType, selectedState, pager.getCurrPage(), pager.getLimit());
                 break;
         }
 
@@ -121,7 +129,9 @@ public class PollController {
         // Add other parameters
 
         mav.addObject("showCreateForm", showCreateForm);
-        
+
+        mav.addObject("canDeletePoll", loggedUser.can(Permission.Action.delete, Entity.poll));
+
         return mav;
     }
 
@@ -140,17 +150,42 @@ public class PollController {
                 null, null,0, true, pollForm, loggedUser);
         }
 
+        if(pollForm.getCareerCode() != null && pollForm.getCourseId() != null)
+            throw new BadRequestException();
+
+        Career career = pollForm.getCareerCode() != null ? careerService.findByCode(pollForm.getCareerCode()).orElseThrow(BadRequestException::new) : null;
+        Course course = pollForm.getCourseId() != null ? courseService.findById(pollForm.getCourseId()).orElseThrow(BadRequestException::new) : null;
+
         LOGGER.debug("user {} is tryng to create a poll with  form {} ",loggedUser,pollForm);
-        pollService.addPoll(
-            pollForm.getTitle(),
-            pollForm.getDescription(),
-            PollFormat.multiple_choice,
-            pollForm.getCareerCode(),
-            pollForm.getCourseId(),
-            pollForm.getExpiryDate(),
-            loggedUser,
-            pollForm.getOptions()
-        );
+        if(career != null)
+            pollService.addPoll(
+                pollForm.getTitle(),
+                pollForm.getDescription(),
+                PollFormat.multiple_choice,
+                career,
+                pollForm.getExpiryDate(),
+                loggedUser,
+                pollForm.getOptions()
+            );
+        else if(course != null)
+            pollService.addPoll(
+                pollForm.getTitle(),
+                pollForm.getDescription(),
+                PollFormat.multiple_choice,
+                course,
+                pollForm.getExpiryDate(),
+                loggedUser,
+                pollForm.getOptions()
+            );
+        else
+            pollService.addPoll(
+                pollForm.getTitle(),
+                pollForm.getDescription(),
+                PollFormat.multiple_choice,
+                pollForm.getExpiryDate(),
+                loggedUser,
+                pollForm.getOptions()
+            );
 
         LOGGER.debug("user {} created a poll with  form {} ",loggedUser,pollForm);
 
@@ -179,7 +214,7 @@ public class PollController {
 
         mav.addObject("poll",selectedPoll.get());
 
-        Map<PollOption,Integer> votes = pollService.getVotes(pollId);
+        Map<PollOption,Integer> votes = pollService.getVotes(selectedPoll.get());
         mav.addObject("votes",votes);
         Map<String,Integer> votesMap = new HashMap<>();
         for (PollOption p: votes.keySet()
@@ -188,7 +223,7 @@ public class PollController {
         }
         mav.addObject("votesMap",votesMap);
 
-        mav.addObject("hasVoted", pollService.hasVoted(pollId, loggedUser));
+        mav.addObject("hasVoted", pollService.hasVoted(selectedPoll.get(), loggedUser));
 
         Locale loc = new Locale("es", "AR");
         DateFormat expiryFormat = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT, loc);
@@ -206,9 +241,10 @@ public class PollController {
         @PathVariable(value="id") int id, HttpServletRequest request,
         @ModelAttribute("user") User loggedUser
     ) {
+        Poll poll = pollService.findById(id).orElseThrow(ResourceNotFoundException::new);
 
         LOGGER.debug("user {} is attempting to delete in poll with id {}",loggedUser,id);
-        pollService.delete(id);
+        pollService.delete(poll);
         LOGGER.debug("user {} deleted poll with id {}",loggedUser,id);
 
         return "redirect:"+ request.getHeader("Referer");
@@ -229,9 +265,16 @@ public class PollController {
             @RequestParam int option,
             @ModelAttribute("user") User loggedUser
     ) {
+        Poll poll = pollService.findById(id).orElseThrow(ResourceNotFoundException::new);
+
+        PollOption pollOption = poll.getOptions()
+            .stream()
+            .filter(o -> o.getId() == option)
+            .findAny()
+            .orElseThrow(BadRequestException::new);
 
         LOGGER.debug("user {} is attempting to vote in poll with id {} with option {}",loggedUser,id,option);
-        pollService.voteChoicePoll(id, option, loggedUser);
+        pollService.voteChoicePoll(poll, pollOption, loggedUser);
 
         LOGGER.debug("user {} voted in poll with id {} with option {}",loggedUser,id,option);
         return "redirect:/polls/"+id;

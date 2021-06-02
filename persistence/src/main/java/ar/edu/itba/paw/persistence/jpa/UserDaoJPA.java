@@ -10,17 +10,14 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
+import ar.edu.itba.paw.models.*;
 import org.springframework.stereotype.Repository;
 
-import ar.edu.itba.paw.models.Career;
-import ar.edu.itba.paw.models.Course;
-import ar.edu.itba.paw.models.LoginActivity;
-import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.models.UserVerification;
 import ar.edu.itba.paw.persistence.UserDao;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository
+@Transactional
 public class UserDaoJPA implements UserDao {
 
     @PersistenceContext
@@ -51,9 +48,10 @@ public class UserDaoJPA implements UserDao {
     }
 
     @Transactional
-    private void createVerificationCode(User user) {
+    void createVerificationCode(User user) {
         int code=random.nextInt(1000000);
         UserVerification verification = new UserVerification(user, code);
+        user.setVerification(verification);
         em.persist(verification);
     }
 
@@ -63,8 +61,8 @@ public class UserDaoJPA implements UserDao {
             List<Course> courses) {
         User user = new User(id, name, surname, email, passwordHash, career);
         user.setFavoriteCourses(new TreeSet<>(courses));
-        createVerificationCode(user);
         em.persist(user);
+        createVerificationCode(user);
         return user;
     }
 
@@ -76,7 +74,10 @@ public class UserDaoJPA implements UserDao {
 
         user.setVerified(true);
         em.remove(user.getVerification());
+        user.setVerification(null);
         em.flush();
+        em.clear();
+        em.merge(user);
         return true;
     }
 
@@ -88,8 +89,8 @@ public class UserDaoJPA implements UserDao {
 
     @Override
     @Transactional
-    public void setProfilePicture(String pictureDataURI, User user) {
-        user.setProfilePicture(pictureDataURI);
+    public void setPicture(User user, byte picture[]) {
+        user.setPicture(picture);
         em.merge(user);
     }
 
@@ -99,5 +100,5 @@ public class UserDaoJPA implements UserDao {
         LoginActivity activity = new LoginActivity(user);
         em.persist(activity);
     }
-    
+
 }

@@ -1,8 +1,5 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
-
 import java.util.*;
 
 import ar.edu.itba.paw.models.*;
@@ -20,6 +17,8 @@ import org.springframework.web.servlet.ModelAndView;
 import ar.edu.itba.paw.webapp.auth.UserPrincipal;
 import ar.edu.itba.paw.webapp.exceptions.ResourceNotFoundException;
 
+import static org.springframework.web.bind.annotation.RequestMethod.*;
+
 @Controller
 public class CourseController {
 
@@ -30,8 +29,6 @@ public class CourseController {
     @Autowired private CourseService courseService;
 
     @Autowired private CareerService careerService;
-
-    @Autowired private PollService pollService;
 
     @Autowired private SgaService sgaService;
 
@@ -110,6 +107,8 @@ public class CourseController {
         });
 
         mav.addObject("contentOwners", contentOwners);
+
+        mav.addObject("canDeleteContent", loggedUser.can(Permission.Action.delete, Entity.course_content));
 
         // Course polls
 

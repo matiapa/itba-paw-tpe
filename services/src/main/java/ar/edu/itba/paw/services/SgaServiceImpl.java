@@ -89,7 +89,7 @@ public class SgaServiceImpl implements SgaService {
         }
 
         @Override
-        public String getProfilePicture() {
+        public byte[] getPicture() {
             return null;
         }
 

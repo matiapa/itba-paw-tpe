@@ -12,6 +12,7 @@ import java.util.stream.IntStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import ar.edu.itba.paw.models.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +24,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import ar.edu.itba.paw.models.Career;
-import ar.edu.itba.paw.models.ChatGroup;
-import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.models.ui.Pager;
+import ar.edu.itba.paw.webapp.controller.common.Pager;
 import ar.edu.itba.paw.services.CareerService;
 import ar.edu.itba.paw.services.ChatGroupService;
-import ar.edu.itba.paw.webapp.auth.UserPrincipal;
 import ar.edu.itba.paw.webapp.controller.common.CommonFilters;
 import ar.edu.itba.paw.webapp.exceptions.ResourceNotFoundException;
 import ar.edu.itba.paw.webapp.form.ChatGroupForm;
@@ -97,7 +94,10 @@ public class ChatGroupController {
         mav.addObject("pager", pager);
 
         // Add other parameters
+
         mav.addObject("showCreateForm", showCreateForm);
+
+        mav.addObject("canDeleteChat", loggedUser.can(Permission.Action.delete, Entity.chat_group));
 
         return mav;
     }

@@ -106,7 +106,7 @@
                                             <th><spring:message code="author"/></th>
                                             <th><spring:message code="form.link"/></th>
 
-                                            <c:if test="<%= user.can(Permission.Action.delete, Entity.course_content) %>">
+                                            <c:if test="${canDeleteContent}">
                                                 <th></th>
                                             </c:if>
                                         </tr>
@@ -115,7 +115,8 @@
                                         <c:forEach var="content" items="${contents}">
                                             <c:set var="content" value="${content}" scope="request"/>
                                             <tr>
-                                                <td><c:out value="${content.name}"/></td>
+                                                <c:url var="url" value="/contents/${content.id}"/>
+                                                <td><a href="${url}"><c:out value="${content.name}"/></a></td>
                                                 <td><spring:message code="enum.contenttype.${content.contentType}"/></td>
                                                 <td><c:out value="${content.contentDate}"/></td>
                                                 <td>
@@ -131,7 +132,7 @@
                                                     </a>
                                                 </td>
 
-                                                <c:if test="<%= user.can(Permission.Action.delete, Entity.course_content) %>">
+                                                <c:if test="${canDeleteContent}">
                                                     <td>
                                                         <c:url var="url" value="/contents/${content.id}/delete"/>
                                                         <form action="${url}" method="post">

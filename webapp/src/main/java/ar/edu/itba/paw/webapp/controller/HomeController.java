@@ -55,8 +55,9 @@ public class HomeController {
 
         mav.addObject("careers", careerService.findAll());
 
-        // mav.addObject("relevantPolls", pollService.findRelevant(loggedUser.getId()));
-        // mav.addObject("controversialPolls", pollService.findControversial(loggedUser.getId()));
+        mav.addObject("relevantPolls", pollService.findRelevant(loggedUser, 5));
+
+        mav.addObject("controversialPolls", pollService.findControversial(loggedUser, 5));
 
         return mav;
     }

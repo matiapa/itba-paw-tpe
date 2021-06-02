@@ -8,7 +8,7 @@
 
 <jsp:useBean type="ar.edu.itba.paw.models.Announcement" scope="request" id="announcement"/>
 <jsp:useBean type="ar.edu.itba.paw.models.User" scope="request" id="user"/>
-
+<jsp:useBean type="java.lang.Boolean" scope="request" id="canDeleteAnnounce"/>
 
 <div id="announce${announcement.id}" class="card shadow mb-4" style="margin-top: 32px;">
     <div class="card-header py-3">
@@ -29,7 +29,7 @@
             </div>
 
             <div class="col col-md-auto p-1">
-                <c:if test="<%= user.can(Permission.Action.delete, Entity.announcement) %>">
+                <c:if test="${canDeleteAnnounce}">
                     <c:url var="url" value="/announcements/${announcement.id}/delete"/>
                     <form action="${url}" method="post">
                        <button type="submit" class="btn btn-icon"

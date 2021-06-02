@@ -7,10 +7,16 @@ import java.io.IOException;
 import java.util.Base64;
 import java.util.Optional;
 
+import ar.edu.itba.paw.models.Course;
+import ar.edu.itba.paw.services.CourseService;
+import ar.edu.itba.paw.services.UserWorkRateService;
+import ar.edu.itba.paw.webapp.form.AnnounceForm;
+import ar.edu.itba.paw.webapp.form.UserWorkRateForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,21 +24,23 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import ar.edu.itba.paw.models.Career;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.UserData;
-import ar.edu.itba.paw.services.CareerService;
 import ar.edu.itba.paw.services.SgaService;
 import ar.edu.itba.paw.services.UserService;
-import ar.edu.itba.paw.webapp.auth.UserPrincipal;
 import ar.edu.itba.paw.webapp.exceptions.ResourceNotFoundException;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 @Controller
 public class ProfileController {
 
     @Autowired UserService userService;
-    @Autowired CareerService careerService;
     @Autowired SgaService sgaService;
+    @Autowired UserWorkRateService rateService;
+    @Autowired CourseService courseService;
 
     private static final Logger LOGGER= LoggerFactory.getLogger(ProfileController.class);
 
@@ -47,11 +55,11 @@ public class ProfileController {
         @ModelAttribute("user") User loggedUser
     ) throws IOException {
 
-        String type = newPicture.getContentType();
-        String base64 = Base64.getEncoder().encodeToString(newPicture.getBytes());
-        String dataURI = String.format("data:%s;base64,%s", type, base64);
+//        String type = newPicture.getContentType();
+//        String base64 = Base64.getEncoder().encodeToString(newPicture.getBytes());
+//        String dataURI = String.format("data:%s;base64,%s", type, base64);
 
-        userService.setProfilePicture(loggedUser, dataURI);
+        userService.setPicture(loggedUser, newPicture.getBytes());
 
         return "redirect:/profile/own";
     }
@@ -59,10 +67,11 @@ public class ProfileController {
     @RequestMapping(value = "/profile/{id:[0-9]+}", method = GET)
     public ModelAndView getProfileById(
         @PathVariable(value="id") int id,
+        @ModelAttribute("createForm") final UserWorkRateForm form,
+        @RequestParam(name="showCreateForm", required=false, defaultValue="false") boolean showCreateForm,
         @ModelAttribute("user") User loggedUser
     ) {
         final ModelAndView mav = new ModelAndView("profile/profile");
-
 
         Optional<User> optUser = userService.findById(id);
         if(! optUser.isPresent()){
@@ -70,10 +79,10 @@ public class ProfileController {
             throw new ResourceNotFoundException();
         }
 
-        Career career = optUser.get().getCareer();
-
+        mav.addObject("showCreateForm", showCreateForm);
         mav.addObject("profile", optUser.get());
-        mav.addObject("userCareer", career);
+        mav.addObject("rates", rateService.getRates(optUser.get(), 0, 5));
+        mav.addObject("courses", courseService.findAll());
 
         return mav;
     }
@@ -85,11 +94,12 @@ public class ProfileController {
 
     @RequestMapping(value = "/profile/{email:[a-zA-Z]+@[a-zA-Z.]+}", method = GET)
     public ModelAndView getProfileByEmail(
-        @PathVariable(value="email") String email,
-        @ModelAttribute("user") User loggedUser
+            @PathVariable(value="email") String email,
+            @ModelAttribute("createForm") final UserWorkRateForm form,
+            @RequestParam(name="showCreateForm", required=false, defaultValue="false") boolean showCreateForm,
+            @ModelAttribute("user") User loggedUser
     ) {
         final ModelAndView mav = new ModelAndView("profile/profile");
-
 
         UserData user;
         Optional<User> optUser = userService.findByEmail(email);
@@ -100,12 +110,59 @@ public class ProfileController {
             throw new ResourceNotFoundException();
         }
 
-        Career career = user.getCareer();
-
+        mav.addObject("showCreateForm", showCreateForm);
         mav.addObject("profile", user);
-        mav.addObject("userCareer", career);
-
+        mav.addObject("rates", user instanceof User
+            ? rateService.getRates((User) user, 0, 5) : null);
+        mav.addObject("courses", courseService.findAll());
         return mav;
+    }
+
+
+    @RequestMapping(value = "/profile/{id:[0-9]+}/picture", method = GET)
+    public void getProfilePicture(
+        @PathVariable(value="id") int id,
+        @ModelAttribute("user") User loggedUser,
+        HttpServletRequest request,
+        HttpServletResponse response
+    ) throws IOException{
+        Optional<User> optUser = userService.findById(id);
+        if(! optUser.isPresent()){
+            LOGGER.debug("user {} in profile with id {} was not found",loggedUser,id);
+            throw new ResourceNotFoundException();
+        }
+
+        byte[] image = optUser.get().getPicture();
+        if (image == null) {
+            response.sendRedirect(request.getContextPath() + "/assets/img/avatars/avatar.png");
+        } else {
+            response.setContentType("image/png");
+            response.getOutputStream().write(image);
+        }
+
+    }
+
+
+    @RequestMapping(value = "/profile/{id:[0-9]+}/rate", method = POST)
+    public ModelAndView rateProfile(
+            @PathVariable(value="id") int id,
+            @ModelAttribute("user") User loggedUser,
+            @Valid @ModelAttribute("createForm") final UserWorkRateForm form,
+            final BindingResult errors
+    ) {
+        if (errors.hasErrors()) {
+            System.out.println(errors);
+            return getProfileById(id, form, true, loggedUser);
+        }
+
+        User ratedUser = userService.findById(id).orElseThrow(ResourceNotFoundException::new);
+
+        Course course = courseService.findById(form.getCourseId())
+                .orElseThrow(ResourceNotFoundException::new);
+
+        rateService.rate(loggedUser, ratedUser, course, form.getBehaviour(), form.getSkill(), form.getComment());
+
+        return getProfileById(id, form, false, loggedUser);
     }
 
 
