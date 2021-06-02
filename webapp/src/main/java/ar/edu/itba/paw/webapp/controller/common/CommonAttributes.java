@@ -33,8 +33,8 @@ public class CommonAttributes {
     }
 
     @ModelAttribute("canReadStats")
-    boolean canReadStats() {
-        return loggedUser().can(Permission.Action.read, Entity.statistic);
+    boolean canReadStats(@ModelAttribute("user") User user) {
+        return user != null ? user.can(Permission.Action.read, Entity.statistic) : false;
     }
 
 }

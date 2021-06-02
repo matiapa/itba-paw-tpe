@@ -8,22 +8,20 @@ import javax.persistence.*;
 import javax.persistence.Entity;
 
 @Entity
-@Table(name = "login_activity")
-@IdClass(LoginActivity.LoginActivityId.class)
+@Table(name = "login_activity", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "date"}, name = "login_activity_unique")})
 public class LoginActivity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "login_activity_id_seq")
+    @SequenceGenerator(sequenceName = "login_activity_id_seq", name = "login_activity_id_seq", allocationSize = 1)
+    @Column
+    private int id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Id
     @Column(nullable = false)
     private final Date date = new Date();
-
-    @Id
-    @Column(name = "user_id", insertable = false, updatable = false)
-    private int userId;
-
 
     public LoginActivity() { }
 
