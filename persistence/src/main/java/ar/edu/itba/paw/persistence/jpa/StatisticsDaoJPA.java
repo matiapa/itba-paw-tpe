@@ -1,17 +1,22 @@
 package ar.edu.itba.paw.persistence.jpa;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+import org.springframework.stereotype.Repository;
+
 import ar.edu.itba.paw.models.Career;
 import ar.edu.itba.paw.models.Course;
 import ar.edu.itba.paw.models.Entity;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.persistence.StatisticsDao;
-import org.springframework.stereotype.Repository;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.*;
 
 @Repository
 @SuppressWarnings("unchecked")
@@ -28,7 +33,7 @@ public class StatisticsDaoJPA implements StatisticsDao {
 
         Map<Entity, Integer> map = new HashMap<>();
         for(Object[] row : res)
-            map.put(Entity.valueOf((String) row[0]), ((BigDecimal) row[1]).intValue());
+            map.put(Entity.valueOf((String) row[0]), ((BigInteger) row[1]).intValue());
 
         return map;
     }
