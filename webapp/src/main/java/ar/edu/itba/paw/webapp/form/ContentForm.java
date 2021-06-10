@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.form;
 
+import org.hibernate.validator.constraints.Email;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
@@ -28,6 +29,11 @@ public class ContentForm {
 
     @NotNull
     private String contentType;
+
+    @Email
+    private String ownerMail;
+
+
 
     public Date getContentDate() {
         return contentDate;
@@ -69,12 +75,19 @@ public class ContentForm {
         this.courseId = courseId;
     }
 
-
     public String getContentType() {
         return contentType;
     }
 
     public void setContentType(String contentType) {
         this.contentType = contentType;
+    }
+
+    public String getOwnerMail() {
+        return ownerMail;
+    }
+
+    public void setOwnerMail(String ownerMail) {
+        this.ownerMail = ownerMail;
     }
 }

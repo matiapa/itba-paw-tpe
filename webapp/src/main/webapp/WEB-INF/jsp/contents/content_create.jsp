@@ -70,6 +70,12 @@
                         <form:errors path="contentDate" cssStyle="color: red" element="p"/>
                     </div>
 
+                    <div class="form-group">
+                        <form:label path="ownerMail"><spring:message code="form.OwnerMailHelper"/></form:label>
+                        <form:input type="text" path="ownerMail" cssClass="form-control"/>
+                        <form:errors path="ownerMail" cssStyle="color: red" element="p"/>
+                    </div>
+
                     <div>
                         <button id="submitContent" type="submit" class="btn btn-primary ml-3"><spring:message code="form.sendButton"/></button>
                     </div>

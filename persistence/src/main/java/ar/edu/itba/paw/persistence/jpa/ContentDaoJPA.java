@@ -93,8 +93,8 @@ public class ContentDaoJPA implements ContentDao {
     @Override
     @Transactional
     public boolean createContent(String name, String link, Course course, String description, ContentType contentType,
-            Date contentDate, User uploader) {
-        Content content = new Content(null, name, link, description, uploader, uploader.getEmail(),
+            Date contentDate, User uploader, String ownerMail) {
+        Content content = new Content(null, name, link, description, uploader, ownerMail,
                 contentDate, contentType, course);
         em.persist(content);
         em.flush();

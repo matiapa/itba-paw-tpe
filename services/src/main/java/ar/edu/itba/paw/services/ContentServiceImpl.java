@@ -37,8 +37,8 @@ public class ContentServiceImpl implements ContentService{
 
     @Override
     public boolean createContent(String name, String link, Course course, String description, ContentType contentType,
-                                 Date contentDate, User uploader) {
-        return contentDao.createContent(name, link, course, description, contentType, contentDate, uploader);
+                                 Date contentDate, User uploader, String ownerMail) {
+        return contentDao.createContent(name, link, course, description, contentType, contentDate, uploader,ownerMail);
     }
 
     @Override

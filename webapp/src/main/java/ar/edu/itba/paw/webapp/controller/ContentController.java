@@ -123,7 +123,8 @@ public class ContentController {
             form.getDescription(),
             Content.ContentType.valueOf(form.getContentType()),
             form.getContentDate(),
-            loggedUser
+            loggedUser,
+            form.getOwnerMail()
         );
 
         LOGGER.debug("User created content with form {} ",form);
