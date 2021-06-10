@@ -20,12 +20,12 @@
     <jsp:include page="../common/styles.jsp"/>
 
     <link rel="stylesheet" href="<c:url value="/assets/bootstrap/css/bootstrap-select.min.css"/>">
-    <link rel="stylesheet" href="<c:url value="/assets/css/overlay.css"/>"></head>
+    <link rel="stylesheet" href="<c:url value="/assets/css/overlay.css"/>">
 </head>
 
 <body class="bg-gradient-primary" style="background: rgb(2,86,138);">
     <div class="container">
-            <div class="card shadow-lg o-hidden border-0 my-5">
+            <div class="card shadow-lg border-0 my-5">
                 <div class="card-body p-0">
                     <c:url value="/register" var="postFormUrl"/>
 

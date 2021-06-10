@@ -30,7 +30,7 @@
 
                 <div class="container-fluid">
                     <div>
-                        <ul class="nav nav-tabs flex-column" role="tablist">
+                        <ul class="nav nav-tabs flex-row" role="tablist">
                             <c:forEach var="career" items="${careers}">
                                 <c:set var="career" value="${career}" scope="request"/>
                                 <li class="nav-item" role="presentation">
