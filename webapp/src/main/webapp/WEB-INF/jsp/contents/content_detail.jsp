@@ -30,80 +30,73 @@
 
                 <jsp:include page="../common/header.jsp"/>
 
-                <div class="container-fluid">
-                    <div class="col">
-                        <div class="row">
-                            <div id="${content.id}" class="card shadow mb-4" style="margin-top: 32px; width: 100%">
-                                <div class="card-header py-3">
-                                    <h6 class="font-weight-bold m-0">
-                                        <a href="${content.link}"><c:out value="${content.name}"/></a>
-                                    </h6>
-                                </div>
-                                <div class="col mr-2" style="padding: 16px 24px;">
-                                    <c:choose>
-                                        <c:when test="${content.description==null}">
-                                            <p style="padding-top: 0;"><spring:message code="content.noDescription"/></p>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <p style="padding-top: 0;"><c:out value="${content.description}"/></p>
-                                        </c:otherwise>
-                                    </c:choose>
-
-                                    <c:if test="${content.ownerMail!=null}">
-                                        <p><spring:message code="content.ownerMailHelper"/> <c:out value="${content.ownerMail}"/></p>
-                                    </c:if>
-                                    <c:if test="${content.contentDate!=null}">
-                                        <p><spring:message code="content.contentDateHelper"/> <c:out value="${content.contentDate}"/></p>
-                                    </c:if>
-                                    <span class="text-xs">
-                                        <fmt:formatDate type="both" dateStyle = "short" timeStyle = "short" value="${content.uploadDate}" var="uploadDateFormatted"/>
-                                        <c:url var="profileUrl" value="/profile/${content.uploader.id}"/>
-                                        <spring:message code="publishedBy" htmlEscape="false" arguments=
-                                            '<a href="${profileUrl}">${fn:escapeXml(content.uploader.name)}</a>,
-                                            ${uploadDateFormatted}'/>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="container-fluid">
-                    <div class="col">
-                        <div class="row">
+                <div class="container-fluid" style="width: 100%">
+                    <div class="row">
+                        <div id="${content.id}" class="card shadow mb-4" style="margin-top: 32px; width: 100%">
                             <div class="card-header py-3">
                                 <h6 class="font-weight-bold m-0">
-                                    Reviews
+                                    <a href="${content.link}"><c:out value="${content.name}"/></a>
                                 </h6>
                             </div>
-                            <div id="comment_input" class="card shadow mb-4" style="width: 100%">
-                                <c:url value="/contents/${content.id}" var="postFormUrl"/>
-                                <form:form modelAttribute="ContentReviewForm" action="${postFormUrl}" method="post">
-                                    <div class="form-group">
-                                        <spring:message code="content.contentReviewHelper" var="TextAreaHelper"/>
-                                        <form:textarea path="reviewBody" class="form-control"  placeholder="${TextAreaHelper}" aria-label="With textarea"/>
-                                        <form:errors path="reviewBody" cssStyle="color: red" element="p"/>
-                                    </div>
-                                    <button type="submit" class="btn btn-primary"><spring:message code="content.contentReviewSubmitButtonText"/></button>
-                                </form:form>
+                            <div class="col mr-2" style="padding: 16px 24px;">
+                                <c:choose>
+                                    <c:when test="${content.description==null}">
+                                        <p style="padding-top: 0;"><spring:message code="content.noDescription"/></p>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <p style="padding-top: 0;"><c:out value="${content.description}"/></p>
+                                    </c:otherwise>
+                                </c:choose>
+
+                                <c:if test="${content.ownerMail!=null}">
+                                    <p><spring:message code="content.ownerMailHelper"/> <c:out value="${content.ownerMail}"/></p>
+                                </c:if>
+                                <c:if test="${content.contentDate!=null}">
+                                    <p><spring:message code="content.contentDateHelper"/> <c:out value="${content.contentDate}"/></p>
+                                </c:if>
+                                <span class="text-xs">
+                                    <fmt:formatDate type="both" dateStyle = "short" timeStyle = "short" value="${content.uploadDate}" var="uploadDateFormatted"/>
+                                    <c:url var="profileUrl" value="/profile/${content.uploader.id}"/>
+                                    <spring:message code="publishedBy" htmlEscape="false" arguments=
+                                        '<a href="${profileUrl}">${fn:escapeXml(content.uploader.name)}</a>,
+                                        ${uploadDateFormatted}'/>
+                                </span>
                             </div>
                         </div>
                     </div>
+
+                    <div class="row">
+                        <div class="card-header py-3">
+                            <h6 class="font-weight-bold m-0">
+                                Reviews
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="row" style="width: 100%; margin-bottom: 32px">
+                        <c:url value="/contents/${content.id}" var="postFormUrl"/>
+                        <form:form modelAttribute="ContentReviewForm" action="${postFormUrl}" method="post" style="width: 100%">
+                            <div class="form-group" style="width: 100%">
+                                <spring:message code="content.contentReviewHelper" var="TextAreaHelper"/>
+                                <form:textarea path="reviewBody" class="form-control"  placeholder="${TextAreaHelper}" aria-label="With textarea"/>
+                                <form:errors path="reviewBody" cssStyle="color: red" element="p"/>
+                            </div>
+                            <button type="submit" class="btn btn-primary"><spring:message code="content.contentReviewSubmitButtonText"/></button>
+                        </form:form>
+                    </div>
+
+                    <c:forEach var="review" items="${reviews}">
+                        <c:set var="review" value="${review}" scope="request"/>
+                        <div class="row">
+                            <jsp:include page="content_review_card.jsp"/>
+                        </div>
+                    </c:forEach>
                 </div>
 
 
 
 
 
-                <c:forEach var="review" items="${reviews}">
-                    <c:set var="review" value="${review}" scope="request"/>
-                    <div class="container-fluid">
-                        <div class="col">
-                            <div class="row">
-                                <jsp:include page="content_review_card.jsp"/>
-                            </div>
-                        </div>
-                    </div>
-                </c:forEach>
+
 
                 <jsp:include page="../common/paginator.jsp"/>
 
