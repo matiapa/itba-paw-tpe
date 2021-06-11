@@ -20,15 +20,16 @@
                         <p><c:out value="${poll.description}"/></p>
                         <span class="text-xs">
                             <c:if test="${poll.expiryDate != null}">
+                                <fmt:formatDate type="both" dateStyle = "short" timeStyle = "short"
+                                    value="${poll.expiryDate}" var="expiryDateFormatted"/>
                                 <c:choose>
                                     <c:when test="${poll.isExpired}">
-                                        <spring:message code="expiredOn"/>
+                                        <spring:message code="expiredOn" arguments="${expiryDateFormatted}"/>
                                     </c:when>
                                     <c:otherwise>
-                                        <spring:message code="expireOn"/>
+                                        <spring:message code="expireOn" arguments="${expiryDateFormatted}"/>
                                     </c:otherwise>
                                 </c:choose>
-                                <fmt:formatDate type="both" dateStyle = "short" timeStyle = "short" value="${poll.expiryDate}"/>
                             </c:if>
                         </span>
                     </div>

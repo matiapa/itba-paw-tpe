@@ -76,12 +76,7 @@
                                     <div class="col">
                                         <div class="form-group">
                                             <label><strong><spring:message code="joinedOn"/></strong></label>
-                                            <c:if test="${profile.signupDate != null}">
-                                                <p><fmt:formatDate type="date" dateStyle="short" value="${profile.signupDate}"/></p>
-                                            </c:if>
-                                            <c:if test="${profile.signupDate == null}">
-                                                <p><spring:message code="notRegistered"/></p>
-                                            </c:if>
+                                            <p><fmt:formatDate type="date" dateStyle="short" value="${profile.signupDate}"/></p>
                                         </div>
                                     </div>
                                 </div>

@@ -7,7 +7,6 @@
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 
 <jsp:useBean type="java.util.List<ar.edu.itba.paw.models.Course>" scope="request" id="courses"/>
-<jsp:useBean id="profile" scope="request" type="ar.edu.itba.paw.models.User"/>
 
 <div class="modal fade" id="popup">
     <div class="modal-dialog modal-lg">
