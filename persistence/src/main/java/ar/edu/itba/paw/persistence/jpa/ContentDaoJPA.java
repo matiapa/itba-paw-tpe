@@ -6,6 +6,7 @@ import ar.edu.itba.paw.models.ContentReview;
 import ar.edu.itba.paw.models.Course;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.persistence.ContentDao;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -92,14 +93,14 @@ public class ContentDaoJPA implements ContentDao {
 
     @Override
     @Transactional
-    public boolean createContent(String name, String link, Course course, String description, ContentType contentType,
+    public Content createContent(String name, String link, Course course, String description, ContentType contentType,
             Date contentDate, User uploader, String ownerMail) {
         Content content = new Content(null, name, link, description, uploader, ownerMail,
                 contentDate, contentType, course);
         em.persist(content);
         em.flush();
         em.clear();
-        return true;
+        return content;
     }
 
     @Override
@@ -137,12 +138,21 @@ public class ContentDaoJPA implements ContentDao {
     @Override
     public int getReviewsSize(Content content) {
         final TypedQuery<ContentReview> query = em.createQuery(
-                "SELECT c FROM ContentReview c WHERE c.content= :content ", ContentReview.class
+            "SELECT c FROM ContentReview c WHERE c.content= :content ", ContentReview.class
         );
 
         query.setParameter("content", content);
 
         return query.getResultList().size();
+    }
+    @Override
+    @Transactional
+     public List<User> getSubscribedUsers(Content content) {
+        final TypedQuery<User> query = em.createQuery(
+            "SELECT u FROM User u  WHERE u.id = some (SELECT f.user_id from Favourite f where f.course_id = :course_id)", User.class
+        );
+        query.setParameter("course_id", content.getCourse().getId());
+        return query.getResultList();
     }
 
 }

@@ -19,7 +19,7 @@ public interface ContentDao {
 
     int getSize(Course course, ContentType contentType, Date minDate, Date maxDate);
 
-    boolean createContent(String name, String link, Course course, String description, ContentType contentType,
+    Content createContent(String name, String link, Course course, String description, ContentType contentType,
                           Date contentDate, User uploader, String ownerMail);
 
     void delete(Content content);
@@ -29,5 +29,7 @@ public interface ContentDao {
     ContentReview createContentReview(Content content,String review,User uploader);
 
     int getReviewsSize(Content content);
+
+    List<User> getSubscribedUsers(Content content);
 
 }

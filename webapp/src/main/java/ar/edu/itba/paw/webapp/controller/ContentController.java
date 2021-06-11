@@ -4,20 +4,26 @@ import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import ar.edu.itba.paw.models.*;
+import ar.edu.itba.paw.webapp.exceptions.BadRequestException;
 import ar.edu.itba.paw.webapp.exceptions.ResourceNotFoundException;
 import ar.edu.itba.paw.webapp.form.AnnounceForm;
 import ar.edu.itba.paw.webapp.form.ContentReviewForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -32,6 +38,7 @@ import ar.edu.itba.paw.services.CourseService;
 import ar.edu.itba.paw.services.SgaService;
 import ar.edu.itba.paw.webapp.controller.common.CommonFilters;
 import ar.edu.itba.paw.webapp.form.ContentForm;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 
 @Controller
@@ -102,10 +109,10 @@ public class ContentController {
 
     @RequestMapping(value = "/contents", method = POST)
     public ModelAndView create(
-        @Valid @ModelAttribute("createForm") final ContentForm form,
-        final BindingResult errors,
+        HttpServletRequest request,
+        @Valid @ModelAttribute("createForm") final ContentForm form, final BindingResult errors,
         @ModelAttribute("user") User loggedUser
-    ) throws URISyntaxException {
+    ) throws URISyntaxException, IOException {
 
 
         if(errors.hasErrors()){
@@ -116,6 +123,9 @@ public class ContentController {
 
         // TODO: Change form content type to be enum
 
+        String websiteUrl = ServletUriComponentsBuilder.fromRequestUri(request).replacePath(null).build()
+                .toString() + request.getContextPath();
+
         contentService.createContent(
             form.getName(),
             form.getLink(),
@@ -124,8 +134,12 @@ public class ContentController {
             Content.ContentType.valueOf(form.getContentType()),
             form.getContentDate(),
             loggedUser,
-            form.getOwnerMail()
+            form.getOwnerMail().isEmpty()?null: form.getOwnerMail(),
+            websiteUrl,
+            LocaleContextHolder.getLocale()
         );
+
+
 
         LOGGER.debug("User created content with form {} ",form);
 
