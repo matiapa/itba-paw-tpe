@@ -27,7 +27,7 @@ public class StatisticsDaoJPA implements StatisticsDao {
 
     @Override
     public Map<Entity, Integer> newContributions(User loggedUser) {
-        List<Object[]> res = em.createNativeQuery("SELECT * FROM statistics.new_contribs(:forUser)")
+        List<Object[]> res = em.createNativeQuery("SELECT * FROM new_contribs(:forUser)")
             .setParameter("forUser", loggedUser.getId())
             .getResultList();
 
@@ -40,7 +40,7 @@ public class StatisticsDaoJPA implements StatisticsDao {
 
     @Override
     public Map<Career, Integer> contributionsByCareer() {
-        List<Object[]> res = em.createNativeQuery("SELECT code, contribs FROM statistics.career_contribs")
+        List<Object[]> res = em.createNativeQuery("SELECT code, contribs FROM career_contribs")
             .getResultList();
 
         Map<Career, Integer> map = new HashMap<>();
@@ -52,7 +52,7 @@ public class StatisticsDaoJPA implements StatisticsDao {
 
     @Override
     public Map<Date, Integer> contributionsByDate() {
-        List<Object[]> res = em.createNativeQuery("SELECT date, contribs FROM statistics.daily_contribs")
+        List<Object[]> res = em.createNativeQuery("SELECT date, contribs FROM daily_contribs")
                 .getResultList();
 
         Map<Date, Integer> map = new HashMap<>();
@@ -65,7 +65,7 @@ public class StatisticsDaoJPA implements StatisticsDao {
 
     @Override
     public Map<User, Integer> topUsersByContributions() {
-        List<Object[]> res = em.createNativeQuery("SELECT id, contribs FROM statistics.top_users_contribs")
+        List<Object[]> res = em.createNativeQuery("SELECT id, contribs FROM top_users_contribs")
             .getResultList();
 
         Map<User, Integer> map = new HashMap<>();
@@ -77,7 +77,7 @@ public class StatisticsDaoJPA implements StatisticsDao {
 
     @Override
     public Map<Course, Integer> topCoursesByContributions() {
-        List<Object[]> res = em.createNativeQuery("SELECT id, contribs FROM statistics.top_courses_contribs")
+        List<Object[]> res = em.createNativeQuery("SELECT id, contribs FROM top_courses_contribs")
             .getResultList();
 
         Map<Course, Integer> map = new HashMap<>();
