@@ -7,7 +7,7 @@ import javax.validation.constraints.Size;
 public class ContentReviewForm {
 
     @NotNull
-    @Size(min = 1, max = 500)
+    @Size(min = 4, max = 500)
     private String reviewBody;
 
     public String getReviewBody() {
