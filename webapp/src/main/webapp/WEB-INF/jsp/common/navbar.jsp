@@ -59,6 +59,13 @@
                 </a>
             </li>
 
+            <li class="nav-item">
+                <a class="nav-link" href="<c:url value="/profile"/>">
+                    <i class="fas fa-user-friends"></i>
+                    <span><spring:message code="people"/></span>
+                </a>
+            </li>
+
             <c:if test="${canReadStats}">
                 <li class="nav-item">
                     <hr class="sidebar-divider">

@@ -31,6 +31,8 @@ import ar.edu.itba.paw.webapp.exceptions.ResourceNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.List;
+
 
 @Controller
 public class ProfileController {
@@ -64,6 +66,27 @@ public class ProfileController {
 
 
     /* -------------------- OTHER'S PROFILE METHODS -------------------- */
+
+    @RequestMapping(value = "/profile", method = GET)
+    public ModelAndView getProfiles(
+        @RequestParam(name="personId", required=false) Integer personId,
+        @ModelAttribute("user") User loggedUser
+    ) {
+        if (personId != null) {
+            return new ModelAndView("redirect:/profile/"+personId);
+        }
+
+        final ModelAndView mav = new ModelAndView("profile/profile_list");
+
+        List<User> users = userService.findAll();
+
+        users.forEach(System.out::println);
+
+        mav.addObject("profiles", users);
+
+        return mav;
+    }
+
 
     @RequestMapping(value = "/profile/{id:[0-9]+}", method = GET)
     public ModelAndView getProfileById(

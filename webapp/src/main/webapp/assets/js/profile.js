@@ -24,9 +24,10 @@ $("#cancelNewPicture").click(() => {
 
     $("#submitNewPicture")[0].hidden = true
     $("#cancelNewPicture")[0].hidden = true
-})
+});
 
-// $("#submitChatGroup").click(function(){
-//     $("div.spanner").addClass("show");
-//     $("div.overlay").addClass("show");
-// });
+$("#personId").change((event) => {
+    console.log('OK')
+    $(this).find('select:not(:has(option:selected[value!=""]))').attr('name', '');
+    $("#personSearchForm")[0].submit()
+});
