@@ -18,6 +18,8 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -236,6 +238,7 @@ public class PollController {
     }
 
 
+    @Secured("ROLE_POLL.DELETE")
     @RequestMapping(value = "/polls/{id}", method = DELETE)
     public String delete(
         @PathVariable(value="id") int id, HttpServletRequest request,
@@ -250,6 +253,7 @@ public class PollController {
         return "redirect:"+ request.getHeader("Referer");
     }
 
+    @Secured("ROLE_POLL.DELETE")
     @RequestMapping(value = "/polls/{id}/delete", method = POST)
     public String deleteWithPost(
         @PathVariable(value="id") int id, HttpServletRequest request,

@@ -16,6 +16,7 @@ import ar.edu.itba.paw.models.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -132,6 +133,7 @@ public class ChatGroupController {
     }
 
 
+    @Secured("ROLE_CHAT_GROUP.DELETE")
     @RequestMapping(value = "/chats/{id}", method = DELETE)
     public String delete(
         @PathVariable(value="id") Integer id, HttpServletRequest request,
@@ -146,6 +148,7 @@ public class ChatGroupController {
     }
 
 
+    @Secured("ROLE_CHAT_GROUP.DELETE")
     @RequestMapping(value = "/chats/{id}/delete", method = POST)
     public String deleteWithPost(
             @PathVariable(value="id") Integer id, HttpServletRequest request,

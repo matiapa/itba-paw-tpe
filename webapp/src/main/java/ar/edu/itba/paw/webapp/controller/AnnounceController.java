@@ -17,6 +17,7 @@ import ar.edu.itba.paw.models.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -108,7 +109,8 @@ public class AnnounceController {
         return mav;
     }
 
-
+    
+    @Secured("ROLE_ANNOUNCEMENT.CREATE")
     @RequestMapping(value = "/announcements", method = POST)
     public ModelAndView create(
         @Valid @ModelAttribute("createForm") final AnnounceForm form,
@@ -160,6 +162,7 @@ public class AnnounceController {
     }
 
 
+    @Secured("ROLE_ANNOUNCEMENT.DELETE")
     @RequestMapping(value = "/announcements/{id}", method = DELETE)
     public String delete(
         @PathVariable(value="id") int id, HttpServletRequest request,
@@ -175,6 +178,7 @@ public class AnnounceController {
         return "redirect:"+ request.getHeader("Referer");
     }
 
+    @Secured("ROLE_ANNOUNCEMENT.DELETE")
     @RequestMapping(value = "/announcements/{id}/delete", method = POST)
     public String deleteWithPost(
         @PathVariable(value="id") int id, HttpServletRequest request,

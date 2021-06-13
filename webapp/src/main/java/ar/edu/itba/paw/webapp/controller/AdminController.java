@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,6 +33,7 @@ public class AdminController {
 
     private static final Logger LOGGER= LoggerFactory.getLogger(AdminController.class);
 
+    @Secured("ROLE_STATISTIC.READ")
     @RequestMapping(value = "/admin/statistics", method = GET)
     public ModelAndView statistics(
         @ModelAttribute("user") User loggedUser
