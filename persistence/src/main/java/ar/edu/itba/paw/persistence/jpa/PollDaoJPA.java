@@ -208,6 +208,7 @@ public class PollDaoJPA implements PollDao {
         em.merge(poll);
 	}
 
+    @Transactional
 	@Override
 	public boolean hasVoted(Poll poll, User user) {
 		return poll.getVotedBy().contains(user);
