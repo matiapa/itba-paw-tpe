@@ -1,12 +1,11 @@
 package ar.edu.itba.paw;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import javax.sql.DataSource;
 
+import ar.edu.itba.paw.models.*;
+import ar.edu.itba.paw.persistence.jpa.PollDaoJPA;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,20 +18,17 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
-import ar.edu.itba.paw.models.EntityTarget;
-import ar.edu.itba.paw.models.Poll;
 import ar.edu.itba.paw.models.Poll.PollFormat;
 import ar.edu.itba.paw.models.Poll.PollOption;
 import ar.edu.itba.paw.models.Poll.PollState;
-import ar.edu.itba.paw.persistence.PollDaoJdbc;
 
 @Rollback
 @Sql("classpath:populators/poll_populate.sql")
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
-public class PollDaoJdbcTest {
+public class PollDaoJPATest {
     @Autowired
-    private PollDaoJdbc pollDaoJdbc;
+    private PollDaoJPA pollDao;
 
     @Autowired private DataSource ds;
 
@@ -46,37 +42,46 @@ public class PollDaoJdbcTest {
     @Test
     public void testFindGeneral()
     {
-        List<Poll> general = pollDaoJdbc.findGeneral(null, null, 0, 7);
+        List<Poll> general = pollDao.findGeneral(null, null, 0, 7);
         Assert.assertEquals(4, general.size());
     }
 
     @Test
     public void testfindByCareer()
     {
-        List<Poll> polls = pollDaoJdbc.findByCareer("S", null, null, 0, 7);
+        Career career = new Career();
+        career.setCode("S");
+
+        List<Poll> polls = pollDao.findByCareer(career, null, null, 0, 7);
         Assert.assertEquals(1, polls.size());
     }
 
     @Test
     public void testFindByCourse()
     {
-        List<Poll> polls = pollDaoJdbc.findByCourse("1.1", null, null, 0, 7);
+        Course course = new Course();
+        course.setId("1.1");
+        List<Poll> polls = pollDao.findByCourse(course, null, null, 0, 7);
         Assert.assertEquals(2, polls.size());
     }
 
     @Test
     public void testGetSize()
     {
-        Assert.assertEquals(3, pollDaoJdbc.getSize(EntityTarget.general, null, PollFormat.multiple_choice, PollState.open));
-        Assert.assertEquals(1, pollDaoJdbc.getSize(EntityTarget.career, "S", PollFormat.multiple_choice, PollState.open));
-        Assert.assertEquals(2, pollDaoJdbc.getSize(EntityTarget.course, "1.1", PollFormat.multiple_choice, PollState.open));
-        Assert.assertEquals(1, pollDaoJdbc.getSize(EntityTarget.general, null, PollFormat.multiple_choice, PollState.closed));
+        Career career = new Career();
+        career.setCode("S");
+        Course course = new Course();
+        course.setId("1.1");
+
+        Assert.assertEquals(3, pollDao.getCount(EntityTarget.general, PollFormat.multiple_choice, PollState.open));
+        Assert.assertEquals(1, pollDao.getCount(EntityTarget.career, career, PollFormat.multiple_choice, PollState.open));
+        Assert.assertEquals(2, pollDao.getCount(EntityTarget.course, course, PollFormat.multiple_choice, PollState.open));
     }
 
     @Test
     public void testFindById()
     {
-        Optional<Poll> opt = pollDaoJdbc.findById(7);
+        Optional<Poll> opt = pollDao.findById(7);
         Assert.assertTrue(opt.isPresent());
 
         Poll poll = opt.get();
@@ -104,7 +109,15 @@ public class PollDaoJdbcTest {
     @Test
     public void testGetVotes()
     {
-        Map<PollOption,Integer> votes = pollDaoJdbc.getVotes(7);
+        Career career = new Career();
+        career.setCode("S");
+        Course course = new Course();
+        course.setId("1.1");
+        User user = new User(0, "John", "Doe", "jd@gmail.com", "12345678", career);
+
+        Poll poll = new Poll("poll", "description", PollFormat.multiple_choice, career, course, null, user);
+
+        Map<PollOption,Integer> votes = pollDao.getVotes(poll);
         for(PollOption option : votes.keySet()) {
             switch(option.getId()) {
                 case 1:
@@ -125,7 +138,13 @@ public class PollDaoJdbcTest {
     @Test
     public void testAddPoll()
     {
-        pollDaoJdbc.addPoll("Name 8", "Description 8", PollFormat.multiple_choice, null, null, null, null, Arrays.asList("Option 1", "Option 2"));
+        Career career = new Career();
+        career.setCode("S");
+        Course course = new Course();
+        course.setId("1.1");
+        User user = new User(0, "John", "Doe", "jd@gmail.com", "12345678", career);
+
+        pollDao.addPoll("Name 8", "Description 8", PollFormat.multiple_choice, career, null, user, Arrays.asList("Option 1", "Option 2"));
 
         int count = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "poll", "name='Name 8'");
 
@@ -135,10 +154,19 @@ public class PollDaoJdbcTest {
     @Test
     public void testVoteChoicePoll()
     {
+        Career career = new Career();
+        career.setCode("S");
+        Course course = new Course();
+        course.setId("1.1");
+        User user = new User(0, "John", "Doe", "jd@gmail.com", "12345678", career);
+
+        Poll poll = new Poll("poll", "description", PollFormat.multiple_choice, career, course, null, user);
+        PollOption option = new PollOption(poll, "option");
+
         int count = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "poll_submission", "poll_id=7 AND option_id=3");
         Assert.assertEquals(0, count);
         
-        pollDaoJdbc.voteChoicePoll(7, 3, 4);
+        pollDao.voteChoicePoll(poll, option, user);
         count = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "poll_submission", "poll_id=7 AND option_id=3");
         Assert.assertEquals(1, count);
     }
@@ -146,16 +174,35 @@ public class PollDaoJdbcTest {
     @Test
     public void testHasVoted()
     {
-        Assert.assertTrue(pollDaoJdbc.hasVoted(7, 1));
-        Assert.assertTrue(pollDaoJdbc.hasVoted(7, 2));
-        Assert.assertFalse(pollDaoJdbc.hasVoted(7, 3));
+        Career career = new Career();
+        career.setCode("S");
+        Course course = new Course();
+        course.setId("1.1");
+        User user1 = new User(0, "John1", "Doe", "jd@gmail.com", "12345678", career);
+        User user2 = new User(1, "John2", "Doe", "jd@gmail.com", "12345678", career);
+        User user3 = new User(2, "John3", "Doe", "jd@gmail.com", "12345678", career);
+
+        Poll poll = new Poll("poll", "description", PollFormat.multiple_choice, career, course, null, user1);
+
+        Assert.assertTrue(pollDao.hasVoted(poll, user1));
+
+        Assert.assertTrue(pollDao.hasVoted(poll, user2));
+        Assert.assertFalse(pollDao.hasVoted(poll, user3));
     }
 
     @Test
     public void testDelete()
     {
-        Assert.assertTrue(pollDaoJdbc.findById(1).isPresent());
-        pollDaoJdbc.delete(1);
-        Assert.assertFalse(pollDaoJdbc.findById(1).isPresent());
+        Career career = new Career();
+        career.setCode("S");
+        Course course = new Course();
+        course.setId("1.1");
+        User user = new User(0, "John1", "Doe", "jd@gmail.com", "12345678", career);
+
+        Poll poll = new Poll("poll", "description", PollFormat.multiple_choice, career, course, null, user);
+
+        Assert.assertTrue(pollDao.findById(1).isPresent());
+        pollDao.delete(poll);
+        Assert.assertFalse(pollDao.findById(1).isPresent());
     }
 }

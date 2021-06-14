@@ -76,9 +76,9 @@ public class Poll {
     )
     private List<User> votedBy;
 
-    private Poll() {}
+    public Poll() {}
     
-    private Poll(String name, String description, PollFormat format, Career career, Course course, Date expiryDate, User submittedBy) {
+    public Poll(String name, String description, PollFormat format, Career career, Course course, Date expiryDate, User submittedBy) {
         this.name = name;
         this.description = description;
         this.format = format;
