@@ -18,6 +18,8 @@ import java.io.FileInputStream;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
+import javax.annotation.Resource;
+
 @Configuration
 @EnableWebSecurity
 @ComponentScan("ar.edu.itba.paw.webapp.auth")
@@ -29,6 +31,9 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Autowired private UserDetailsServiceImpl userDetailsService;
 
     @Autowired private SuccessHandler successHandler;
+
+    @Resource(name = "appProperties")
+    private Properties appProps;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -42,12 +47,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
-        String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath();
-        String appConfigPath = rootPath + "auth.properties";
-
-        Properties appProps = new Properties();
-        appProps.load(new FileInputStream(appConfigPath));
-
         http.sessionManagement()
            .invalidSessionUrl("/login")
 
