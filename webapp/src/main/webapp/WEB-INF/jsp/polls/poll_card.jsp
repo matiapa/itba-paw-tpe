@@ -34,8 +34,8 @@
                         </span>
                     </div>
                     <div class="col-auto">
-                        <c:if test="${canDeletePoll}%>">
-                            <c:url var="url" value="/polls/${poll.id}/delete"/>
+                        <c:if test="${canDeletePoll}">
+                        <c:url var="url" value="/polls/${poll.id}/delete"/>
                             <form action="${url}" method="post">
                                 <button type="submit" class="btn btn-icon" style="color:red">
                                     <i class="material-icons">delete</i>
