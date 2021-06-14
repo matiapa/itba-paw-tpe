@@ -4,7 +4,7 @@ import ar.edu.itba.paw.models.Career;
 import ar.edu.itba.paw.models.Course;
 import ar.edu.itba.paw.models.Entity;
 import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.persistence.StatisticsDaoJdbc;
+import ar.edu.itba.paw.persistence.jpa.StatisticsDaoJPA;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,17 +22,22 @@ import java.text.SimpleDateFormat;
 @Sql("classpath:populators/statistics_populate.sql")
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
-public class StatisticsDaoJdbcTest {
+public class StatisticsDaoJPATest {
 
-    private final static User LOGGED_USER = new User(1, null, null, null, null,
-    null, null, null, null);
+
 
     @Autowired
-    private StatisticsDaoJdbc statisticsDaoJdbc;
+    private StatisticsDaoJPA statisticsDao;
 
     @Test
     public void testNewContributions(){
-        Map<Entity, Integer> newContribs = statisticsDaoJdbc.newContributions(LOGGED_USER);
+        Career career = new Career();
+        career.setCode("S");
+        Course course = new Course();
+        course.setId("1.1");
+        User user = new User(0, "John", "Doe", "jd@gmail.com", "12345678", career);
+
+        Map<Entity, Integer> newContribs = statisticsDao.newContributions(user);
 
         Map<Entity, Integer> expectedNewContribs = new HashMap<Entity, Integer>(){{
             put(Entity.announcement, 2); put(Entity.chat_group, 2);
@@ -44,7 +49,7 @@ public class StatisticsDaoJdbcTest {
 
     @Test
     public void testContributionsByCareer(){
-        Map<Career, Integer> careerContribs = statisticsDaoJdbc.contributionsByCareer();
+        Map<Career, Integer> careerContribs = statisticsDao.contributionsByCareer();
 
         Map<String, Integer> expectedCareerContribs = new HashMap<String, Integer>(){{
             put("A", 1); put("B", 2); put("C", 3);
@@ -55,7 +60,7 @@ public class StatisticsDaoJdbcTest {
 
     @Test
     public void testContributionsByDate(){
-        Map<Date, Integer> dateContribs = statisticsDaoJdbc.contributionsByDate();
+        Map<Date, Integer> dateContribs = statisticsDao.contributionsByDate();
 
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -68,7 +73,7 @@ public class StatisticsDaoJdbcTest {
 
     @Test
     public void topUsersByContributions(){
-        Map<User, Integer> userContribs = statisticsDaoJdbc.topUsersByContributions();
+        Map<User, Integer> userContribs = statisticsDao.topUsersByContributions();
 
         Map<Integer, Integer> expectedUserContribs = new HashMap<Integer, Integer>(){{
             put(1, 2); put(2, 4); put(3, 6);
@@ -79,7 +84,7 @@ public class StatisticsDaoJdbcTest {
 
     @Test
     public void topCoursesByContributions(){
-        Map<Course, Integer> courseContribs = statisticsDaoJdbc.topCoursesByContributions();
+        Map<Course, Integer> courseContribs = statisticsDao.topCoursesByContributions();
 
         Map<String, Integer> expectedCourseContribs = new HashMap<String, Integer>(){{
             put("1.1", 1); put("1.2", 2); put("1.3", 3);
