@@ -28,7 +28,6 @@ public class User implements Serializable, UserData {
     @Column
     protected String password;
 
-    @Lob
     @Column(name = "picture")
     private byte[] picture;
 
