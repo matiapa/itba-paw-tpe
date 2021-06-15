@@ -40,6 +40,9 @@ public class EmailServiceImpl implements EmailService{
     @Autowired
     private UserDao userDao;
 
+    @Resource(name = "appProperties")
+    private Properties appProps;
+
     @Resource
     private MessageSource messageSource;
 
@@ -90,12 +93,6 @@ public class EmailServiceImpl implements EmailService{
 
     private void sendHTMLMessage(String to, String subject, String text) throws IOException {
         MimeMessage message= mailSender.createMimeMessage();
-
-        String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath();
-        String appConfigPath = rootPath + "auth.properties";
-
-        Properties appProps = new Properties();
-        appProps.load(new FileInputStream(appConfigPath));
 
         try{
             MimeMessageHelper helper= new MimeMessageHelper(message,true);

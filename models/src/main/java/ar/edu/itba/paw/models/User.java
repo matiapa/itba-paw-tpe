@@ -28,7 +28,6 @@ public class User implements Serializable, UserData {
     @Column
     protected String password;
 
-    @Lob
     @Column(name = "picture")
     private byte[] picture;
 
@@ -70,6 +69,7 @@ public class User implements Serializable, UserData {
     public User(){}
 
 
+    @Deprecated
     public boolean can(String action, String entity){
         return getPermissions().contains(new Permission(
             Permission.Action.valueOf(action), Entity.valueOf(entity)

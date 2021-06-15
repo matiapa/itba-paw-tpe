@@ -33,20 +33,24 @@
                             </c:if>
                         </span>
                     </div>
-                    <div class="col-auto">
-                        <c:if test="${canDeletePoll}%>">
+                    <div class="col col-md-auto p-1">
+                        <c:if test="${canDeletePoll}">
                             <c:url var="url" value="/polls/${poll.id}/delete"/>
                             <form action="${url}" method="post">
-                                <button type="submit" class="btn btn-icon" style="color:red">
+                                <button type="submit" class="btn btn-icon"
+                                    data-toggle="tooltip" title='<spring:message code="poll.delete"/>'>
                                     <i class="material-icons">delete</i>
                                 </button>
                             </form>
                         </c:if>
                     </div>
 
-                        <a href="<c:url value="/polls/${poll.id}"/>" class="btn btn-icon stretched-link" type="button">
+                    <div class="col col-md-auto p-1">
+                        <a href='<c:url value="/polls/${poll.id}"/>' class="btn btn-icon" type="button"
+                            data-toggle="tooltip" title='<spring:message code="poll.view"/>'>
                             <i class="material-icons">keyboard_arrow_right</i>
                         </a>
+                    </div>
 
                 </div>
             </div>

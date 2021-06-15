@@ -27,8 +27,8 @@
         <c:when test="${worked}">
           <h3><spring:message code="register.validate_email.SuccessTitle"/></h3>
           <h5 class="mt-3"><spring:message code="register.validate_email.SuccessMessage"/></h5>
-          <a class="mt-3" href="<c:url value="/login"/>">
-            <h5><spring:message code="register.validate_email.GoToLoginButton"/></h5>
+          <a class="mt-3" href='<c:url value="/" />'>
+            <h5><spring:message code="register.validate_email.GoToHomeButton"/></h5>
           </a>
         </c:when>
         <c:otherwise>
