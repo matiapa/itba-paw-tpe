@@ -84,7 +84,7 @@ public class UserDaoJPATest {
 
         Optional<Integer> code = userDao.getVerificationCode(user);
 
-        Assert.assertTrue(userDao.verifyEmail(user, code.isPresent()? code.get() : null));
+        Assert.assertTrue(userDao.verifyEmail(user, code.isPresent()? code.get() : 0));
     }
 /*          Ya no existe el metodo
     @Test

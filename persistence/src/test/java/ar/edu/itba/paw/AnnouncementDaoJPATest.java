@@ -28,6 +28,7 @@ public class AnnouncementDaoJPATest {
 
     @Autowired private DataSource ds;
 
+
     private JdbcTemplate jdbcTemplate;
 
     @Before
@@ -51,7 +52,7 @@ public class AnnouncementDaoJPATest {
 
 
     @Test
-    public void testFindByCarrer() {
+    public void testFindByCareer() {
         Career career = new Career();
         career.setCode("A");
         User user = new User(0, "John", "Doe", "jd@gmail.com", "12345678", career);
