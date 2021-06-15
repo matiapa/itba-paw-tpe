@@ -7,6 +7,8 @@ import javax.sql.DataSource;
 
 import ar.edu.itba.paw.models.Career;
 import ar.edu.itba.paw.models.Course;
+import ar.edu.itba.paw.persistence.jpa.CareerDaoJPA;
+import ar.edu.itba.paw.persistence.jpa.CourseDaoJPA;
 import ar.edu.itba.paw.persistence.jpa.UserDaoJPA;
 import org.junit.Assert;
 import org.junit.Before;
@@ -29,6 +31,8 @@ import ar.edu.itba.paw.models.User;
 public class UserDaoJPATest {
 
     @Autowired private UserDaoJPA userDao;
+    @Autowired private CareerDaoJPA careerDao;
+    @Autowired private CourseDaoJPA courseDao;
     @Autowired private DataSource ds;
 
     private JdbcTemplate jdbcTemplate;
@@ -72,13 +76,9 @@ public class UserDaoJPATest {
     @Test
     public void testRegisterUser()
     {
-        Career career = new Career();
-        career.setCode("S");
-        Course course = new Course();
-        course.setId("1.1");
-        User user = new User(0, "John", "Doe", "jd@gmail.com", "12345678", career);
-
-        userDao.registerUser(3, "User 3", "Surname", "usr3@test.com", "password", career, Arrays.asList(course));
+        Optional<Career> career = careerDao.findByCode("S");
+        Optional<Course> course = courseDao.findById("1.1");
+        User user =  userDao.registerUser(3, "User 3", "Surname", "usr3@test.com", "password", career.get(), Arrays.asList(course.get()));
         int count = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "users", "id=3");
         Assert.assertEquals(1, count);
 

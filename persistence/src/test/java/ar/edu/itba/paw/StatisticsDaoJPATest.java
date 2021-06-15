@@ -4,7 +4,10 @@ import ar.edu.itba.paw.models.Career;
 import ar.edu.itba.paw.models.Course;
 import ar.edu.itba.paw.models.Entity;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.persistence.jpa.CareerDaoJPA;
+import ar.edu.itba.paw.persistence.jpa.CourseDaoJPA;
 import ar.edu.itba.paw.persistence.jpa.StatisticsDaoJPA;
+import ar.edu.itba.paw.persistence.jpa.UserDaoJPA;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,6 +17,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.persistence.AssociationOverride;
 import java.util.*;
 
 import java.text.SimpleDateFormat;
@@ -29,15 +33,14 @@ public class StatisticsDaoJPATest {
     @Autowired
     private StatisticsDaoJPA statisticsDao;
 
+    @Autowired private CareerDaoJPA careerDao;
+    @Autowired private CourseDaoJPA courseDao;
+    @Autowired private UserDaoJPA userDao;
     @Test
     public void testNewContributions(){
-        Career career = new Career();
-        career.setCode("S");
-        Course course = new Course();
-        course.setId("1.1");
-        User user = new User(0, "John", "Doe", "jd@gmail.com", "12345678", career);
 
-        Map<Entity, Integer> newContribs = statisticsDao.newContributions(user);
+        Optional<User> user = userDao.findById(0);
+        Map<Entity, Integer> newContribs = statisticsDao.newContributions(user.get());
 
         Map<Entity, Integer> expectedNewContribs = new HashMap<Entity, Integer>(){{
             put(Entity.announcement, 2); put(Entity.chat_group, 2);

@@ -2,6 +2,9 @@ package ar.edu.itba.paw;
 
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.persistence.jpa.AnnouncementDaoJPA;
+import ar.edu.itba.paw.persistence.jpa.CareerDaoJPA;
+import ar.edu.itba.paw.persistence.jpa.CourseDaoJPA;
+import ar.edu.itba.paw.persistence.jpa.UserDaoJPA;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,6 +29,10 @@ public class AnnouncementDaoJPATest {
 
     @Autowired private AnnouncementDaoJPA announcementDao;
 
+    @Autowired private UserDaoJPA userDao;
+    @Autowired private CareerDaoJPA careerDao;
+    @Autowired private CourseDaoJPA courseDao;
+
     @Autowired private DataSource ds;
 
 
@@ -38,14 +45,9 @@ public class AnnouncementDaoJPATest {
 
         @Test
     public void testFindGeneral() {
-        Career career = new Career();
-        career.setCode("A");
-        User user = new User(0, "John", "Doe", "jd@gmail.com", "12345678", career);
-
-        List<Announcement> announcements = announcementDao.findGeneral(user,1, 10);
+        List<Announcement> announcements = announcementDao.findGeneral(null,0, 10);
 
         Assert.assertEquals(3, announcements.size());
-
         Assert.assertEquals(1, Optional.ofNullable(announcements.get(0).getId()));
     }
 
@@ -53,11 +55,8 @@ public class AnnouncementDaoJPATest {
 
     @Test
     public void testFindByCareer() {
-        Career career = new Career();
-        career.setCode("A");
-        User user = new User(0, "John", "Doe", "jd@gmail.com", "12345678", career);
-
-        List<Announcement> announcements = announcementDao.findByCareer(career, user, 1, 0);
+        Optional<Career> career = careerDao.findByCode("S");
+        List<Announcement> announcements = announcementDao.findByCareer(career.isPresent()? career.get() : null, null, 1, 0);
 
         Assert.assertEquals(1, announcements.size());
         Assert.assertEquals(2, Optional.ofNullable(announcements.get(0).getId()));
@@ -65,49 +64,48 @@ public class AnnouncementDaoJPATest {
 
     @Test
     public void testFindByCourse() {
-        Course course = new Course();
-        course.setId("1.1");
-        Career career = new Career();
-        career.setCode("A");
-        User user = new User(0, "John", "Doe", "jd@gmail.com", "12345678", career);
-
-        List<Announcement> announcements = announcementDao.findByCourse(course, user, 0, 0);
+        Optional<Course> course = courseDao.findById("1.1");
+        List<Announcement> announcements = announcementDao.findByCourse(course.isPresent()? course.get() : null, null, 0, 0);
 
         Assert.assertEquals(1, announcements.size());
         Assert.assertEquals(3, Optional.ofNullable(announcements.get(0).getId()));
     }
 
     @Test
+    public void testFindRelevant() {
+        Optional<User> user = userDao.findById(0);
+        List<Announcement> announcements = announcementDao.findRelevant(user.isPresent()? user.get() : null, 1, 10);
+        //TODO AGREGAR RELEVANT AL POPULATOR
+        Assert.assertEquals(1, announcements.size());
+    }
+    @Test
     public void testPagination() {
-        Career career = new Career();
-        career.setCode("A");
-        User user = new User(0, "John", "Doe", "jd@gmail.com", "12345678", career);
 
-        int totalElements = announcementDao.getSize(EntityTarget.general, null, user);
+        int totalElements = announcementDao.getSize(EntityTarget.general, null, null);
         Assert.assertEquals(3, totalElements);
 
-        List<Announcement> announcements = announcementDao.findGeneral(user,1, 0);
+        List<Announcement> announcements = announcementDao.findGeneral(null,1, 0);
         Assert.assertEquals(2, announcements.size());
         Assert.assertEquals(4, Optional.ofNullable(announcements.get(1).getId()));
 
-        announcements = announcementDao.findGeneral(user,1, 2);
+        announcements = announcementDao.findGeneral(null,1, 2);
         Assert.assertEquals(1, announcements.size());
         Assert.assertEquals(5, Optional.ofNullable(announcements.get(0).getId()));
     }
 
     @Test
-    public void testShowSeen() {            //TODO
-        Career career = new Career();
-        career.setCode("A");
-        User user = new User(0, "John", "Doe", "jd@gmail.com", "12345678", career);
-
+    public void testShowSeen() {
+        Optional<User> opUser = userDao.findById(0);
+        User user = null;
+        if (opUser.isPresent()){
+            user = opUser.get();
+        }
         List<Announcement> announcements = announcementDao.findGeneral(user,1, 0);
         Assert.assertEquals(3, announcements.size());
         Assert.assertEquals(1, Optional.ofNullable(announcements.get(0).getId()));
 
-        announcements = announcementDao.findGeneral(user,1, 0);
-        Assert.assertEquals(4, announcements.size());
-        Assert.assertEquals(6, Optional.ofNullable(announcements.get(3).getId()));
+        announcementDao.markSeen(announcements.get(0), user);
+        Assert.assertTrue(announcements.get(0).getSeenBy().get(0).getName().equals(user.getName()));
     }
 
     @Test
@@ -123,12 +121,11 @@ public class AnnouncementDaoJPATest {
 
     @Test
     public void testCreate() {
-        Career career = new Career();
-        career.setCode("A");
-        User user = new User(0, "John", "Doe", "jd@gmail.com", "12345678", career);
+        Optional<User> user = userDao.findById(0);
+
 
         Announcement announcement = announcementDao.create("Test", "Test", "Test",
-        null, null, null, user);
+        null, null, null, user.isPresent()? user.get() : null);
 
         int count = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "announcement",
             String.format("id=%d", announcement.getId()));

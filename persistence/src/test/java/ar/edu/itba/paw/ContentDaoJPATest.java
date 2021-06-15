@@ -5,6 +5,8 @@ import ar.edu.itba.paw.models.Content;
 import ar.edu.itba.paw.models.Course;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.persistence.jpa.ContentDaoJPA;
+import ar.edu.itba.paw.persistence.jpa.CourseDaoJPA;
+import ar.edu.itba.paw.persistence.jpa.UserDaoJPA;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,53 +29,48 @@ import java.util.Optional;
 public class ContentDaoJPATest {
 
     @Autowired private ContentDaoJPA contentDao;
+
+    @Autowired private CourseDaoJPA courseDao;
+    @Autowired private UserDaoJPA userDao;
+
     @Test
     public void findByCourseTest() {
-        Course course = new Course();
-        course.setId("1.1");
+        Optional<Course> course = courseDao.findById("1.1");
 
-        List<Content> contentList = contentDao.findByCourse(course, Content.ContentType.miscellaneous,null,null,0,10);
+        List<Content> contentList = contentDao.findByCourse(course.isPresent()? course.get() : null, Content.ContentType.miscellaneous,null,null,0,10);
         Assert.assertEquals(2,contentList.size());
         Assert.assertEquals(1, Optional.ofNullable(contentList.get(0).getId()));
         Assert.assertEquals(2, Optional.ofNullable(contentList.get(1).getId()));
     }
     @Test
     public void deleteTest(){
-        Course course = new Course();
-        course.setId("1.1");
+        Optional<Course> course = courseDao.findById("1.1");
 
-        List<Content> contentList = contentDao.findByCourse(course, Content.ContentType.miscellaneous,null,null,0,10);
+        List<Content> contentList = contentDao.findByCourse(course.isPresent()? course.get() : null, Content.ContentType.miscellaneous,null,null,0,10);
         Assert.assertEquals(2,contentList.size());
         Assert.assertEquals(1, Optional.ofNullable(contentList.get(0).getId()));
         Assert.assertEquals(2, Optional.ofNullable(contentList.get(1).getId()));
 
         contentDao.delete(contentList.get(0));
 
-        contentList = contentDao.findByCourse(course,Content.ContentType.miscellaneous,null,null,0,10);
+        contentList = contentDao.findByCourse(course.isPresent()? course.get() : null, Content.ContentType.miscellaneous,null,null,0,10);
         Assert.assertEquals(1,contentList.size());
         Assert.assertEquals(2, Optional.ofNullable(contentList.get(0).getId()));
     }
 
     @Test
     public void createContentTest(){
-        Career career = new Career();
-        career.setCode("S");
-        Course course = new Course();
-        course.setId("1.1");
-        User user = new User(0, "John", "Doe", "jd@gmail.com", "12345678", career);
-
-        List<Content> contentList = contentDao.findByCourse(course,Content.ContentType.miscellaneous,null,null,0,10);
+        Optional<Course> course = courseDao.findById("1.1");
+        Optional<User> user = userDao.findById(0);
+        List<Content> contentList = contentDao.findByCourse(course.isPresent()? course.get() : null, Content.ContentType.miscellaneous,null,null,0,10);
         Assert.assertEquals(2,contentList.size());
-/*
-*     public Content createContent(String name, String link, Course course, String description, ContentType contentType,Date contentDate, User uploader, String ownerMail) {
- */
         Content content = new Content();
         content.setName("name");
         content.setLink("www.test.com");
-        Assert.assertEquals(content ,contentDao.createContent("name", "www.test.com", course, "test description", Content.ContentType.miscellaneous, null,
-                user, user.getEmail()));
+        Assert.assertEquals(content , contentDao.createContent("name", "www.test.com", course.isPresent()? course.get() : null, "test description", Content.ContentType.miscellaneous, null,
+                user.isPresent()? user.get() : null, user.isPresent()? user.get().getEmail() : null));
 
-        contentList = contentDao.findByCourse(course, Content.ContentType.miscellaneous,null,null,0,10);
+        contentList = contentDao.findByCourse(course.isPresent()? course.get() : null, Content.ContentType.miscellaneous,null,null,0,10);
         Assert.assertEquals(3,contentList.size());
 
     }
