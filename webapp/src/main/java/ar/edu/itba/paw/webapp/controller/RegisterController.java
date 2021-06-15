@@ -15,6 +15,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -30,6 +36,7 @@ import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.services.CareerService;
 import ar.edu.itba.paw.services.CourseService;
 import ar.edu.itba.paw.services.UserService;
+import ar.edu.itba.paw.webapp.auth.UserPrincipal;
 import ar.edu.itba.paw.webapp.exceptions.BadRequestException;
 import ar.edu.itba.paw.webapp.form.UserForm;
 
@@ -42,6 +49,8 @@ public class RegisterController {
     @Autowired private CourseService courseService;
 
     @Autowired private UserService userService;
+    
+    @Autowired private UserDetailsService detailsService;
 
     private static final Logger LOGGER= LoggerFactory.getLogger(RegisterController.class);
 
@@ -141,19 +150,23 @@ public class RegisterController {
     ) {
         final ModelAndView mav = new ModelAndView("register/validate_email");
 
-        Optional<User> userOptional= userService.findByEmail(email);
+        UserPrincipal principal = (UserPrincipal)detailsService.loadUserByUsername(email);
 
-        if (!userOptional.isPresent()){
-            LOGGER.debug("verification, no user with email {} could be found",email);
-           throw new RuntimeException( "email not found");
-        }
         LOGGER.debug("attempting to verify user with email {} and code {}",email,verification_code);
-        boolean worked = userService.verifyEmail(userOptional.get(),verification_code);
+        boolean worked = userService.verifyEmail(principal.getUser(), verification_code);
         LOGGER.debug("verified user with email {} and code {}",email,verification_code);
+
+        if(worked)
+            ForceLogin(principal);
 
         mav.addObject("worked", worked);
 
         return mav;
     }
 
+    private void ForceLogin(UserDetails principal) {
+        Authentication authentication = new UsernamePasswordAuthenticationToken(principal, principal.getPassword(), principal.getAuthorities());
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        securityContext.setAuthentication(authentication);
+    }
 }
