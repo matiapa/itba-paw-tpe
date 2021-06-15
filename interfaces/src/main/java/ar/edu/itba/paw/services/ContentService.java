@@ -7,8 +7,10 @@ import ar.edu.itba.paw.models.Course;
 import ar.edu.itba.paw.models.User;
 
 import javax.persistence.criteria.CriteriaBuilder;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 public interface ContentService {
@@ -20,8 +22,8 @@ public interface ContentService {
 
     int getSize(Course course, ContentType contentType, Date minDate, Date maxDate);
 
-    boolean createContent(String name, String link, Course course, String description, ContentType contentType,
-                          Date contentDate, User uploader);
+    Content createContent(String name, String link, Course course, String description, ContentType contentType,
+                          Date contentDate, User uploader, String ownerMail, String websiteUrl, Locale locale) throws IOException;
 
     void delete(Content content);
 

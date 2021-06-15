@@ -21,6 +21,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import ar.edu.itba.paw.webapp.auth.SuccessHandler;
 import ar.edu.itba.paw.webapp.auth.UserDetailsServiceImpl;
 
+import javax.annotation.Resource;
+
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true)
@@ -33,6 +35,9 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Autowired private UserDetailsServiceImpl userDetailsService;
 
     @Autowired private SuccessHandler successHandler;
+
+    @Resource(name = "appProperties")
+    private Properties appProps;
 
     @Bean
     @Override
@@ -52,12 +57,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
-        String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath();
-        String appConfigPath = rootPath + "auth.properties";
-
-        Properties appProps = new Properties();
-        appProps.load(new FileInputStream(appConfigPath));
-
         http.sessionManagement()
            .invalidSessionUrl("/login")
 

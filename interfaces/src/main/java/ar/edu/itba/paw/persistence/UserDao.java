@@ -10,6 +10,8 @@ import ar.edu.itba.paw.models.UserWorkRate;
 
 public interface UserDao {
 
+    List<User> findAll();
+
     Optional<User> findById(int id);
 
     Optional<User> findByEmail(String email);

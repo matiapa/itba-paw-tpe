@@ -4,13 +4,11 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import java.io.IOException;
-import java.util.Base64;
 import java.util.Optional;
 
 import ar.edu.itba.paw.models.Course;
 import ar.edu.itba.paw.services.CourseService;
 import ar.edu.itba.paw.services.UserWorkRateService;
-import ar.edu.itba.paw.webapp.form.AnnounceForm;
 import ar.edu.itba.paw.webapp.form.UserWorkRateForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +31,8 @@ import ar.edu.itba.paw.webapp.exceptions.ResourceNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.List;
+
 
 @Controller
 public class ProfileController {
@@ -44,10 +44,14 @@ public class ProfileController {
 
     private static final Logger LOGGER= LoggerFactory.getLogger(ProfileController.class);
 
+
+    /* -------------------- OWN PROFILE METHODS -------------------- */
+
     @RequestMapping(value = "/profile/own", method = GET)
     public ModelAndView getOwnProfile() {
         return new ModelAndView("profile/profile_own");
     }
+
 
     @RequestMapping(value = "/profile/own/image", method = POST)
     public String setProfileImage(
@@ -55,14 +59,34 @@ public class ProfileController {
         @ModelAttribute("user") User loggedUser
     ) throws IOException {
 
-//        String type = newPicture.getContentType();
-//        String base64 = Base64.getEncoder().encodeToString(newPicture.getBytes());
-//        String dataURI = String.format("data:%s;base64,%s", type, base64);
-
         userService.setPicture(loggedUser, newPicture.getBytes());
 
         return "redirect:/profile/own";
     }
+
+
+    /* -------------------- OTHER'S PROFILE METHODS -------------------- */
+
+    @RequestMapping(value = "/profile", method = GET)
+    public ModelAndView getProfiles(
+        @RequestParam(name="personId", required=false) Integer personId,
+        @ModelAttribute("user") User loggedUser
+    ) {
+        if (personId != null) {
+            return new ModelAndView("redirect:/profile/"+personId);
+        }
+
+        final ModelAndView mav = new ModelAndView("profile/profile_list");
+
+        List<User> users = userService.findAll();
+
+        users.forEach(System.out::println);
+
+        mav.addObject("profiles", users);
+
+        return mav;
+    }
+
 
     @RequestMapping(value = "/profile/{id:[0-9]+}", method = GET)
     public ModelAndView getProfileById(
@@ -71,7 +95,7 @@ public class ProfileController {
         @RequestParam(name="showCreateForm", required=false, defaultValue="false") boolean showCreateForm,
         @ModelAttribute("user") User loggedUser
     ) {
-        final ModelAndView mav = new ModelAndView("profile/profile");
+        final ModelAndView mav = new ModelAndView("profile/profile_registered");
 
         Optional<User> optUser = userService.findById(id);
         if(! optUser.isPresent()){
@@ -84,37 +108,6 @@ public class ProfileController {
         mav.addObject("rates", rateService.getRates(optUser.get(), 0, 5));
         mav.addObject("courses", courseService.findAll());
 
-        return mav;
-    }
-
-
-    /* The purpose of this endpoint is to provide a way of showing information about not registered users
-        by using the SGAService, since this one only provides and endpoint to fetch by email, not id. This
-        is used for example for displaying the name of owners of contents that have been scrapped. */
-
-    @RequestMapping(value = "/profile/{email:[a-zA-Z]+@[a-zA-Z.]+}", method = GET)
-    public ModelAndView getProfileByEmail(
-            @PathVariable(value="email") String email,
-            @ModelAttribute("createForm") final UserWorkRateForm form,
-            @RequestParam(name="showCreateForm", required=false, defaultValue="false") boolean showCreateForm,
-            @ModelAttribute("user") User loggedUser
-    ) {
-        final ModelAndView mav = new ModelAndView("profile/profile");
-
-        UserData user;
-        Optional<User> optUser = userService.findByEmail(email);
-        user = optUser.isPresent() ? optUser.get() : sgaService.fetchFromEmail(email);
-
-        if(user == null){
-            LOGGER.debug("user {} in profile with email {} was not found",loggedUser,email);
-            throw new ResourceNotFoundException();
-        }
-
-        mav.addObject("showCreateForm", showCreateForm);
-        mav.addObject("profile", user);
-        mav.addObject("rates", user instanceof User
-            ? rateService.getRates((User) user, 0, 5) : null);
-        mav.addObject("courses", courseService.findAll());
         return mav;
     }
 
@@ -165,5 +158,41 @@ public class ProfileController {
         return getProfileById(id, form, false, loggedUser);
     }
 
+
+    /* The purpose of this endpoint is to provide a way of showing information about not registered users
+        by using the SGAService, since this one only provides and endpoint to fetch by email, not id. This
+        is used for example for displaying the name of owners of contents that have been scrapped. */
+
+    @RequestMapping(value = "/profile/{email:[a-zA-Z]+@[a-zA-Z.]+}", method = GET)
+    public ModelAndView getProfileByEmail(
+            @PathVariable(value="email") String email,
+            @ModelAttribute("user") User loggedUser
+    ) {
+
+        // Try to find it on database, if found, redirect to ID endpoint (for registered users)
+
+        UserData user;
+        Optional<User> optUser = userService.findByEmail(email);
+
+        if (optUser.isPresent()) {
+            return new ModelAndView("redirect:/profile/" + optUser.get().getId());
+        }
+
+        // If not found, try to find it from SGA service and show unregistered profile page
+
+        user = sgaService.fetchFromEmail(email);
+
+        if(user == null){
+            LOGGER.debug("user {} in profile with email {} was not found",loggedUser,email);
+            throw new ResourceNotFoundException();
+        }
+
+        ModelAndView mav = new ModelAndView("profile/profile_unregistered");
+
+        mav.addObject("profile", user);
+
+        return mav;
+
+    }
 
 }

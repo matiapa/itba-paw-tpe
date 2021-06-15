@@ -140,9 +140,8 @@ public class PollController {
 
     @RequestMapping(value = "/polls", method = POST)
     public ModelAndView create(
-        @Valid @ModelAttribute("createForm") final PollForm pollForm,
-        @ModelAttribute("user") User loggedUser,
-        final BindingResult errors
+        @Valid @ModelAttribute("createForm") final PollForm pollForm,final BindingResult errors,
+        @ModelAttribute("user") User loggedUser
     ) {
 
 

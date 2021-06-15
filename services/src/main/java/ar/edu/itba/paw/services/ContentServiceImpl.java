@@ -8,9 +8,12 @@ import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.persistence.ContentDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 @Service
@@ -18,6 +21,9 @@ public class ContentServiceImpl implements ContentService{
 
     @Autowired
     private ContentDao contentDao;
+
+    @Autowired
+    private EmailService emailService;
 
     @Override
     public List<Content> findByCourse(Course course, ContentType contentType, Date minDate, Date maxDate,
@@ -34,11 +40,20 @@ public class ContentServiceImpl implements ContentService{
     public int getSize(Course course, ContentType contentType, Date minDate, Date maxDate) {
         return contentDao.getSize(course, contentType, minDate, maxDate);
     }
-
+    @Transactional
     @Override
-    public boolean createContent(String name, String link, Course course, String description, ContentType contentType,
-                                 Date contentDate, User uploader) {
-        return contentDao.createContent(name, link, course, description, contentType, contentDate, uploader);
+    public Content createContent(String name, String link, Course course, String description, ContentType contentType,
+                                 Date contentDate, User uploader, String ownerMail,String websiteUrl,Locale locale) throws IOException {
+        Content content=contentDao.createContent(name, link, course, description, contentType, contentDate, uploader,ownerMail);
+
+        List<User> users=contentDao.getSubscribedUsers(content);
+        for (User user:users ) {
+            emailService.sendContentNotification(user,content,websiteUrl, locale);
+        }
+
+        return content;
+
+
     }
 
     @Override

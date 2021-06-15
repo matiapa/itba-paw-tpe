@@ -3,6 +3,9 @@ package ar.edu.itba.paw.webapp.auth;
 import ar.edu.itba.paw.models.Permission;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.services.UserService;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,12 +23,16 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired private UserService us;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
+
     @Override
     public UserDetails loadUserByUsername(final String email) throws UsernameNotFoundException {
         final Optional<User> userOpt = us.findByEmail(email);
 
-        if (!userOpt.isPresent())
+        if (!userOpt.isPresent()) {
+            LOGGER.debug("verification, no user with email {} could be found",email);
             throw new UsernameNotFoundException("Email not found");
+        }
 
         final User user = userOpt.get();
 

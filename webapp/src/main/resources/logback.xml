@@ -26,4 +26,8 @@
     <logger name="ar.edu.itba" level="DEBUG" additivity="false">
         <appender-ref ref="paw-appender"/>
     </logger>
+    <logger name="ar.edu.itba" level="INFO" additivity="false">
+        <appender-ref ref="paw-appender"/>
+    </logger>
+
 </configuration>

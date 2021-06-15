@@ -13,6 +13,7 @@ import javax.annotation.Resource;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
+import ar.edu.itba.paw.models.Content;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -39,10 +40,14 @@ public class EmailServiceImpl implements EmailService{
     @Autowired
     private UserDao userDao;
 
+    @Resource(name = "appProperties")
+    private Properties appProps;
+
     @Resource
     private MessageSource messageSource;
 
 
+    @Async
     @Override
     public void sendVerificationEmail(User user, String baseURL,Locale locale) throws IOException {
 
@@ -62,6 +67,21 @@ public class EmailServiceImpl implements EmailService{
         sendMessageUsingThymeleafTemplate(user.getEmail(), subject, model,"register-verification.html");
 
     }
+    @Async
+    @Override
+    public void sendContentNotification(User user, Content content,String baseURL, Locale locale) throws IOException {
+
+        Map<String,Object> model = new HashMap<>();
+
+        model.put("title",messageSource.getMessage("content.fav_notification_mail.title",null,locale));
+        model.put("text", messageSource.getMessage("content.fav_notification_mail.body", null, locale));
+        model.put("buttonText", messageSource.getMessage("content.fav_notification_mail.buttonText", null, locale));
+        model.put("buttonLink", String.format("%s/contents/%d", baseURL, content.getId()));
+        String subject = messageSource.getMessage("content.fav_notification_mail.subject", null, locale);
+
+        sendMessageUsingThymeleafTemplate(user.getEmail(), subject, model,"new-content-notification.html");
+
+    }
 
     private void sendMessageUsingThymeleafTemplate(String to, String subject, Map<String, Object> templateModel,String template) throws IOException {
         Context thymeleafContext = new Context();
@@ -73,12 +93,6 @@ public class EmailServiceImpl implements EmailService{
 
     private void sendHTMLMessage(String to, String subject, String text) throws IOException {
         MimeMessage message= mailSender.createMimeMessage();
-
-        String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath();
-        String appConfigPath = rootPath + "auth.properties";
-
-        Properties appProps = new Properties();
-        appProps.load(new FileInputStream(appConfigPath));
 
         try{
             MimeMessageHelper helper= new MimeMessageHelper(message,true);

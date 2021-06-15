@@ -35,6 +35,7 @@ import org.thymeleaf.templateresolver.ITemplateResolver;
 import java.util.Properties;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 @EnableAsync
@@ -49,8 +50,22 @@ import java.io.IOException;
 public class WebConfig {
 
     private final static String DB_PROPERTY_KEY = "itbahub.persistence.db";
+    private final static String PROPERTIES_FILE = "auth.properties";
 
-    public WebConfig(){}
+    private Properties appProps;
+
+    public WebConfig() throws FileNotFoundException, IOException {
+        String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath();
+        String appConfigPath = rootPath + PROPERTIES_FILE;
+
+        appProps = new Properties();
+        appProps.load(new FileInputStream(appConfigPath));
+    }
+
+    @Bean
+    public Properties appProperties() {
+        return appProps;
+    }
 
     @Bean
     public ViewResolver viewResolver() {
@@ -65,12 +80,6 @@ public class WebConfig {
 
     @Bean
     public DataSource dataSource() throws IOException {
-        String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath();
-        String appConfigPath = rootPath + "auth.properties";
-
-        Properties appProps = new Properties();
-        appProps.load(new FileInputStream(appConfigPath));
-
         final SimpleDriverDataSource ds = new SimpleDriverDataSource();
         String url = appProps.getProperty(DB_PROPERTY_KEY + ".url");
         String user = appProps.getProperty(DB_PROPERTY_KEY + ".user");
@@ -128,11 +137,7 @@ public class WebConfig {
 
     @Bean
     public JavaMailSender getJavaMailSender() throws IOException {
-        String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath();
-        String appConfigPath = rootPath + "auth.properties";
 
-        Properties appProps = new Properties();
-        appProps.load(new FileInputStream(appConfigPath));
 
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         mailSender.setHost("smtp.gmail.com");

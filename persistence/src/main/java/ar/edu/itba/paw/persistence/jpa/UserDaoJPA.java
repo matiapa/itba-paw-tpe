@@ -29,6 +29,13 @@ public class UserDaoJPA implements UserDao {
     }
 
     @Override
+    public List<User> findAll() {
+        TypedQuery<User> query = em.createQuery("SELECT u FROM User u", User.class);
+
+        return query.getResultList();
+    }
+
+    @Override
     public Optional<User> findById(int id) {
         return Optional.ofNullable(
             em.find(User.class, id)

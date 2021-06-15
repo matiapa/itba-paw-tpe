@@ -26,7 +26,12 @@
         <div id="content">
             <jsp:include page="../common/header.jsp"/>
             <div class="container-fluid">
-                <div class="mb-3" align="right">
+                <div class="d-flex justify-content-end bd-highlight mb-3" align="right">
+                    <c:url var="urlComments" value="/courses/${course.id}/comments"/>
+                    <a class="btn btn-primary btn-sm" href="${urlComments}" role="button">
+                        <i class="far fa-comment"></i>
+                        <spring:message code="course.Comments"/>
+                    </a>
                     <c:if test="${!course.favedBy.contains(user)}">
                         <c:url var="url" value="/courses/${course.id}/fav"/>
                         <form action="${url}" method="post">

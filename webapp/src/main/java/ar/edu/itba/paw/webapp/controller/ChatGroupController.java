@@ -106,12 +106,10 @@ public class ChatGroupController {
 
     @RequestMapping(value = "/chats", method = POST)
     public ModelAndView create(
-        @Valid @ModelAttribute("createForm") final ChatGroupForm chatGroupForm,
-        @ModelAttribute("user") User loggedUser,
-        final BindingResult errors
+        @Valid @ModelAttribute("createForm") final ChatGroupForm chatGroupForm,final BindingResult errors,
+        @ModelAttribute("user") User loggedUser
+
     ) {
-
-
         if(errors.hasErrors()){
             LOGGER.debug("User {} tried and failed to create a chatgroup with form {} and error {}",loggedUser,chatGroupForm,errors);
             return list(null, null, null, null, 0, true,

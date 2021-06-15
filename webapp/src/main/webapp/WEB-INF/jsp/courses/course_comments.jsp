@@ -6,8 +6,8 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
 
-<jsp:useBean type="ar.edu.itba.paw.models.Content" scope="request" id="content"/>
-<jsp:useBean type="java.util.List<ar.edu.itba.paw.models.ContentReview>" scope="request" id="reviews"/>
+<jsp:useBean type="ar.edu.itba.paw.models.Course" scope="request" id="course"/>
+<jsp:useBean type="java.util.List<ar.edu.itba.paw.models.CourseReview>" scope="request" id="reviews"/>
 
 <!DOCTYPE html>
 <html>
@@ -15,7 +15,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>${content.name}</title>
+    <title>${course.name}</title>
 
     <jsp:include page="../common/styles.jsp"/>
 </head>
@@ -32,35 +32,11 @@
 
                 <div class="container-fluid" style="width: 100%">
                     <div class="row">
-                        <div id="${content.id}" class="card shadow mb-4" style="margin-top: 32px; width: 100%">
+                        <div id="${course.id}" class="card shadow mb-4" style="margin-top: 32px; width: 100%">
                             <div class="card-header py-3">
                                 <h6 class="font-weight-bold m-0">
-                                    <a href="${content.link}"><c:out value="${content.name}"/></a>
+                                    <c:out value="${course.name}"/>
                                 </h6>
-                            </div>
-                            <div class="col mr-2" style="padding: 16px 24px;">
-                                <c:choose>
-                                    <c:when test="${content.description==null}">
-                                        <p style="padding-top: 0;"><spring:message code="content.noDescription"/></p>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <p style="padding-top: 0;"><c:out value="${content.description}"/></p>
-                                    </c:otherwise>
-                                </c:choose>
-
-                                <c:if test="${content.ownerMail!=null}">
-                                    <p><spring:message code="content.ownerMailHelper"/> <c:out value="${content.ownerMail}"/></p>
-                                </c:if>
-                                <c:if test="${content.contentDate!=null}">
-                                    <p><spring:message code="content.contentDateHelper"/> <c:out value="${content.contentDate}"/></p>
-                                </c:if>
-                                <span class="text-xs">
-                                    <fmt:formatDate type="both" dateStyle = "short" timeStyle = "short" value="${content.uploadDate}" var="uploadDateFormatted"/>
-                                    <c:url var="profileUrl" value="/profile/${content.uploader.id}"/>
-                                    <spring:message code="publishedBy" htmlEscape="false" arguments=
-                                        '<a href="${profileUrl}">${fn:escapeXml(content.uploader.name)}</a>,
-                                        ${uploadDateFormatted}'/>
-                                </span>
                             </div>
                         </div>
                     </div>
@@ -73,7 +49,7 @@
                         </div>
                     </div>
                     <div class="row" style="width: 100%; margin-bottom: 32px">
-                        <c:url value="/contents/${content.id}" var="postFormUrl"/>
+                        <c:url value="/courses/${course.id}/comments" var="postFormUrl"/>
                         <form:form modelAttribute="ContentReviewForm" action="${postFormUrl}" method="post" style="width: 100%">
                             <div class="form-group" style="width: 100%">
                                 <spring:message code="content.contentReviewHelper" var="TextAreaHelper"/>
@@ -87,21 +63,17 @@
                     <c:forEach var="review" items="${reviews}">
                         <c:set var="review" value="${review}" scope="request"/>
                         <div class="row">
-                            <jsp:include page="content_review_card.jsp"/>
+                            <jsp:include page="course_review_card.jsp"/>
                         </div>
                     </c:forEach>
                 </div>
-
-
-
-
-
 
 
                 <jsp:include page="../common/paginator.jsp"/>
 
             </div>
         </div>
+
 
     </div>
 

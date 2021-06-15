@@ -157,10 +157,6 @@ public class Poll {
     @IdClass(Poll.PollOptionId.class)
     public static class PollOption {
         @Id
-        @Column(name = "poll_id", insertable = false, updatable = false)
-        private int pollId;
-
-        @Id
         @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "poll_option_id_seq")
         @SequenceGenerator(sequenceName = "poll_option_id_seq", name = "poll_option_id_seq", allocationSize = 1)
         @Column(name = "option_id", nullable = false)
@@ -169,6 +165,7 @@ public class Poll {
         @Column(name = "option_value")
         private String value;
 
+        @Id
         @ManyToOne(fetch = FetchType.LAZY, optional = false)
         @JoinColumn(name = "poll_id", nullable = false)
         private Poll poll;
@@ -234,16 +231,13 @@ public class Poll {
     @IdClass(Poll.PollOptionId.class)
     public static class PollVoteCount {
         @Id
-        @Column(name = "poll_id", insertable = false, updatable = false)
-        private int pollId;
-        
-        @Id
         @Column(name = "option_id", insertable = false, updatable = false)
         private int optionId;
         
         @Column
         private int votes;
         
+        @Id
         @ManyToOne(fetch = FetchType.LAZY, optional = false)
         @JoinColumn(name = "poll_id", nullable = false, insertable = false, updatable = false)
         private Poll poll;
@@ -288,7 +282,7 @@ public class Poll {
     }
 
     public static class PollOptionId implements Serializable {
-        private int pollId;
+        private int poll;
         private int optionId;
     }
     

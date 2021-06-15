@@ -8,7 +8,7 @@ import javax.persistence.*;
 @javax.persistence.Entity
 @Table(name = "permission")
 @IdClass(Permission.PermissionId.class)
-public class Permission {
+public class Permission implements Serializable {
 
     public enum Action {create, read, update, delete}
 
