@@ -4,10 +4,13 @@ import java.util.*;
 
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.services.*;
+import ar.edu.itba.paw.webapp.controller.common.Pager;
+import ar.edu.itba.paw.webapp.form.ContentReviewForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +19,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import ar.edu.itba.paw.webapp.auth.UserPrincipal;
 import ar.edu.itba.paw.webapp.exceptions.ResourceNotFoundException;
+
+import javax.validation.Valid;
 
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
@@ -140,6 +145,60 @@ public class CourseController {
             loggedUser, false
         );
         return get(id, loggedUser);
+    }
+
+    @RequestMapping(value = "/courses/{id:.+}/comments", method = GET)
+    public ModelAndView getComments(
+            @PathVariable(value="id") String courseId,
+            @ModelAttribute("ContentReviewForm") final ContentReviewForm form,
+            @ModelAttribute("user") User loggedUser,
+            @RequestParam(name="page", required = false, defaultValue = "0") int page
+    ){
+
+        final ModelAndView mav = new ModelAndView("courses/course_comments");
+
+        // Course details
+
+        Course selectedCourse = courseService.findById(courseId).orElseThrow(NoSuchElementException::new);
+        if (selectedCourse == null){
+            LOGGER.debug("user {} could not find course with id {}",loggedUser,courseId);
+            throw new ResourceNotFoundException();
+        }
+
+        mav.addObject("course", selectedCourse);
+
+        Pager pager = new Pager(courseService.getReviewsSize(selectedCourse),page);
+
+        mav.addObject("pager",pager);
+
+        List<CourseReview> courseReviewList= courseService.getReviews(selectedCourse,page,10);
+
+        mav.addObject("reviews",courseReviewList);
+        return mav;
+    }
+    @RequestMapping(value = "/courses/{id:.+}/comments", method = POST)
+    public ModelAndView postReview(
+            @PathVariable(value = "id") String courseId,
+            @Valid @ModelAttribute("ContentReviewForm") final ContentReviewForm form, final BindingResult errors,
+            @ModelAttribute("user") User loggedUser,
+            @RequestParam(name="page", required = false, defaultValue = "0") int page
+    ){
+
+
+        if (errors.hasErrors()){
+            LOGGER.debug("user {} tried to post a review on content with id {} with errors {}",loggedUser,courseId,errors);
+            return getComments(courseId,form,loggedUser,page);
+
+        }
+        Optional<Course> optionalCourse=courseService.findById(courseId);
+        if (!optionalCourse.isPresent()){
+            LOGGER.debug("user {} tried to review content with id {} but didnt exist",loggedUser,courseId);
+            throw new ResourceNotFoundException();
+        }
+        courseService.createCourseReview(optionalCourse.get(), form.getReviewBody(),loggedUser);
+
+        return getComments(courseId,form, loggedUser, page);
+
     }
 
 }

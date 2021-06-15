@@ -1,9 +1,6 @@
 package ar.edu.itba.paw.persistence.jpa;
 
-import ar.edu.itba.paw.models.Career;
-import ar.edu.itba.paw.models.CareerCourse;
-import ar.edu.itba.paw.models.Course;
-import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.persistence.CourseDao;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -69,6 +66,41 @@ public class CourseDaoJPA implements CourseDao {
         else
             course.getFavedBy().remove(ofUser);
         em.merge(course);
+    }
+
+    @Override
+    @Transactional
+    public CourseReview createCourseReview(Course course, String review, User uploader) {
+        CourseReview courseReview = new CourseReview(null,review,uploader,course);
+        em.persist(courseReview);
+        em.flush();
+        em.clear();
+        return courseReview;
+    }
+
+    @Override
+    public List<CourseReview> getReviews(Course course, Integer page, Integer pageSize) {
+
+        final TypedQuery<CourseReview> query = em.createQuery(
+                "SELECT c FROM CourseReview c WHERE c.course= :course ", CourseReview.class
+        );
+
+        query.setParameter("course", course);
+        query.setFirstResult(page * pageSize);
+        query.setMaxResults(pageSize);
+        return query.getResultList();
+
+    }
+
+    @Override
+    public int getReviewsSize(Course course) {
+        final TypedQuery<CourseReview> query = em.createQuery(
+                "SELECT c FROM CourseReview c WHERE c.course= :course ", CourseReview.class
+        );
+
+        query.setParameter("course", course);
+
+        return query.getResultList().size();
     }
 
 }

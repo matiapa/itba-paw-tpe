@@ -4,13 +4,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import ar.edu.itba.paw.models.Career;
-import ar.edu.itba.paw.models.CareerCourse;
+import ar.edu.itba.paw.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import ar.edu.itba.paw.models.Course;
-import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.persistence.CourseDao;
 
 @Service
@@ -42,6 +39,21 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public void markFavorite(Course course, User ofUser, boolean favorite) {
         courseDao.markFavorite(course, ofUser, favorite);
+    }
+
+    @Override
+    public CourseReview createCourseReview(Course course, String review, User uploader) {
+        return courseDao.createCourseReview(course, review, uploader);
+    }
+
+    @Override
+    public List<CourseReview> getReviews(Course course, Integer page, Integer pageSize) {
+        return courseDao.getReviews(course,page,pageSize);
+    }
+
+    @Override
+    public int getReviewsSize(Course course) {
+        return courseDao.getReviewsSize(course);
     }
 
 }

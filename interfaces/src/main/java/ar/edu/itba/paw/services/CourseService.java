@@ -3,10 +3,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import ar.edu.itba.paw.models.Career;
-import ar.edu.itba.paw.models.CareerCourse;
-import ar.edu.itba.paw.models.Course;
-import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.*;
 
 public interface CourseService {
 
@@ -19,5 +16,11 @@ public interface CourseService {
     Optional<Course> findById(String id);
 
     void markFavorite(Course course, User ofUser, boolean favorite);
+
+    CourseReview createCourseReview(Course course, String review, User uploader);
+
+    List<CourseReview> getReviews(Course course, Integer page, Integer pageSize);
+
+    int getReviewsSize(Course course);
 
 }
