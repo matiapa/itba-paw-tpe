@@ -37,7 +37,7 @@
                                         <form:option value="${career.code}"><c:out value="${career.name}"/></form:option>
                                     </c:forEach>
                                 </form:select>
-                                <form:errors path="careerCode" element="div"/>
+                                <form:errors path="careerCode" cssStyle="color: red" element="div"/>
                             </div>
 
                             <div hidden id="courseTarget" class="form-group">
@@ -48,7 +48,7 @@
                                         <form:option value="${course.id}"><c:out value="${course.name}"/></form:option>
                                     </c:forEach>
                                 </form:select>
-                                <form:errors path="courseId" element="div"/>
+                                <form:errors cssStyle="color: red" path="courseId" element="div"/>
                             </div>
 
                             <div class="form-group">
@@ -78,28 +78,28 @@
                             <div class="form-group">
                                 <form:label path="options[0]"><spring:message code="option1"/></form:label>
                                 <form:input type="text" path="options[0]" class="form-control"/>
-                                <form:errors path="options[0]" element="p"/>
+                                <form:errors path="options[0]" cssStyle="color: red" element="p"/>
                             </div>
 
                             <div class="form-group">
                                 <form:label path="options[1]"><spring:message code="option2"/></form:label>
                                 <form:input type="text" path="options[1]" class="form-control"/>
-                                <form:errors path="options[1]" element="p"/>
+                                <form:errors path="options[1]" cssStyle="color: red" element="p"/>
                             </div>
 
                             <div class="form-group">
                                 <form:label path="options[2]"><spring:message code="option3"/></form:label>
                                 <form:input type="text" path="options[2]" class="form-control"/>
-                                <form:errors path="options[2]" element="p"/>
+                                <form:errors path="options[2]" cssStyle="color: red" element="p"/>
                             </div>
 
                             <div class="form-group">
                                 <form:label path="options[3]"><spring:message code="option4"/></form:label>
                                 <form:input type="text" path="options[3]" class="form-control"/>
-                                <form:errors path="options[3]" element="p"/>
+                                <form:errors path="options[3]" cssStyle="color: red" element="p"/>
                             </div>
 
-                            <form:errors path="options" element="p"/>
+                            <form:errors path="options" cssStyle="color: red"  element="p"/>
 
                         </div>
 

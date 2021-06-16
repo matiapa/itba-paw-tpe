@@ -114,8 +114,8 @@ public class AnnounceController {
     @RequestMapping(value = "/announcements", method = POST)
     public ModelAndView create(
         @Valid @ModelAttribute("createForm") final AnnounceForm form,
-        @ModelAttribute("user") User loggedUser,
-        final BindingResult errors
+        final BindingResult errors,
+        @ModelAttribute("user") User loggedUser
     ){
         if (errors.hasErrors()) {
             return list(EntityTarget.general, null, null, true, false,

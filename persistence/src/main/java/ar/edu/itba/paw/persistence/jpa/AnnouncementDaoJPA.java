@@ -142,7 +142,7 @@ public class AnnouncementDaoJPA implements AnnouncementDao {
 
     @Override
     public void markAllSeen(User seenBy) {
-        // TODO: Implement this method
+
     }
 
     @Override

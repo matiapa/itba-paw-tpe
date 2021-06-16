@@ -10,9 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.*;
 
 @Repository
 public class ChatGroupDaoJPA implements ChatGroupDao {
@@ -54,17 +55,13 @@ public class ChatGroupDaoJPA implements ChatGroupDao {
             query.setParameter("platform",platform);
 
         if(year != null && quarter != null){
-            String minDate = String.format("%d-%d-01", year, quarter == 1 ? 1 : 7);
-            String maxDate = String.format("%d-%d-%d", year, quarter == 1 ? 6 : 12, quarter == 1 ? 30 : 31);
-
-            query.setParameter("minDate", Date.parse(minDate));
-            query.setParameter("maxDate", Date.parse(maxDate));
+            query.setParameter("minDate", new GregorianCalendar(year, quarter == 1
+                    ? Calendar.JANUARY : Calendar.AUGUST, 1).getTime());
+            query.setParameter("maxDate", new GregorianCalendar(year, quarter == 1
+                    ? Calendar.JULY : Calendar.DECEMBER, quarter == 1 ? 30 : 31).getTime());
         }else if(year != null){
-            String minDate = String.format("%d-01-01", year);
-            String maxDate = String.format("%d-12-31", year);
-
-            query.setParameter("minDate", Date.parse(minDate));
-            query.setParameter("maxDate", Date.parse(maxDate));
+            query.setParameter("minDate", new GregorianCalendar(year, Calendar.JANUARY, 1).getTime());
+            query.setParameter("maxDate", new GregorianCalendar(year, Calendar.DECEMBER, 31).getTime());
         }else if(quarter != null){
             query.setParameter("minQuarter", quarter == 1 ? 1 : 7);
             query.setParameter("maxQuarter", quarter == 1 ? 6 : 12);
@@ -78,7 +75,7 @@ public class ChatGroupDaoJPA implements ChatGroupDao {
 
 
     @Override
-    public int getSize(Career career, ChatPlatform platform, Integer year, Integer quarter) {
+    public int getSize(Career career, ChatPlatform platform, Integer year, Integer quarter) throws ParseException {
         String qryStr = buildQuery("SELECT count(cg.id) FROM ChatGroup cg", platform, year, quarter);
 
         TypedQuery<Long> query = em.createQuery(qryStr, Long.class);
@@ -89,17 +86,13 @@ public class ChatGroupDaoJPA implements ChatGroupDao {
             query.setParameter("platform", platform);
 
         if(year != null && quarter != null){
-            String minDate = String.format("%d-%d-01", year, quarter == 1 ? 1 : 7);
-            String maxDate = String.format("%d-%d-%d", year, quarter == 1 ? 6 : 12, quarter == 1 ? 30 : 31);
-
-            query.setParameter("minDate", Date.parse(minDate));
-            query.setParameter("maxDate", Date.parse(maxDate));
+            query.setParameter("minDate", new GregorianCalendar(year, quarter == 1
+                    ? Calendar.JANUARY : Calendar.AUGUST, 1).getTime());
+            query.setParameter("maxDate", new GregorianCalendar(year, quarter == 1
+                    ? Calendar.JULY : Calendar.DECEMBER, quarter == 1 ? 30 : 31).getTime());
         }else if(year != null){
-            String minDate = String.format("%d-01-01", year);
-            String maxDate = String.format("%d-12-31", year);
-
-            query.setParameter("minDate", Date.parse(minDate));
-            query.setParameter("maxDate", Date.parse(maxDate));
+            query.setParameter("minDate", new GregorianCalendar(year, Calendar.JANUARY, 1).getTime());
+            query.setParameter("maxDate", new GregorianCalendar(year, Calendar.DECEMBER, 31).getTime());
         }else if(quarter != null){
             query.setParameter("minQuarter", quarter == 1 ? 1 : 7);
             query.setParameter("maxQuarter", quarter == 1 ? 6 : 12);

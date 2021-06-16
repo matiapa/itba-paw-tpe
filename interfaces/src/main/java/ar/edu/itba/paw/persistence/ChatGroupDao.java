@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.ChatGroup;
 import ar.edu.itba.paw.models.ChatGroup.ChatPlatform;
 import ar.edu.itba.paw.models.User;
 
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -16,7 +17,7 @@ public interface ChatGroupDao {
 
     Optional<ChatGroup> findById(int id);
 
-    int getSize(Career career, ChatPlatform platform, Integer year, Integer quarter);
+    int getSize(Career career, ChatPlatform platform, Integer year, Integer quarter) throws ParseException;
 
     ChatGroup addGroup(String groupName, Career career, String link, User createdBy, Date creationDate, ChatPlatform platform);
 

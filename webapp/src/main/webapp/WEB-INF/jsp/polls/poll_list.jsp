@@ -68,11 +68,9 @@
                                         <option ${selectedType == null ? 'selected' : ''} value="">
                                             <spring:message code="form.type"/>
                                         </option>
-                                        <c:forEach var="type" items="${types}">
-                                            <option ${selectedType == type ? 'selected' : ''} value="${type}">
-                                                <spring:message code="enum.polltype.${type}"/>
-                                            </option>
-                                        </c:forEach>
+                                        <option ${selectedType == type ? 'selected' : ''} value="${type}">
+                                            <spring:message code="enum.polltype.multiple_choice"/>
+                                        </option>
                                     </select>
                                 </div>
 
