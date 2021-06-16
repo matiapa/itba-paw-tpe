@@ -1,24 +1,26 @@
 package ar.edu.itba.paw;
 
 import ar.edu.itba.paw.models.*;
-import ar.edu.itba.paw.persistence.jpa.CareerDaoJPA;
 import ar.edu.itba.paw.persistence.jpa.CourseDaoJPA;
-import ar.edu.itba.paw.persistence.jpa.UserDaoJPA;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.Rollback;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.jdbc.JdbcTestUtils;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.swing.text.html.Option;
+import javax.sql.DataSource;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
-@Rollback
+import static ar.edu.itba.paw.TestUtils.set;
+
+@Transactional
 @Sql("classpath:populators/course_populate.sql")
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
@@ -26,8 +28,21 @@ public class CourseDaoJPATest {
 
     @Autowired private CourseDaoJPA courseDao;
 
-    @Autowired private UserDaoJPA userDao;
-    @Autowired private CareerDaoJPA careerDao;
+    @Autowired private DataSource ds;
+
+    private JdbcTemplate jdbcTemplate;
+    private User user;
+    private Career career;
+    @Before
+    public void setUp() {
+        jdbcTemplate = new JdbcTemplate(ds);
+
+        user = new User();
+        career = new Career();
+        set(user, "id",1);
+        set(career, "code", "A");
+    }
+
 
     @Test
     public void findAllTest(){
@@ -39,9 +54,7 @@ public class CourseDaoJPATest {
 
     @Test
     public void findFavouritesTest() {
-        Optional<User> user = userDao.findById(0);
-
-        List<Course> courses = courseDao.findFavourites(user.isPresent()? user.get() : null);
+        List<Course> courses = courseDao.findFavourites(user);
 
         Assert.assertEquals(1, courses.size());
         Assert.assertEquals("1.1", courses.get(0).getId());
@@ -49,16 +62,14 @@ public class CourseDaoJPATest {
 
     @Test
     public void findByCareerTest() {
-        Optional<Career> career = careerDao.findByCode("S");
-        List<CareerCourse> career_courses = courseDao.findByCareer(career.isPresent()? career.get() : null);
+        List<CareerCourse> career_courses = courseDao.findByCareer(career);
 
         Assert.assertEquals(1, career_courses.size());
         Assert.assertEquals("1.1", career_courses.get(0).getCourse().getId());
     }
 
     @Test
-    public void findByIdTest() {
-
+    public void testFindById() {
         Optional<Course> course = courseDao.findById("1.1");
 
         Assert.assertTrue(course.isPresent());
@@ -66,23 +77,36 @@ public class CourseDaoJPATest {
     }
 
     @Test
-    public void testMarkFavorite(){
-
-    }
-
-    @Test
     public void testCreateCourseReview(){
+        Course course = new Course();
+        set(course, "id", "1.1");
+        CourseReview courseReview = courseDao.createCourseReview(course, "Test", user);
 
+
+        Assert.assertEquals("Test", courseReview.getReview());
+        Assert.assertEquals(user, courseReview.getUploader());
+        Assert.assertEquals(course, courseReview.getCourse());
     }
+
 
     @Test
     public void testGetReviews(){
+        Course course = new Course();
+        set(course, "id", "1.1");
 
+        List<CourseReview> courseReviews = courseDao.getReviews(course, 0, 10);
+
+        Assert.assertEquals("1.1", courseReviews.get(0).getCourse().getId());
     }
 
     @Test
     public void testGetReviewsSize(){
+        Course course = new Course();
+        set(course, "id", "1.1");
 
+        List<CourseReview> courseReviews = courseDao.getReviews(course, 0, 10);
+
+        Assert.assertEquals(1, courseReviews.size());
     }
 
 }
