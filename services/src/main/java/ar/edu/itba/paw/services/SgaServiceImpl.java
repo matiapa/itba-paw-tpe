@@ -40,7 +40,6 @@ public class SgaServiceImpl implements SgaService {
                 return null;
             return new SgaUser(extendedData.code, basicData.firstName, basicData.lastName, email, career.get());
         } catch (IOException e) {
-            e.printStackTrace();
             return null;
         }
     }

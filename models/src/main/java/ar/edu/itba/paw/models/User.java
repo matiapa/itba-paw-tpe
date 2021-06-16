@@ -28,6 +28,7 @@ public class User implements Serializable, UserData {
     @Column
     protected String password;
 
+    @Basic(fetch = FetchType.LAZY)
     @Column(name = "picture")
     private byte[] picture;
 
