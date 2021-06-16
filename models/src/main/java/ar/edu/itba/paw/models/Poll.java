@@ -173,7 +173,7 @@ public class Poll {
         @OneToOne(mappedBy = "option", fetch = FetchType.EAGER)
         private PollVoteCount votes;
         
-        private PollOption() {}
+        public PollOption() {}
 
         public PollOption(Poll poll, String value) {
             this.poll = poll;
