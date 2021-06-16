@@ -38,6 +38,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         final Collection<? extends GrantedAuthority> authorities = user.getPermissions().stream()
             .map(Permission::toString)
+            .map(p -> "ROLE_" + p)
             .map(SimpleGrantedAuthority::new)
             .collect(Collectors.toList());
 
