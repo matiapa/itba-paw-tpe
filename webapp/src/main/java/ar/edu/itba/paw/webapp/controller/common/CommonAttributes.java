@@ -4,6 +4,7 @@ import ar.edu.itba.paw.models.Entity;
 import ar.edu.itba.paw.models.Permission;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.services.UserService;
+import ar.edu.itba.paw.webapp.exceptions.InternalServerErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -26,10 +27,8 @@ public class CommonAttributes {
         if(!(principal instanceof UserPrincipal))
             return null;
 
-        // TODO: Add an invalid state exception showing error 500
-
         return userService.findByEmail(((UserPrincipal) principal).getUsername())
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(InternalServerErrorException::new);
     }
 
     @ModelAttribute("canReadStats")

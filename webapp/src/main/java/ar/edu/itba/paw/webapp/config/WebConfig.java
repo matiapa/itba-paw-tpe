@@ -106,9 +106,9 @@ public class WebConfig {
         properties.setProperty("hibernate.hbm2ddl.auto", "update");
         properties.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQL92Dialect");
 
-        // TODO: Remove this for production
-        properties.setProperty("hibernate.show_sql", "true");
-        properties.setProperty("format_sql", "true");
+        // This shouldn't be on production
+        // properties.setProperty("hibernate.show_sql", "true");
+        // properties.setProperty("format_sql", "true");
 
         factoryBean.setJpaProperties(properties);
 

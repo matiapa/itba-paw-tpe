@@ -29,65 +29,30 @@ public class TestConfig {
     @Value("classpath:hsqldb.sql")
     private Resource hsqldbSql;
 
-    @Value("classpath:schema.sql")
-    private Resource schemaSql;
-
     @Bean
     public DataSource dataSource() {
-        final SingleConnectionDataSource ds = new SingleConnectionDataSource();
-        //final SimpleDriverDataSource ds = new SimpleDriverDataSource();
-
-       // ds.setDriverClass(JDBCDriver.class);
-        ds.setSuppressClose(true);
-        ds.setUrl("jdbc:hsqldb:mem:paw");
-        ds.setUsername("ha");
-        ds.setPassword("");
-
-        return ds;
+        final SingleConnectionDataSource scds = new SingleConnectionDataSource();
+        scds.setSuppressClose(true);
+        scds.setDriverClassName("org.hsqldb.jdbcDriver");
+        scds.setUrl("jdbc:hsqldb:mem:paw");
+        scds.setUsername("ha");
+        scds.setPassword("");
+        return scds;
     }
 
     @Bean
     public DataSourceInitializer dataSourceInitializer(final DataSource ds) {
         final DataSourceInitializer dsi = new DataSourceInitializer();
-
         dsi.setDataSource(ds);
         dsi.setDatabasePopulator(databasePopulator());
-
         return dsi;
     }
 
     private DatabasePopulator databasePopulator(){
-
         final ResourceDatabasePopulator dbp = new ResourceDatabasePopulator();
-
         dbp.addScript(hsqldbSql);
-        dbp.addScript(schemaSql);
-
+        // dbp.addScript(schemaSql);
         return dbp;
-    }
-
-    @Bean
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
-        final LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
-        factoryBean.setPackagesToScan("ar.edu.itba.paw.persistence");
-        factoryBean.setDataSource(dataSource());
-
-        final JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-        factoryBean.setJpaVendorAdapter(vendorAdapter);
-
-        final Properties properties = new Properties();
-        properties.setProperty("hibernate.hbm2ddl.auto", "update");
-        properties.setProperty("hibernate.ddl.auto", "none");
-
-        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.HSQLDialect");
-/*
-        // TODO: Remove this for production
-        properties.setProperty("hibernate.show_sql", "true");
-        properties.setProperty("format_sql", "true");
-*/
-        factoryBean.setJpaProperties(properties);
-
-        return factoryBean;
     }
 
     @Bean
@@ -95,5 +60,27 @@ public class TestConfig {
         return new JpaTransactionManager(emf);
     }
 
+    @Bean
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+        final LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
+        factoryBean.setPackagesToScan("ar.edu.itba.paw.models");
+        // factoryBean.setPackagesToScan("ar.edu.itba.paw.persistence");
+        factoryBean.setDataSource(dataSource());
+
+        final JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
+        factoryBean.setJpaVendorAdapter(vendorAdapter);
+
+        final Properties properties = new Properties();
+        properties.setProperty("hibernate.hbm2ddl.auto", "create-drop");
+        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.HSQLDialect");
+        // properties.setProperty("hibernate.ddl.auto", "none");
+
+        properties.setProperty("hibernate.show_sql", "true");
+        properties.setProperty("format_sql", "true");
+
+        factoryBean.setJpaProperties(properties);
+
+        return factoryBean;
+    }
 
 }

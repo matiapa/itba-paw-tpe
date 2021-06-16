@@ -16,12 +16,15 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 import java.util.List;
 import java.util.Optional;
 
-@Rollback
+import static ar.edu.itba.paw.TestUtils.set;
+
+@Transactional
 @Sql("classpath:populators/announcement_populate.sql")
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
@@ -29,83 +32,67 @@ public class AnnouncementDaoJPATest {
 
     @Autowired private AnnouncementDaoJPA announcementDao;
 
-    @Autowired private UserDaoJPA userDao;
-    @Autowired private CareerDaoJPA careerDao;
-    @Autowired private CourseDaoJPA courseDao;
-
     @Autowired private DataSource ds;
 
-
     private JdbcTemplate jdbcTemplate;
+    private User user;
 
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
+
+        user = new User();
+        set(user, "id",1);
     }
 
-        @Test
+    @Test
     public void testFindGeneral() {
         List<Announcement> announcements = announcementDao.findGeneral(null,0, 10);
 
-        Assert.assertEquals(3, announcements.size());
-        Assert.assertEquals(1, Optional.ofNullable(announcements.get(0).getId()));
+        Assert.assertEquals(4, announcements.size());
+        Assert.assertEquals(Integer.valueOf(1), announcements.get(0).getId());
     }
-
-
 
     @Test
     public void testFindByCareer() {
-        Optional<Career> career = careerDao.findByCode("S");
-        List<Announcement> announcements = announcementDao.findByCareer(career.isPresent()? career.get() : null, null, 1, 0);
+        Career career = new Career();
+        set(career, "code","A");
+
+        List<Announcement> announcements = announcementDao.findByCareer(career, null, 0, 10);
 
         Assert.assertEquals(1, announcements.size());
-        Assert.assertEquals(2, Optional.ofNullable(announcements.get(0).getId()));
+        Assert.assertEquals(Integer.valueOf(2), announcements.get(0).getId());
     }
 
     @Test
     public void testFindByCourse() {
-        Optional<Course> course = courseDao.findById("1.1");
-        List<Announcement> announcements = announcementDao.findByCourse(course.isPresent()? course.get() : null, null, 0, 0);
+        Course course = new Course();
+        set(course, "id","1.1");
+
+        List<Announcement> announcements = announcementDao.findByCourse(course, null, 0, 10);
 
         Assert.assertEquals(1, announcements.size());
-        Assert.assertEquals(3, Optional.ofNullable(announcements.get(0).getId()));
+        Assert.assertEquals(Integer.valueOf(3), announcements.get(0).getId());
     }
 
-    @Test
-    public void testFindRelevant() {
-        Optional<User> user = userDao.findById(0);
-        List<Announcement> announcements = announcementDao.findRelevant(user.isPresent()? user.get() : null, 1, 10);
-        //TODO AGREGAR RELEVANT AL POPULATOR
-        Assert.assertEquals(1, announcements.size());
-    }
     @Test
     public void testPagination() {
-
         int totalElements = announcementDao.getSize(EntityTarget.general, null, null);
-        Assert.assertEquals(3, totalElements);
+        Assert.assertEquals(4, totalElements);
 
-        List<Announcement> announcements = announcementDao.findGeneral(null,1, 0);
+        List<Announcement> announcements = announcementDao.findGeneral(null,0, 2);
         Assert.assertEquals(2, announcements.size());
-        Assert.assertEquals(4, Optional.ofNullable(announcements.get(1).getId()));
+        Assert.assertEquals(Integer.valueOf(4), announcements.get(1).getId());
 
-        announcements = announcementDao.findGeneral(null,1, 2);
-        Assert.assertEquals(1, announcements.size());
-        Assert.assertEquals(5, Optional.ofNullable(announcements.get(0).getId()));
+        announcements = announcementDao.findGeneral(null, 2, 2);
+        Assert.assertEquals(0, announcements.size());
     }
 
     @Test
     public void testShowSeen() {
-        Optional<User> opUser = userDao.findById(0);
-        User user = null;
-        if (opUser.isPresent()){
-            user = opUser.get();
-        }
-        List<Announcement> announcements = announcementDao.findGeneral(user,1, 0);
+        List<Announcement> announcements = announcementDao.findGeneral(user,0, 10);
         Assert.assertEquals(3, announcements.size());
-        Assert.assertEquals(1, Optional.ofNullable(announcements.get(0).getId()));
-
-        announcementDao.markSeen(announcements.get(0), user);
-        Assert.assertTrue(announcements.get(0).getSeenBy().get(0).getName().equals(user.getName()));
+        Assert.assertEquals(Integer.valueOf(1), announcements.get(0).getId());
     }
 
     @Test
@@ -115,20 +102,17 @@ public class AnnouncementDaoJPATest {
         Assert.assertTrue(announcementOptional.isPresent());
         Announcement announcement = announcementOptional.get();
 
-        Assert.assertEquals(1, Optional.ofNullable(announcement.getId()));
+        Assert.assertEquals(Integer.valueOf(1), announcement.getId());
         Assert.assertEquals("Test content",announcement.getContent());
     }
 
     @Test
     public void testCreate() {
-        Optional<User> user = userDao.findById(0);
-
-
         Announcement announcement = announcementDao.create("Test", "Test", "Test",
-        null, null, null, user.isPresent()? user.get() : null);
+                null, null, null, user);
 
         int count = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "announcement",
-            String.format("id=%d", announcement.getId()));
+                String.format("id=%d", announcement.getId()));
 
         Assert.assertEquals(1, count);
     }
@@ -136,14 +120,12 @@ public class AnnouncementDaoJPATest {
     @Test
     public void testDelete() {
         int initialCount = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "announcement",
-            String.format("id=%d", 1));
+                String.format("id=%d", 1));
 
-        Announcement announcement = new Announcement();
-        announcement.setId(0);
-        announcementDao.delete(announcement);
+        announcementDao.delete(announcementDao.findById(1).orElseThrow(RuntimeException::new));
 
         int finalCount = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "announcement",
-            String.format("id=%d", 1));
+                String.format("id=%d", 1));
 
         Assert.assertEquals(initialCount-1, finalCount);
     }

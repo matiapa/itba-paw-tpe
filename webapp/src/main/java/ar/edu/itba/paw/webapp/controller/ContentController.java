@@ -124,8 +124,6 @@ public class ContentController {
                 true, form, loggedUser);
         }
 
-        // TODO: Change form content type to be enum
-
         String websiteUrl = ServletUriComponentsBuilder.fromRequestUri(request).replacePath(null).build()
                 .toString() + request.getContextPath();
 

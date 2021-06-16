@@ -83,13 +83,12 @@ public class User implements Serializable, UserData {
         ));
     }
 
-    // TODO: Move this method
-
     private String normalizeCase(String str) {
         str = str.toLowerCase();
         String[] arr = str.split(" ");
         StringBuilder sb = new StringBuilder();
-        for(String s : arr) sb.append(Character.toUpperCase(s.charAt(0))).append(s.substring(1)).append(" ");
+        for(String s : arr)
+            sb.append(Character.toUpperCase(s.charAt(0))).append(s.substring(1)).append(" ");
         return sb.toString().trim();
     }
 
