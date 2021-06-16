@@ -14,12 +14,11 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import javax.persistence.TypedQuery;
 import javax.sql.DataSource;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -37,95 +36,105 @@ public class ContentDaoJPATest {
 
     @Autowired private DataSource ds;
 
-    private User user;
-    private Course course;
     private JdbcTemplate jdbcTemplate;
+    private User user;
 
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
 
         user = new User();
-        course = new Course();
         set(user, "id",1);
-        set(course, "id", "1.1");
+        set(user, "email","test@email.com");
+    }
+
+
+    @Test
+    public void findByIdTest(){
+        Optional<Content> content = contentDao.findById(1);
+        Assert.assertTrue(content.isPresent());
+        Assert.assertEquals(Integer.valueOf(1),content.get().getId());
+        Assert.assertEquals("Content 2", content.get().getName());
+        Assert.assertEquals("desc", content.get().getDescription());
+        Assert.assertEquals("http://test.com", content.get().getLink());
 
     }
+
 
     @Test
     public void findByCourseTest() {
-        List<Content> contentList = contentDao.findByCourse(course, Content.ContentType.miscellaneous,null,null,0,10);
+        Course course = new Course();
+        set(course, "id","1.1");
 
+        List<Content> contentList = contentDao.findByCourse(course, Content.ContentType.miscellaneous,null,null,0,10);
         Assert.assertEquals(2,contentList.size());
+        Assert.assertEquals(Integer.valueOf(0), contentList.get(0).getId());
+        Assert.assertEquals(Integer.valueOf(1), contentList.get(1).getId());
     }
     @Test
     public void deleteTest(){
-        int initialCount = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "course_content",
-                String.format("id=%d", 1));
+        Course course = new Course();
+        set(course, "id","1.1");
 
-        contentDao.delete(contentDao.findById(1).orElseThrow(RuntimeException::new));
+        List<Content> contentList = contentDao.findByCourse(course, Content.ContentType.miscellaneous,null,null,0,10);
+        Assert.assertEquals(2,contentList.size());
+        Assert.assertEquals(Integer.valueOf(0), contentList.get(0).getId());
+        Assert.assertEquals(Integer.valueOf(1), contentList.get(1).getId());
 
-        int finalCount = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "course_content",
-                String.format("id=%d", 1));
+        contentDao.delete(contentList.get(0));
 
-        Assert.assertEquals(initialCount-1, finalCount);
+        contentList = contentDao.findByCourse(course, Content.ContentType.miscellaneous,null,null,0,10);
+        Assert.assertEquals(1,contentList.size());
+        Assert.assertEquals(Integer.valueOf(1), contentList.get(0).getId());
     }
 
-    @Test
-    public void createContentTest(){
-        Content content = contentDao.createContent("Test", "test.com", course, "test",
-                Content.ContentType.miscellaneous, null, user, "mail.com");
-
-        int count = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "course_content",
-                String.format("id=%d", content.getId()));
-
-        Assert.assertEquals(1, count);
-
-    }
 
     @Test
-    public void testFindById(){
-        Optional<Content> content = contentDao.findById(1);
+    public void getReviewsTest() {
 
-        Assert.assertTrue(content.isPresent());
-        Assert.assertEquals(1, Optional.ofNullable(content.get().getId()));
-
-    }
-    @Test
-    public void testGetSize(){
-        int totalElements = contentDao.getSize(course, null, null, null);
-        Assert.assertEquals(2, totalElements);
-        List<Content> contents = contentDao.findByCourse(course, null, null, null, 0, 10);
-        Assert.assertEquals(2, contents.size());
-        Assert.assertEquals(Integer.valueOf(2), contents.get(1).getId());
-
-        contents = contentDao.findByCourse(course, null, null, null,3, 10);
-        Assert.assertEquals(0, contents.size());
-    }
-
-    @Test
-    public void testGetReviews(){
         Content content = new Content();
-        set(content, "id", 1);
+        set(content, "id",0);
 
-        List<ContentReview> reviewList = contentDao.getReviews(content, 0, 10);
-        Assert.assertEquals(3, reviewList.size());
-    }
-
-    @Test
-    public void testCreateContentReview(){
+        List<ContentReview>list =contentDao.getReviews(content,0,10);
+        Assert.assertEquals(1,list.size());
+        Assert.assertEquals(Integer.valueOf(0), list.get(0).getId());
 
     }
 
     @Test
-    public void testGetReviewsSize(){
+    public void getReviewsSizeTest(){
+        Content content = new Content();
+        set(content, "id",0);
 
+
+        Assert.assertEquals(1,contentDao.getReviewsSize(content));
+        set(content, "id",1);
+        Assert.assertEquals(0, contentDao.getReviewsSize(content));
+    }
+
+
+    @Test
+    public void createContentReview(){
+        Content content = new Content();
+        set(content, "id",0);
+
+        ContentReview contentReview = contentDao.createContentReview(content,"test rev",user);
+
+        Assert.assertEquals("test rev",contentReview.getReview());
+        Assert.assertEquals(user,contentReview.getUploader());
+        Assert.assertEquals(content,contentReview.getContent());
     }
 
     @Test
-    public void testGetSubscribedUsers(){
+    public void getSubscribedUsersTest(){
 
+        Course course = new Course();
+        set(course, "id","1.1");
+        Content content = new Content();
+        set(content, "id",0);
+        content.setCourse(course);
+        List<User> users= contentDao.getSubscribedUsers(content);
+        Assert.assertEquals(1,users.size());
+        Assert.assertEquals(1,users.get(0).getId());
     }
-
-
 }

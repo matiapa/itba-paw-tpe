@@ -46,7 +46,7 @@ public class Content {
     @JoinColumn(name = "course_id", nullable = false)
     private Course course;
 
-    @OneToMany(mappedBy = "content", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "content", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private List<ContentReview> reviewList;
 
     public Content(Integer id, String name, String link, String description, User submitter, String ownerMail,
