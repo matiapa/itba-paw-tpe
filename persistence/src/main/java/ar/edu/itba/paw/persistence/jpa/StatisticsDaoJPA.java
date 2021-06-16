@@ -33,7 +33,7 @@ public class StatisticsDaoJPA implements StatisticsDao {
 
         Map<Entity, Integer> map = new HashMap<>();
         for(Object[] row : res)
-            map.put(Entity.valueOf((String) row[0]), ((BigDecimal) row[1]).intValue());
+            map.put(Entity.valueOf((String) row[0]), ((BigInteger) row[1]).intValue());
 
         return map;
     }
