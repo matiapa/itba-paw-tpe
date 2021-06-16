@@ -141,8 +141,13 @@ public class AnnouncementDaoJPA implements AnnouncementDao {
     }
 
     @Override
+    @Transactional
     public void markAllSeen(User seenBy) {
-
+        // Usamos una query nativa porque con Hibernate se traen toda la lista de anuncios solo para
+        // marcarlos como listos, lo cual es muy ineficiente y ralentiza la experiencia de usuario
+        em.createNativeQuery("INSERT INTO announcement_seen SELECT id, :forUser FROM announcement")
+            .setParameter("forUser", seenBy.getId())
+            .executeUpdate();
     }
 
     @Override
