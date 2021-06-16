@@ -109,6 +109,6 @@ public class Course implements Comparable <Course>{
 
     @Override
     public int compareTo(Course o) {
-        return this.name.compareTo(o.name);
+        return this.id.compareTo(o.id);
     }
 }
