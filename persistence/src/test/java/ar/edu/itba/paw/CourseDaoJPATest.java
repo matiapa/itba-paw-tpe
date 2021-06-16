@@ -66,22 +66,22 @@ public class CourseDaoJPATest {
     }
 
     @Test
-    public void testMarkFavorite(Course course, User ofUser, boolean favorite){
+    public void testMarkFavorite(){
 
     }
 
     @Test
-    public void testCreateCourseReview(Course course, String review, User uploader){
+    public void testCreateCourseReview(){
 
     }
 
     @Test
-    public void testGetReviews(Course course, Integer page, Integer pageSize){
+    public void testGetReviews(){
 
     }
 
     @Test
-    public void testGetReviewsSize(Course course){
+    public void testGetReviewsSize(){
 
     }
 

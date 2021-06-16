@@ -94,22 +94,22 @@ public class UserDaoJPATest {
     }
 
     @Test
-    public void testVerifyEmail(User user, int verificationCode){
+    public void testVerifyEmail(){
 
     }
 
     @Test
-    public void testGetVerificationCode(User user){
+    public void testGetVerificationCode(){
 
     }
 
     @Test
-    public void testGetPicture(User loggedUser, byte picture[]){
+    public void testGetPicture(){
 
     }
 
     @Test
-    public void testRegisterLogin(User user){
+    public void testRegisterLogin(){
 
     }
 
