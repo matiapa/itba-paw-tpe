@@ -144,8 +144,11 @@ public class AnnouncementDaoJPA implements AnnouncementDao {
     @Transactional
     public void markAllSeen(User seenBy) {
         // Usamos una query nativa porque con Hibernate se traen toda la lista de anuncios solo para
-        // marcarlos como listos, lo cual es muy ineficiente y ralentiza la experiencia de usuario
-        em.createNativeQuery("INSERT INTO announcement_seen SELECT id, :forUser FROM announcement")
+        // marcarlos como listos, lo cual es muy ineficiente y ralentiza la experiencia de usuario.
+        // Se intentó usar la cláusula ON CONFLICT de insert para hacer la query más eficiente pero
+        // generaba problemas de compatibilidad con HSQL.
+        em.createNativeQuery("INSERT INTO announcement_seen SELECT a.id, :forUser FROM announcement a"
+            + " WHERE NOT EXISTS(SELECT * FROM announcement_seen s WHERE s.announcement_id=a.id AND s.user_id=:forUser)")
             .setParameter("forUser", seenBy.getId())
             .executeUpdate();
     }

@@ -34,10 +34,10 @@
     <location>/error/404</location>
   </error-page>
 
-<!--  <error-page>-->
-<!--    <error-code>500</error-code>-->
-<!--    <location>/error/500</location>-->
-<!--  </error-page>-->
+  <error-page>
+    <error-code>500</error-code>
+    <location>/error/500</location>
+  </error-page>
 
   <context-param>
     <param-name>contextClass</param-name>
