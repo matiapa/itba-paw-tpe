@@ -8,6 +8,8 @@ import ar.edu.itba.paw.persistence.jpa.CareerDaoJPA;
 import ar.edu.itba.paw.persistence.jpa.CourseDaoJPA;
 import ar.edu.itba.paw.persistence.jpa.StatisticsDaoJPA;
 import ar.edu.itba.paw.persistence.jpa.UserDaoJPA;
+import org.hsqldb.jdbc.JDBCUtil;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,44 +24,17 @@ import java.util.*;
 
 import java.text.SimpleDateFormat;
 
+import static ar.edu.itba.paw.TestUtils.set;
+
 @Rollback
 @Sql("classpath:populators/statistics_populate.sql")
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
 public class StatisticsDaoJPATest {
 
-
-
     @Autowired
     private StatisticsDaoJPA statisticsDao;
 
-    @Autowired private CareerDaoJPA careerDao;
-    @Autowired private CourseDaoJPA courseDao;
-    @Autowired private UserDaoJPA userDao;
-    @Test
-    public void testNewContributions(){
-
-        Optional<User> user = userDao.findById(0);
-        Map<Entity, Integer> newContribs = statisticsDao.newContributions(user.get());
-
-        Map<Entity, Integer> expectedNewContribs = new HashMap<Entity, Integer>(){{
-            put(Entity.announcement, 2); put(Entity.chat_group, 2);
-            put(Entity.course_content, 2); put(Entity.poll, 3);
-        }};
-
-        newContribs.forEach((k,v) -> Assert.assertEquals(expectedNewContribs.get(k), v));
-    }
-
-    @Test
-    public void testContributionsByCareer(){
-        Map<Career, Integer> careerContribs = statisticsDao.contributionsByCareer();
-
-        Map<String, Integer> expectedCareerContribs = new HashMap<String, Integer>(){{
-            put("A", 1); put("B", 2); put("C", 3);
-        }};
-
-        careerContribs.forEach((k,v) -> Assert.assertEquals(expectedCareerContribs.get(k.getCode()), v));
-    }
 
     @Test
     public void testContributionsByDate(){
