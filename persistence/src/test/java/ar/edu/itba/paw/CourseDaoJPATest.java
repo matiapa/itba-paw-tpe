@@ -1,9 +1,6 @@
 package ar.edu.itba.paw;
 
-import ar.edu.itba.paw.models.Career;
-import ar.edu.itba.paw.models.CareerCourse;
-import ar.edu.itba.paw.models.Course;
-import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.persistence.jpa.CareerDaoJPA;
 import ar.edu.itba.paw.persistence.jpa.CourseDaoJPA;
 import ar.edu.itba.paw.persistence.jpa.UserDaoJPA;
@@ -66,6 +63,26 @@ public class CourseDaoJPATest {
 
         Assert.assertTrue(course.isPresent());
         Assert.assertEquals("Course 1", course.get().getName());
+    }
+
+    @Test
+    public void testMarkFavorite(){
+
+    }
+
+    @Test
+    public void testCreateCourseReview(){
+
+    }
+
+    @Test
+    public void testGetReviews(){
+
+    }
+
+    @Test
+    public void testGetReviewsSize(){
+
     }
 
 }

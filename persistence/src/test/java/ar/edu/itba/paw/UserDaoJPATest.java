@@ -1,6 +1,7 @@
 package ar.edu.itba.paw;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import javax.sql.DataSource;
@@ -86,15 +87,30 @@ public class UserDaoJPATest {
 
         Assert.assertTrue(userDao.verifyEmail(user, code.isPresent()? code.get() : 0));
     }
-/*          Ya no existe el metodo
+
     @Test
-    public void testProfilePicture()
-    {
+    public void testFindAll(){
 
-        Optional<User> user = userDao.findById(1);
+    }
 
-        userDao.setPicture(user.isPresent()? user.get() : null, blob);
-        Assert.assertTrue(user.isPresent());
-        Assert.assertEquals(blob, user.get().getProfileImgB64());
-    }*/
+    @Test
+    public void testVerifyEmail(){
+
+    }
+
+    @Test
+    public void testGetVerificationCode(){
+
+    }
+
+    @Test
+    public void testGetPicture(){
+
+    }
+
+    @Test
+    public void testRegisterLogin(){
+
+    }
+
 }

@@ -198,4 +198,5 @@ public class PollDaoJPATest {
         pollDao.delete(poll);
         Assert.assertFalse(pollDao.findById(1).isPresent());
     }
+
 }

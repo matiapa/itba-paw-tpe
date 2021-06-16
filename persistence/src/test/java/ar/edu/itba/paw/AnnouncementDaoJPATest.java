@@ -2,16 +2,12 @@ package ar.edu.itba.paw;
 
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.persistence.jpa.AnnouncementDaoJPA;
-import ar.edu.itba.paw.persistence.jpa.CareerDaoJPA;
-import ar.edu.itba.paw.persistence.jpa.CourseDaoJPA;
-import ar.edu.itba.paw.persistence.jpa.UserDaoJPA;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -19,8 +15,7 @@ import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static ar.edu.itba.paw.TestUtils.set;
 
@@ -43,6 +38,7 @@ public class AnnouncementDaoJPATest {
 
         user = new User();
         set(user, "id",1);
+
     }
 
     @Test
@@ -75,6 +71,19 @@ public class AnnouncementDaoJPATest {
         Assert.assertEquals(Integer.valueOf(3), announcements.get(0).getId());
     }
 
+    @Test public void testFindRelevant(){
+        //TODO
+        Course course = new Course();
+        set(course, "id","1.1");
+        Set<Course> courses = new HashSet<>();
+        courses.add(course);
+        set(user, "favedBy", courses);
+
+        List<Announcement> announcements = announcementDao.findRelevant(user, 0, 10);
+
+        Assert.assertEquals(3, Optional.ofNullable(announcements.get(0).getId()));
+
+    }
     @Test
     public void testPagination() {
         int totalElements = announcementDao.getSize(EntityTarget.general, null, null);
@@ -128,6 +137,21 @@ public class AnnouncementDaoJPATest {
                 String.format("id=%d", 1));
 
         Assert.assertEquals(initialCount-1, finalCount);
+    }
+    @Test
+    public void testMarkSeen(){
+        Announcement announcement = new Announcement();
+        set(announcement, "id", 1);
+        announcementDao.markSeen(announcement, user);
+
+        Assert.assertEquals(3, announcementDao.findGeneral(user, 0, 10));
+    }
+    @Test
+    public void testMarkAllSeen(){
+        announcementDao.markAllSeen(user);
+
+        Assert.assertEquals(0, announcementDao.findGeneral(user, 0, 10).size());
+
     }
 
 }
