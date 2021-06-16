@@ -33,8 +33,6 @@ public class StatisticsDaoJPATest {
     @Autowired
     private StatisticsDaoJPA statisticsDao;
 
-    @Autowired private CareerDaoJPA careerDao;
-    @Autowired private CourseDaoJPA courseDao;
     @Autowired private UserDaoJPA userDao;
     @Test
     public void testNewContributions(){

@@ -1,28 +1,33 @@
 package ar.edu.itba.paw;
 
-import ar.edu.itba.paw.models.Career;
-import ar.edu.itba.paw.models.Content;
-import ar.edu.itba.paw.models.Course;
-import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.persistence.jpa.ContentDaoJPA;
 import ar.edu.itba.paw.persistence.jpa.CourseDaoJPA;
 import ar.edu.itba.paw.persistence.jpa.UserDaoJPA;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.jdbc.JdbcTestUtils;
+import org.springframework.transaction.annotation.Transactional;
 
 
+import javax.sql.DataSource;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import static ar.edu.itba.paw.TestUtils.set;
 
-@Rollback
+
+@Transactional
 @Sql("classpath:populators/content_populate.sql")
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
@@ -30,49 +35,97 @@ public class ContentDaoJPATest {
 
     @Autowired private ContentDaoJPA contentDao;
 
-    @Autowired private CourseDaoJPA courseDao;
-    @Autowired private UserDaoJPA userDao;
+    @Autowired private DataSource ds;
+
+    private User user;
+    private Course course;
+    private JdbcTemplate jdbcTemplate;
+
+    @Before
+    public void setUp() {
+        jdbcTemplate = new JdbcTemplate(ds);
+
+        user = new User();
+        course = new Course();
+        set(user, "id",1);
+        set(course, "id", "1.1");
+
+    }
 
     @Test
     public void findByCourseTest() {
-        Optional<Course> course = courseDao.findById("1.1");
+        List<Content> contentList = contentDao.findByCourse(course, Content.ContentType.miscellaneous,null,null,0,10);
 
-        List<Content> contentList = contentDao.findByCourse(course.isPresent()? course.get() : null, Content.ContentType.miscellaneous,null,null,0,10);
         Assert.assertEquals(2,contentList.size());
-        Assert.assertEquals(1, Optional.ofNullable(contentList.get(0).getId()));
-        Assert.assertEquals(2, Optional.ofNullable(contentList.get(1).getId()));
     }
     @Test
     public void deleteTest(){
-        Optional<Course> course = courseDao.findById("1.1");
+        int initialCount = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "course_content",
+                String.format("id=%d", 1));
 
-        List<Content> contentList = contentDao.findByCourse(course.isPresent()? course.get() : null, Content.ContentType.miscellaneous,null,null,0,10);
-        Assert.assertEquals(2,contentList.size());
-        Assert.assertEquals(1, Optional.ofNullable(contentList.get(0).getId()));
-        Assert.assertEquals(2, Optional.ofNullable(contentList.get(1).getId()));
+        contentDao.delete(contentDao.findById(1).orElseThrow(RuntimeException::new));
 
-        contentDao.delete(contentList.get(0));
+        int finalCount = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "course_content",
+                String.format("id=%d", 1));
 
-        contentList = contentDao.findByCourse(course.isPresent()? course.get() : null, Content.ContentType.miscellaneous,null,null,0,10);
-        Assert.assertEquals(1,contentList.size());
-        Assert.assertEquals(2, Optional.ofNullable(contentList.get(0).getId()));
+        Assert.assertEquals(initialCount-1, finalCount);
     }
 
     @Test
     public void createContentTest(){
-        Optional<Course> course = courseDao.findById("1.1");
-        Optional<User> user = userDao.findById(0);
-        List<Content> contentList = contentDao.findByCourse(course.isPresent()? course.get() : null, Content.ContentType.miscellaneous,null,null,0,10);
-        Assert.assertEquals(2,contentList.size());
-        Content content = new Content();
-        content.setName("name");
-        content.setLink("www.test.com");
-        Assert.assertEquals(content , contentDao.createContent("name", "www.test.com", course.isPresent()? course.get() : null, "test description", Content.ContentType.miscellaneous, null,
-                user.isPresent()? user.get() : null, user.isPresent()? user.get().getEmail() : null));
+        Content content = contentDao.createContent("Test", "test.com", course, "test",
+                Content.ContentType.miscellaneous, null, user, "mail.com");
 
-        contentList = contentDao.findByCourse(course.isPresent()? course.get() : null, Content.ContentType.miscellaneous,null,null,0,10);
-        Assert.assertEquals(3,contentList.size());
+        int count = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "course_content",
+                String.format("id=%d", content.getId()));
+
+        Assert.assertEquals(1, count);
 
     }
+
+    @Test
+    public void testFindById(){
+        Optional<Content> content = contentDao.findById(1);
+
+        Assert.assertTrue(content.isPresent());
+        Assert.assertEquals(1, Optional.ofNullable(content.get().getId()));
+
+    }
+    @Test
+    public void testGetSize(){
+        int totalElements = contentDao.getSize(course, null, null, null);
+        Assert.assertEquals(2, totalElements);
+        List<Content> contents = contentDao.findByCourse(course, null, null, null, 0, 10);
+        Assert.assertEquals(2, contents.size());
+        Assert.assertEquals(Integer.valueOf(2), contents.get(1).getId());
+
+        contents = contentDao.findByCourse(course, null, null, null,3, 10);
+        Assert.assertEquals(0, contents.size());
+    }
+
+    @Test
+    public void testGetReviews(){
+        Content content = new Content();
+        set(content, "id", 1);
+
+        List<ContentReview> reviewList = contentDao.getReviews(content, 0, 10);
+        Assert.assertEquals(3, reviewList.size());
+    }
+
+    @Test
+    public void testCreateContentReview(){
+
+    }
+
+    @Test
+    public void testGetReviewsSize(){
+
+    }
+
+    @Test
+    public void testGetSubscribedUsers(){
+
+    }
+
 
 }

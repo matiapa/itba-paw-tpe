@@ -198,4 +198,15 @@ public class PollDaoJPATest {
         pollDao.delete(poll);
         Assert.assertFalse(pollDao.findById(1).isPresent());
     }
+
+    @Test
+    public void testFindRelevant(User user, int topN){
+
+    }
+
+    @Test
+    public void testFindControversial(User user, int topN){
+
+    }
+
 }

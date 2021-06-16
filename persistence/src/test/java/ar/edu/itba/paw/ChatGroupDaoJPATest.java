@@ -7,18 +7,25 @@ import ar.edu.itba.paw.persistence.jpa.CareerDaoJPA;
 import ar.edu.itba.paw.persistence.jpa.ChatGroupDaoJPA;
 import ar.edu.itba.paw.persistence.jpa.UserDaoJPA;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.jdbc.JdbcTestUtils;
+
+import javax.sql.DataSource;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+
+import static ar.edu.itba.paw.TestUtils.set;
 
 @Rollback
 @Sql("classpath:populators/chat_group_populate.sql")
@@ -31,29 +38,38 @@ public class ChatGroupDaoJPATest {
     @Autowired private CareerDaoJPA careerDao;
     @Autowired private UserDaoJPA userDao;
 
+    @Autowired private DataSource ds;
+
+    private JdbcTemplate jdbcTemplate;
+    private User user;
+    private Career career;
+    @Before
+    public void setUp() {
+        jdbcTemplate = new JdbcTemplate(ds);
+
+        user = new User();
+        career = new Career();
+
+        set(user, "id",1);
+        set(career, "code", "S");
+    }
+
+
     @Test
     public void testAddGroup() throws ParseException {
-        Career career = new Career();
-        career.setCode("S");
-        User user = new User(0, "John", "Doe", "jd@gmail.com", "12345678", career);
-
         Date creationDate = new SimpleDateFormat("dd-MM-yyyy").parse("11-05-2018");
         ChatGroup chatGroup = chatGroupDao.addGroup("ChatGroup test", career,
                 "https://test.com", user, creationDate, ChatGroup.ChatPlatform.whatsapp);
 
-        Assert.assertEquals("ChatGroup test", chatGroup.getName());
-        Assert.assertEquals("S", chatGroup.getCareerCode());
-        Assert.assertEquals("https://test.com", chatGroup.getLink());
 
-        Assert.assertEquals("ChatGroup test", chatGroupDao.findByCareer(career, ChatGroup.ChatPlatform.whatsapp, null, null, 0, 10).get(0).getName());
-        Assert.assertEquals("S", chatGroupDao.findByCareer(career, ChatGroup.ChatPlatform.whatsapp, null, null, 0, 10).get(0).getCareerCode());
-        Assert.assertEquals("https://test.com", chatGroupDao.findByCareer(career, ChatGroup.ChatPlatform.whatsapp, null, null, 0, 10).get(0).getLink());
+        int count = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "announcement",
+                String.format("id=%d", chatGroup.getId()));
+
+        Assert.assertEquals(1, count);
     }
 
     @Test
     public void testGetSize() throws ParseException {
-        Optional<Career> career = careerDao.findByCode("S");
-        Optional<User> user = userDao.findById(0);
   /*
         Date creationDate = new SimpleDateFormat("dd-MM-yyyy").parse("11-05-2018");
         for (int i = 0; i < 10; i++){
@@ -61,14 +77,12 @@ public class ChatGroupDaoJPATest {
                     "https://test.com", user.isPresent()? user.get() : null, creationDate, ChatGroup.ChatPlatform.whatsapp);
         }
 */
-        int size = chatGroupDao.getSize(career.isPresent()? career.get() : null, ChatGroup.ChatPlatform.whatsapp, 2018, 1);
-        Assert.assertEquals(10, size);
+        int size = chatGroupDao.getSize(career, ChatGroup.ChatPlatform.whatsapp, 2018, 1);
+        Assert.assertEquals(1, size);
     }
 
     @Test
     public void testFindByCareer() throws ParseException {
-        Optional<Career> career = careerDao.findByCode("S");
-        Optional<User> user = userDao.findById(0);
         /*
         Date creationDate = new SimpleDateFormat("dd-MM-yyyy").parse("11-05-2018");
         for (int i = 0; i < 10; i++){
@@ -76,7 +90,7 @@ public class ChatGroupDaoJPATest {
                     "https://test.com", user, creationDate, ChatGroup.ChatPlatform.whatsapp);
         }
 */
-        List<ChatGroup> chatGroups = chatGroupDao.findByCareer(career.isPresent()? career.get() : null, ChatGroup.ChatPlatform.whatsapp, 2018, 1, 0, 5);
+        List<ChatGroup> chatGroups = chatGroupDao.findByCareer(career, ChatGroup.ChatPlatform.whatsapp, 2018, 1, 0, 5);
 
         Assert.assertEquals(5, chatGroups.size());
         Assert.assertEquals(1, Optional.ofNullable(chatGroups.get(0).getId()));
