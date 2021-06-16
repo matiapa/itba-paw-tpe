@@ -2,9 +2,6 @@ package ar.edu.itba.paw;
 
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.persistence.jpa.AnnouncementDaoJPA;
-import ar.edu.itba.paw.persistence.jpa.CareerDaoJPA;
-import ar.edu.itba.paw.persistence.jpa.CourseDaoJPA;
-import ar.edu.itba.paw.persistence.jpa.UserDaoJPA;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,8 +16,7 @@ import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static ar.edu.itba.paw.TestUtils.set;
 
@@ -44,6 +40,7 @@ public class AnnouncementDaoJPATest {
 
         user = new User();
         set(user, "id",1);
+
     }
 
     @Test
@@ -129,6 +126,19 @@ public class AnnouncementDaoJPATest {
                 String.format("id=%d", 1));
 
         Assert.assertEquals(initialCount-1, finalCount);
+    }
+
+    @Test
+    public void testMarkSeen(){
+        Announcement announcement = announcementDao.findById(1).orElseThrow(RuntimeException::new);
+        announcementDao.markSeen(announcement, user);
+        Assert.assertEquals(2, announcementDao.findGeneral(user, 0, 10).size());
+    }
+
+    @Test
+    public void testMarkAllSeen(){
+        announcementDao.markAllSeen(user);
+        Assert.assertEquals(0, announcementDao.findGeneral(user, 0, 10).size());
     }
 
 }

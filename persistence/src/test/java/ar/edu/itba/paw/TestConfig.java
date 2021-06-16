@@ -56,7 +56,7 @@ public class TestConfig {
     private DatabasePopulator databasePopulator(){
         final ResourceDatabasePopulator dbp = new ResourceDatabasePopulator();
         dbp.addScript(hsqldbSql);
-         dbp.addScript(schemaSql);
+        dbp.addScript(schemaSql);
         return dbp;
     }
 
@@ -78,7 +78,7 @@ public class TestConfig {
         final Properties properties = new Properties();
         properties.setProperty("hibernate.hbm2ddl.auto", "create-drop");
         properties.setProperty("hibernate.dialect", "org.hibernate.dialect.HSQLDialect");
-        // properties.setProperty("hibernate.ddl.auto", "none");
+        //properties.setProperty("hibernate.ddl.auto", "none");
 
         properties.setProperty("hibernate.show_sql", "true");
         properties.setProperty("format_sql", "true");

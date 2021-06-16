@@ -17,7 +17,7 @@ public interface ChatGroupDao {
 
     Optional<ChatGroup> findById(int id);
 
-    int getSize(Career career, ChatPlatform platform, Integer year, Integer quarter) throws ParseException;
+    int getSize(Career career, ChatPlatform platform, Integer year, Integer quarter);
 
     ChatGroup addGroup(String groupName, Career career, String link, User createdBy, Date creationDate, ChatPlatform platform);
 

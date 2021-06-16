@@ -75,7 +75,7 @@ public class ChatGroupDaoJPA implements ChatGroupDao {
 
 
     @Override
-    public int getSize(Career career, ChatPlatform platform, Integer year, Integer quarter) throws ParseException {
+    public int getSize(Career career, ChatPlatform platform, Integer year, Integer quarter) {
         String qryStr = buildQuery("SELECT count(cg.id) FROM ChatGroup cg", platform, year, quarter);
 
         TypedQuery<Long> query = em.createQuery(qryStr, Long.class);

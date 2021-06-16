@@ -18,3 +18,6 @@ INSERT INTO announcement(id,title,content,career_code,course_id,submitted_by,sum
     (6,'Test Title', 'Test content', null, null , 1, 'Test summary', now());
 
 INSERT INTO announcement_seen(announcement_id, user_id) VALUES (6, 1);
+
+INSERT INTO fav_course(course_id, user_id) VALUES ('1.1', 1);
+
