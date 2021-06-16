@@ -141,8 +141,10 @@
                                                 <td><c:out value="${content.uploadDate}"/></td>
                                                 <td>
                                                     <c:set var="owner" value="${contentOwners.get(content.id)}"/>
-                                                    <c:url var="profileUrl" value="/profile/${owner.email}"/>
-                                                    <a href="${profileUrl}"><c:out value="${owner.fullName}"/></a>
+                                                    <c:if test="${owner}">
+                                                        <c:url var="profileUrl" value="/profile/${owner.email}"/>
+                                                        <a href="${profileUrl}"><c:out value="${owner.fullName}"/></a>
+                                                    </c:if>
                                                 </td>
 
                                                 <td>

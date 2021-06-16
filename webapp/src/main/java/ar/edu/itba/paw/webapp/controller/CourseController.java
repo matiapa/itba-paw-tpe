@@ -106,9 +106,12 @@ public class CourseController {
         mav.addObject("contents", contents);
 
         Map<Integer, UserData> contentOwners = new HashMap<>();
-        contents.forEach(c -> {
-            UserData user = sgaService.fetchFromEmail(c.getOwnerMail());
-            if(user != null) contentOwners.put(c.getId(), user);
+        contents
+            .stream()
+            .filter(c -> c.getOwnerMail() != null)
+            .forEach(c -> {
+                UserData user = sgaService.fetchFromEmail(c.getOwnerMail());
+                if(user != null) contentOwners.put(c.getId(), user);
         });
 
         mav.addObject("contentOwners", contentOwners);
