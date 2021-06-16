@@ -25,6 +25,7 @@ import java.util.Optional;
 import static ar.edu.itba.paw.TestUtils.set;
 
 @Transactional
+@Rollback
 @Sql("classpath:populators/announcement_populate.sql")
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)

@@ -1,6 +1,7 @@
 package ar.edu.itba.paw;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Optional;
 
 import javax.sql.DataSource;
@@ -23,27 +24,18 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
 import ar.edu.itba.paw.models.User;
+import org.springframework.transaction.annotation.Transactional;
 
+import static ar.edu.itba.paw.TestUtils.set;
+
+@Transactional
 @Rollback
-@Sql("classpath:populators/course_populate.sql")
+@Sql("classpath:populators/user_populate.sql")
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
 public class UserDaoJPATest {
 
     @Autowired private UserDaoJPA userDao;
-    @Autowired private CareerDaoJPA careerDao;
-    @Autowired private CourseDaoJPA courseDao;
-    @Autowired private DataSource ds;
-
-    private JdbcTemplate jdbcTemplate;
-
-    private final String blob = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAIAAADTED8xAAAACXBIWXMAAAsSAAALEgCl2k5qAAACwklEQVR4nO3TQQ3AQAzAsKs0/pQ7GH3ERpBP3oOwmZnrBjjzGYAyA5BmANIMQJoBSDMAaQYgzQCkGYA0A5BmANIMQJoBSDMAaQYgzQCkGYA0A5BmANIMQJoBSDMAaQYgzQCkGYA0A5BmANIMQJoBSDMAaQYgzQCkGYA0A5BmANIMQJoBSDMAaQYgzQCkGYA0A5BmANIMQJoBSDMAaQYgzQCkGYA0A5BmANIMQJoBSDMAaQYgzQCkGYA0A5BmANIMQJoBSDMAaQYgzQCkGYA0A5BmANIMQJoBSDMAaQYgzQCkGYA0A5BmANIMQJoBSDMAaQYgzQCkGYA0A5BmANIMQJoBSDMAaQYgzQCkGYA0A5BmANIMQJoBSDMAaQYgzQCkGYA0A5BmANIMQJoBSDMAaQYgzQCkGYA0A5BmANIMQJoBSDMAaQYgzQCkGYA0A5BmANIMQJoBSDMAaQYgzQCkGYA0A5BmANIMQJoBSDMAaQYgzQCkGYA0A5BmANIMQJoBSDMAaQYgzQCkGYA0A5BmANIMQJoBSDMAaQYgzQCkGYA0A5BmANIMQJoBSDMAaQYgzQCkGYA0A5BmANIMQJoBSDMAaQYgzQCkGYA0A5BmANIMQJoBSDMAaQYgzQCkGYA0A5BmANIMQJoBSDMAaQYgzQCkGYA0A5BmANIMQJoBSDMAaQYgzQCkGYA0A5BmANIMQJoBSDMAaQYgzQCkGYA0A5BmANIMQJoBSDMAaQYgzQCkGYA0A5BmANIMQJoBSDMAaQYgzQCkGYA0A5BmANIMQJoBSDMAaQYgzQCkGYA0A5BmANIMQJoBSDMAaQYgzQCkGYA0A5BmANIMQJoBSDMAaQYgzQCkGYA0A5BmANIMQJoBSDMAaQYgzQCkGYA0A5BmANIMQJoBSDMAaQYgzQCkGYA0A5BmANIMQJoBSJvdvW6AMz980AnubVk09AAAAABJRU5ErkJggg==";
-
-
-    @Before
-    public void setUp() {
-        jdbcTemplate = new JdbcTemplate(ds);
-    }
 
     @Test
     public void testFindById(){
@@ -73,28 +65,4 @@ public class UserDaoJPATest {
         Assert.assertFalse(userOptional.isPresent());
     }
 
-    @Test
-    public void testRegisterUser()
-    {
-        Optional<Career> career = careerDao.findByCode("S");
-        Optional<Course> course = courseDao.findById("1.1");
-        User user =  userDao.registerUser(3, "User 3", "Surname", "usr3@test.com", "password", career.get(), Arrays.asList(course.get()));
-        int count = JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "users", "id=3");
-        Assert.assertEquals(1, count);
-
-        Optional<Integer> code = userDao.getVerificationCode(user);
-
-        Assert.assertTrue(userDao.verifyEmail(user, code.isPresent()? code.get() : 0));
-    }
-/*          Ya no existe el metodo
-    @Test
-    public void testProfilePicture()
-    {
-
-        Optional<User> user = userDao.findById(1);
-
-        userDao.setPicture(user.isPresent()? user.get() : null, blob);
-        Assert.assertTrue(user.isPresent());
-        Assert.assertEquals(blob, user.get().getProfileImgB64());
-    }*/
 }
